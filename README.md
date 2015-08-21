@@ -7,6 +7,9 @@ This script, designed for GNU/Linux, generates a hosts file based on multiple so
 - http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext
 - http://adaway.org/hosts.txt
 
+## What is this for?
+To prevent your computer from connecting to domains who serve ads and malware. This will increase the security of your computer and save bandwidth.
+
 ## Usage
 Simply type in your terminal:
 
