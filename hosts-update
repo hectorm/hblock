@@ -1,0 +1,96 @@
+#!/bin/bash
+# Author:
+#  Héctor Molinero Fernández <me@znt.se>.
+#
+
+# Exit on errors:
+set -e
+
+# Configuration:
+DST_HOSTS="/etc/hosts"
+DST_IP="0.0.0.0"
+HEADER="
+127.0.0.1 localhost
+127.0.1.1 $(uname -n)
+255.255.255.255 broadcasthost
+::1 localhost
+::1 ip6-localhost
+::1 ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+"
+SOURCES=(
+	"http://winhelp2002.mvps.org/hosts.txt"
+	"http://someonewhocares.org/hosts/hosts"
+	"http://www.malwaredomainlist.com/hostslist/hosts.txt"
+	"http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext"
+	"http://adaway.org/hosts.txt"
+)
+WHITELIST=(
+	"example.com"
+	"example.org"
+)
+BLACKLIST=(
+	"totallyrandom.domain"
+)
+
+# Messages:
+actionMsg() {
+	echo -e "\e[1;33m + \e[1;32m$1 \e[0m"
+}
+infoMsg() {
+	echo -e "   - $1"
+}
+
+# Process begins:
+actionMsg "Configuration:"
+infoMsg "Hosts location: $DST_HOSTS"
+infoMsg "Destination IP: $DST_IP"
+
+actionMsg "Downloading lists..."
+for URL in "${SOURCES[@]}"; do
+	infoMsg "$URL"
+	CONTENT=$(wget -T 10 -qO- "$URL")
+	BLOCKLIST=$(echo -e "$BLOCKLIST\n$CONTENT")
+done
+
+actionMsg "Parsing lists..."
+infoMsg "Change EOL to Unix format"
+BLOCKLIST=$(echo "$BLOCKLIST" | sed 's/\r//g')
+infoMsg "Select only hosts lines"
+BLOCKLIST=$(echo "$BLOCKLIST" | grep -Eo '^([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+[^#[:space:]]+$')
+infoMsg "Remove old destination"
+BLOCKLIST=$(echo "$BLOCKLIST" | sed -r 's/^([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+//g')
+infoMsg "Remove local entries"
+BLOCKLIST=$(echo "$BLOCKLIST" | grep -Ev '^(localhost|localhost.localdomain|local|broadcasthost)$')
+infoMsg "Apply whitelist"
+for DOMAIN in "${WHITELIST[@]}"; do
+	BLOCKLIST=$(echo "$BLOCKLIST" | grep -Fxv "$DOMAIN")
+done
+infoMsg "Apply blacklist"
+for DOMAIN in "${BLACKLIST[@]}"; do
+	BLOCKLIST=$(echo -e "$BLOCKLIST\n$DOMAIN")
+done
+infoMsg "Remove duplicate entries"
+BLOCKLIST=$(echo "$BLOCKLIST" | awk '!a[$0]++')
+infoMsg "Sort entries"
+BLOCKLIST=$(echo "$BLOCKLIST" | sort -n)
+infoMsg "Add new destination"
+BLOCKLIST=$(echo "$BLOCKLIST" | sed "s/^/$DST_IP /g")
+
+actionMsg "Generating hosts file..."
+HEADER=$(echo -e "# <header>$HEADER# </header>")
+HEADER=$(echo -e "# $(date --rfc-2822)\n$HEADER")
+HOSTS=$(echo -e "$HEADER\n# <blocklist>\n$BLOCKLIST\n# </blocklist>")
+
+# Write to disk:
+if [ $EUID -ne 0 ]; then
+	echo "$HOSTS" | sudo tee $DST_HOSTS > /dev/null
+else
+	echo "$HOSTS" | tee $DST_HOSTS > /dev/null
+fi
+
+actionMsg "$(echo "$BLOCKLIST" | wc -l) hosts added!"
