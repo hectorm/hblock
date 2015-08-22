@@ -3,6 +3,7 @@ This script, designed for GNU/Linux, generates a hosts file based on multiple so
 
 - http://winhelp2002.mvps.org/hosts.txt
 - http://someonewhocares.org/hosts/hosts
+- http://hosts-file.net/ad_servers.txt
 - http://www.malwaredomainlist.com/hostslist/hosts.txt
 - http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext
 - http://adaway.org/hosts.txt
