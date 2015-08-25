@@ -33,11 +33,11 @@ SOURCES=(
 	"http://www.malwaredomainlist.com/hostslist/hosts.txt"
 )
 WHITELIST=(
-	"example.com"
-	"example.org"
+	"whitelistdomain1.example"
+	"whitelistdomain2.example"
 )
 BLACKLIST=(
-	"totallyrandom.domain"
+	"blacklistdomain.example"
 )
 
 # Messages:
