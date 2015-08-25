@@ -52,6 +52,8 @@ actionMsg "Configuration:"
 infoMsg "Hosts location: $DST_HOSTS"
 infoMsg "Destination IP: $DST_IP"
 
+BLOCKLIST=""
+
 actionMsg "Downloading lists..."
 for URL in "${SOURCES[@]}"; do
 	infoMsg "$URL"
