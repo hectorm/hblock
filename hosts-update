@@ -65,7 +65,9 @@ actionMsg "Parsing lists..."
 infoMsg "Change EOL to Unix format"
 BLOCKLIST=$(echo "$BLOCKLIST" | sed 's/\r//g')
 infoMsg "Select only hosts lines"
-BLOCKLIST=$(echo "$BLOCKLIST" | grep -Eo '^([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+[^#[:space:]]+$')
+IP_REGEX='([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+'
+DOMAIN_REGEX='([\p{L}0-9_-]{1,63}\.)+\p{L}[\p{L}0-9_-]{1,62}(?=[[:space:]#]|$)'
+BLOCKLIST=$(echo "$BLOCKLIST" | grep -Po "(^($IP_REGEX)|^)$DOMAIN_REGEX")
 infoMsg "Remove old destination"
 BLOCKLIST=$(echo "$BLOCKLIST" | sed -r 's/^([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+//g')
 infoMsg "Remove local entries"
