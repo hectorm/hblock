@@ -1,6 +1,5 @@
 # hosts-update
-This script, designed for GNU/Linux, generates a hosts file based on multiple sources.
-
+This bash script, designed for GNU/Linux, generates a hosts file based on multiple sources.
 - http://adaway.org/hosts.txt
 - http://hosts-file.net/ad_servers.txt
 - http://malwaredomains.lehigh.edu/files/justdomains
@@ -15,10 +14,17 @@ This will increase the security of your computer and save bandwidth.
 
 ## Usage
 Simply type in your terminal:
-
-	wget -qO- https://raw.githubusercontent.com/zant95/hosts-update/master/hosts-update | bash
+```bash
+wget -qO- 'https://raw.githubusercontent.com/zant95/hosts-update/master/hosts-update' | bash
+```
 
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
+
+## Dependencies
+In order to run this script the system must have the following binaries installed:
+```
+awk cp grep sed sort sudo tee wc wget
+```
 
 ## Preview
 ![Preview](https://raw.githubusercontent.com/zant95/hosts-update/master/preview.png)
