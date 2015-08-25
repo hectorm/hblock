@@ -1,12 +1,12 @@
 # hosts-update
 This script, designed for GNU/Linux, generates a hosts file based on multiple sources.
 
-- http://winhelp2002.mvps.org/hosts.txt
-- http://someonewhocares.org/hosts/hosts
-- http://hosts-file.net/ad_servers.txt
-- http://www.malwaredomainlist.com/hostslist/hosts.txt
-- http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext
 - http://adaway.org/hosts.txt
+- http://hosts-file.net/ad_servers.txt
+- http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext
+- http://someonewhocares.org/hosts/hosts
+- http://winhelp2002.mvps.org/hosts.txt
+- http://www.malwaredomainlist.com/hostslist/hosts.txt
 
 ## What is this for?
 To prevent your computer from connecting to domains who serve ads and malware. This will increase the security of your computer and save bandwidth.
