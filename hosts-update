@@ -95,9 +95,9 @@ HOSTS=$(echo -e "$HEADER\n# <blocklist>\n$BLOCKLIST\n# </blocklist>")
 
 # Write to disk:
 if [ $EUID -ne 0 ]; then
-	echo "$HOSTS" | sudo tee $DST_HOSTS > /dev/null
+	echo "$HOSTS" | sudo tee "$DST_HOSTS" > /dev/null
 else
-	echo "$HOSTS" | tee $DST_HOSTS > /dev/null
+	echo "$HOSTS" | tee "$DST_HOSTS" > /dev/null
 fi
 
 actionMsg "$(echo "$BLOCKLIST" | wc -l) hosts added!"
