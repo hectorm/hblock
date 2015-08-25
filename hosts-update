@@ -26,7 +26,8 @@ ff02::3 ip6-allhosts
 SOURCES=(
 	"http://adaway.org/hosts.txt"
 	"http://hosts-file.net/ad_servers.txt"
-	"http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext"
+	"http://malwaredomains.lehigh.edu/files/justdomains"
+	"http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext"
 	"http://someonewhocares.org/hosts/hosts"
 	"http://winhelp2002.mvps.org/hosts.txt"
 	"http://www.malwaredomainlist.com/hostslist/hosts.txt"
