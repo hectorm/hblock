@@ -4,7 +4,7 @@ This script, designed for GNU/Linux, generates a hosts file based on multiple so
 - http://adaway.org/hosts.txt
 - http://hosts-file.net/ad_servers.txt
 - http://malwaredomains.lehigh.edu/files/justdomains
-- http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext
+- http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - http://someonewhocares.org/hosts/hosts
 - http://winhelp2002.mvps.org/hosts.txt
 - http://www.malwaredomainlist.com/hostslist/hosts.txt
@@ -21,7 +21,7 @@ Simply type in your terminal:
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
 ## Preview
-![Preview](https://i.imgur.com/BXi1dX8.png)
+![Preview](https://i.imgur.com/5cRyzIx.png)
 
 ## Disclaimer
 This script replaces the "/etc/hosts" file of your system. I am not responsible for any damage or loss, always make backups.
