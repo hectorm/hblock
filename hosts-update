@@ -4,7 +4,8 @@
 #
 
 # Exit on errors:
-set -e
+set -eu
+set -o pipefail
 
 # Configuration:
 DST_HOSTS="/etc/hosts"
