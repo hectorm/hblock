@@ -77,12 +77,12 @@ actionMsg 'Downloading lists...'
 
 actionMsg 'Parsing lists...'
 	infoMsg 'Change EOL to Unix format'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed 's/\r//g')
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed 's/^M$//')
 
 	infoMsg 'Select only hosts lines'
-		IP_REGEX='([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+'
-		DOMAIN_REGEX='([\p{L}0-9_-]{1,63}\.)+\p{L}[\p{L}0-9_-]{1,62}(?=[[:space:]#]|$)'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -Po "(^($IP_REGEX)|^)$DOMAIN_REGEX")
+		IP_REGEX='([0-9]{1,3}\.){3}[0-9]{1,3}[[:blank:]]+'
+		DOMAIN_REGEX='([[:alnum:]_-]{1,63}\.)+[[:alpha:]][[:alnum:]_-]{1,62}'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -oE "(^($IP_REGEX)|^)$DOMAIN_REGEX")
 
 	infoMsg 'Remove old destination'
 		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "s/^$IP_REGEX//g")
@@ -119,7 +119,7 @@ actionMsg 'Parsing lists...'
 
 	actionMsg 'Generating hosts file...'
 		HEADER=$(printf '# <header>%s# </header>\n' "$HEADER")
-		HEADER=$(printf '# %s\n%s\n' "$(date --rfc-2822)" "$HEADER")
+		HEADER=$(printf '# %s\n%s\n' "$(date -R)" "$HEADER")
 		HOSTS=$(printf '%s\n# <blocklist>\n%s\n# </blocklist>' "$HEADER" "$BLOCKLIST")
 
 # Write to disk:
