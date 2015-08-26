@@ -15,7 +15,7 @@ This will increase the security of your computer and save bandwidth.
 ## Usage
 Simply type in your terminal:
 ```bash
-wget -qO- 'https://raw.githubusercontent.com/zant95/hosts-update/master/hosts-update' | bash
+curl -sL 'https://raw.githubusercontent.com/zant95/hosts-update/master/hosts-update' | bash
 ```
 
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
@@ -23,7 +23,7 @@ wget -qO- 'https://raw.githubusercontent.com/zant95/hosts-update/master/hosts-up
 ## Dependencies
 In order to run this script the system must have the following binaries installed:
 ```
-awk cp grep printf sed sort sudo tee wc wget
+awk cp curl grep printf sed sort sudo tee wc
 ```
 
 ## Preview
