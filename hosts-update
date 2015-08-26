@@ -87,6 +87,9 @@ actionMsg 'Parsing lists...'
 	infoMsg 'Remove old destination'
 		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "s/^$IP_REGEX//g")
 
+	infoMsg 'Transform all entries to lowercase'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | awk '{print tolower($0)}')
+
 	infoMsg 'Remove local entries'
 		LOCAL_REGEX='(localhost|localhost\.localdomain|local|broadcasthost)'
 		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "/^$LOCAL_REGEX$/d")
