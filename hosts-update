@@ -63,7 +63,7 @@ BLOCKLIST=''
 actionMsg 'Downloading lists...'
 	for URL in "${SOURCES[@]}"; do
 		infoMsg "$URL"
-		CONTENT=$(curl -fsSL --connect-timeout 20 --max-time 60 "$URL") || true
+		CONTENT=$(curl -fsSL --connect-timeout 40 --max-time 120 "$URL") || true
 
 		# Inform user if the download fails
 		if [[ -z "$CONTENT" ]]; then
