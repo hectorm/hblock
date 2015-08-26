@@ -42,81 +42,82 @@ BLACKLIST=(
 
 # Messages:
 actionMsg() {
-	echo -e "\e[1;33m + \e[1;32m$1 \e[0m"
+	printf '\e[1;33m + \e[1;32m%s \e[0m\n' "$@"
 }
 infoMsg() {
-	echo -e "   - $1"
+	printf '   - %s\n' "$@"
 }
 errorMsg() {
-	echo -e "\e[1;33m + \e[1;31m$1 \e[0m"
+	printf '\e[1;33m + \e[1;31m%s \e[0m\n' "$@"
 }
 
 # Process begins:
-actionMsg "Configuration:"
+actionMsg 'Configuration:'
 	infoMsg "Hosts location: $DST_HOSTS"
 	infoMsg "Destination IP: $DST_IP"
 
-BLOCKLIST=""
+BLOCKLIST=''
 
-actionMsg "Downloading lists..."
+actionMsg 'Downloading lists...'
 	for URL in "${SOURCES[@]}"; do
 		infoMsg "$URL"
 		CONTENT=$(wget -T 10 -qO- "$URL") || true
 
 		# Inform user if the download fails
-		if [[ "$CONTENT" = "" ]]; then
-			errorMsg "Error downloading lists"
+		if [[ "$CONTENT" = '' ]]; then
+			errorMsg 'Error downloading lists'
 			exit 1
 		fi
 
-		BLOCKLIST=$(echo -e "$BLOCKLIST\n$CONTENT")
+		BLOCKLIST=$(printf '%s\n%s\n' "$BLOCKLIST" "$CONTENT")
 		unset CONTENT
 	done
 
-actionMsg "Parsing lists..."
-	infoMsg "Change EOL to Unix format"
-		BLOCKLIST=$(echo "$BLOCKLIST" | sed 's/\r//g')
+actionMsg 'Parsing lists...'
+	infoMsg 'Change EOL to Unix format'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed 's/\r//g')
 
-	infoMsg "Select only hosts lines"
+	infoMsg 'Select only hosts lines'
 		IP_REGEX='([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+'
 		DOMAIN_REGEX='([\p{L}0-9_-]{1,63}\.)+\p{L}[\p{L}0-9_-]{1,62}(?=[[:space:]#]|$)'
-		BLOCKLIST=$(echo "$BLOCKLIST" | grep -Po "(^($IP_REGEX)|^)$DOMAIN_REGEX")
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -Po "(^($IP_REGEX)|^)$DOMAIN_REGEX")
 
-	infoMsg "Remove old destination"
-		BLOCKLIST=$(echo "$BLOCKLIST" | sed -r 's/^([0-9]{1,3}\.){3}[0-9]{1,3}[[:space:]]+//g')
+	infoMsg 'Remove old destination'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "s/^$IP_REGEX//g")
 
-	infoMsg "Remove local entries"
-		BLOCKLIST=$(echo "$BLOCKLIST" | grep -Ev '^(localhost|localhost.localdomain|local|broadcasthost)$')
+	infoMsg 'Remove local entries'
+		LOCAL_REGEX='(localhost|localhost.localdomain|local|broadcasthost)'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -Ev "^$LOCAL_REGEX$")
 
-	infoMsg "Apply whitelist"
+	infoMsg 'Apply whitelist'
 		for DOMAIN in "${WHITELIST[@]}"; do
-			BLOCKLIST=$(echo "$BLOCKLIST" | grep -Fxv "$DOMAIN")
+			BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -Fxv "$DOMAIN")
 		done
 
-	infoMsg "Apply blacklist"
+	infoMsg 'Apply blacklist'
 		for DOMAIN in "${BLACKLIST[@]}"; do
-			BLOCKLIST=$(echo -e "$BLOCKLIST\n$DOMAIN")
+			BLOCKLIST=$(printf '%s\n%s\n' "$BLOCKLIST" "$DOMAIN")
 		done
 
-	infoMsg "Remove duplicate entries"
-		BLOCKLIST=$(echo "$BLOCKLIST" | awk '!a[$0]++')
+	infoMsg 'Remove duplicate entries'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | awk '!a[$0]++')
 
-	infoMsg "Sort entries"
-		BLOCKLIST=$(echo "$BLOCKLIST" | sort -n)
+	infoMsg 'Sort entries'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sort -n)
 
-	infoMsg "Add new destination"
-		BLOCKLIST=$(echo "$BLOCKLIST" | sed "s/^/$DST_IP /g")
+	infoMsg 'Add new destination'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed "s/^/$DST_IP /g")
 
-	actionMsg "Generating hosts file..."
-		HEADER=$(echo -e "# <header>$HEADER# </header>")
-		HEADER=$(echo -e "# $(date --rfc-2822)\n$HEADER")
-		HOSTS=$(echo -e "$HEADER\n# <blocklist>\n$BLOCKLIST\n# </blocklist>")
+	actionMsg 'Generating hosts file...'
+		HEADER=$(printf '# <header>%s# </header>\n' "$HEADER")
+		HEADER=$(printf '# %s\n%s\n' "$(date --rfc-2822)" "$HEADER")
+		HOSTS=$(printf '%s\n# <blocklist>\n%s\n# </blocklist>' "$HEADER" "$BLOCKLIST")
 
 # Write to disk:
 if [ $EUID -ne 0 ]; then
-	echo "$HOSTS" | sudo tee "$DST_HOSTS" > /dev/null
+	printf '%s\n' "$HOSTS" | sudo tee "$DST_HOSTS" > /dev/null
 else
-	echo "$HOSTS" | tee "$DST_HOSTS" > /dev/null
+	printf '%s\n' "$HOSTS" | tee "$DST_HOSTS" > /dev/null
 fi
 
-actionMsg "$(echo "$BLOCKLIST" | wc -l) hosts added!"
+actionMsg "$(printf '%s\n' "$BLOCKLIST" | wc -l) hosts added!"

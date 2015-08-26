@@ -23,7 +23,7 @@ wget -qO- 'https://raw.githubusercontent.com/zant95/hosts-update/master/hosts-up
 ## Dependencies
 In order to run this script the system must have the following binaries installed:
 ```
-awk cp grep sed sort sudo tee wc wget
+awk cp grep printf sed sort sudo tee wc wget
 ```
 
 ## Preview
