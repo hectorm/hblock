@@ -47,18 +47,30 @@ actionMsg() {
 infoMsg() {
 	echo -e "   - $1"
 }
+errorMsg() {
+	echo -e "\e[1;33m + \e[1;31m$1 \e[0m"
+}
 
 # Process begins:
 actionMsg "Configuration:"
 	infoMsg "Hosts location: $DST_HOSTS"
 	infoMsg "Destination IP: $DST_IP"
 
+BLOCKLIST=""
+
 actionMsg "Downloading lists..."
-	BLOCKLIST=""
 	for URL in "${SOURCES[@]}"; do
 		infoMsg "$URL"
-		CONTENT=$(wget -T 10 -qO- "$URL")
+		CONTENT=$(wget -T 10 -qO- "$URL") || true
+
+		# Inform user if the download fails
+		if [[ "$CONTENT" = "" ]]; then
+			errorMsg "Error downloading lists"
+			exit 1
+		fi
+
 		BLOCKLIST=$(echo -e "$BLOCKLIST\n$CONTENT")
+		unset CONTENT
 	done
 
 actionMsg "Parsing lists..."
