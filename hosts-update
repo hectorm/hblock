@@ -8,8 +8,8 @@ set -eu
 set -o pipefail
 
 # Configuration:
-DST_HOSTS="/etc/hosts"
-DST_IP="0.0.0.0"
+DST_HOSTS='/etc/hosts'
+DST_IP='0.0.0.0'
 HEADER="
 127.0.0.1       localhost $(uname -n)
 255.255.255.255 broadcasthost
@@ -21,20 +21,25 @@ ff02::2         ip6-allrouters
 ff02::3         ip6-allhosts
 "
 SOURCES=(
-	"http://adaway.org/hosts.txt"
-	"http://hosts-file.net/ad_servers.txt"
-	"http://malwaredomains.lehigh.edu/files/justdomains"
-	"http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext"
-	"http://someonewhocares.org/hosts/hosts"
-	"http://winhelp2002.mvps.org/hosts.txt"
-	"http://www.malwaredomainlist.com/hostslist/hosts.txt"
+	'http://adaway.org/hosts.txt'
+	'http://hosts-file.net/ad_servers.txt'
+	'http://malwaredomains.lehigh.edu/files/justdomains'
+	'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext'
+	'http://someonewhocares.org/hosts/hosts'
+	'http://winhelp2002.mvps.org/hosts.txt'
+	'http://www.malwaredomainlist.com/hostslist/hosts.txt'
 )
 WHITELIST=(
-	"whitelistdomain1.example"
-	"whitelistdomain2.example"
+# Regex examples:
+#   '\.com$' -> all domains that ends with '.com'.
+#   '^example' -> all domains that starts whith 'example'.
+#   '^sub\.example\.org$' -> literal domain 'sub.example.org'.
+	'^whitelistdomain1\.example$'
+	'^whitelistdomain2\.example$'
 )
 BLACKLIST=(
-	"blacklistdomain.example"
+# Literal string, no regex.
+	'blacklistdomain.example'
 )
 
 # Messages:
@@ -61,7 +66,7 @@ actionMsg 'Downloading lists...'
 		CONTENT=$(curl -fsSL --connect-timeout 20 --max-time 60 "$URL") || true
 
 		# Inform user if the download fails
-		if [[ "$CONTENT" = '' ]]; then
+		if [[ -z "$CONTENT" ]]; then
 			errorMsg 'Error downloading lists'
 			exit 1
 		fi
@@ -83,18 +88,22 @@ actionMsg 'Parsing lists...'
 		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "s/^$IP_REGEX//g")
 
 	infoMsg 'Remove local entries'
-		LOCAL_REGEX='(localhost|localhost.localdomain|local|broadcasthost)'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -Ev "^$LOCAL_REGEX$")
+		LOCAL_REGEX='(localhost|localhost\.localdomain|local|broadcasthost)'
+		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "/^$LOCAL_REGEX$/d")
 
 	infoMsg 'Apply whitelist'
-		for DOMAIN in "${WHITELIST[@]}"; do
-			BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -Fxv "$DOMAIN")
-		done
+		if [ ${#WHITELIST[@]} -gt 0 ]; then
+			for DOMAIN in "${WHITELIST[@]}"; do
+				BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "/$DOMAIN/d")
+			done
+		fi
 
 	infoMsg 'Apply blacklist'
-		for DOMAIN in "${BLACKLIST[@]}"; do
-			BLOCKLIST=$(printf '%s\n%s\n' "$BLOCKLIST" "$DOMAIN")
-		done
+		if [ ${#BLACKLIST[@]} -gt 0 ]; then
+			for DOMAIN in "${BLACKLIST[@]}"; do
+				BLOCKLIST=$(printf '%s\n%s\n' "$BLOCKLIST" "$DOMAIN")
+			done
+		fi
 
 	infoMsg 'Remove duplicate entries'
 		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | awk '!a[$0]++')
