@@ -119,7 +119,7 @@ actionMsg 'Parsing lists...'
 
 	actionMsg 'Generating hosts file...'
 		HEADER=$(printf '# <header>%s# </header>\n' "$HEADER")
-		HEADER=$(printf '# %s\n%s\n' "$(date -R)" "$HEADER")
+		HEADER=$(printf '# %s\n%s\n' "$(date)" "$HEADER")
 		HOSTS=$(printf '%s\n# <blocklist>\n%s\n# </blocklist>' "$HEADER" "$BLOCKLIST")
 
 # Write to disk:
