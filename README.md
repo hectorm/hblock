@@ -15,7 +15,7 @@ This will increase the security of your computer and save bandwidth.
 ## Usage
 Simply type in your terminal:
 ```bash
-curl -sL 'https://raw.githubusercontent.com/zant95/hosts-update/master/hosts-update' | bash
+curl -sL 'git.io/hosts' | bash
 ```
 
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
