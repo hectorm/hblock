@@ -52,6 +52,15 @@ infoMsg() {
 errorMsg() {
 	printf '\e[1;33m + \e[1;31m%s \e[0m\n' "$@"
 }
+promptMsg() {
+	printf '\e[1;33m + \e[1;32m%s \e[0m' "$@"
+	read -p '[y/N]: ' USER_RESPONSE
+	if [[ $USER_RESPONSE =~ ^[Yy]$ ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
 
 # Process begins:
 actionMsg 'Configuration:'
@@ -67,8 +76,10 @@ actionMsg 'Downloading lists...'
 
 		# Inform user if the download fails
 		if [[ -z "$CONTENT" ]]; then
-			errorMsg 'Error downloading lists'
-			exit 1
+			actionMsg 'Error downloading list'
+			if ! promptMsg 'Do you want to continue?'; then
+				exit 0
+			fi
 		fi
 
 		BLOCKLIST=$(printf '%s\n%s\n' "$BLOCKLIST" "$CONTENT")
