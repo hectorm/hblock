@@ -76,6 +76,7 @@ actionMsg 'Downloading lists...'
 
 		# Inform user if the download fails
 		if [[ -z "$CONTENT" ]]; then
+			# If you want to make a scheduled task you should comment this lines
 			actionMsg 'Error downloading list'
 			if ! promptMsg 'Do you want to continue?'; then
 				exit 0
