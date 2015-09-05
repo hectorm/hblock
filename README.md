@@ -18,6 +18,12 @@ Simply type in your terminal:
 curl -sL 'git.io/hosts-update' | bash
 ```
 
+#### Optional arguments
+```bash
+yes # assume 'yes' on all prompts
+no  # assume 'no' on all prompts
+```
+
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
 ## Dependencies

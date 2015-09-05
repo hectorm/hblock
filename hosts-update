@@ -42,6 +42,12 @@ BLACKLIST=(
 	'blacklistdomain.example'
 )
 
+# Flag:
+FLAG=''
+if [ $# -eq 1 ]; then
+	FLAG="$1"
+fi
+
 # Messages:
 actionMsg() {
 	printf '\e[1;33m + \e[1;32m%s \e[0m\n' "$@"
@@ -53,6 +59,12 @@ errorMsg() {
 	printf '\e[1;33m + \e[1;31m%s \e[0m\n' "$@"
 }
 promptMsg() {
+	if [ "$FLAG" = 'yes' ]; then
+		return 0
+	elif [ "$FLAG" = 'no' ]; then
+		return 1
+	fi
+
 	printf '\e[1;33m + \e[1;32m%s \e[0m' "$@"
 	read -p '[y/N]: ' USER_RESPONSE < /dev/tty
 	if [[ ${USER_RESPONSE^^} =~ ^(Y|YES)$ ]]; then
@@ -76,8 +88,7 @@ actionMsg 'Downloading lists...'
 
 		# Inform user if the download fails
 		if [[ -z "$CONTENT" ]]; then
-			# If you want to make a scheduled task you should comment this lines
-			actionMsg 'Error downloading list'
+			errorMsg 'Error downloading list'
 			if ! promptMsg 'Do you want to continue?'; then
 				exit 0
 			fi
