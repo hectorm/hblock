@@ -50,12 +50,6 @@ BLACKLIST=(
 	'blacklistdomain.example'
 )
 
-# Flag:
-FLAG=''
-if [ $# -eq 1 ]; then
-	FLAG="$1"
-fi
-
 # Messages:
 actionMsg() {
 	printf '\e[1;33m + \e[1;32m%s \e[0m\n' "$@"
@@ -81,6 +75,19 @@ promptMsg() {
 		return 1
 	fi
 }
+
+# Flag:
+USE_DIFF=0
+DIFF_TOOL=vimdiff
+if [ $# -ge 1 ] && [[ "$1" == "diff" ]]; then
+	shift
+	actionMsg "Using $DIFF_TOOL"
+	USE_DIFF=1
+fi
+FLAG=''
+if [ $# -eq 1 ]; then
+	FLAG="$1"
+fi
 
 # Process begins:
 actionMsg 'Configuration:'
@@ -153,11 +160,23 @@ actionMsg 'Parsing lists...'
 		HEADER=$(printf '# %s\n%s\n' "$(date)" "$HEADER")
 		HOSTS=$(printf '%s\n# <blocklist>\n%s\n# </blocklist>' "$HEADER" "$BLOCKLIST")
 
-# Write to disk:
-if [ $EUID -ne 0 ]; then
-	printf '%s\n' "$HOSTS" | sudo tee "$DST_HOSTS" > /dev/null
+if [ $USE_DIFF -eq 1 ]; then
+	# Diff new file with current hosts file
+	temp=$(tempfile)
+	printf '%s\n' "$HOSTS" > $temp
+	if [ $EUID -ne 0 ]; then
+		sudo $DIFF_TOOL $temp "$DST_HOSTS"
+	else
+		$DIFF_TOOL $temp "$DST_HOSTS"
+	fi
+	rm -f $temp
 else
-	printf '%s\n' "$HOSTS" | tee "$DST_HOSTS" > /dev/null
+	# Write to disk:
+	if [ $EUID -ne 0 ]; then
+		printf '%s\n' "$HOSTS" | sudo tee "$DST_HOSTS" > /dev/null
+	else
+		printf '%s\n' "$HOSTS" | tee "$DST_HOSTS" > /dev/null
+	fi
 fi
 
 actionMsg "$(printf '%s\n' "$BLOCKLIST" | wc -l) hosts added!"
