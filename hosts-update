@@ -11,7 +11,12 @@ set -o pipefail
 # Configuration:
 DST_HOSTS='/etc/hosts'
 DST_IP='0.0.0.0'
-HEADER="
+HEADER_FILE=~/.config/hosts-update/hosts-header.txt
+if test -r "$HEADER_FILE"; then
+	# read header from file
+	HEADER=$(cat "$HEADER_FILE")
+else
+	HEADER="
 127.0.0.1       localhost $(uname -n)
 255.255.255.255 broadcasthost
 ::1             localhost ip6-localhost ip6-loopback
@@ -21,6 +26,8 @@ ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 ff02::3         ip6-allhosts
 "
+fi
+
 SOURCES=(
 	'http://adaway.org/hosts.txt'
 	'http://hosts-file.net/ad_servers.txt'
