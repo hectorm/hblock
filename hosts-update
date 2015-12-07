@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Author:
 #  Héctor Molinero Fernández <me@znt.se>.
-#
+#  https://github.com/zant95/hosts-update
+
 
 # Exit on errors:
 set -eu
