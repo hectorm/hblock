@@ -5,39 +5,36 @@ This bash script, designed for GNU/Linux, generates a hosts file based on multip
 - http://malwaredomains.lehigh.edu/files/justdomains
 - http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - http://someonewhocares.org/hosts/hosts
+- https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+- https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
+- https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
+- https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 - http://winhelp2002.mvps.org/hosts.txt
 - http://www.malwaredomainlist.com/hostslist/hosts.txt
 
 ## What is this for?
-To prevent your computer from connecting to domains who serve ads and malware.  
+To prevent your computer from connecting to domains who serve ads and malware.
 This will increase the security of your computer and save bandwidth.
 
 ## Usage
 Simply type in your terminal:
 ```bash
-curl -sL 'git.io/hosts-update' | bash
+curl -sL 'https://git.io/hosts-update' | bash
 ```
-
-#### Optional arguments
+Yes to all:
 ```bash
-yes # assume 'yes' on all prompts
-no  # assume 'no' on all prompts
+yes | ./hosts-update
 ```
 
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
-## Dependencies
-In order to run this script the system must have the following binaries installed:
-```
-awk cp curl grep printf sed sort sudo tee wc
-```
-
 ## Preview
-![Preview](https://raw.githubusercontent.com/zant95/hosts-update/master/preview.png)
+![Preview](preview.png)
 
 ## Disclaimer
 - **Read the script** to make sure it is what you need.
 - This script, by default, replaces the "/etc/hosts" file of your system. I am not responsible for any damage or loss, always make backups.
 
 ## License
-See the [license](https://raw.githubusercontent.com/zant95/hosts-update/master/LICENSE) file.
+See the [license](LICENSE) file.
+

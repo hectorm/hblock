@@ -1,155 +1,163 @@
 #!/usr/bin/env bash
-# Author:
-#  Héctor Molinero Fernández <me@znt.se>.
-#
 
-# Exit on errors:
-set -eu
-set -o pipefail
+# Author:   Héctor Molinero Fernández <hector@molinero.xyz>
+# License:  MIT, https://opensource.org/licenses/MIT
 
-# Configuration:
-DST_HOSTS='/etc/hosts'
-DST_IP='0.0.0.0'
-HEADER="
-127.0.0.1       localhost $(uname -n)
+# Exit on errors
+set -eu -o pipefail
+
+# Globals
+dstHosts='/etc/hosts'
+dstIp='0.0.0.0'
+header="
+127.0.0.1       localhost
+127.0.1.1       $(uname -n)
 255.255.255.255 broadcasthost
-::1             localhost ip6-localhost ip6-loopback
-fe00::0         ip6-localnet
-ff00::0         ip6-mcastprefix
+::1             ip6-localhost ip6-loopback
+fe00::0         ip6-localnet ip6-mcastprefix
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 ff02::3         ip6-allhosts
 "
-SOURCES=(
+sources=(
 	'http://adaway.org/hosts.txt'
 	'http://hosts-file.net/ad_servers.txt'
 	'http://malwaredomains.lehigh.edu/files/justdomains'
 	'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext'
 	'http://someonewhocares.org/hosts/hosts'
+	'https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt'
+	'https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt'
+	'https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt'
+	'https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt'
 	'http://winhelp2002.mvps.org/hosts.txt'
 	'http://www.malwaredomainlist.com/hostslist/hosts.txt'
 )
-WHITELIST=(
+whitelist=(
 # Regex examples:
 #   '\.com$' -> all domains that ends with '.com'.
 #   '^example' -> all domains that starts whith 'example'.
 #   '^sub\.example\.org$' -> literal domain 'sub.example.org'.
-	'^whitelistdomain1\.example$'
-	'^whitelistdomain2\.example$'
+	'^whitelistdomain1\.localdomain$'
+	'^whitelistdomain2\.localdomain$'
 )
-BLACKLIST=(
+blacklist=(
 # Literal string, no regex.
-	'blacklistdomain.example'
+	'blacklistdomain.localdomain'
 )
+blocklist=''
 
-# Flag:
-FLAG=''
-if [ $# -eq 1 ]; then
-	FLAG="$1"
-fi
-
-# Messages:
-actionMsg() {
-	printf '\e[1;33m + \e[1;32m%s \e[0m\n' "$@"
-}
-infoMsg() {
+# Methods
+logMsg() {
 	printf '   - %s\n' "$@"
 }
+
+infoMsg() {
+	printf '\e[1;33m + \e[1;32m%s \e[0m\n' "$@"
+}
+
 errorMsg() {
 	printf '\e[1;33m + \e[1;31m%s \e[0m\n' "$@"
 }
-promptMsg() {
-	if [ "$FLAG" = 'yes' ]; then
-		return 0
-	elif [ "$FLAG" = 'no' ]; then
-		return 1
-	fi
 
-	printf '\e[1;33m + \e[1;32m%s \e[0m' "$@"
-	read -p '[y/N]: ' USER_RESPONSE < /dev/tty
-	if [[ ${USER_RESPONSE^^} =~ ^(Y|YES)$ ]]; then
-		return 0
+promptMsg() {
+	printf '\e[1;33m + \e[1;33m%s \e[0m[y/N]: ' "$@"
+	read answer
+	case "${answer}" in
+		[yY]|[yY][eE][sS]) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+checkBinary() {
+	type "$@" &>/dev/null
+}
+
+checkDownloadAbility() {
+	if ! checkBinary curl && ! checkBinary wget; then
+		errorMsg 'Either wget or curl are required for this script'
+		exit 1
+	fi
+}
+
+fetch() {
+	if checkBinary curl; then
+		curl -fsL "$@"
 	else
-		return 1
+		wget -qO- "$@"
 	fi
 }
 
 # Process begins:
-actionMsg 'Configuration:'
-	infoMsg "Hosts location: $DST_HOSTS"
-	infoMsg "Destination IP: $DST_IP"
+infoMsg 'Configuration:'
+	logMsg "Hosts location: $dstHosts"
+	logMsg "Destination IP: $dstIp"
 
-BLOCKLIST=''
+infoMsg 'Downloading lists...'
+	checkDownloadAbility
+	for url in "${sources[@]}"; do
+		logMsg "$url"
+		content=$(fetch "$url") || true
 
-actionMsg 'Downloading lists...'
-	for URL in "${SOURCES[@]}"; do
-		infoMsg "$URL"
-		CONTENT=$(curl -fsSL --connect-timeout 40 --max-time 120 "$URL") || true
-
-		# Inform user if the download fails
-		if [[ -z "$CONTENT" ]]; then
+		if [[ -z "$content" ]]; then
 			errorMsg 'Error downloading list'
 			if ! promptMsg 'Do you want to continue?'; then
 				exit 0
 			fi
 		fi
 
-		BLOCKLIST=$(printf '%s\n%s\n' "$BLOCKLIST" "$CONTENT")
-		unset CONTENT
+		blocklist=$(printf '%s\n%s\n' "$blocklist" "$content")
+		unset content
 	done
 
-actionMsg 'Parsing lists...'
-	infoMsg 'Change EOL to Unix format'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed 's/^M$//')
+infoMsg 'Parsing lists...'
+	logMsg 'Change EOL to Unix format'
+		blocklist=$(printf '%s\n' "$blocklist" | sed 's/^M$//')
 
-	infoMsg 'Select only hosts lines'
-		IP_REGEX='([0-9]{1,3}\.){3}[0-9]{1,3}[[:blank:]]+'
-		DOMAIN_REGEX='([[:alnum:]_-]{1,63}\.)+[[:alpha:]][[:alnum:]_-]{1,62}'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | grep -oE "(^($IP_REGEX)|^)$DOMAIN_REGEX")
+	logMsg 'Select only hosts lines'
+		ipRegex='([0-9]{1,3}\.){3}[0-9]{1,3}[[:blank:]]+'
+		domainRegex='([[:alnum:]_-]{1,63}\.)+[[:alpha:]][[:alnum:]_-]{1,62}'
+		blocklist=$(printf '%s\n' "$blocklist" | grep -oE "(^($ipRegex)|^)$domainRegex")
 
-	infoMsg 'Remove old destination'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "s/^$IP_REGEX//g")
+	logMsg 'Remove old destination'
+		blocklist=$(printf '%s\n' "$blocklist" | sed 's/^.*\s//g')
 
-	infoMsg 'Transform all entries to lowercase'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | awk '{print tolower($0)}')
+	logMsg 'Transform all entries to lowercase'
+		blocklist=$(printf '%s\n' "$blocklist" | tr '[:upper:]' '[:lower:]')
 
-	infoMsg 'Remove local entries'
-		LOCAL_REGEX='(localhost|localhost\.localdomain|local|broadcasthost)'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "/^$LOCAL_REGEX$/d")
+	logMsg 'Remove local entries'
+		localRegex='(localhost|.*\.localdomain|local|broadcasthost|ip6-[a-z0-9]*)'
+		blocklist=$(printf '%s\n' "$blocklist" | grep -vE "(^|\s+)$localRegex($|\s+)")
 
-	infoMsg 'Apply whitelist'
-		if [ ${#WHITELIST[@]} -gt 0 ]; then
-			for DOMAIN in "${WHITELIST[@]}"; do
-				BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed -r "/$DOMAIN/d")
+	logMsg 'Apply whitelist'
+		if [ ${#whitelist[@]} -gt 0 ]; then
+			for domain in "${whitelist[@]}"; do
+				blocklist=$(printf '%s\n' "$blocklist" | sed "/$domain/d")
 			done
 		fi
 
-	infoMsg 'Apply blacklist'
-		if [ ${#BLACKLIST[@]} -gt 0 ]; then
-			for DOMAIN in "${BLACKLIST[@]}"; do
-				BLOCKLIST=$(printf '%s\n%s\n' "$BLOCKLIST" "$DOMAIN")
+	logMsg 'Apply blacklist'
+		if [ ${#blacklist[@]} -gt 0 ]; then
+			for domain in "${blacklist[@]}"; do
+				blocklist=$(printf '%s\n%s\n' "$blocklist" "$domain")
 			done
 		fi
 
-	infoMsg 'Remove duplicate entries'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | awk '!a[$0]++')
+	logMsg 'Sort entries'
+		blocklist=$(printf '%s\n' "$blocklist" | sort -u)
 
-	infoMsg 'Sort entries'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sort -n)
+	logMsg 'Add new destination'
+		blocklist=$(printf '%s\n' "$blocklist" | sed "s/^/$dstIp /g")
 
-	infoMsg 'Add new destination'
-		BLOCKLIST=$(printf '%s\n' "$BLOCKLIST" | sed "s/^/$DST_IP /g")
+infoMsg 'Generating hosts file...'
+	header=$(printf '# <header>%s# </header>\n' "$header")
+	header=$(printf '# %s\n%s\n' "$(date)" "$header")
+	hosts=$(printf '%s\n# <blocklist>\n%s\n# </blocklist>' "$header" "$blocklist")
 
-	actionMsg 'Generating hosts file...'
-		HEADER=$(printf '# <header>%s# </header>\n' "$HEADER")
-		HEADER=$(printf '# %s\n%s\n' "$(date)" "$HEADER")
-		HOSTS=$(printf '%s\n# <blocklist>\n%s\n# </blocklist>' "$HEADER" "$BLOCKLIST")
-
-# Write to disk:
-if [ $EUID -ne 0 ]; then
-	printf '%s\n' "$HOSTS" | sudo tee "$DST_HOSTS" > /dev/null
+if checkBinary sudo && [ $EUID -ne 0 ]; then
+	printf '%s\n' "$hosts" | sudo tee "$dstHosts" > /dev/null
 else
-	printf '%s\n' "$HOSTS" | tee "$DST_HOSTS" > /dev/null
+	printf '%s\n' "$hosts" | tee "$dstHosts" > /dev/null
 fi
 
-actionMsg "$(printf '%s\n' "$BLOCKLIST" | wc -l) hosts added!"
+infoMsg "$(printf '%s\n' "$blocklist" | wc -l) hosts added!"
+
