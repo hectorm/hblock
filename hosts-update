@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-# Author:   Héctor Molinero Fernández <hector@molinero.xyz>
-# License:  MIT, https://opensource.org/licenses/MIT
+# Author:     Héctor Molinero Fernández <hector@molinero.xyz>
+# Repository: https://github.com/zant95/hosts-update
+# License:    MIT, https://opensource.org/licenses/MIT
 
 # Exit on errors
 set -eu -o pipefail
 
 # Globals
-dstHosts='/etc/hosts'
-dstIp='0.0.0.0'
-header="
+readonly dstHosts='/etc/hosts'
+readonly dstIp='0.0.0.0'
+readonly header="
 127.0.0.1       localhost
 127.0.1.1       $(uname -n)
 255.255.255.255 broadcasthost
@@ -19,32 +20,40 @@ ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 ff02::3         ip6-allhosts
 "
-sources=(
-	'http://adaway.org/hosts.txt'
-	'http://hosts-file.net/ad_servers.txt'
-	'http://malwaredomains.lehigh.edu/files/justdomains'
-	'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext'
+readonly sources=(
+#	'http://hosts-file.net/ad_servers.txt' # ad/tracking servers
+#	'http://hosts-file.net/emd.txt' # malware
+#	'http://hosts-file.net/exp.txt' # exploit
+#	'http://hosts-file.net/fsa.txt' # fraud
+#	'http://hosts-file.net/grm.txt' # spam
+#	'http://hosts-file.net/hfs.txt' # hpHosts forum spammers
+#	'http://hosts-file.net/hjk.txt' # hijack
+#	'http://hosts-file.net/mmt.txt' # misleading marketing
+#	'http://hosts-file.net/pha.txt' # illegal pharmacy
+#	'http://hosts-file.net/psh.txt' # phishing
+#	'http://hosts-file.net/wrz.txt' # warez/piracy
 	'http://someonewhocares.org/hosts/hosts'
+	'http://winhelp2002.mvps.org/hosts.txt'
+	'https://adaway.org/hosts.txt'
+	'https://mirror.cedia.org.ec/malwaredomains/justdomains'
+	'https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext'
 	'https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt'
 	'https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt'
 	'https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt'
 	'https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt'
-	'http://winhelp2002.mvps.org/hosts.txt'
-	'http://www.malwaredomainlist.com/hostslist/hosts.txt'
+	'https://www.malwaredomainlist.com/hostslist/hosts.txt'
+	'https://raw.githubusercontent.com/zant95/hosts/master/hosts'
 )
-whitelist=(
+readonly whitelist=(
 # Regex examples:
 #   '\.com$' -> all domains that ends with '.com'.
 #   '^example' -> all domains that starts whith 'example'.
 #   '^sub\.example\.org$' -> literal domain 'sub.example.org'.
-	'^whitelistdomain1\.localdomain$'
-	'^whitelistdomain2\.localdomain$'
+	'^adf\.ly$'
 )
-blacklist=(
-# Literal string, no regex.
-	'blacklistdomain.localdomain'
+readonly blacklist=(
+	'blacklist.local'
 )
-blocklist=''
 
 # Methods
 logMsg() {
@@ -88,6 +97,8 @@ fetch() {
 }
 
 # Process begins:
+blocklist=''
+
 infoMsg 'Configuration:'
 	logMsg "Hosts location: $dstHosts"
 	logMsg "Destination IP: $dstIp"
@@ -98,11 +109,11 @@ infoMsg 'Downloading lists...'
 		logMsg "$url"
 		content=$(fetch "$url") || true
 
-		if [[ -z "$content" ]]; then
-			errorMsg 'Error downloading list'
-			if ! promptMsg 'Do you want to continue?'; then
-				exit 0
-			fi
+		if
+			[ -z "$content" ] &&
+			! promptMsg 'Error downloading list, do you want to continue?'
+		then
+			exit 0
 		fi
 
 		blocklist=$(printf '%s\n%s\n' "$blocklist" "$content")
@@ -125,7 +136,7 @@ infoMsg 'Parsing lists...'
 		blocklist=$(printf '%s\n' "$blocklist" | tr '[:upper:]' '[:lower:]')
 
 	logMsg 'Remove local entries'
-		localRegex='(localhost|.*\.localdomain|local|broadcasthost|ip6-[a-z0-9]*)'
+		localRegex='(localhost|.*\.localdomain|.*\.local|broadcasthost|ip6-[a-z0-9]*)'
 		blocklist=$(printf '%s\n' "$blocklist" | grep -vE "(^|\s+)$localRegex($|\s+)")
 
 	logMsg 'Apply whitelist'
@@ -149,9 +160,8 @@ infoMsg 'Parsing lists...'
 		blocklist=$(printf '%s\n' "$blocklist" | sed "s/^/$dstIp /g")
 
 infoMsg 'Generating hosts file...'
-	header=$(printf '# <header>%s# </header>\n' "$header")
-	header=$(printf '# %s\n%s\n' "$(date)" "$header")
-	hosts=$(printf '%s\n# <blocklist>\n%s\n# </blocklist>' "$header" "$blocklist")
+	template='# %s\n# <header>%s# </header>\n# <blocklist>\n%s\n# </blocklist>'
+	hosts=$(printf "$template" "$(date)" "$header" "$blocklist")
 
 if checkBinary sudo && [ $EUID -ne 0 ]; then
 	printf '%s\n' "$hosts" | sudo tee "$dstHosts" > /dev/null
@@ -160,4 +170,3 @@ else
 fi
 
 infoMsg "$(printf '%s\n' "$blocklist" | wc -l) hosts added!"
-

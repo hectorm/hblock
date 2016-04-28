@@ -1,16 +1,16 @@
 # hosts-update
 This bash script, designed for GNU/Linux, generates a hosts file based on multiple sources.
-- http://adaway.org/hosts.txt
-- http://hosts-file.net/ad_servers.txt
-- http://malwaredomains.lehigh.edu/files/justdomains
-- http://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - http://someonewhocares.org/hosts/hosts
+- http://winhelp2002.mvps.org/hosts.txt
+- https://adaway.org/hosts.txt
+- https://mirror.cedia.org.ec/malwaredomains/justdomains
+- https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
-- http://winhelp2002.mvps.org/hosts.txt
-- http://www.malwaredomainlist.com/hostslist/hosts.txt
+- https://www.malwaredomainlist.com/hostslist/hosts.txt
+- https://raw.githubusercontent.com/zant95/hosts/master/hosts
 
 ## What is this for?
 To prevent your computer from connecting to domains who serve ads and malware.
