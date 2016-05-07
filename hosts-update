@@ -8,9 +8,9 @@
 set -eu
 
 # Globals
-readonly dstHosts='/etc/hosts'
-readonly dstIp='0.0.0.0'
-readonly header="
+output='/etc/hosts'
+redirection='0.0.0.0'
+header="
 127.0.0.1       localhost
 127.0.1.1       $(uname -n)
 255.255.255.255 broadcasthost
@@ -20,7 +20,7 @@ ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 ff02::3         ip6-allhosts
 "
-readonly sources='
+sources='
 	http://someonewhocares.org/hosts/hosts
 	http://winhelp2002.mvps.org/hosts.txt
 	https://adaway.org/hosts.txt
@@ -33,18 +33,26 @@ readonly sources='
 	https://www.malwaredomainlist.com/hostslist/hosts.txt
 	https://raw.githubusercontent.com/zant95/hosts/master/hosts
 '
-
 # POSIX basic regex
 #   \.com$              -> all domains that ends with '.com'.
 #   ^example            -> all domains that starts whith 'example'.
 #   ^sub\.example\.org$ -> domain 'sub.example.org'.
-readonly whitelist='
+whitelist='
 	^whitelist\.local$
 	^adf\.ly$
 '
-
-readonly blacklist='
+blacklist='
 	blacklist.local
+'
+help='
+Usage: hosts-update [OPTION]...
+ -O    Output file
+ -R    Redirection IP
+ -H    File header
+ -S    Hosts sources (space separated entries)
+ -W    Whitelist (space separated entries, POSIX basic regex)
+ -B    Blacklist (space separated entries)
+ -h    Print this help
 '
 
 # Methods
@@ -88,12 +96,25 @@ fetch() {
 	fi
 }
 
+# Arguments
+while getopts 'h?O:R:H:S:W:B:' opt; do
+	case "$opt" in
+		O) output=$OPTARG ;;
+		R) redirection=$OPTARG ;;
+		H) header=$OPTARG ;;
+		S) sources=$OPTARG ;;
+		W) whitelist=$OPTARG ;;
+		B) blacklist=$OPTARG ;;
+		h|\?) printf "$help"; exit 0 ;;
+	esac
+done
+
 # Process begins:
 blocklist=''
 
 infoMsg 'Configuration:'
-	logMsg "Hosts location: $dstHosts"
-	logMsg "Destination IP: $dstIp"
+	logMsg "Hosts location: $output"
+	logMsg "Redirection IP: $redirection"
 
 infoMsg 'Downloading lists...'
 	checkDownloadAbility
@@ -154,16 +175,19 @@ infoMsg 'Parsing lists...'
 		blocklist=$(printf '%s\n' "$blocklist" | sort -u)
 
 	logMsg 'Add new destination'
-		blocklist=$(printf '%s\n' "$blocklist" | sed "s/^/$dstIp /g")
+		blocklist=$(printf '%s\n' "$blocklist" | sed "s/^/$redirection /g")
 
 infoMsg 'Generating hosts file...'
-	template='# %s\n# <header>%s# </header>\n# <blocklist>\n%s\n# </blocklist>'
+	template='# %s\n# <header>\n%s\n# </header>\n# <blocklist>\n%s\n# </blocklist>'
 	hosts=$(printf "$template" "$(date)" "$header" "$blocklist")
 
-if ! [ $(id -u) = 0 ] && checkBinary sudo; then
-	printf '%s\n' "$hosts" | sudo tee "$dstHosts" >/dev/null
+if touch "$output" >/dev/null 2>&1; then
+	printf '%s\n' "$hosts" | tee "$output" >/dev/null
+elif checkBinary sudo; then
+	printf '%s\n' "$hosts" | sudo tee "$output" >/dev/null
 else
-	printf '%s\n' "$hosts" | tee "$dstHosts" >/dev/null
+	errorMsg "Cannot write '$output': Permission denied"
+	exit 1
 fi
 
 infoMsg "$(printf '%s\n' "$blocklist" | wc -l) hosts added!"

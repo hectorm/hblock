@@ -17,9 +17,19 @@ To prevent your computer from connecting to domains who serve ads and malware.
 This will increase the security of your computer and save bandwidth.
 
 ## Usage
-Simply type in your terminal:
+```
+Usage: hosts-update [OPTION]...
+ -O    Output file
+ -R    Redirection IP
+ -H    File header
+ -S    Hosts sources (space separated entries)
+ -W    Whitelist (space separated entries, POSIX basic regex)
+ -B    Blacklist (space separated entries)
+ -h    Print this help
+```
+Run latest version from GitHub:
 ```bash
-curl -sL 'https://git.io/hosts-update' | bash
+curl -sL 'https://git.io/hosts-update' | sh
 ```
 Yes to all:
 ```bash
