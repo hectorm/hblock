@@ -109,7 +109,7 @@ while getopts 'h?O:R:H:S:W:B:' opt; do
 	esac
 done
 
-# Process begins:
+# Process:
 blocklist=''
 
 infoMsg 'Configuration:'
