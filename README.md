@@ -1,5 +1,5 @@
 # hosts-update
-This bash script, designed for GNU/Linux, generates a hosts file based on multiple sources.
+This shell script, designed for GNU/Linux, generates a hosts file based on multiple sources.
 - http://someonewhocares.org/hosts/hosts
 - http://winhelp2002.mvps.org/hosts.txt
 - https://adaway.org/hosts.txt
@@ -31,9 +31,9 @@ Run latest version from GitHub:
 ```bash
 curl -sL 'https://git.io/hosts-update' | sh
 ```
-Yes to all:
+Create an Android flashable zip in your home folder:
 ```bash
-yes | ./hosts-update
+curl -sL 'https://git.io/hosts-update-android' | sh
 ```
 
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.

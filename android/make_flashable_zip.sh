@@ -14,9 +14,15 @@ header='
 ::1             ip6-localhost
 '
 
+if type bash > /dev/null; then
+	shell='bash'
+else
+	shell='sh'
+fi
+
 # Process:
 cd "$dir"
 
-../hosts-update -O ./hosts -H "$header"
-zip -r ./hosts-update.zip .
+$shell ../hosts-update -O ./hosts -H "$header"
+zip -rT ./hosts-update.zip .
 
