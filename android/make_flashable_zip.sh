@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/hosts-update
+# Repository: https://github.com/zant95/hBlock
 # License:    MIT, https://opensource.org/licenses/MIT
 
 # Exit on errors
@@ -23,6 +23,6 @@ fi
 # Process:
 cd "$dir"
 
-$shell ../hosts-update -O ./hosts -H "$header"
-zip -rT ./hosts-update.zip .
+$shell ../hblock -O ./hosts -H "$header"
+zip -rT ./hblock.zip .
 

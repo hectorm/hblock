@@ -1,6 +1,7 @@
 #!/sbin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
+# Repository: https://github.com/zant95/hBlock
 # License:    MIT, https://opensource.org/licenses/MIT
 #
 # Script based on Chainfire's SuperSU.
@@ -162,7 +163,7 @@ fi
 #==============================================================================#
 
 ui_print "=================="
-ui_print "|  hosts-update  |"
+ui_print "|     hBlock     |"
 ui_print "=================="
 
 ui_print "- Mounting /system (rw), /data (rw) and rootfs (rw)"
@@ -171,10 +172,10 @@ remount_rw /data
 remount_rw /
 
 ui_print "- Extracting files"
-mkdir /tmp/hosts-update
-cd /tmp/hosts-update
+mkdir /tmp/hblock
+cd /tmp/hblock
 unzip -o "$ZIP"
-CON=/tmp/hosts-update
+CON=/tmp/hblock
 
 ui_print "- Copying files"
 cp_perm 0 0 0644 "$CON"/hosts /data/hosts

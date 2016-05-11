@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/hosts-update
+# Repository: https://github.com/zant95/hBlock
 # License:    MIT, https://opensource.org/licenses/MIT
 
 # Exit on errors
@@ -48,7 +48,7 @@ blacklist='
 	blacklist.local
 '
 help='
-Usage: hosts-update [OPTION]...
+Usage: hblock [OPTION]...
  -O    Output file
  -R    Redirection IP
  -H    Hosts header

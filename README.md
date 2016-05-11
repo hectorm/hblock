@@ -1,4 +1,4 @@
-# hosts-update
+# hBlock
 This shell script, designed for GNU/Linux, generates a hosts file based on multiple sources.
 - http://someonewhocares.org/hosts/hosts
 - http://winhelp2002.mvps.org/hosts.txt
@@ -21,7 +21,7 @@ This will increase the security of your computer and save bandwidth.
 
 ## Usage
 ```
-Usage: hosts-update [OPTION]...
+Usage: hblock [OPTION]...
  -O    Output file
  -R    Redirection IP
  -H    Hosts header
@@ -33,12 +33,12 @@ Usage: hosts-update [OPTION]...
  -h    Print this help
 ```
 Run latest version from GitHub:
-```bash
-curl -sL 'https://git.io/hosts-update' | sh
+```sh
+curl -sL 'https://git.io/hblock' | sh
 ```
 Create an Android flashable zip in your home folder:
-```bash
-curl -sL 'https://git.io/hosts-update-android' | sh
+```sh
+curl -sL 'https://git.io/hblock-android' | sh
 ```
 
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
