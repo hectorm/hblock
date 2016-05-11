@@ -104,9 +104,9 @@ checkDownloadAbility() {
 
 fetch() {
 	if checkBinary curl; then
-		curl -fsL "$@"
+		curl -fsL -A 'Mozilla/5.0' "$@"
 	else
-		wget -qO- "$@"
+		wget -qO- -U 'Mozilla/5.0' "$@"
 	fi
 }
 
