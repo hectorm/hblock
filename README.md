@@ -2,7 +2,7 @@
 This shell script, designed for Unix-like systems, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).
 
 ## What is this for?
-To prevent your system from connecting to domains who serve ads, tracking scripts and malware. This will increase the security of your system and save bandwidth.
+To prevent your system from connecting to domains that serve ads, tracking scripts and malware. This will increase the security of your system and save bandwidth.
 
 ## Usage
 Run latest version from GitHub:
@@ -29,7 +29,16 @@ Usage: hblock [OPTION]...
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
 ## Preview
-![Preview](preview.png)
+<table>
+	<tr>
+		<th>Ubuntu 16.04</th>
+		<th>CyanogenMod 13.0 (OnePlus X)
+	</tr>
+	<tr>
+		<td><img src="preview_linux.png" height="540px" /></td>
+		<td><img src="preview_android.png" height="540px" /></td>
+	</tr>
+</table>
 
 ## Is it safe to use?
 Absolutely, this script uses regular expressions to select only the domain names of the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.
