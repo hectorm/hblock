@@ -8,6 +8,8 @@
 set -eu
 
 # Globals
+export LC_ALL=C
+
 output='/etc/hosts'
 redirection='0.0.0.0'
 header="
