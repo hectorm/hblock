@@ -49,6 +49,9 @@ whitelist='
 blacklist='
 	blacklist.local
 '
+backup='no'
+lenient='no'
+assume='ask'
 help='
 Usage: hblock [OPTION]...
  -O    Output file
@@ -57,11 +60,12 @@ Usage: hblock [OPTION]...
  -S    Hosts sources (space separated entries)
  -W    Whitelist (space separated entries, POSIX basic regex)
  -B    Blacklist (space separated entries)
+ -b    Backup (make a time-stamped backup)
+ -l    Lenient (select any IP address)
  -y    Automatic "yes" to prompts
  -n    Automatic "no" to prompts
  -h    Print this help
 '
-assume='ask'
 
 # Methods
 logMsg() {
@@ -104,7 +108,7 @@ checkDownloadAbility() {
 	fi
 }
 
-fetch() {
+fetchUrl() {
 	if checkBinary curl; then
 		curl -fsL -A 'Mozilla/5.0' "$@"
 	else
@@ -112,15 +116,28 @@ fetch() {
 	fi
 }
 
+writeFile() {
+	if touch "$2" >/dev/null 2>&1; then
+		printf -- '%s\n' "$1" | tee "$2" >/dev/null
+	elif checkBinary sudo; then
+		printf -- '%s\n' "$1" | sudo tee "$2" >/dev/null
+	else
+		errorMsg "Cannot write '$2': Permission denied"
+		exit 1
+	fi
+}
+
 # Arguments
-while getopts 'hynO:R:H:S:W:B:' opt; do
+while getopts 'O:R:H:S:W:B:blynh' opt; do
 	case "$opt" in
-		O) output=$OPTARG ;;
-		R) redirection=$OPTARG ;;
-		H) header=$OPTARG ;;
-		S) sources=$OPTARG ;;
-		W) whitelist=$OPTARG ;;
-		B) blacklist=$OPTARG ;;
+		O) output="$OPTARG" ;;
+		R) redirection="$OPTARG" ;;
+		H) header="$OPTARG" ;;
+		S) sources="$OPTARG" ;;
+		W) whitelist="$OPTARG" ;;
+		B) blacklist="$OPTARG" ;;
+		b) backup='yes' ;;
+		l) lenient='yes' ;;
 		y) assume='yes' ;;
 		n) assume='no' ;;
 		h) printf -- "$help"; exit 0 ;;
@@ -134,12 +151,14 @@ blocklist=''
 infoMsg 'Configuration:'
 	logMsg "Hosts location: $output"
 	logMsg "Redirection IP: $redirection"
+	logMsg "Backup: $backup"
+	logMsg "Lenient: $lenient"
 
 infoMsg 'Downloading lists...'
 	checkDownloadAbility
 	for url in $sources; do
 		logMsg "$url"
-		content=$(fetch "$url") || true
+		content=$(fetchUrl "$url") || true
 
 		if
 			[ -z "$content" ] &&
@@ -166,12 +185,16 @@ infoMsg 'Parsing lists...'
 		blocklist=$(printf -- '%s\n' "$blocklist" | sed '/^$/d')
 
 	logMsg 'Select only hosts lines'
-		ipRegex='\([[:digit:]]\{1,3\}\.\)\{3\}[[:digit:]]\{1,3\}'
+		if [ "$lenient" = 'yes' ]; then
+			ipRegex='\([[:digit:]]\{1,3\}\.\)\{3\}[[:digit:]]\{1,3\}'
+		else
+			ipRegex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
+		fi
 		domainRegex='\([[:alnum:]_-]\{1,63\}\.\)\{1,\}[[:alpha:]][[:alnum:]_-]\{1,62\}'
 		blocklist=$(printf -- '%s\n' "$blocklist" | sed -n "/^\($ipRegex[[:blank:]]\{1,\}\)\{0,1\}$domainRegex$/p")
 
 	logMsg 'Remove old destination'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^$ipRegex[[:blank:]]\{1,\}//g")
+		blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^.\{1,\}[[:blank:]]\{1,\}//g")
 
 	logMsg 'Transform all entries to lowercase'
 		blocklist=$(printf -- '%s\n' "$blocklist" | tr '[:upper:]' '[:lower:]')
@@ -196,18 +219,14 @@ infoMsg 'Parsing lists...'
 	logMsg 'Add new destination'
 		blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^/$redirection /g")
 
+if [ -f "$output" ] && [ "$backup" = 'yes' ]; then
+	infoMsg 'Backing up hosts file...'
+		writeFile "$(cat "$output")" "${output}.$(date +%s).bak"
+fi
+
 infoMsg 'Generating hosts file...'
 	template='# %s\n# <header>\n%s\n# </header>\n# <blocklist>\n%s\n# </blocklist>'
-	hosts=$(printf -- "$template" "$(date)" "$header" "$blocklist")
-
-if touch "$output" >/dev/null 2>&1; then
-	printf -- '%s\n' "$hosts" | tee "$output" >/dev/null
-elif checkBinary sudo; then
-	printf -- '%s\n' "$hosts" | sudo tee "$output" >/dev/null
-else
-	errorMsg "Cannot write '$output': Permission denied"
-	exit 1
-fi
+	writeFile "$(printf -- "$template" "$(date)" "$header" "$blocklist")" "$output"
 
 infoMsg "$(printf -- '%s\n' "$blocklist" | wc -l) hosts added!"
 

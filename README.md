@@ -22,6 +22,8 @@ Usage: hblock [OPTION]...
  -S    Hosts sources (space separated entries)
  -W    Whitelist (space separated entries, POSIX basic regex)
  -B    Blacklist (space separated entries)
+ -b    Backup (make a time-stamped backup)
+ -l    Lenient (select any IP address)
  -y    Automatic "yes" to prompts
  -n    Automatic "no" to prompts
  -h    Print this help
