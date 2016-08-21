@@ -214,7 +214,7 @@ infoMsg 'Parsing lists...'
 		done
 
 	logMsg 'Sort entries'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sort -u)
+		blocklist=$(printf -- '%s\n' "$blocklist" | sort | uniq)
 
 	logMsg 'Add new destination'
 		blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^/$redirection /g")
