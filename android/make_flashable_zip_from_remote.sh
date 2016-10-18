@@ -8,28 +8,23 @@
 set -eu
 
 # Globals
-remote='https://raw.githubusercontent.com/zant95/hblock/master'
-dir="$HOME/.hblock.tmp"
-header='
-127.0.0.1       localhost
-::1             ip6-localhost
-'
+tmpDir=$(mktemp -d "$HOME"/.hblock.XXXXXXXX)
+baseUrl='https://github.com/zant95/hBlock/raw/master'
 
-if type bash > /dev/null; then
+if type bash >/dev/null 2>&1; then
 	shell='bash'
 else
 	shell='sh'
 fi
 
-# Process:
-rm -rf "$dir"
-mkdir -p "$dir/META-INF/com/google/android"
-cd "$dir"
+# Process
+cd "$tmpDir"
 
-curl -sL "$remote/android/META-INF/com/google/android/update-binary" > ./META-INF/com/google/android/update-binary
-curl -sL "$remote/android/META-INF/com/google/android/updater-script" > ./META-INF/com/google/android/updater-script
-curl -sL "$remote/hblock" | $shell -s - -O ./hosts -H "$header"
-zip -rT "$HOME/hblock.zip" .
+mkdir -p ./META-INF/com/google/android
+curl -sL "$baseUrl"/android/META-INF/com/google/android/update-binary > ./META-INF/com/google/android/update-binary
+curl -sL "$baseUrl"/android/META-INF/com/google/android/updater-script > ./META-INF/com/google/android/updater-script
+curl -sL "$baseUrl"/hblock | $shell -s - -O ./hosts
+zip -r "$HOME"/hblock-android.zip .
 
-cd && rm -rf "$dir"
+cd && rm -rf "$tmpDir"
 

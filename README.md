@@ -7,26 +7,26 @@ To prevent your system from connecting to domains that serve ads, tracking scrip
 ## Usage
 Run latest version from GitHub:
 ```sh
-curl -sL 'https://git.io/hblock' | sh
+curl -sL 'https://github.com/zant95/hBlock/raw/master/hblock' | sh
 ```
 Create an [Android flashable zip](http://forum.xda-developers.com/wiki/Flashing) in your home folder:
 ```sh
-curl -sL 'https://git.io/hblock-android' | sh
+curl -sL 'https://github.com/zant95/hBlock/raw/master/android/make_flashable_zip_from_remote.sh' | sh
 ```
 You can also change the default behavior using these arguments:
 ```
 Usage: hblock [OPTION]...
- -O    Output file
- -R    Redirection IP
- -H    Hosts header
- -S    Hosts sources (space separated entries)
- -W    Whitelist (space separated entries, POSIX basic regex)
- -B    Blacklist (space separated entries)
- -b    Backup (make a time-stamped backup)
- -l    Lenient (select any IP address)
- -y    Automatic "yes" to prompts
- -n    Automatic "no" to prompts
- -h    Print this help
+  -O  Output file
+  -R  Redirection IP
+  -H  Hosts header
+  -S  Hosts sources (space separated entries)
+  -W  Whitelist (space separated entries, POSIX basic regex)
+  -B  Blacklist (space separated entries)
+  -b  Backup (make a time-stamped backup)
+  -l  Lenient (select any IP address)
+  -y  Automatic 'yes' to prompts
+  -n  Automatic 'no' to prompts
+  -h  Print this help
 ```
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
@@ -60,7 +60,6 @@ It glides as softly as a cloud.
 - https://mirror.cedia.org.ec/malwaredomains/justdomains
 - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
-- https://raw.githubusercontent.com/zant95/hosts/master/hosts
 - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt

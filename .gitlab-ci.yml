@@ -1,0 +1,16 @@
+image: alpine
+
+pages:
+  script:
+  - apk update
+  - apk add curl openssl zip
+  - sh ./hblock -O ./hosts
+  - sh ./android/make_flashable_zip.sh
+  - mkdir ./public
+  - mv ./hosts ./hblock-android.zip ./public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+

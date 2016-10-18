@@ -12,16 +12,21 @@ export LC_ALL=C
 
 output='/etc/hosts'
 redirection='0.0.0.0'
-header="
+backup='no'
+lenient='no'
+assume='ask'
+
+# Hosts file header
+header="\
 127.0.0.1       localhost
-127.0.1.1       $(uname -n)
 255.255.255.255 broadcasthost
-::1             ip6-localhost ip6-loopback
+::1             localhost ip6-localhost ip6-loopback
 fe00::0         ip6-localnet ip6-mcastprefix
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
-ff02::3         ip6-allhosts
-"
+ff02::3         ip6-allhosts"
+
+# Hosts file sources
 sources='
 	http://someonewhocares.org/hosts/hosts
 	http://winhelp2002.mvps.org/hosts.txt
@@ -30,7 +35,6 @@ sources='
 	https://mirror.cedia.org.ec/malwaredomains/justdomains
 	https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 	https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
-	https://raw.githubusercontent.com/zant95/hosts/master/hosts
 	https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 	https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
 	https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
@@ -38,34 +42,36 @@ sources='
 	https://www.malwaredomainlist.com/hostslist/hosts.txt
 	https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
 '
-# POSIX basic regex
-#   \.com$              -> all domains that ends with '.com'.
-#   ^example            -> all domains that starts whith 'example'.
-#   ^sub\.example\.org$ -> domain 'sub.example.org'.
+
+# Hosts files whitelist
+#   POSIX basic regex
+#     \.com$              -> all domains that ends with '.com'.
+#     ^example            -> all domains that starts with 'example'.
+#     ^sub\.example\.org$ -> domain 'sub.example.org'.
 whitelist='
 	^whitelist\.local$
 	^adf\.ly$
 '
+
+# Hosts file blacklist
 blacklist='
 	blacklist.local
 '
-backup='no'
-lenient='no'
-assume='ask'
-help='
+
+# Help message
+help="\
 Usage: hblock [OPTION]...
- -O    Output file
- -R    Redirection IP
- -H    Hosts header
- -S    Hosts sources (space separated entries)
- -W    Whitelist (space separated entries, POSIX basic regex)
- -B    Blacklist (space separated entries)
- -b    Backup (make a time-stamped backup)
- -l    Lenient (select any IP address)
- -y    Automatic "yes" to prompts
- -n    Automatic "no" to prompts
- -h    Print this help
-'
+  -O  Output file
+  -R  Redirection IP
+  -H  Hosts header
+  -S  Hosts sources (space separated entries)
+  -W  Whitelist (space separated entries, POSIX basic regex)
+  -B  Blacklist (space separated entries)
+  -b  Backup (make a time-stamped backup)
+  -l  Lenient (select any IP address)
+  -y  Automatic 'yes' to prompts
+  -n  Automatic 'no' to prompts
+  -h  Print this help"
 
 # Methods
 logMsg() {
@@ -140,12 +146,12 @@ while getopts 'O:R:H:S:W:B:blynh' opt; do
 		l) lenient='yes' ;;
 		y) assume='yes' ;;
 		n) assume='no' ;;
-		h) printf -- "$help"; exit 0 ;;
-		*) printf -- "$help"; exit 1 ;;
+		h) printf -- '%s\n' "$help"; exit 0 ;;
+		*) printf -- '%s\n' "$help"; exit 1 ;;
 	esac
 done
 
-# Process:
+# Process
 blocklist=''
 
 infoMsg 'Configuration:'
@@ -219,14 +225,29 @@ infoMsg 'Parsing lists...'
 	logMsg 'Add new destination'
 		blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^/$redirection /g")
 
+# Backup procedure
 if [ -f "$output" ] && [ "$backup" = 'yes' ]; then
 	infoMsg 'Backing up hosts file...'
-		writeFile "$(cat "$output")" "${output}.$(date +%s).bak"
+		writeFile "$(cat "$output")" "$output.$(date +%s).bak"
 fi
 
+# Hosts file template
+template="\
+# Author:       Héctor Molinero Fernández <hector@molinero.xyz>
+# Repository:   https://github.com/zant95/hBlock
+# Last updated: $(date)
+
+# <header>
+$header
+# </header>
+
+# <blocklist>
+$blocklist
+# </blocklist>
+"
+
 infoMsg 'Generating hosts file...'
-	template='# %s\n# <header>\n%s\n# </header>\n# <blocklist>\n%s\n# </blocklist>'
-	writeFile "$(printf -- "$template" "$(date)" "$header" "$blocklist")" "$output"
+	writeFile "$(printf -- '%s\n' "$template")" "$output"
 
 infoMsg "$(printf -- '%s\n' "$blocklist" | wc -l) hosts added!"
 
