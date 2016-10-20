@@ -53,11 +53,11 @@ Alternatively, you can use [this project](https://github.com/StevenBlack/hosts) 
 It glides as softly as a cloud.
 
 ## Sources
+- http://mirror1.malwaredomains.com/files/justdomains
 - http://someonewhocares.org/hosts/hosts
 - http://winhelp2002.mvps.org/hosts.txt
 - https://adaway.org/hosts.txt
 - https://isc.sans.edu/feeds/suspiciousdomains_High.txt
-- https://mirror.cedia.org.ec/malwaredomains/justdomains
 - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
