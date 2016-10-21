@@ -173,7 +173,7 @@ infoMsg 'Downloading lists...'
 			[ -z "$content" ] &&
 			! promptMsg 'Error downloading list, do you want to continue?'
 		then
-			exit 0
+			exit 1
 		fi
 
 		blocklist=$(printf -- '%s\n%s\n' "$blocklist" "$content")
