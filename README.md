@@ -53,6 +53,7 @@ Alternatively, you can use [this project](https://github.com/StevenBlack/hosts) 
 It glides as softly as a cloud.
 
 ## Sources
+- http://mirror1.malwaredomains.com/files/immortal_domains.txt
 - http://mirror1.malwaredomains.com/files/justdomains
 - http://someonewhocares.org/hosts/hosts
 - http://winhelp2002.mvps.org/hosts.txt

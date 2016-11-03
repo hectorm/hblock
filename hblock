@@ -31,6 +31,7 @@ ff02::3         ip6-allhosts"
 
 # Hosts file sources
 sources='
+	http://mirror1.malwaredomains.com/files/immortal_domains.txt
 	http://mirror1.malwaredomains.com/files/justdomains
 	http://someonewhocares.org/hosts/hosts
 	http://winhelp2002.mvps.org/hosts.txt
