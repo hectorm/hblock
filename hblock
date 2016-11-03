@@ -16,8 +16,13 @@ backup='no'
 lenient='no'
 assume='ask'
 
+hostname=$(uname -n)
+
 # Prevent adding 'localhost' twice
-hostname=$([ "$(uname -n)" != 'localhost' ] && echo "$(uname -n)" || echo '')
+hostname=$(printf -- '%s\n' "$hostname" | sed '/^localhost$/d')
+
+# Prevent adding GitLab CI runner hostname
+hostname=$(printf -- '%s\n' "$hostname" | sed '/^runner-[[:alnum:]]\{8\}-project-.*$/d')
 
 # Hosts file header
 header="\
