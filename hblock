@@ -235,11 +235,14 @@ if [ -f "$output" ] && [ "$backup" = 'yes' ]; then
 		writeFile "$(cat "$output")" "$output.$(date +%s).bak"
 fi
 
+blocklistCount=$(printf -- '%s\n' "$blocklist" | wc -l)
+
 # Hosts file template
 template="\
-# Author:       Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository:   https://github.com/zant95/hBlock
-# Last updated: $(date)
+# Author:              Héctor Molinero Fernández <hector@molinero.xyz>
+# Repository:          https://github.com/zant95/hBlock
+# Last updated:        $(date)
+# Blacklisted domains: $blocklistCount
 
 # <header>
 $header
@@ -251,7 +254,7 @@ $blocklist
 "
 
 infoMsg 'Generating hosts file...'
-	writeFile "$(printf -- '%s\n' "$template")" "$output"
+	writeFile "$template" "$output"
 
-infoMsg "$(printf -- '%s\n' "$blocklist" | wc -l) hosts added!"
+infoMsg "$blocklistCount blacklisted domains!"
 
