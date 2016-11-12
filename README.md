@@ -4,14 +4,15 @@ This shell script, designed for Unix-like systems, generates a [hosts file](http
 ## What is this for?
 To prevent your system from connecting to domains that serve ads, tracking scripts and malware. This will increase the security of your system and save bandwidth.
 
+## Nightly builds
+I provide pregenerated nightly builds with the default configuration. This builds are created automatically with [GitLab CI](https://gitlab.com/zant95/hblock/pipelines) and are triggered using an [Amazon Lambda function](https://gist.github.com/zant95/b181089dac06205c7fd18190e6ab8e67).
+- https://hblock.molinero.xyz
+- https://zant95.gitlab.io/hblock (mirror)
+
 ## Usage
 Run latest version from GitHub:
 ```sh
-curl -sL 'https://github.com/zant95/hBlock/raw/master/hblock' | sh
-```
-Create an [Android flashable zip](http://forum.xda-developers.com/wiki/Flashing) in your home folder:
-```sh
-curl -sL 'https://github.com/zant95/hBlock/raw/master/android/make_flashable_zip_from_remote.sh' | sh
+curl -sL 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' | sh
 ```
 You can also change the default behavior using these arguments:
 ```
@@ -31,11 +32,11 @@ Usage: hblock [OPTION]...
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
 ## Preview
-| System                              | Preview                                        |
-| ----------------------------------- | :--------------------------------------------: |
-| Ubuntu 16.04                        | [:arrow_upper_right:](img/preview_linux.png)   |
-| Windows 10 (Cmder console emulator) | [:arrow_upper_right:](img/preview_windows.png) |
-| CyanogenMod 13.0 (OnePlus X)        | [:arrow_upper_right:](img/preview_android.png) |
+| System                              | Preview                                               |
+| ----------------------------------- | :---------------------------------------------------: |
+| Ubuntu 16.04                        | [:arrow_upper_right:](resources/previews/linux.png)   |
+| Windows 10 (Cmder console emulator) | [:arrow_upper_right:](resources/previews/windows.png) |
+| CyanogenMod 13.0 (OnePlus X)        | [:arrow_upper_right:](resources/previews/android.png) |
 
 ## Is it safe to use?
 Absolutely, this script uses regular expressions to select only the domain names of the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.

@@ -2,12 +2,34 @@ image: alpine
 
 pages:
   script:
-  - apk update
-  - apk add curl openssl zip
-  - sh ./hblock -O ./hosts
-  - sh ./android/make_flashable_zip.sh
+# Install required packages
+  - cat /etc/apk/repositories
+  - echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
+  - apk add --no-cache curl zip tree dos2unix@testing
+# Create public folder
   - mkdir ./public
-  - mv ./hosts ./hblock-android.zip ./public
+  - cd ./public
+# Create hosts file
+  - sh ../hblock -O ./hosts
+# Create a gzipped version of hosts file
+  - gzip -c ./hosts > ./hosts.gz
+# Create Android installer
+  - mkdir ./hosts_android
+  - cd ./hosts_android
+  - cp -r ../../resources/android/* ../hosts ./
+  - zip -r ../hosts_android.zip ./
+  - cd ../
+  - rm -r ./hosts_android
+# Create Windows installer
+  - mkdir ./hosts_windows
+  - cd ./hosts_windows
+  - cp -r ../../resources/windows/* ../hosts ./
+  - unix2dos ./hosts
+  - zip -r ../hosts_windows.zip ./
+  - cd ../
+  - rm -r ./hosts_windows
+# Create HTML index
+  - tree -T 'hBlock files' -I '*.html' -hDH . > ./index.html
   artifacts:
     paths:
     - public
