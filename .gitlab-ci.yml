@@ -24,7 +24,7 @@ pages:
   - mkdir ./hosts_windows
   - cd ./hosts_windows
   - cp -r ../../resources/windows/* ../hosts ./
-  - unix2dos ./hosts
+  - unix2dos ./install.bat ./hosts
   - zip -r ../hosts_windows.zip ./
   - cd ../
   - rm -r ./hosts_windows
