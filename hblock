@@ -131,17 +131,17 @@ checkDownloadAbility() {
 
 fetchUrl() {
 	if checkBinary curl; then
-		curl -fsL -A 'Mozilla/5.0' "$@"
+		curl -fsL -A 'Mozilla/5.0' -- "$@"
 	else
-		wget -qO- -U 'Mozilla/5.0' "$@"
+		wget -qO- -U 'Mozilla/5.0' -- "$@"
 	fi
 }
 
 writeFile() {
-	if touch "$2" >/dev/null 2>&1; then
-		printf -- '%s\n' "$1" | tee "$2" >/dev/null
+	if touch -- "$2" >/dev/null 2>&1; then
+		printf -- '%s\n' "$1" | tee -- "$2" >/dev/null
 	elif checkBinary sudo; then
-		printf -- '%s\n' "$1" | sudo tee "$2" >/dev/null
+		printf -- '%s\n' "$1" | sudo tee -- "$2" >/dev/null
 	else
 		errorMsg "Cannot write '$2': Permission denied"
 		exit 1
@@ -244,7 +244,7 @@ main() {
 	# Backup procedure
 	if [ -f "$output" ] && [ "$backup" = 'yes' ]; then
 		infoMsg 'Backing up hosts file...'
-		writeFile "$(cat "$output")" "$output.$(date +%s).bak"
+		writeFile "$(cat -- "$output")" "$output.$(date +%s).bak"
 	fi
 
 	# Hosts file template
@@ -273,3 +273,4 @@ main() {
 }
 
 main
+
