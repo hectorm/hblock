@@ -15,7 +15,6 @@ redirection='0.0.0.0'
 backup='no'
 lenient='no'
 assume='ask'
-
 hostname=$(uname -n)
 
 # Prevent adding 'localhost' twice
@@ -25,17 +24,19 @@ hostname=$(printf -- '%s\n' "$hostname" | sed '/^localhost$/d')
 hostname=$(printf -- '%s\n' "$hostname" | sed '/^runner-[[:alnum:]]\{8\}-project-.*$/d')
 
 # Hosts file header
-header="\
-127.0.0.1       localhost $hostname
-255.255.255.255 broadcasthost
-::1             localhost ip6-localhost ip6-loopback
-fe00::0         ip6-localnet ip6-mcastprefix
-ff02::1         ip6-allnodes
-ff02::2         ip6-allrouters
-ff02::3         ip6-allhosts"
+header=$(cat <<-EOF
+	127.0.0.1       localhost $hostname
+	255.255.255.255 broadcasthost
+	::1             localhost ip6-localhost ip6-loopback
+	fe00::0         ip6-localnet ip6-mcastprefix
+	ff02::1         ip6-allnodes
+	ff02::2         ip6-allrouters
+	ff02::3         ip6-allhosts
+EOF
+)
 
 # Hosts file sources
-sources='
+sources=$(cat <<-EOF
 	http://mirror1.malwaredomains.com/files/immortal_domains.txt
 	http://mirror1.malwaredomains.com/files/justdomains
 	http://someonewhocares.org/hosts/hosts
@@ -50,37 +51,42 @@ sources='
 	https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 	https://www.malwaredomainlist.com/hostslist/hosts.txt
 	https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
-'
+EOF
+)
 
 # Hosts files whitelist
 #   POSIX basic regex
 #     \.com$              -> all domains that ends with '.com'.
 #     ^example            -> all domains that starts with 'example'.
 #     ^sub\.example\.org$ -> domain 'sub.example.org'.
-whitelist='
+whitelist=$(cat <<-EOF
 	^whitelist\.local$
 	^adf\.ly$
-'
+EOF
+)
 
 # Hosts file blacklist
-blacklist='
+blacklist=$(cat <<-EOF
 	blacklist.local
-'
+EOF
+)
 
 # Help message
-help="\
-Usage: hblock [OPTION]...
-  -O  Output file
-  -R  Redirection IP
-  -H  Hosts header
-  -S  Hosts sources (space separated entries)
-  -W  Whitelist (space separated entries, POSIX basic regex)
-  -B  Blacklist (space separated entries)
-  -b  Backup (make a time-stamped backup)
-  -l  Lenient (select any IP address)
-  -y  Automatic 'yes' to prompts
-  -n  Automatic 'no' to prompts
-  -h  Print this help"
+help=$(cat <<-EOF
+	Usage: hblock [OPTION]...
+	-O  Output file
+	-R  Redirection IP
+	-H  Hosts header
+	-S  Hosts sources (space separated entries)
+	-W  Whitelist (space separated entries, POSIX basic regex)
+	-B  Blacklist (space separated entries)
+	-b  Backup (make a time-stamped backup)
+	-l  Lenient (select any IP address)
+	-y  Automatic 'yes' to prompts
+	-n  Automatic 'no' to prompts
+	-h  Print this help"
+EOF
+)
 
 # Methods
 logMsg() {
@@ -161,15 +167,16 @@ while getopts 'O:R:H:S:W:B:blynh' opt; do
 done
 
 # Process
-blocklist=''
+main() {
+	blocklist=''
 
-infoMsg 'Configuration:'
+	infoMsg 'Configuration:'
 	logMsg "Hosts location: $output"
 	logMsg "Redirection IP: $redirection"
 	logMsg "Backup: $backup"
 	logMsg "Lenient: $lenient"
 
-infoMsg 'Downloading lists...'
+	infoMsg 'Downloading lists...'
 	checkDownloadAbility
 	for url in $sources; do
 		logMsg "$url"
@@ -186,80 +193,83 @@ infoMsg 'Downloading lists...'
 		unset content
 	done
 
-infoMsg 'Parsing lists...'
+	infoMsg 'Parsing lists...'
 	logMsg 'Remove carriage return'
-		blocklist=$(printf -- '%s\n' "$blocklist" | tr -d '\r')
+	blocklist=$(printf -- '%s\n' "$blocklist" | tr -d '\r')
 
 	logMsg 'Remove comments'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed 's/#.*$//g')
+	blocklist=$(printf -- '%s\n' "$blocklist" | sed 's/#.*$//g')
 
 	logMsg 'Trim spaces'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed 's/[[:blank:]]*$//g;s/^[[:blank:]]*//g')
+	blocklist=$(printf -- '%s\n' "$blocklist" | sed 's/[[:blank:]]*$//g;s/^[[:blank:]]*//g')
 
 	logMsg 'Remove empty lines'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed '/^$/d')
+	blocklist=$(printf -- '%s\n' "$blocklist" | sed '/^$/d')
 
 	logMsg 'Select only hosts lines'
-		if [ "$lenient" = 'yes' ]; then
-			ipRegex='\([[:digit:]]\{1,3\}\.\)\{3\}[[:digit:]]\{1,3\}'
-		else
-			ipRegex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
-		fi
-		domainRegex='\([[:alnum:]_-]\{1,63\}\.\)\{1,\}[[:alpha:]][[:alnum:]_-]\{1,62\}'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed -n "/^\($ipRegex[[:blank:]]\{1,\}\)\{0,1\}$domainRegex$/p")
+	if [ "$lenient" = 'yes' ]; then
+		ipRegex='\([[:digit:]]\{1,3\}\.\)\{3\}[[:digit:]]\{1,3\}'
+	else
+		ipRegex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
+	fi
+	domainRegex='\([[:alnum:]_-]\{1,63\}\.\)\{1,\}[[:alpha:]][[:alnum:]_-]\{1,62\}'
+	blocklist=$(printf -- '%s\n' "$blocklist" | sed -n "/^\($ipRegex[[:blank:]]\{1,\}\)\{0,1\}$domainRegex$/p")
 
 	logMsg 'Remove old destination'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^.\{1,\}[[:blank:]]\{1,\}//g")
+	blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^.\{1,\}[[:blank:]]\{1,\}//g")
 
 	logMsg 'Transform all entries to lowercase'
-		blocklist=$(printf -- '%s\n' "$blocklist" | tr '[:upper:]' '[:lower:]')
+	blocklist=$(printf -- '%s\n' "$blocklist" | tr '[:upper:]' '[:lower:]')
 
 	logMsg 'Remove local entries'
-		localDomainRegex='/\.\localdomain[[:blank:]]*$/d;/\.\local[[:blank:]]*$/d'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed "$localDomainRegex")
+	localDomainRegex='/\.\localdomain[[:blank:]]*$/d;/\.\local[[:blank:]]*$/d'
+	blocklist=$(printf -- '%s\n' "$blocklist" | sed "$localDomainRegex")
 
 	logMsg 'Apply whitelist'
-		for domain in $whitelist; do
-			blocklist=$(printf -- '%s\n' "$blocklist" | sed "/$domain/d")
-		done
+	for domain in $whitelist; do
+		blocklist=$(printf -- '%s\n' "$blocklist" | sed "/$domain/d")
+	done
 
 	logMsg 'Apply blacklist'
-		for domain in $blacklist; do
-			blocklist=$(printf -- '%s\n%s\n' "$blocklist" "$domain")
-		done
+	for domain in $blacklist; do
+		blocklist=$(printf -- '%s\n%s\n' "$blocklist" "$domain")
+	done
 
 	logMsg 'Sort entries'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sort | uniq)
+	blocklist=$(printf -- '%s\n' "$blocklist" | sort | uniq)
 
 	logMsg 'Add new destination'
-		blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^/$redirection /g")
+	blocklist=$(printf -- '%s\n' "$blocklist" | sed "s/^/$redirection /g")
 
-# Backup procedure
-if [ -f "$output" ] && [ "$backup" = 'yes' ]; then
-	infoMsg 'Backing up hosts file...'
+	# Backup procedure
+	if [ -f "$output" ] && [ "$backup" = 'yes' ]; then
+		infoMsg 'Backing up hosts file...'
 		writeFile "$(cat "$output")" "$output.$(date +%s).bak"
-fi
+	fi
 
-blocklistCount=$(printf -- '%s\n' "$blocklist" | wc -l)
+	# Hosts file template
+	blockListDate=$(date -u)
+	blocklistCount=$(printf -- '%s\n' "$blocklist" | wc -l)
+	hosts=$(cat <<-EOF
+		# Author:              Héctor Molinero Fernández <hector@molinero.xyz>
+		# Repository:          https://github.com/zant95/hBlock
+		# Last updated:        $blockListDate
+		# Blacklisted domains: $blocklistCount
 
-# Hosts file template
-template="\
-# Author:              Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository:          https://github.com/zant95/hBlock
-# Last updated:        $(date)
-# Blacklisted domains: $blocklistCount
+		# <header>
+		$header
+		# </header>
 
-# <header>
-$header
-# </header>
+		# <blocklist>
+		$blocklist
+		# </blocklist>
+	EOF
+	)
 
-# <blocklist>
-$blocklist
-# </blocklist>
-"
+	infoMsg 'Generating hosts file...'
+	writeFile "$hosts" "$output"
 
-infoMsg 'Generating hosts file...'
-	writeFile "$template" "$output"
+	infoMsg "$blocklistCount blacklisted domains!"
+}
 
-infoMsg "$blocklistCount blacklisted domains!"
-
+main
