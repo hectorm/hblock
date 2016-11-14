@@ -29,7 +29,7 @@ pages:
   - cd ../
   - rm -r ./hosts_windows
 # Create HTML index
-  - tree -T 'hBlock files' -I '*.html' -hDH . > ./index.html
+  - ../resources/template/index.sh ./
   artifacts:
     paths:
     - public
