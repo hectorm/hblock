@@ -33,11 +33,14 @@ cat > ./index.html <<EOF
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">
-	<meta name="author" content="Héctor Molinero Fernández <hector@molinero.xyz>">
-	<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
 	<title>hBlock files</title>
+	<meta name="description" content="Save bandwidth by blocking ads, tracking and malware domains">
+	<meta name="author" content="Héctor Molinero Fernández <hector@molinero.xyz>">
+	<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
 
 	<style>
 		html {
