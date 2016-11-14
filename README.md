@@ -32,11 +32,7 @@ Usage: hblock [OPTION]...
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
 ## Preview
-| System                              | Preview                                               |
-| ----------------------------------- | :---------------------------------------------------: |
-| Ubuntu 16.04                        | [:arrow_upper_right:](resources/previews/linux.png)   |
-| Windows 10 (Cmder console emulator) | [:arrow_upper_right:](resources/previews/windows.png) |
-| CyanogenMod 13.0 (OnePlus X)        | [:arrow_upper_right:](resources/previews/android.png) |
+[![asciicast](https://asciinema.org/a/92741.png)](https://asciinema.org/a/92741)
 
 ## Is it safe to use?
 Absolutely, this script uses regular expressions to select only the domain names of the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.
