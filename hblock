@@ -131,7 +131,7 @@ checkDownloadAbility() {
 
 fetchUrl() {
 	if checkBinary curl; then
-		curl -fsL -A 'Mozilla/5.0' -- "$@"
+		curl -fsSL -A 'Mozilla/5.0' -- "$@"
 	else
 		wget -qO- -U 'Mozilla/5.0' -- "$@"
 	fi
