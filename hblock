@@ -10,20 +10,20 @@ set -eu
 # Globals
 export LC_ALL=C
 
+hostname=$(uname -n)
+# Prevent adding 'localhost' twice
+hostname=$(printf -- '%s\n' "$hostname" | sed '/^localhost$/d')
+# Prevent adding GitLab CI runner hostname
+hostname=$(printf -- '%s\n' "$hostname" | sed '/^runner-[[:alnum:]]\{8\}-project-.*$/d')
+
+# Default options
 output='/etc/hosts'
 redirection='0.0.0.0'
 backup='no'
 lenient='no'
 assume='ask'
-hostname=$(uname -n)
 
-# Prevent adding 'localhost' twice
-hostname=$(printf -- '%s\n' "$hostname" | sed '/^localhost$/d')
-
-# Prevent adding GitLab CI runner hostname
-hostname=$(printf -- '%s\n' "$hostname" | sed '/^runner-[[:alnum:]]\{8\}-project-.*$/d')
-
-# Hosts file header
+# Default header
 header=$(cat <<-EOF
 	127.0.0.1       localhost $hostname
 	255.255.255.255 broadcasthost
@@ -35,8 +35,8 @@ header=$(cat <<-EOF
 EOF
 )
 
-# Hosts file sources
-sources=$(cat <<-EOF
+# Default sources
+sources=$(cat <<-'EOF'
 	http://mirror1.malwaredomains.com/files/immortal_domains.txt
 	http://mirror1.malwaredomains.com/files/justdomains
 	http://someonewhocares.org/hosts/hosts
@@ -54,37 +54,20 @@ sources=$(cat <<-EOF
 EOF
 )
 
-# Hosts files whitelist
+# Default whitelist
 #   POSIX basic regex
 #     \.com$              -> all domains that ends with '.com'.
 #     ^example            -> all domains that starts with 'example'.
 #     ^sub\.example\.org$ -> domain 'sub.example.org'.
-whitelist=$(cat <<-EOF
+whitelist=$(cat <<-'EOF'
 	^whitelist\.local$
 	^adf\.ly$
 EOF
 )
 
-# Hosts file blacklist
-blacklist=$(cat <<-EOF
+# Default blacklist
+blacklist=$(cat <<-'EOF'
 	blacklist.local
-EOF
-)
-
-# Help message
-help=$(cat <<-EOF
-	Usage: hblock [OPTION]...
-	-O  Output file
-	-R  Redirection IP
-	-H  Hosts header
-	-S  Hosts sources (space separated entries)
-	-W  Whitelist (space separated entries, POSIX basic regex)
-	-B  Blacklist (space separated entries)
-	-b  Backup (make a time-stamped backup)
-	-l  Lenient (select any IP address)
-	-y  Automatic 'yes' to prompts
-	-n  Automatic 'no' to prompts
-	-h  Print this help"
 EOF
 )
 
@@ -148,23 +131,70 @@ writeFile() {
 	fi
 }
 
-# Arguments
-while getopts 'O:R:H:S:W:B:blynh' opt; do
-	case "$opt" in
-		O) output="$OPTARG" ;;
-		R) redirection="$OPTARG" ;;
-		H) header="$OPTARG" ;;
-		S) sources="$OPTARG" ;;
-		W) whitelist="$OPTARG" ;;
-		B) blacklist="$OPTARG" ;;
-		b) backup='yes' ;;
-		l) lenient='yes' ;;
-		y) assume='yes' ;;
-		n) assume='no' ;;
-		h) printf -- '%s\n' "$help"; exit 0 ;;
-		*) printf -- '%s\n' "$help"; exit 1 ;;
-	esac
-done
+showHelp() {
+	if [ $# -eq 0 ]; then
+		printf -- '%s\n' "$(cat <<-'EOF'
+			Usage: hblock [options...]
+			 -O, --output FILE      Output file (default: /etc/hosts)
+			 -R, --redirection IP   Domain redirection IP (default: 0.0.0.0)
+			 -H, --header STRING    File header (default: see source code)
+			 -S, --sources STRING   Space separated URLs (default: see source code)
+			 -W, --whitelist STRING Space separated entries, POSIX basic regex (default: see source code)
+			 -B, --blacklist STRING Space separated entries (default: see source code)
+			 -b, --backup           Make a time-stamped backup (default: disabled)
+			 -l, --lenient          Select any IP address from sources (default: 0.0.0.0, 127.0.0.1 or none)
+			 -y, --yes              Automatic 'yes' to prompts (default: disabled)
+			 -n, --no               Automatic 'no' to prompts (default: disabled)
+			 -h, --help             Print this help
+		EOF
+		)"
+		exit 0
+	else
+		[ -n "$1" ] && printf -- '%s\n' "Illegal option $1"
+		printf -- '%s\n' "Try 'hblock --help' for more information"
+		exit 1
+	fi
+}
+
+setOptions() {
+	# Transform long options to short ones
+	for opt in "$@"; do
+		shift
+		case "$opt" in
+			'--output')      set -- "$@" '-O' ;;
+			'--redirection') set -- "$@" '-R' ;;
+			'--header')      set -- "$@" '-H' ;;
+			'--sources')     set -- "$@" '-S' ;;
+			'--whitelist')   set -- "$@" '-W' ;;
+			'--blacklist')   set -- "$@" '-B' ;;
+			'--backup')      set -- "$@" '-b' ;;
+			'--lenient')     set -- "$@" '-l' ;;
+			'--yes')         set -- "$@" '-y' ;;
+			'--no')          set -- "$@" '-n' ;;
+			'--help')        set -- "$@" '-h' ;;
+			*)               set -- "$@" "$opt"
+		esac
+	done
+
+	OPTIND=1
+	while getopts ':O:R:H:S:W:B:blynh-:' opt; do
+		case "$opt" in
+			'O') output="$OPTARG" ;;
+			'R') redirection="$OPTARG" ;;
+			'H') header="$OPTARG" ;;
+			'S') sources="$OPTARG" ;;
+			'W') whitelist="$OPTARG" ;;
+			'B') blacklist="$OPTARG" ;;
+			'b') backup='yes' ;;
+			'l') lenient='yes' ;;
+			'y') assume='yes' ;;
+			'n') assume='no' ;;
+			'h') showHelp ;;
+			'-') showHelp "--$OPTARG" ;;
+			*)   showHelp "-$OPTARG"
+		esac
+	done
+}
 
 # Process
 main() {
@@ -182,10 +212,7 @@ main() {
 		logMsg "$url"
 		content=$(fetchUrl "$url") || true
 
-		if
-			[ -z "$content" ] &&
-			! promptMsg 'Error downloading list, do you want to continue?'
-		then
+		if [ -z "$content" ] && ! promptMsg 'Error downloading list, do you want to continue?'; then
 			exit 1
 		fi
 
@@ -272,5 +299,6 @@ main() {
 	infoMsg "$blocklistCount blacklisted domains!"
 }
 
+setOptions "$@"
 main
 

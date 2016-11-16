@@ -1,5 +1,5 @@
 # hBlock
-This shell script, designed for Unix-like systems, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).
+This POSIX-compliant shell script, designed for Unix-like systems, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).
 
 ## What is this for?
 To prevent your system from connecting to domains that serve ads, tracking scripts and malware. This will increase the security of your system and save bandwidth.
@@ -14,20 +14,25 @@ Run latest version from GitHub:
 ```sh
 curl -sL 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' | sh
 ```
-You can also change the default behavior using these arguments:
+To install it:
+```sh
+sudo curl -sL 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /usr/local/bin/hblock
+sudo chmod a+rx /usr/local/bin/hblock
 ```
-Usage: hblock [OPTION]...
-  -O  Output file
-  -R  Redirection IP
-  -H  Hosts header
-  -S  Hosts sources (space separated entries)
-  -W  Whitelist (space separated entries, POSIX basic regex)
-  -B  Blacklist (space separated entries)
-  -b  Backup (make a time-stamped backup)
-  -l  Lenient (select any IP address)
-  -y  Automatic 'yes' to prompts
-  -n  Automatic 'no' to prompts
-  -h  Print this help
+You can also change the default behavior using these options:
+```
+Usage: hblock [options...]
+ -O, --output FILE      Output file (default: /etc/hosts)
+ -R, --redirection IP   Domain redirection IP (default: 0.0.0.0)
+ -H, --header STRING    File header (default: see source code)
+ -S, --sources STRING   Space separated URLs (default: see source code)
+ -W, --whitelist STRING Space separated entries, POSIX basic regex (default: see source code)
+ -B, --blacklist STRING Space separated entries (default: see source code)
+ -b, --backup           Make a time-stamped backup (default: disabled)
+ -l, --lenient          Select any IP address from sources (default: 0.0.0.0, 127.0.0.1 or none)
+ -y, --yes              Automatic 'yes' to prompts (default: disabled)
+ -n, --no               Automatic 'no' to prompts (default: disabled)
+ -h, --help             Print this help
 ```
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
