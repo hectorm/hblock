@@ -1,6 +1,6 @@
 # hBlock
-This POSIX-compliant shell script, designed for Unix-like systems, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).  
-If you don't want to run it, I provide pregenerated [nightly builds](#nightly-builds) of the hosts file and installers for Windows (batch file installer) and Android (flashable zip).
+This POSIX-compliant shell script, designed for Unix-like systems, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).
+I also provide [nightly builds](#nightly-builds) of the hosts file and installers for Windows (batch file installer) and Android (flashable zip).
 
 ## What is this for?
 To prevent your system from connecting to domains that serve ads, tracking scripts and malware. This will increase the security of your system and save bandwidth.
