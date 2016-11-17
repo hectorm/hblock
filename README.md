@@ -18,22 +18,21 @@ sudo chmod a+rx /usr/local/bin/hblock
 You can also change the default behavior using these options:
 ```
 Usage: hblock [options...]
- -O, --output FILE      Output file (default: /etc/hosts)
- -R, --redirection IP   Domain redirection IP (default: 0.0.0.0)
- -H, --header STRING    File header (default: see source code)
- -S, --sources STRING   Space separated URLs (default: see source code)
- -W, --whitelist STRING Space separated entries, POSIX basic regex (default: see source code)
- -B, --blacklist STRING Space separated entries (default: see source code)
- -b, --backup           Make a time-stamped backup (default: disabled)
- -l, --lenient          Select any IP address from sources (default: 0.0.0.0, 127.0.0.1 or none)
- -y, --yes              Automatic 'yes' to prompts (default: disabled)
- -n, --no               Automatic 'no' to prompts (default: disabled)
- -h, --help             Print this help
+ -O, --output FILE            Output file (default: /etc/hosts)
+ -R, --redirection IP         Domain redirection IP (default: 0.0.0.0)
+ -H, --header STRING          File header (default: see source code)
+ -S, --sources STRING         Space separated URLs (default: see source code)
+ -W, --whitelist STRING       Space separated entries, POSIX basic regex (default: see source code)
+ -B, --blacklist STRING       Space separated entries (default: see source code)
+ -b, --backup                 Make a time-stamped backup (default: disabled)
+ -l, --lenient                Select any IP address from sources (default: 0.0.0.0, 127.0.0.1 or none)
+ -i, --ignore-download-error  Do not abort on download error (default: disabled)
+ -h, --help                   Print this help
 ```
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
 ## Preview
-[![asciicast](https://asciinema.org/a/93086.png)](https://asciinema.org/a/93086)
+[![asciicast](https://asciinema.org/a/93152.png)](https://asciinema.org/a/93152)
 
 ## Is it safe to use?
 Absolutely, this script uses regular expressions to select only the domain names of the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.
