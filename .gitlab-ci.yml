@@ -8,28 +8,26 @@ pages:
   - apk add --no-cache curl zip tree dos2unix@testing
 # Create public folder
   - mkdir ./public
-  - cd ./public
 # Create hosts file
-  - sh ../hblock -O ./hosts
+  - sh ./hblock -O ./public/hosts
 # Create a gzipped version of hosts file
-  - gzip -c ./hosts > ./hosts.gz
+  - gzip -c ./public/hosts > ./public/hosts.gz
 # Create Android installer
-  - mkdir ./hosts_android
-  - cd ./hosts_android
-  - cp -r ../../resources/android/* ../hosts ./
-  - zip -r ../hosts_android.zip ./
-  - cd ../
-  - rm -r ./hosts_android
+  - mkdir /tmp/hosts_android
+  - cp -r ./resources/android/* ./public/hosts /tmp/hosts_android
+  - cd /tmp/hosts_android
+  - zip -r "$CI_PROJECT_DIR"/public/hosts_android.zip ./
+  - cd "$CI_PROJECT_DIR"
 # Create Windows installer
-  - mkdir ./hosts_windows
-  - cd ./hosts_windows
-  - cp -r ../../resources/windows/* ../hosts ./
-  - unix2dos ./install.bat ./hosts
-  - zip -r ../hosts_windows.zip ./
-  - cd ../
-  - rm -r ./hosts_windows
+  - mkdir /tmp/hosts_windows
+  - cp -r ./resources/windows/* ./public/hosts /tmp/hosts_windows
+  - cd /tmp/hosts_windows
+  - zip -r "$CI_PROJECT_DIR"/public/hosts_windows.zip ./
+  - cd "$CI_PROJECT_DIR"
+# Create stats file
+  - ./resources/stats.sh ./public/hosts > ./public/stats.txt
 # Create HTML index
-  - ../resources/template/index.sh ./
+  - ./resources/template/index.sh ./public
   artifacts:
     paths:
     - public

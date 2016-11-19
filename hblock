@@ -67,7 +67,6 @@ EOF
 
 # Default blacklist
 blacklist=$(cat <<-'EOF'
-	blacklist.example
 EOF
 )
 
