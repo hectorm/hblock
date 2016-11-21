@@ -60,6 +60,7 @@ These builds are created automatically using [GitLab CI](https://gitlab.com/zant
 - https://isc.sans.edu/feeds/suspiciousdomains_High.txt
 - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
+- https://raw.githubusercontent.com/Dawsey21/Lists/master/main-blacklist.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
