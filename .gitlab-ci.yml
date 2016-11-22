@@ -3,8 +3,7 @@ image: alpine
 pages:
   script:
 # Install required packages
-  - echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
-  - apk add --no-cache curl zip tree dos2unix@testing
+  - apk add --no-cache curl file zip
 # Create public folder
   - mkdir ./public
 # Create hosts file
@@ -21,12 +20,13 @@ pages:
   - mkdir /tmp/hosts_windows
   - cp -r ./resources/windows/* ./public/hosts /tmp/hosts_windows
   - cd /tmp/hosts_windows
+  - unix2dos ./install.bat ./hosts
   - zip -r "$CI_PROJECT_DIR"/public/hosts_windows.zip ./
   - cd "$CI_PROJECT_DIR"
 # Create stats file
   - ./resources/stats.sh ./public/hosts > ./public/stats.txt
 # Create HTML index
-  - ./resources/template/index.sh ./public
+  - ./resources/template/index.sh ./public > ./public/index.html
   artifacts:
     paths:
     - public

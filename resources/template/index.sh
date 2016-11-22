@@ -9,106 +9,171 @@ set -eu
 
 # Globals
 export LC_ALL=C
-readonly workDir="$1"
 
 # Process
-cd "$workDir"
+main() {
+	if [ $# -eq 0 ]; then
+		directory='./'
+	elif [ -d "$1" ] && [ -r "$1" ]; then
+		directory="$1"
+	else
+		>&2 printf -- '%s\n' "Cannot read directory '$1'"
+		exit 1
+	fi
 
-entries=$(find ./ -maxdepth 1 -type f ! -iname '*.html' -exec basename {} \; | sort | \
-	while read file; do
-		printf -- '%s\n' "\
-			<a class=\"row\" href=\"./$file\">
-				<div class=\"cell\">$file</div>
-				<div class=\"cell\">$(du -sh "$file" | cut -f1)</div>
-				<div class=\"cell\">$(date -ur "$file")</div>
-			</a>"
-	done
-)
+	entries=$(find "$directory" -maxdepth 1 \( -type f -o -type l \) ! -iname '*.html' | sort | \
+		while read file; do
+			fileName=$(basename "$file")
+			fileSize=$(du -shL "$file" | cut -f1)
+			fileType=$(file -bL --mime-type "$file")
+			fileDate=$(date -ur "$file" '+%Y-%m-%d %H:%M:%S %Z')
 
-# Index template
-cat > ./index.html <<EOF
-<!DOCTYPE html>
-<html>
+			# Entry template
+			printf -- '%s\n' "$(cat <<-EOF
+				<a class="row" href="./${fileName}">
+					<div class="cell">${fileName}</div>
+					<div class="cell">${fileSize}</div>
+					<div class="cell">${fileType}</div>
+					<div class="cell">${fileDate}</div>
+				</a>
+			EOF
+			)"
+		done
+	)
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	# Page template
+	printf -- '%s\n' "$(tr -d '\n' <<-EOF
+		<!DOCTYPE html>
+		<html>
 
-	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>hBlock files</title>
-	<meta name="description" content="Save bandwidth by blocking ads, tracking and malware domains">
-	<meta name="author" content="Héctor Molinero Fernández <hector@molinero.xyz>">
-	<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
+			<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:;">
+			<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-	<style>
-		html {
-			font-family: monospace;
-			font-size: 16px;
-			color: #424242;
-			background-color: #FAFAFA;
-		}
+			<title>Index of /hBlock</title>
+			<meta name="description" content="Save bandwidth by blocking ads, tracking and malware domains">
+			<meta name="author" content="Héctor Molinero Fernández <hector@molinero.xyz>">
+			<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
 
-		a {
-			color: inherit;
-			text-decoration: none;
-			border-bottom: 1px dashed #424242;
-		}
+			<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
 
-		#container {
-			margin: 0 auto;
-			width: 100%;
-			max-width: 1000px;
-			white-space: nowrap;
-		}
+			<style>
+				html {
+					font-family: monospace;
+					font-size: 14px;
+					color: #424242;
+					background-color: #FAFAFA;
+				}
 
-		.title {
-			margin: 30px 20px;
-			font-size: 24px;
-		}
+				a {
+					color: inherit;
+					text-decoration: none;
+				}
 
-		.table {
-			display: table;
-			width: 100%;
-		}
+				#container {
+					margin: 40px auto;
+					width: 100%;
+					max-width: 1000px;
+				}
 
-		.table > .row {
-			display: table-row;
-		}
+				.title {
+					margin: 0 10px 10px;
+					font-size: 22px;
+				}
 
-		.table > .row > .cell {
-			display: table-cell;
-			padding: 15px 20px;
-			width: 33%;
-			border-bottom: 1px solid #E0E0E0;
-		}
+				.table {
+					display: table;
+					width: 100%;
+					border-collapse: collapse;
+				}
 
-		.table > .row:first-child {
-			font-weight: bold;
-		}
+				.row {
+					display: table-row;
+					border-bottom: 1px solid #BDBDBD;
+				}
 
-		.table > a.row:hover,
-		.table > a.row:focus {
-			background-color: #EEE;
-		}
-	</style>
-</head>
+				.cell {
+					display: table-cell;
+					padding: 15px 10px;
+					width: 25%;
+					white-space: nowrap;
+				}
 
-<body>
-	<div id="container">
-		<h1 class="title"><a href="https://github.com/zant95/hBlock">hBlock</a> files</h1>
-		<div class="table">
-			<div class="row">
-				<div class="cell">Name</div>
-				<div class="cell">Size</div>
-				<div class="cell">Last modified</div>
+				.row:first-child {
+					font-weight: bold;
+				}
+
+				a.row:hover,
+				a.row:focus {
+					background-color: #EEE;
+				}
+
+				@media all and (max-width: 640px) {
+					.table, .row, .cell {
+						display: block;
+					}
+
+					.row {
+						padding: 15px 10px;
+					}
+
+					.row:first-child {
+						display: none;
+					}
+
+					.cell {
+						padding: 5px 0;
+						width: auto;
+						white-space: normal;
+					}
+
+					.cell::before {
+						display: inline-block;
+						margin-right: 5px;
+						font-weight: bold;
+					}
+
+					.cell:nth-child(1)::before {
+						content: 'Filename:';
+					}
+
+					.cell:nth-child(2)::before {
+						content: 'Size:';
+					}
+
+					.cell:nth-child(3)::before {
+						content: 'Type:';
+					}
+
+					.cell:nth-child(4)::before {
+						content: 'Modified:';
+					}
+				}
+			</style>
+		</head>
+
+		<body>
+			<div id="container">
+				<h1 class="title">Index of <a href="https://github.com/zant95/hBlock">/hBlock</a></h1>
+				<div class="table">
+					<div class="row">
+						<div class="cell">Filename</div>
+						<div class="cell">Size</div>
+						<div class="cell">Type</div>
+						<div class="cell">Modified</div>
+					</div>
+					${entries}
+				</div>
 			</div>
-$entries
-		</div>
-	</div>
-</body>
+		</body>
 
-</html>
-EOF
+		</html>
+	EOF
+	)"
+}
+
+main "$@"
 
