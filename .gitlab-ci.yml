@@ -3,7 +3,6 @@ image: alpine
 pages:
   script:
 # Install required packages
-  - cat /etc/apk/repositories
   - echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
   - apk add --no-cache curl zip tree dos2unix@testing
 # Create public folder

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/misc
+# Repository: https://github.com/zant95/hBlock
 # License:    MIT, https://opensource.org/licenses/MIT
 #
 

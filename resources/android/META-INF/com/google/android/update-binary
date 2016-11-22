@@ -140,21 +140,6 @@ remount_rw() {
   if (! is_mounted "$1" rw); then toolbox_mount "$1"; fi
 }
 
-# 'readlink -f' is not reliable across devices/recoveries, this works for our case
-resolve_link() {
-  local RESOLVE=$1
-  local RESOLVED=
-  while (true); do
-    RESOLVED=$(readlink $RESOLVE || echo $RESOLVE)
-    if [ "$RESOLVE" = "$RESOLVED" ]; then
-      echo $RESOLVE
-      break
-    else
-      RESOLVE=$RESOLVED
-    fi
-  done
-}
-
 if [ ! -f "/sbin/unzip" ]; then
   ui_print "- BAD RECOVERY DETECTED, NO UNZIP, ABORTING"
   exit 1
