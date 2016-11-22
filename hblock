@@ -46,6 +46,10 @@ sources=$(cat <<-'EOF'
 	https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 	https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
 	https://raw.githubusercontent.com/Dawsey21/Lists/master/main-blacklist.txt
+	https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.2o7Net/hosts
+	https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Dead/hosts
+	https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Risk/hosts
+	https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
 	https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 	https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
 	https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
@@ -61,7 +65,6 @@ EOF
 #     ^example            -> all domains that starts with 'example'.
 #     ^sub\.example\.org$ -> domain 'sub.example.org'.
 whitelist=$(cat <<-'EOF'
-	^whitelist\.example$
 	^adf\.ly$
 EOF
 )

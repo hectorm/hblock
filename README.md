@@ -32,7 +32,7 @@ Usage: hblock [options...]
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
 ## Preview
-[![asciicast](https://asciinema.org/a/93152.png)](https://asciinema.org/a/93152)
+[![asciicast](https://asciinema.org/a/93694.png)](https://asciinema.org/a/93694)
 
 ## Is it safe to use?
 Absolutely, this script uses regular expressions to select only the domain names of the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.
@@ -61,6 +61,10 @@ These builds are created automatically using [GitLab CI](https://gitlab.com/zant
 - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 - https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
 - https://raw.githubusercontent.com/Dawsey21/Lists/master/main-blacklist.txt
+- https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.2o7Net/hosts
+- https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Dead/hosts
+- https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Risk/hosts
+- https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
 - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
 - https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
