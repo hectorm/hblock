@@ -236,7 +236,7 @@ main() {
 		blocklist=$(printf -- '%s' "$blocklist" | sed -n "/^\($ipRegex[[:blank:]]\{1,\}\)\{0,1\}$domainRegex$/p")
 
 		printInfo 'Remove old destination'
-		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^.\{1,\}[[:blank:]]\{1,\}//g")
+		blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]]\{1,\}//g')
 
 		printInfo 'Transform all entries to lowercase'
 		blocklist=$(printf -- '%s' "$blocklist" | tr '[:upper:]' '[:lower:]')
