@@ -12,17 +12,20 @@ export LC_ALL=C
 
 # Process
 main() {
-	if [ $# -eq 0 ]; then
-		directory='./'
-	elif [ -d "$1" ] && [ -r "$1" ]; then
-		directory="$1"
-	else
-		>&2 printf -- '%s\n' "Cannot read directory '$1'"
+	directory="${1:-./}"
+
+	if ! [ -d "$directory" ] || ! [ -r "$directory" ]; then
+		>&2 printf -- '%s\n' "Cannot read directory '$directory'"
 		exit 1
 	fi
 
-	entries=$(find "$directory" -maxdepth 1 \( -type f -o -type l \) ! -iname '*.html' | sort | \
+	entries=$(find -L "$directory" -maxdepth 1 -type f ! -iname '*.html' | sort | \
 		while read file; do
+			if ! [ -r "$file" ]; then
+				>&2 printf -- '%s\n' "Cannot read file '$file'"
+				continue
+			fi
+
 			fileName=$(basename "$file")
 			fileSize=$(du -shL "$file" | cut -f1)
 			fileType=$(file -bL --mime-type "$file")
@@ -111,7 +114,7 @@ main() {
 					background-color: #EEE;
 				}
 
-				@media all and (max-width: 640px) {
+				@media all and (max-width: 768px) {
 					.table, .row, .cell {
 						display: block;
 					}
@@ -125,7 +128,7 @@ main() {
 					}
 
 					.cell {
-						padding: 5px 0;
+						padding: 0 0 5px;
 						width: auto;
 						white-space: normal;
 					}
