@@ -24,8 +24,8 @@ pages:
   - zip -r "$CI_PROJECT_DIR"/public/hosts_windows.zip ./
   - cd "$CI_PROJECT_DIR"
 # Create stats files
-  - ./resources/stats/stats_suffix.sh ./public/hosts none > ./public/most_abused_tlds.txt
-  - ./resources/stats/stats_suffix.sh ./public/hosts > ./public/most_abused_suffixes.txt
+  - ./resources/stats/suffix.sh ./public/hosts none > ./public/most_abused_tlds.txt
+  - ./resources/stats/suffix.sh ./public/hosts > ./public/most_abused_suffixes.txt
 # Create HTML index
   - ./resources/template/index.sh ./public > ./public/index.html
   artifacts:
