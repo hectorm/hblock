@@ -3,7 +3,7 @@ image: alpine
 pages:
   script:
 # Install required packages
-  - apk add --no-cache curl file zip
+  - apk add --no-cache curl file gawk grep libidn sed zip
 # Create public folder
   - mkdir ./public
 # Create hosts file
@@ -23,8 +23,9 @@ pages:
   - unix2dos ./install.bat ./hosts
   - zip -r "$CI_PROJECT_DIR"/public/hosts_windows.zip ./
   - cd "$CI_PROJECT_DIR"
-# Create stats file
-  - ./resources/stats.sh ./public/hosts > ./public/stats.txt
+# Create stats files
+  - ./resources/stats/stats_suffix.sh ./public/hosts none > ./public/most_abused_tlds.txt
+  - ./resources/stats/stats_suffix.sh ./public/hosts > ./public/most_abused_suffixes.txt
 # Create HTML index
   - ./resources/template/index.sh ./public > ./public/index.html
   artifacts:
