@@ -88,7 +88,7 @@ printError() {
 }
 
 checkBinary() {
-	type "$@" >/dev/null 2>&1
+	command -v -- "$@" >/dev/null 2>&1
 }
 
 checkDownloadAbility() {
