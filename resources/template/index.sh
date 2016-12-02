@@ -19,8 +19,8 @@ main() {
 		exit 1
 	fi
 
-	entries=$(find -L "$directory" -maxdepth 1 -type f ! -iname '*.html' | sort | \
-		while read file; do
+	entries=$(find -L "$directory" -maxdepth 1 -type f ! -iname '*.html' | sort |
+		while IFS= read -r file; do
 			if ! [ -r "$file" ]; then
 				>&2 printf -- '%s\n' "Cannot read file '$file'"
 				continue
@@ -102,7 +102,7 @@ main() {
 					display: table-cell;
 					padding: 15px 10px;
 					width: 25%;
-					white-space: nowrap;
+					white-space: pre;
 				}
 
 				.row:first-child {
