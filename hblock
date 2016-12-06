@@ -287,7 +287,7 @@ main() {
 	blockListDate=$(date -u)
 	blocklistCount='0'
 	if [ -n "$blocklist" ]; then
-		blocklistCount=$(printf -- '%s\n' "$blocklist" | wc -l)
+		blocklistCount=$(printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]')
 	fi
 
 	hosts=$(cat <<-EOF
