@@ -24,7 +24,7 @@ main() {
 	stats=''
 
 	# Get blocklist content
-	blocklist=$(cat -- "$file" | \
+	blocklist=$(cat -- "$file" |
 		awk '/<blocklist>/{p=1;next}/<\/blocklist>/{p=0}p' |
 		sed 's/^.\{1,\}[[:blank:]][^.]\{1,\}//'
 	)
@@ -34,8 +34,8 @@ main() {
 		suffixes=$(curl -fsSL -- "$publicSuffixList")
 
 		# Transform suffix list (punycode encode and sort by length in descending order)
-		suffixes=$(printf -- '%s\n' "$suffixes" | \
-			sed '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' | CHARSET=UTF-8 idn | \
+		suffixes=$(printf -- '%s\n' "$suffixes" |
+			sed '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' | CHARSET=UTF-8 idn |
 			awk '{print length($0)":."$0}' | sort -nr | cut -d: -f2
 		)
 
@@ -55,9 +55,9 @@ main() {
 
 	# If blocklist is not empty use TLD as suffix
 	if [ -n "$blocklist" ]; then
-		tldStats=$(printf -- '%s' "$blocklist" | \
-			grep -o '\.[^.]\{1,\}$' | sort | uniq -c | \
-			sed 's/^[[:blank:]]\{1,\}\([0-9]\{1,\}\)[[:blank:]]\{1,\}/\1\t/'
+		tldStats=$(printf -- '%s' "$blocklist" |
+			grep -o '\.[^.]\{1,\}$' | sort | uniq -c |
+			sed 's/^[[:blank:]]*\([0-9]\{1,\}\)[[:blank:]]\{1,\}/\1	/'
 		)
 
 		stats=$(printf -- '%s\n%s' "$tldStats" "$stats")
