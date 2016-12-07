@@ -2,32 +2,8 @@ image: alpine
 
 pages:
   script:
-# Install required packages
-  - apk add --no-cache curl file gawk grep libidn sed zip
-# Create public folder
-  - mkdir ./public
-# Create hosts file
-  - sh ./hblock -O ./public/hosts
-# Create a gzipped version of hosts file
-  - gzip -c ./public/hosts > ./public/hosts.gz
-# Create Android installer
-  - mkdir /tmp/hosts_android
-  - cp -r ./resources/android/* ./public/hosts /tmp/hosts_android
-  - cd /tmp/hosts_android
-  - zip -r "$CI_PROJECT_DIR"/public/hosts_android.zip ./
-  - cd "$CI_PROJECT_DIR"
-# Create Windows installer
-  - mkdir /tmp/hosts_windows
-  - cp -r ./resources/windows/* ./public/hosts /tmp/hosts_windows
-  - cd /tmp/hosts_windows
-  - unix2dos ./install.bat ./hosts
-  - zip -r "$CI_PROJECT_DIR"/public/hosts_windows.zip ./
-  - cd "$CI_PROJECT_DIR"
-# Create stats files
-  - ./resources/stats/suffix.sh ./public/hosts none > ./public/most_abused_tlds.txt
-  - ./resources/stats/suffix.sh ./public/hosts > ./public/most_abused_suffixes.txt
-# Create HTML index
-  - ./resources/template/index.sh ./public > ./public/index.html
+  - apk add --no-cache curl file gawk grep libidn make sed zip
+  - make all
   artifacts:
     paths:
     - public
