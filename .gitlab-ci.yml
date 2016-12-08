@@ -3,7 +3,8 @@ image: alpine
 pages:
   script:
   - apk add --no-cache curl file gawk grep libidn make sed zip
-  - make all
+  - make build stats index
+  - mv dist public
   artifacts:
     paths:
     - public
