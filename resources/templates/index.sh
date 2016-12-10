@@ -27,7 +27,7 @@ main() {
 			fi
 
 			fileName=$(basename "$file")
-			fileSize=$(du -shL "$file" | cut -f1)
+			fileSize=$(wc -c < "$file" | awk '{printf "%0.2f kB", $1 / 1000}')
 			fileType=$(file -bL --mime-type "$file")
 			fileDate=$(date -ur "$file" '+%Y-%m-%d %H:%M:%S %Z')
 
