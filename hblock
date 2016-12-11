@@ -223,10 +223,10 @@ main() {
 		blocklist=$(printf -- '%s' "$blocklist" | tr -d '\r')
 
 		printInfo 'Remove comments'
-		blocklist=$(printf -- '%s' "$blocklist" | sed 's/#.*$//g')
+		blocklist=$(printf -- '%s' "$blocklist" | sed 's/#.*//')
 
 		printInfo 'Trim spaces'
-		blocklist=$(printf -- '%s' "$blocklist" | sed 's/[[:blank:]]*$//g;s/^[[:blank:]]*//g')
+		blocklist=$(printf -- '%s' "$blocklist" | sed 's/^[[:blank:]]*//;s/[[:blank:]]*$//')
 
 		printInfo 'Select only hosts lines'
 		if [ "$lenient" = 'yes' ]; then
@@ -238,7 +238,7 @@ main() {
 		blocklist=$(printf -- '%s' "$blocklist" | sed -n "/^\($ipRegex[[:blank:]]\{1,\}\)\{0,1\}$domainRegex$/p")
 
 		printInfo 'Remove old destination'
-		blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]]\{1,\}//g')
+		blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]]\{1,\}//')
 
 		printInfo 'Transform all entries to lowercase'
 		blocklist=$(printf -- '%s' "$blocklist" | tr '[:upper:]' '[:lower:]')
@@ -276,7 +276,7 @@ main() {
 
 		printInfo 'Add new destination'
 		redirection=$(escapeSedReplacement "$redirection")
-		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^\(.\{1,\}\)$/$redirection \1/")
+		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$redirection /")
 	fi
 
 	# Backup procedure
