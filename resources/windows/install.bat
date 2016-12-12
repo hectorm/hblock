@@ -2,6 +2,9 @@
 :: Repository: https://github.com/zant95/hBlock
 :: License:    MIT, https://opensource.org/licenses/MIT
 
+:: This script needs administrator privileges.
+:: WARNING: consider disabling "DNS Client" service if your machine slows down.
+
 @echo off
 
 set "source=%~dp0hosts"
