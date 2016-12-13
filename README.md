@@ -1,16 +1,30 @@
 # hBlock
-This POSIX-compliant shell script, designed for Unix-like systems, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).
-I also provide [nightly builds](#nightly-builds) of the hosts file and installers for Windows (batch file installer) and Android (flashable zip).
+
+[![Build](https://gitlab.com/zant95/hblock/badges/master/build.svg)](https://gitlab.com/zant95/hblock/pipelines)
+[![Website](https://img.shields.io/website/https/hblock.molinero.xyz.svg)](https://hblock.molinero.xyz)
+[![License](https://img.shields.io/github/license/zant95/hblock.svg)](LICENSE)
+
+This POSIX-compliant shell script, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).
+I also provide nightly builds of the hosts file and installers for Windows (batch file installer) and Android (flashable zip).
+
+| URL                             | Type      |
+| ------------------------------- | :-------: |
+| https://hblock.molinero.xyz     | Primary   |
+| https://zant95.gitlab.io/hblock | Mirror    |
 
 ## What is this for?
 To prevent your system from connecting to domains that serve ads, tracking scripts and malware. This will increase the security of your system and save bandwidth.
+
+## Is it safe to use?
+Absolutely, this script selects only the domain names in the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.
+In the worst scenario you can lose access to a legitimate domain name due a false positive, but you can reverse it by adding that domain to the whitelist.
 
 ## Usage
 Run latest version from GitHub:
 ```sh
 curl -fsS 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' | sh
 ```
-Local install:
+Local installation:
 ```sh
 sudo curl -fsS 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /usr/local/bin/hblock
 sudo chmod a+rx /usr/local/bin/hblock
@@ -34,9 +48,6 @@ Usage: hblock [options...]
 ## Preview
 [![asciicast](https://asciinema.org/a/95561.png)](https://asciinema.org/a/95561)
 
-## Is it safe to use?
-Absolutely, this script uses regular expressions to select only the domain names of the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.
-
 ## What about Windows users?
 Unfortunately, this script only works on Unix-like systems, but there is some workarounds by using console emulators like [Cmder](http://cmder.net), that includes the necessary tools to run this script.
 Simply use the output argument with the appropriate hosts file location:
@@ -46,33 +57,28 @@ hblock -O "%SystemRoot%\System32\drivers\etc\hosts"
 
 Alternatively, you can use [this project](https://github.com/StevenBlack/hosts) written in Python that has a similar approach or try [Bash on Ubuntu on Windows](https://github.com/Microsoft/BashOnWindows).
 
-## Nightly builds
-These builds are created automatically using [GitLab CI](https://gitlab.com/zant95/hblock/pipelines) and are triggered with an [Amazon Lambda function](https://gist.github.com/zant95/b181089dac06205c7fd18190e6ab8e67).
-- https://hblock.molinero.xyz
-- https://zant95.gitlab.io/hblock (mirror)
-
 ## Sources
-| Name                                  |                                                     |                                                     |
-| ------------------------------------- | :-------------------------------------------------: | :-------------------------------------------------: |
-| adaway.org                            | [source][source-adaway.org]                         | [mirror][mirror-adaway.org]                         |
-| disconnect.me - Ad                    | [source][source-disconnect.me-ad]                   | [mirror][mirror-disconnect.me-ad]                   |
-| disconnect.me - Malvertising          | [source][source-disconnect.me-malvertising]         | [mirror][mirror-disconnect.me-malvertising]         |
-| disconnect.me - Malware               | [source][source-disconnect.me-malware]              | [mirror][mirror-disconnect.me-malware]              |
-| disconnect.me - Tracking              | [source][source-disconnect.me-tracking]             | [mirror][mirror-disconnect.me-tracking]             |
-| FadeMind - add.2o7Net                 | [source][source-fademind-add.2o7net]                | [mirror][mirror-fademind-add.2o7net]                |
-| FadeMind - add.Dead                   | [source][source-fademind-add.dead]                  | [mirror][mirror-fademind-add.dead]                  |
-| FadeMind - add.Risk                   | [source][source-fademind-add.risk]                  | [mirror][mirror-fademind-add.risk]                  |
-| FadeMind - add.Spam                   | [source][source-fademind-add.spam]                  | [mirror][mirror-fademind-add.spam]                  |
-| KADhosts                              | [source][source-kadhosts]                           | [mirror][mirror-kadhosts]                           |
-| malwaredomainlist.com                 | [source][source-malwaredomainlist.com]              | [mirror][mirror-malwaredomainlist.com]              |
-| malwaredomains.com - Immortal domains | [source][source-malwaredomains.com-immortaldomains] | [mirror][mirror-malwaredomains.com-immortaldomains] |
-| malwaredomains.com - Just domains     | [source][source-malwaredomains.com-justdomains]     | [mirror][mirror-malwaredomains.com-justdomains]     |
-| pgl.yoyo.org                          | [source][source-pgl.yoyo.org]                       | [mirror][mirror-pgl.yoyo.org]                       |
-| ransomwaretracker.abuse.ch            | [source][source-ransomwaretracker.abuse.ch]         | [mirror][mirror-ransomwaretracker.abuse.ch]         |
-| someonewhocares.org                   | [source][source-someonewhocares.org]                | [mirror][mirror-someonewhocares.org]                |
-| spam404.com                           | [source][source-spam404.com]                        | [mirror][mirror-spam404.com]                        |
-| winhelp2002.mvps.org                  | [source][source-winhelp2002.mvps.org]               | [mirror][mirror-winhelp2002.mvps.org]               |
-| zeustracker.abuse.ch                  | [source][source-zeustracker.abuse.ch]               | [mirror][mirror-zeustracker.abuse.ch]               |
+| Name                                  | Primary                                          | Mirror                                           |
+| ------------------------------------- | :----------------------------------------------: | :----------------------------------------------: |
+| adaway.org                            | [URL][source-adaway.org]                         | [URL][mirror-adaway.org]                         |
+| disconnect.me - Ad                    | [URL][source-disconnect.me-ad]                   | [URL][mirror-disconnect.me-ad]                   |
+| disconnect.me - Malvertising          | [URL][source-disconnect.me-malvertising]         | [URL][mirror-disconnect.me-malvertising]         |
+| disconnect.me - Malware               | [URL][source-disconnect.me-malware]              | [URL][mirror-disconnect.me-malware]              |
+| disconnect.me - Tracking              | [URL][source-disconnect.me-tracking]             | [URL][mirror-disconnect.me-tracking]             |
+| FadeMind - add.2o7Net                 | [URL][source-fademind-add.2o7net]                | [URL][mirror-fademind-add.2o7net]                |
+| FadeMind - add.Dead                   | [URL][source-fademind-add.dead]                  | [URL][mirror-fademind-add.dead]                  |
+| FadeMind - add.Risk                   | [URL][source-fademind-add.risk]                  | [URL][mirror-fademind-add.risk]                  |
+| FadeMind - add.Spam                   | [URL][source-fademind-add.spam]                  | [URL][mirror-fademind-add.spam]                  |
+| KADhosts                              | [URL][source-kadhosts]                           | [URL][mirror-kadhosts]                           |
+| malwaredomainlist.com                 | [URL][source-malwaredomainlist.com]              | [URL][mirror-malwaredomainlist.com]              |
+| malwaredomains.com - Immortal domains | [URL][source-malwaredomains.com-immortaldomains] | [URL][mirror-malwaredomains.com-immortaldomains] |
+| malwaredomains.com - Just domains     | [URL][source-malwaredomains.com-justdomains]     | [URL][mirror-malwaredomains.com-justdomains]     |
+| pgl.yoyo.org                          | [URL][source-pgl.yoyo.org]                       | [URL][mirror-pgl.yoyo.org]                       |
+| ransomwaretracker.abuse.ch            | [URL][source-ransomwaretracker.abuse.ch]         | [URL][mirror-ransomwaretracker.abuse.ch]         |
+| someonewhocares.org                   | [URL][source-someonewhocares.org]                | [URL][mirror-someonewhocares.org]                |
+| spam404.com                           | [URL][source-spam404.com]                        | [URL][mirror-spam404.com]                        |
+| winhelp2002.mvps.org                  | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
+| zeustracker.abuse.ch                  | [URL][source-zeustracker.abuse.ch]               | [URL][mirror-zeustracker.abuse.ch]               |
 
 [source-adaway.org]: https://adaway.org/hosts.txt
 [mirror-adaway.org]: https://raw.githubusercontent.com/zant95/hmirror/master/data/adaway.org/list.txt
@@ -116,9 +122,6 @@ These builds are created automatically using [GitLab CI](https://gitlab.com/zant
 ## Disclaimer
 - **Read the script** to make sure it is what you need.
 - This script, by default, replaces the `/etc/hosts` file of your system. I am not responsible for any damage or loss, always make backups.
-
-## I hear those things are awfully loud...
-It glides as softly as a cloud.
 
 ## License
 See the [license](LICENSE) file.
