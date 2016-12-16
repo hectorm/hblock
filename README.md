@@ -1,34 +1,59 @@
-# hBlock
-
 [![Build](https://gitlab.com/zant95/hblock/badges/master/build.svg)](https://gitlab.com/zant95/hblock/pipelines)
 [![Website](https://img.shields.io/website/https/hblock.molinero.xyz.svg)](https://hblock.molinero.xyz)
 [![License](https://img.shields.io/github/license/zant95/hblock.svg)](LICENSE)
 
-This POSIX-compliant shell script, generates a [hosts file](http://man7.org/linux/man-pages/man5/hosts.5.html) based on [popular and reputable sources](#sources).
-I also provide nightly builds of the hosts file and installers for Windows (batch file installer) and Android (flashable zip).
+***
+
+# hBlock
+Improve your security and privacy by blocking ads, tracking and malware domains.
+
+## Table of contents
+* [What is this for?](#what-is-this-for)
+* [Is it safe to use?](#is-it-safe-to-use)
+* [Nightly builds](#nightly-builds)
+* [Usage](#usage)
+  * [Run latest version](#run-latest-version)
+  * [Local installation](#local-installation)
+  * [Script arguments](#script-arguments)
+  * [Run preview](#run-preview)
+* [Sources](#sources)
+* [Disclaimer](#disclaimer)
+* [License](#license)
+
+## What is this for?
+This POSIX-compliant shell script, designed for Unix-like systems, gets a list of domains that serve ads, tracking scripts and malware from
+multiple [reputable sources](#sources) and creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)) that prevents your system from
+connecting to them.
+
+## Is it safe to use?
+Absolutely, this script selects only the domain names for each source, so if a domain name is redirected to a rogue server your system will not be
+affected. In the worst scenario you can lose access to a legitimate domain name due a false positive, but you can reverse it by adding that domain to
+the whitelist.
+
+## Nightly builds
+I provide nightly builds of the hosts file and installers for **Windows** (batch file installer) and **Android** (flashable zip).
 
 | URL                             | Type      |
 | ------------------------------- | :-------: |
 | https://hblock.molinero.xyz     | Primary   |
 | https://zant95.gitlab.io/hblock | Mirror    |
 
-## What is this for?
-To prevent your system from connecting to domains that serve ads, tracking scripts and malware. This will increase the security of your system and save bandwidth.
-
-## Is it safe to use?
-Absolutely, this script selects only the domain names in the source files, so if a source file redirects a domain name to a rogue server your system will not be affected.
-In the worst scenario you can lose access to a legitimate domain name due a false positive, but you can reverse it by adding that domain to the whitelist.
-
 ## Usage
-Run latest version from GitHub:
+
+#### Run latest version
 ```sh
 curl -fsS 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' | sh
 ```
-Local installation:
+
+#### Local installation
 ```sh
 sudo curl -fsS 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /usr/local/bin/hblock
 sudo chmod a+rx /usr/local/bin/hblock
 ```
+
+**Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
+
+#### Script arguments
 You can also change the default behavior using these options:
 ```
 Usage: hblock [options...]
@@ -43,19 +68,9 @@ Usage: hblock [options...]
  -i, --ignore-download-error  Do not abort on download error (default: disabled)
  -h, --help                   Print this help
 ```
-**Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
 
-## Preview
+#### Run preview
 [![asciicast](https://asciinema.org/a/95561.png)](https://asciinema.org/a/95561)
-
-## What about Windows users?
-Unfortunately, this script only works on Unix-like systems, but there is some workarounds by using console emulators like [Cmder](http://cmder.net), that includes the necessary tools to run this script.
-Simply use the output argument with the appropriate hosts file location:
-```
-hblock -O "%SystemRoot%\System32\drivers\etc\hosts"
-```
-
-Alternatively, you can use [this project](https://github.com/StevenBlack/hosts) written in Python that has a similar approach or try [Bash on Ubuntu on Windows](https://github.com/Microsoft/BashOnWindows).
 
 ## Sources
 | Name                                  | Primary                                          | Mirror                                           |
@@ -120,8 +135,7 @@ Alternatively, you can use [this project](https://github.com/StevenBlack/hosts) 
 [mirror-zeustracker.abuse.ch]: https://raw.githubusercontent.com/zant95/hmirror/master/data/zeustracker.abuse.ch/list.txt
 
 ## Disclaimer
-- **Read the script** to make sure it is what you need.
-- This script, by default, replaces the `/etc/hosts` file of your system. I am not responsible for any damage or loss, always make backups.
+This script, by default, replaces the `/etc/hosts` file of your system. I am not responsible for any damage or loss, always make backups.
 
 ## License
 See the [license](LICENSE) file.
