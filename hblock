@@ -65,7 +65,6 @@ EOF
 #     ^example            -> all domains that starts with 'example'.
 #     ^sub\.example\.org$ -> domain 'sub.example.org'.
 whitelist=$(cat <<-'EOF'
-	^adf\.ly$
 EOF
 )
 
