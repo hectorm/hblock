@@ -22,6 +22,7 @@ redirection='0.0.0.0'
 backup='no'
 lenient='no'
 ignoreDownloadError='no'
+userDefined=''
 
 # Default header
 header=$(cat <<-EOF
@@ -278,10 +279,17 @@ main() {
 		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$redirection /")
 	fi
 
-	# Backup procedure
-	if [ -f "$output" ] && [ "$backup" = 'yes' ]; then
-		printAction 'Backing up hosts file...'
-		writeFile "$(cat -- "$output")" "$output.$(date +%s).bak"
+	if [ -f "$output" ]; then
+		currentContent=$(cat -- "$output")
+
+		# Get user defined section
+		userDefined=$(printf -- '%s' "$currentContent" | sed -n '/^#.*<user-defined>/,/^#.*<\/user-defined>/p')
+
+		# Backup procedure
+		if [ "$backup" = 'yes' ]; then
+			printAction 'Backing up hosts file...'
+			writeFile "$currentContent" "$output.$(date +%s).bak"
+		fi
 	fi
 
 	# Hosts file template
@@ -300,7 +308,7 @@ main() {
 		# <header>
 		$header
 		# </header>
-
+		$userDefined
 		# <blocklist>
 		$blocklist
 		# </blocklist>
