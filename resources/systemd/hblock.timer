@@ -1,0 +1,11 @@
+[Unit]
+Description=Update hosts file to blackhole ad sites
+
+[Timer]
+# Run every Sunday at midnight
+OnCalendar=Sun *-*-* 00:00:00
+Persistent=true
+Unit=hblock.service
+
+[Install]
+WantedBy=timers.target
