@@ -1,6 +1,6 @@
-Assuming hBlock directory is /var/git/hBlock, you will have to change the
-commands if you are using a different directory. You can edit hBlock.timer to
-change the schedule for running hBlock, by default it is set to run every
+Assuming hblock directory is /var/git/hBlock, you will have to change the
+commands if you are using a different directory. You can edit hblock.timer to
+change the schedule for running hblock, by default it is set to run every
 Sunday at midnight.
 
 Apologies for being too lazy to write an actual installer script, but it's only
@@ -8,10 +8,10 @@ four commands so is it really worth it?
 
 Install steps:
 
-sudo ln -s /var/git/hBlock/hBlock /usr/local/bin/hBlock
-sudo systemctl enable /var/git/hBlock/systemd/hBlock.service
+sudo ln -s /var/git/hBlock/hblock /usr/local/bin/hblock
+sudo systemctl enable /var/git/hBlock/systemd/hblock.service
   (you may get a warning about not having an install directive,
   it is safe to ignore this because the install directive is in
-  the hBlock.timer file that will get loaded next.)
-sudo systemctl enable /var/git/hBlock/systemd/hBlock.timer
-sudo systemctl start hBlock.timer
+  the hblock.timer file that will get loaded next.)
+sudo systemctl enable /var/git/hBlock/systemd/hblock.timer
+sudo systemctl start hblock.timer

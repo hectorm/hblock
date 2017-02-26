@@ -3,4 +3,4 @@ Description=Update hosts file to blackhole ad sites
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/hBlock
+ExecStart=/usr/local/bin/hblock
