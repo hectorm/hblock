@@ -1,6 +1,6 @@
 [![Build](https://gitlab.com/zant95/hblock/badges/master/build.svg)](https://gitlab.com/zant95/hblock/pipelines)
 [![Website](https://img.shields.io/website/https/hblock.molinero.xyz.svg)](https://hblock.molinero.xyz)
-[![License](https://img.shields.io/github/license/zant95/hblock.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/zant95/hblock.svg)](LICENSE.md)
 
 ***
 
@@ -138,5 +138,5 @@ Usage: hblock [options...]
 This script, by default, replaces the `/etc/hosts` file of your system. I am not responsible for any damage or loss, always make backups.
 
 ## License
-See the [license](LICENSE) file.
+See the [license](LICENSE.md) file.
 
