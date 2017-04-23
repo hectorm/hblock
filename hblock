@@ -55,7 +55,6 @@ sources=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/someonewhocares.org/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/spam404.com/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/stopforumspam.com/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/winhelp2002.mvps.org/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/zeustracker.abuse.ch/list.txt
 EOF

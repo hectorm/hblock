@@ -92,7 +92,6 @@ Usage: hblock [options...]
 | ransomwaretracker.abuse.ch            | [URL][source-ransomwaretracker.abuse.ch]         | [URL][mirror-ransomwaretracker.abuse.ch]         |
 | someonewhocares.org                   | [URL][source-someonewhocares.org]                | [URL][mirror-someonewhocares.org]                |
 | spam404.com                           | [URL][source-spam404.com]                        | [URL][mirror-spam404.com]                        |
-| stopforumspam.com                     | [URL][source-stopforumspam.com]                  | [URL][mirror-stopforumspam.com]                  |
 | winhelp2002.mvps.org                  | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
 | zeustracker.abuse.ch                  | [URL][source-zeustracker.abuse.ch]               | [URL][mirror-zeustracker.abuse.ch]               |
 
@@ -130,8 +129,6 @@ Usage: hblock [options...]
 [mirror-someonewhocares.org]: https://raw.githubusercontent.com/zant95/hmirror/master/data/someonewhocares.org/list.txt
 [source-spam404.com]: https://raw.githubusercontent.com/Dawsey21/Lists/master/main-blacklist.txt
 [mirror-spam404.com]: https://raw.githubusercontent.com/zant95/hmirror/master/data/spam404.com/list.txt
-[source-stopforumspam.com]: https://stopforumspam.com/downloads/toxic_domains_whole.txt
-[mirror-stopforumspam.com]: https://raw.githubusercontent.com/zant95/hmirror/master/data/stopforumspam.com/list.txt
 [source-winhelp2002.mvps.org]: http://winhelp2002.mvps.org/hosts.txt
 [mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/zant95/hmirror/master/data/winhelp2002.mvps.org/list.txt
 [source-zeustracker.abuse.ch]: https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
