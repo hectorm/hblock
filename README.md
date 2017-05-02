@@ -40,15 +40,18 @@ I provide nightly builds of the hosts file and installers for **Windows** (batch
 
 ## Usage
 
-#### Run latest version
+#### Run without installation
 ```sh
-curl -fsS 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' | sh
+curl 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /tmp/hblock && \
+  echo 'dd02198ad592fbd9ac26372b24e7239cc8e3735eb754a3689cb514de3663651c  /tmp/hblock' | shasum -c && \
+  sh /tmp/hblock
 ```
 
-#### Local installation
+#### Installation
 ```sh
-sudo curl -fsS 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /usr/local/bin/hblock
-sudo chmod a+rx /usr/local/bin/hblock
+curl 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /tmp/hblock && \
+  echo 'dd02198ad592fbd9ac26372b24e7239cc8e3735eb754a3689cb514de3663651c  /tmp/hblock' | shasum -c && \
+  sudo mv /tmp/hblock /usr/local/bin/hblock && sudo chmod a+rx /usr/local/bin/hblock
 ```
 
 **Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
