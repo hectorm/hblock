@@ -43,14 +43,14 @@ I provide nightly builds of the hosts file and installers for **Windows** (batch
 #### Run without installation
 ```sh
 curl 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /tmp/hblock && \
-  echo 'dd02198ad592fbd9ac26372b24e7239cc8e3735eb754a3689cb514de3663651c  /tmp/hblock' | shasum -c && \
+  echo 'baf7ebdf300d75fd376cdb25e72f8c64d1a712962f47de43e1f8eeaec7ea4d7a  /tmp/hblock' | shasum -c && \
   sh /tmp/hblock
 ```
 
 #### Installation
 ```sh
 curl 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /tmp/hblock && \
-  echo 'dd02198ad592fbd9ac26372b24e7239cc8e3735eb754a3689cb514de3663651c  /tmp/hblock' | shasum -c && \
+  echo 'baf7ebdf300d75fd376cdb25e72f8c64d1a712962f47de43e1f8eeaec7ea4d7a  /tmp/hblock' | shasum -c && \
   sudo mv /tmp/hblock /usr/local/bin/hblock && sudo chmod a+rx /usr/local/bin/hblock
 ```
 
