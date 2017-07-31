@@ -1,13 +1,29 @@
-image: alpine
+image: node:alpine
 
-pages:
-  script:
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - build
+  - deploy
+
+before_script:
   - apk add --no-cache curl file gawk grep libidn make sed zip
-  - make build stats index
-  - mv dist public
-  artifacts:
-    paths:
-    - public
-  only:
-  - master
 
+build:
+  stage: build
+  script:
+    - make build stats index
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/
+
+deploy:
+  stage: deploy
+  script:
+    - npm install -g firebase-tools
+    - firebase deploy --message "Pipeline ${CI_PIPELINE_ID}, job ${CI_JOB_ID}" --token "${FIREBASE_TOKEN}"
+  only:
+    - master
