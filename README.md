@@ -33,10 +33,9 @@ the whitelist.
 ## Nightly builds
 I provide nightly builds of the hosts file and installers for **Windows** (batch file installer) and **Android** (flashable zip).
 
-| URL                             | Type      |
-| ------------------------------- | :-------: |
-| https://hblock.molinero.xyz     | Primary   |
-| https://zant95.gitlab.io/hblock | Mirror    |
+| URL                         |
+| --------------------------- |
+| https://hblock.molinero.xyz |
 
 ## Usage
 
