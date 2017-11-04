@@ -19,8 +19,8 @@ deploy:
   script:
     - npm install firebase-tools
     - PATH="node_modules/firebase-tools/bin:${PATH}"
-    - firebase use --token "${FIREBASE_TOKEN}" "${FIREBASE_PROJECT}" >/dev/null 2>&1
-    - firebase deploy --token "${FIREBASE_TOKEN}" --message "Pipeline ${CI_PIPELINE_ID}, job ${CI_JOB_ID}" >/dev/null 2>&1
+    - firebase use --token "${FIREBASE_TOKEN}" "${FIREBASE_PROJECT}"
+    - firebase deploy --token "${FIREBASE_TOKEN}" --message "Pipeline ${CI_PIPELINE_ID}, job ${CI_JOB_ID}"
   cache:
     paths:
       - node_modules/
