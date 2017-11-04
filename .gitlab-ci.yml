@@ -1,4 +1,4 @@
-image: node:latest
+image: node:8-alpine
 
 stages:
   - build
