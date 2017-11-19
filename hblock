@@ -95,7 +95,7 @@ checkBinary() {
 }
 
 fetchUrl() {
-	userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0'
+	userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
 	if checkBinary curl; then
 		curl -fsSL -A "$userAgent" -- "$@"
 	else
