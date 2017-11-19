@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Version:    1.0.0
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
 # Repository: https://github.com/zant95/hBlock
 # License:    MIT, https://opensource.org/licenses/MIT
@@ -130,7 +131,8 @@ showHelp() {
 			 -b, --backup                 Make a time-stamped backup (default: disabled)
 			 -l, --lenient                Select any IP address from sources (default: 0.0.0.0, 127.0.0.1 or none)
 			 -i, --ignore-download-error  Do not abort on download error (default: disabled)
-			 -h, --help                   Print this help
+			 -v, --version                Show version number and quit
+			 -h, --help                   Show this help and quit
 		EOF
 		)"
 		exit 0
@@ -139,6 +141,11 @@ showHelp() {
 		>&2 printf -- '%s\n' "Try 'hblock --help' for more information"
 		exit 1
 	fi
+}
+
+showVersion() {
+	printf -- '%s\n' '1.0.0'
+	exit 0
 }
 
 main() {
@@ -155,12 +162,13 @@ main() {
 			'--backup')                set -- "$@" '-b' ;;
 			'--lenient')               set -- "$@" '-l' ;;
 			'--ignore-download-error') set -- "$@" '-i' ;;
+			'--version')               set -- "$@" '-v' ;;
 			'--help')                  set -- "$@" '-h' ;;
 			*)                         set -- "$@" "$opt"
 		esac
 	done
 	OPTIND=1
-	while getopts ':O:R:H:S:W:B:blih-:' opt; do
+	while getopts ':O:R:H:S:W:B:blivh-:' opt; do
 		case "$opt" in
 			'O') output="$OPTARG" ;;
 			'R') redirection="$OPTARG" ;;
@@ -171,6 +179,7 @@ main() {
 			'b') backup='yes' ;;
 			'l') lenient='yes' ;;
 			'i') ignoreDownloadError='yes' ;;
+			'v') showVersion ;;
 			'h') showHelp ;;
 			'-') showHelp "--$OPTARG" ;;
 			*)   showHelp "-$OPTARG"
