@@ -22,7 +22,7 @@ redirection='0.0.0.0'
 backup='no'
 lenient='no'
 ignoreDownloadError='no'
-userDefined=''
+custom=''
 
 # Default header
 header=$(cat <<-EOF
@@ -283,8 +283,12 @@ main() {
 	if [ -f "$output" ]; then
 		currentContent=$(cat -- "$output")
 
-		# Get user defined section
-		userDefined=$(printf -- '%s' "$currentContent" | sed -n '/^#.*<user-defined>/,/^#.*<\/user-defined>/p')
+		# Get custom section
+		custom=$(
+			printf -- '%s' "$currentContent" | sed '/^#.*<custom>/,/^#.*<\/custom>/!d;//d' &&
+			# "<user-defined>" is deprecated, use "<custom>" instead
+			printf -- '%s' "$currentContent" | sed '/^#.*<user-defined>/,/^#.*<\/user-defined>/!d;//d'
+		)
 
 		# Backup procedure
 		if [ "$backup" = 'yes' ]; then
@@ -309,7 +313,9 @@ main() {
 		# <header>
 		$header
 		# </header>
-		$userDefined
+		# <custom>
+		$custom
+		# </custom>
 		# <blocklist>
 		$blocklist
 		# </blocklist>
