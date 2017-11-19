@@ -4,17 +4,8 @@
 # Repository: https://github.com/zant95/hBlock
 # License:    MIT, https://opensource.org/licenses/MIT
 
-# Exit on errors
 set -eu
-
-# Globals
 export LC_ALL=C
-
-hostname=$(uname -n)
-# Prevent adding 'localhost' twice
-hostname=$(printf -- '%s' "$hostname" | sed '/^localhost$/d')
-# Prevent adding GitLab CI runner hostname
-hostname=$(printf -- '%s' "$hostname" | sed '/^runner-[[:alnum:]]\{8\}-project-.*$/d')
 
 # Default options
 output='/etc/hosts'
@@ -22,9 +13,14 @@ redirection='0.0.0.0'
 backup='no'
 lenient='no'
 ignoreDownloadError='no'
-custom=''
 
-# Default header
+hostname=$(uname -n)
+# Prevent adding 'localhost' twice
+hostname=$(printf -- '%s' "$hostname" | sed '/^localhost$/d')
+# Prevent adding GitLab CI runner hostname
+hostname=$(printf -- '%s' "$hostname" | sed '/^runner-[[:alnum:]]\{8\}-project-.*$/d')
+
+# Default header block
 header=$(cat <<-EOF
 	127.0.0.1       localhost $hostname
 	255.255.255.255 broadcasthost
@@ -36,6 +32,12 @@ header=$(cat <<-EOF
 	ff02::3         ip6-allhosts
 EOF
 )
+
+# Default custom block
+custom=''
+
+# Default blocklist block
+blocklist=''
 
 # Default sources
 sources=$(cat <<-'EOF'
@@ -61,11 +63,11 @@ sources=$(cat <<-'EOF'
 EOF
 )
 
-# Default whitelist
-#   POSIX basic regex
-#     \.com$              -> all domains that ends with '.com'.
-#     ^example            -> all domains that starts with 'example'.
-#     ^sub\.example\.org$ -> domain 'sub.example.org'.
+# Default whitelist (POSIX basic regex)
+# Examples:
+#   \.com$              -> all domains that ends with '.com'.
+#   ^example            -> all domains that starts with 'example'.
+#   ^sub\.example\.org$ -> domain 'sub.example.org'.
 whitelist=$(cat <<-'EOF'
 EOF
 )
@@ -92,16 +94,8 @@ checkBinary() {
 	command -v -- "$@" >/dev/null 2>&1
 }
 
-checkDownloadAbility() {
-	if ! checkBinary curl && ! checkBinary wget; then
-		printError 'Either wget or curl are required for this script'
-		exit 1
-	fi
-}
-
 fetchUrl() {
 	userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0'
-
 	if checkBinary curl; then
 		curl -fsSL -A "$userAgent" -- "$@"
 	else
@@ -121,11 +115,6 @@ writeFile() {
 		printError "Cannot write '$2': permission denied"
 		exit 1
 	fi
-}
-
-escapeSedReplacement() {
-	# Escape string literal for use as the replacement string in sed
-	printf -- '%s' "$1" | sed 's/[&/\]/\\&/g'
 }
 
 showHelp() {
@@ -152,7 +141,7 @@ showHelp() {
 	fi
 }
 
-setOptions() {
+main() {
 	# Transform long options to short ones
 	for opt in "$@"; do
 		shift
@@ -170,7 +159,6 @@ setOptions() {
 			*)                         set -- "$@" "$opt"
 		esac
 	done
-
 	OPTIND=1
 	while getopts ':O:R:H:S:W:B:blih-:' opt; do
 		case "$opt" in
@@ -188,13 +176,9 @@ setOptions() {
 			*)   showHelp "-$OPTARG"
 		esac
 	done
-}
-
-# Process
-main() {
-	blocklist=''
 
 	printAction 'Configuration:'
+
 	printInfo "Hosts location: $output"
 	printInfo "Redirection IP: $redirection"
 	printInfo "Backup: $backup"
@@ -202,7 +186,11 @@ main() {
 	printInfo "Ignore download error: $ignoreDownloadError"
 
 	printAction 'Downloading lists...'
-	checkDownloadAbility
+
+	if ! checkBinary curl && ! checkBinary wget; then
+		printError 'Either wget or curl are required for this script'
+		exit 1
+	fi
 	for url in $sources; do
 		printInfo "$url"
 		content=$(fetchUrl "$url") || true
@@ -276,57 +264,51 @@ main() {
 		blocklist=$(printf -- '%s' "$blocklist" | sort | uniq)
 
 		printInfo 'Add new destination'
-		redirection=$(escapeSedReplacement "$redirection")
-		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$redirection /")
+		# Escape string literal for use as the replacement string in sed
+		escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
+		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$escapedRedirection /")
 	fi
 
 	if [ -f "$output" ]; then
-		currentContent=$(cat -- "$output")
+		content=$(cat -- "$output")
 
 		# Get custom section
 		custom=$(
-			printf -- '%s' "$currentContent" | sed '/^#.*<custom>/,/^#.*<\/custom>/!d;//d' &&
-			# "<user-defined>" is deprecated, use "<custom>" instead
-			printf -- '%s' "$currentContent" | sed '/^#.*<user-defined>/,/^#.*<\/user-defined>/!d;//d'
+			printf -- '%s' "$content" | sed '/^#.*<custom>/,/^#.*<\/custom>/!d;//d' &&
+			# "user-defined" is deprecated, use "custom" instead
+			printf -- '%s' "$content" | sed '/^#.*<user-defined>/,/^#.*<\/user-defined>/!d;//d'
 		)
 
 		# Backup procedure
 		if [ "$backup" = 'yes' ]; then
 			printAction 'Backing up hosts file...'
-			writeFile "$currentContent" "$output.$(date +%s).bak"
+			writeFile "$content" "$output.$(date +%s).bak"
 		fi
+
+		unset content
 	fi
 
-	# Hosts file template
-	blockListDate=$(date -u)
-	blocklistCount='0'
-	if [ -n "$blocklist" ]; then
-		blocklistCount=$(printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]')
-	fi
+	generationDate=$(date -u)
+	blocklistCount=$([ -n "$blocklist" ] && printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]' || printf '0')
 
+	# Hosts file
 	hosts=$(cat <<-EOF
 		# Author:              Héctor Molinero Fernández <hector@molinero.xyz>
 		# Repository:          https://github.com/zant95/hBlock
-		# Last updated:        $blockListDate
+		# Last updated:        $generationDate
 		# Blacklisted domains: $blocklistCount
-
-		# <header>
-		$header
-		# </header>
-		# <custom>
-		$custom
-		# </custom>
-		# <blocklist>
-		$blocklist
-		# </blocklist>
+		$(
+			[ -n "$header" ]    && printf -- '\n%s\n%s\n%s\n' '# <header>'    "$header"    '# </header>'
+			[ -n "$custom" ]    && printf -- '\n%s\n%s\n%s\n' '# <custom>'    "$custom"    '# </custom>'
+			[ -n "$blocklist" ] && printf -- '\n%s\n%s\n%s\n' '# <blocklist>' "$blocklist" '# </blocklist>'
+		)
 	EOF
 	)
 
 	printAction 'Generating hosts file...'
 	writeFile "$hosts" "$output"
+
 	printAction "$blocklistCount blacklisted domains!"
 }
 
-setOptions "$@"
-main
-
+main "$@"
