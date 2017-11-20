@@ -1,0 +1,44 @@
+{
+  "name": "hblock",
+  "version": "1.0.0",
+  "description": "Improve your security and privacy by blocking ads, tracking and malware domains",
+  "keywords": [
+    "ad-block",
+    "ad-blocker",
+    "ads",
+    "advertisements",
+    "domains",
+    "filter",
+    "filter-lists",
+    "filterlist",
+    "hosts",
+    "hostsfile",
+    "malware",
+    "privacy",
+    "security",
+    "shell",
+    "trackers",
+    "tracking",
+    "unified-hosts"
+  ],
+  "author": "Héctor Molinero Fernández <hector@molinero.xyz>",
+  "license": "MIT",
+  "homepage": "https://hblock.molinero.xyz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zant95/hblock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zant95/hblock/issues"
+  },
+  "bin": {
+    "hblock": "./hblock"
+  },
+  "files": [
+    "/hblock"
+  ],
+  "preferGlobal": true,
+  "devDependencies": {
+    "firebase-tools": "^3.0.0"
+  }
+}
