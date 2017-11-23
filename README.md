@@ -90,7 +90,7 @@ structure:
 ```
 
 #### Run preview
-[![asciicast](https://asciinema.org/a/95561.png)](https://asciinema.org/a/95561)
+[![asciicast](https://asciinema.org/a/149165.png)](https://asciinema.org/a/149165)
 
 ## Sources
 | Name                                  | Primary                                          | Mirror                                           |
