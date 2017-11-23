@@ -76,7 +76,7 @@ main() {
 					text-decoration: none;
 				}
 
-				#container {
+				.container {
 					margin: 40px auto;
 					width: 100%;
 					max-width: 1000px;
@@ -159,7 +159,7 @@ main() {
 		</head>
 
 		<body>
-			<div id="container">
+			<div class="container">
 				<h1 class="title">Index of <a href="https://github.com/zant95/hBlock">/hBlock</a></h1>
 				<div class="table">
 					<div class="row">
