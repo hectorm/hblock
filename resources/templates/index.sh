@@ -1,13 +1,10 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/hBlock
+# Repository: https://github.com/zant95/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
 
-# Exit on errors
 set -eu
-
-# Globals
 export LC_ALL=C
 
 # Process
@@ -160,7 +157,7 @@ main() {
 
 		<body>
 			<div class="container">
-				<h1 class="title">Index of <a href="https://github.com/zant95/hBlock">/hBlock</a></h1>
+				<h1 class="title">Index of <a href="https://github.com/zant95/hblock">/hBlock</a></h1>
 				<div class="table">
 					<div class="row">
 						<div class="cell">Filename</div>
@@ -179,4 +176,3 @@ main() {
 }
 
 main "$@"
-

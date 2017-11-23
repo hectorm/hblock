@@ -1,13 +1,10 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/hBlock
+# Repository: https://github.com/zant95/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
 
-# Exit on errors
 set -eu
-
-# Globals
 export LC_ALL=C
 
 # Process
@@ -70,4 +67,3 @@ main() {
 }
 
 main "$@"
-

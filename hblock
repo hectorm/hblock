@@ -2,7 +2,7 @@
 
 # Version:    1.0.0
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/hBlock
+# Repository: https://github.com/zant95/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
@@ -122,15 +122,23 @@ showHelp() {
 	if [ $# -eq 0 ]; then
 		printf -- '%s\n' "$(cat <<-'EOF'
 			Usage: hblock [options...]
-			 -O, --output FILE            Output file (default: /etc/hosts)
-			 -R, --redirection IP         Domain redirection IP (default: 0.0.0.0)
-			 -H, --header STRING          File header (default: see source code)
-			 -S, --sources STRING         Space separated URLs (default: see source code)
-			 -W, --whitelist STRING       Space separated entries, POSIX basic regex (default: see source code)
-			 -B, --blacklist STRING       Space separated entries (default: see source code)
-			 -b, --backup                 Make a time-stamped backup (default: disabled)
-			 -l, --lenient                Select any IP address from sources (default: 0.0.0.0, 127.0.0.1 or none)
-			 -i, --ignore-download-error  Do not abort on download error (default: disabled)
+			 -O, --output FILE            Hosts file location (default: /etc/hosts)
+			 -R, --redirection IP         Destination IP for all entries in the blocklist
+			                              (default: 0.0.0.0)
+			 -H, --header HEADER          Content to be included at the beginning of the
+			                              hosts file. You can use the output of any other
+			                              command (e.g. "$(cat header.txt)")
+			 -S, --sources URLS           Sources to be used to generate the blocklist
+			                              (whitespace separated URLs)
+			 -W, --whitelist ENTRIES      Entries to be removed from the blocklist
+			                              (whitespace separated POSIX BREs)
+			 -B, --blacklist ENTRIES      Entries to be added to the blocklist
+			                              (whitespace separated domain names)
+			 -b, --backup                 Make a time-stamped backup
+			 -l, --lenient                Match any IP address from sources, although it
+			                              will be replaced by the destination IP
+			                              (default: 0.0.0.0, 127.0.0.1 or none)
+			 -i, --ignore-download-error  Do not abort if a download error occurs
 			 -v, --version                Show version number and quit
 			 -h, --help                   Show this help and quit
 		EOF
@@ -188,8 +196,8 @@ main() {
 
 	printAction 'Configuration:'
 
-	printInfo "Hosts location: $output"
-	printInfo "Redirection IP: $redirection"
+	printInfo "Hosts file: $output"
+	printInfo "Destination IP: $redirection"
 	printInfo "Backup: $backup"
 	printInfo "Lenient: $lenient"
 	printInfo "Ignore download error: $ignoreDownloadError"
@@ -302,10 +310,10 @@ main() {
 
 	# Hosts file
 	hosts=$(cat <<-EOF
-		# Author:              Héctor Molinero Fernández <hector@molinero.xyz>
-		# Repository:          https://github.com/zant95/hBlock
-		# Last updated:        $generationDate
-		# Blacklisted domains: $blocklistCount
+		# Author:          Héctor Molinero Fernández <hector@molinero.xyz>
+		# Repository:      https://github.com/zant95/hblock
+		# Last updated:    $generationDate
+		# Blocked domains: $blocklistCount
 		$(
 			[ -n "$header" ]    && printf -- '\n%s\n%s\n%s\n' '# <header>'    "$header"    '# </header>'
 			[ -n "$custom" ]    && printf -- '\n%s\n%s\n%s\n' '# <custom>'    "$custom"    '# </custom>'
@@ -317,7 +325,7 @@ main() {
 	printAction 'Generating hosts file...'
 	writeFile "$hosts" "$output"
 
-	printAction "$blocklistCount blacklisted domains!"
+	printAction "$blocklistCount blocked domains!"
 }
 
 main "$@"

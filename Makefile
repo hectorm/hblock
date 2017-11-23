@@ -55,4 +55,3 @@ clean:
 	dist/most_abused_suffixes.txt \
 	dist/index.html
 	-rmdir dist
-

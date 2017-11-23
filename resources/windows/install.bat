@@ -1,5 +1,5 @@
 :: Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-:: Repository: https://github.com/zant95/hBlock
+:: Repository: https://github.com/zant95/hblock
 :: License:    MIT, https://opensource.org/licenses/MIT
 
 :: This script needs administrator privileges.
@@ -31,4 +31,3 @@ echo Execution finished.
 echo.
 
 pause
-

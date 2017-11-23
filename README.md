@@ -37,38 +37,56 @@ I provide nightly builds of the hosts file and installers for **Windows** (batch
 | --------------------------- |
 | https://hblock.molinero.xyz |
 
-## Usage
+## Installation
 
-#### Run without installation
+#### Through [NPM](https://www.npmjs.com):
 ```sh
-curl 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /tmp/hblock && \
-  echo '42a822463ea52238e4730374ac4c0f4d530724469c172c93ceca949d5e1ee9d8  /tmp/hblock' | shasum -c && \
-  sh /tmp/hblock
+npm install -g hblock
 ```
 
-#### Installation
+#### Manually
 ```sh
 curl 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /tmp/hblock && \
   echo '42a822463ea52238e4730374ac4c0f4d530724469c172c93ceca949d5e1ee9d8  /tmp/hblock' | shasum -c && \
   sudo mv /tmp/hblock /usr/local/bin/hblock && sudo chmod a+rx /usr/local/bin/hblock
 ```
 
-**Note:** be sure to regularly update the hosts file for new additions or download the script and create a scheduled task.
+**Note:** be sure to regularly update the hosts file for new additions.
+
+## Usage
 
 #### Script arguments
 You can also change the default behavior using these options:
 ```
 Usage: hblock [options...]
- -O, --output FILE            Output file (default: /etc/hosts)
- -R, --redirection IP         Domain redirection IP (default: 0.0.0.0)
- -H, --header STRING          File header (default: see source code)
- -S, --sources STRING         Space separated URLs (default: see source code)
- -W, --whitelist STRING       Space separated entries, POSIX basic regex (default: see source code)
- -B, --blacklist STRING       Space separated entries (default: see source code)
- -b, --backup                 Make a time-stamped backup (default: disabled)
- -l, --lenient                Select any IP address from sources (default: 0.0.0.0, 127.0.0.1 or none)
- -i, --ignore-download-error  Do not abort on download error (default: disabled)
- -h, --help                   Print this help
+ -O, --output FILE            Hosts file location (default: /etc/hosts)
+ -R, --redirection IP         Destination IP for all entries in the blocklist
+                              (default: 0.0.0.0)
+ -H, --header HEADER          Content to be included at the beginning of the
+                              hosts file. You can use the output of any other
+                              command (e.g. "$(cat header.txt)")
+ -S, --sources URLS           Sources to be used to generate the blocklist
+                              (whitespace separated URLs)
+ -W, --whitelist ENTRIES      Entries to be removed from the blocklist
+                              (whitespace separated POSIX BREs)
+ -B, --blacklist ENTRIES      Entries to be added to the blocklist
+                              (whitespace separated domain names)
+ -b, --backup                 Make a time-stamped backup
+ -l, --lenient                Match any IP address from sources, although it
+                              will be replaced by the destination IP
+                              (default: 0.0.0.0, 127.0.0.1 or none)
+ -i, --ignore-download-error  Do not abort if a download error occurs
+ -v, --version                Show version number and quit
+ -h, --help                   Show this help and quit
+```
+
+#### Preserve content
+This script replaces the hosts file of your system, if you want to preserve part of its content, you should wrap that content with the following
+structure:
+```
+# <custom>
+...
+# </custom>
 ```
 
 #### Run preview
@@ -141,4 +159,3 @@ This script, by default, replaces the `/etc/hosts` file of your system. I am not
 
 ## License
 See the [license](LICENSE.md) file.
-
