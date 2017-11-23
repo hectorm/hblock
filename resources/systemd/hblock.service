@@ -1,5 +1,5 @@
 [Unit]
-Description=Update hosts file to blackhole ad sites
+Description=hBlock
 
 [Service]
 Type=oneshot
