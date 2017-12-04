@@ -12,6 +12,7 @@ export LC_ALL=C
 output='/etc/hosts'
 redirection='0.0.0.0'
 backup=false
+backupDir=''
 lenient=false
 ignoreDownloadError=false
 
@@ -139,7 +140,7 @@ showHelp() {
 			                              (whitespace separated POSIX BREs)
 			 -B, --blacklist ENTRIES      Entries to be added to the blocklist
 			                              (whitespace separated domain names)
-			 -b, --backup                 Make a time-stamped backup
+			 -b, --backup [DIRECTORY]     Make a time-stamped backup
 			 -l, --lenient                Match any IP address from sources, although it
 			                              will be replaced by the destination IP
 			                              (default: 0.0.0.0, 127.0.0.1 or none)
@@ -180,8 +181,22 @@ main() {
 			*)                         set -- "$@" "$opt"
 		esac
 	done
+	# Set omitted arguments to empty strings
+	for opt in "$@"; do
+		shift
+		case "$opt" in
+			-*b)
+				if a="$*"; [ "${a#\-}"x != "${a}x" ]
+					then set -- "$@" "$opt" ''
+					else set -- "$@" "$opt"
+				fi
+				;;
+			*) set -- "$@" "$opt"
+		esac
+	done
+	# Read options
 	OPTIND=1
-	while getopts ':O:R:H:S:W:B:blivh-:' opt; do
+	while getopts ':O:R:H:S:W:B:b:livh-:' opt; do
 		case "$opt" in
 			'O') output="$OPTARG" ;;
 			'R') redirection="$OPTARG" ;;
@@ -189,7 +204,7 @@ main() {
 			'S') sources="$OPTARG" ;;
 			'W') whitelist="$OPTARG" ;;
 			'B') blacklist="$OPTARG" ;;
-			'b') backup=true ;;
+			'b') backup=true; backupDir="$OPTARG" ;;
 			'l') lenient=true ;;
 			'i') ignoreDownloadError=true ;;
 			'v') showVersion ;;
@@ -312,7 +327,8 @@ main() {
 		# Backup procedure
 		if [ "$backup" = true ]; then
 			printAction 'Backing up hosts file...'
-			writeFile "$content" "$output.$(date +%s).bak"
+			[ -z "$backupDir" ] && backupDir=$(dirname "$output")
+			writeFile "$content" "$backupDir/$(basename "$output").$(date +%s).bak"
 		fi
 
 		unset content
