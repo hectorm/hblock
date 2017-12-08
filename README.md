@@ -71,7 +71,8 @@ Usage: hblock [options...]
                               (whitespace separated POSIX BREs)
  -B, --blacklist ENTRIES      Entries to be added to the blocklist
                               (whitespace separated domain names)
- -b, --backup [DIRECTORY]     Make a time-stamped backup
+ -b, --backup [DIRECTORY]     Make a time-stamped backup in DIRECTORY
+                              (default: output file directory)
  -l, --lenient                Match any IP address from sources, although it
                               will be replaced by the destination IP
                               (default: 0.0.0.0, 127.0.0.1 or none)
