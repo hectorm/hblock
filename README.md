@@ -47,7 +47,7 @@ npm install -g hblock
 #### Manually
 ```sh
 curl 'https://raw.githubusercontent.com/zant95/hblock/master/hblock' -o /tmp/hblock && \
-  echo '5493e5a97a77829067e8d296a5152ed7b56fbb7c1704be49905e3cf624a5a0b6  /tmp/hblock' | shasum -c && \
+  echo '04ac43638359f0595cd16b818e4bc4982967de85169842f0169ef2c5f4573d1b  /tmp/hblock' | shasum -c && \
   sudo mv /tmp/hblock /usr/local/bin/hblock && sudo chmod 755 /usr/local/bin/hblock
 ```
 
