@@ -97,7 +97,7 @@ toolbox_mount() {
   DEV=
   POINT=
   FS=
-  for i in `cat /etc/fstab | grep "$1"`; do
+  for i in `cat /etc/fstab | grep -v "#" | grep "$1"`; do
     if [ -z "$DEV" ]; then
       DEV=$i
     elif [ -z "$POINT" ]; then
@@ -107,13 +107,25 @@ toolbox_mount() {
       break
     fi
   done
-  if (! is_mounted $1 $RW); then mount -t $FS -o $RW $DEV $POINT; fi
-  if (! is_mounted $1 $RW); then mount -t $FS -o $RW,remount $DEV $POINT; fi
+  if [ ! -z "$SYSTEM_DEVICE" ]; then
+    if (`echo "$SYSTEM_DEVICE" | grep "$DEV" >/dev/null`); then
+      DEV=$SYSTEM_DEVICE
+    fi
+  fi
+  if [ ! -z "$VENDOR_DEVICE" ]; then
+    if (`echo "$VENDOR_DEVICE" | grep "$DEV" >/dev/null`); then
+      DEV=$VENDOR_DEVICE
+    fi
+  fi
+  if [ ! -z "$DEV" ] && [ ! -z "$POINT" ] && [ ! -z "$DEV" ]; then
+    if (! is_mounted $1 $RW); then mount -t $FS -o $RW $DEV $POINT; fi
+    if (! is_mounted $1 $RW); then mount -t $FS -o $RW,remount $DEV $POINT; fi
+  fi
 
   DEV=
   POINT=
   FS=
-  for i in `cat /etc/recovery.fstab | grep "$1"`; do
+  for i in `cat /etc/recovery.fstab | grep -v "#" | grep "$1"`; do
     if [ -z "$POINT" ]; then
       POINT=$i
     elif [ -z "$FS" ]; then
@@ -123,14 +135,35 @@ toolbox_mount() {
       break
     fi
   done
-  if [ "$FS" = "emmc" ]; then
-    if (! is_mounted $1 $RW); then mount -t ext4 -o $RW $DEV $POINT; fi
-    if (! is_mounted $1 $RW); then mount -t ext4 -o $RW,remount $DEV $POINT; fi
-    if (! is_mounted $1 $RW); then mount -t f2fs -o $RW $DEV $POINT; fi
-    if (! is_mounted $1 $RW); then mount -t f2fs -o $RW,remount $DEV $POINT; fi
-  else
-    if (! is_mounted $1 $RW); then mount -t $FS -o $RW $DEV $POINT; fi
-    if (! is_mounted $1 $RW); then mount -t $FS -o $RW,remount $DEV $POINT; fi
+  # usually <point> <fs> <dev>, but sometimes <dev> <point> <fs>
+  if [ "$DEV" = "ext4" ] || [ "$DEV" = "f2fs" ] || [ "$DEV" = "vfat" ] || [ "$DEV" = "emmc" ] || [ "$DEV" = "swap" ]; then
+    local _POINT=$POINT
+    local _FS=$FS
+    local _DEV=$DEV
+    DEV=$_POINT
+    POINT=$_FS
+    FS=$_DEV
+  fi
+  if [ ! -z "$SYSTEM_DEVICE" ]; then
+    if (`echo "$SYSTEM_DEVICE" | grep "$DEV" >/dev/null`); then
+      DEV=$SYSTEM_DEVICE
+    fi
+  fi
+  if [ ! -z "$VENDOR_DEVICE" ]; then
+    if (`echo "$VENDOR_DEVICE" | grep "$DEV" >/dev/null`); then
+      DEV=$VENDOR_DEVICE
+    fi
+  fi
+  if [ ! -z "$DEV" ] && [ ! -z "$POINT" ] && [ ! -z "$DEV" ]; then
+    if [ "$FS" = "emmc" ]; then
+      if (! is_mounted $1 $RW); then mount -t ext4 -o $RW $DEV $POINT; fi
+      if (! is_mounted $1 $RW); then mount -t ext4 -o $RW,remount $DEV $POINT; fi
+      if (! is_mounted $1 $RW); then mount -t f2fs -o $RW $DEV $POINT; fi
+      if (! is_mounted $1 $RW); then mount -t f2fs -o $RW,remount $DEV $POINT; fi
+    else
+      if (! is_mounted $1 $RW); then mount -t $FS -o $RW $DEV $POINT; fi
+      if (! is_mounted $1 $RW); then mount -t $FS -o $RW,remount $DEV $POINT; fi
+    fi
   fi
 }
 
