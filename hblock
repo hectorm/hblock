@@ -16,11 +16,8 @@ backupDir=''
 lenient=false
 ignoreDownloadError=false
 
-hostname=$(uname -n)
-# Prevent adding 'localhost' twice
-hostname=$(printf -- '%s' "$hostname" | sed '/^localhost$/d')
-# Prevent adding GitLab CI runner hostname
-hostname=$(printf -- '%s' "$hostname" | sed '/^runner-[[:alnum:]]\{8\}-project-.*$/d')
+# shellcheck disable=SC2039
+hostname=${HOSTNAME-$(uname -n)}
 
 # Default header block
 header=$(cat <<-EOF

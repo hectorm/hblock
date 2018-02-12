@@ -8,7 +8,7 @@ build:
   stage: build
   script:
     - apk add --no-cache curl file gawk grep libidn make sed zip
-    - make build stats index
+    - HOSTNAME= make build stats index
   artifacts:
     expire_in: 1 week
     paths:
