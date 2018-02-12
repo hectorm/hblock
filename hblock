@@ -306,10 +306,12 @@ main() {
 		printInfo 'Sort entries'
 		blocklist=$(printf -- '%s' "$blocklist" | sort | uniq)
 
-		printInfo 'Add new destination IP'
-		# Escape string literal for use as the replacement string in sed
-		escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
-		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$escapedRedirection /")
+		if [ -n "$redirection" ]; then
+			printInfo 'Add new destination IP'
+			# Escape string literal for use as the replacement string in sed
+			escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
+			blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$escapedRedirection /")
+		fi
 	fi
 
 	if [ -f "$output" ]; then
