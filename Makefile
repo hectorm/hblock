@@ -1,10 +1,15 @@
 #!/usr/bin/make -f
 
+MKFILE_RELPATH=$(shell printf -- '%s' "$(MAKEFILE_LIST)" | sed 's|^\ ||')
+MKFILE_ABSPATH=$(shell readlink -f -- '$(MKFILE_RELPATH)')
+MKFILE_DIR=$(shell dirname -- '$(MKFILE_ABSPATH)')
+WORK_DIR=$(shell pwd)
+
 .PHONY: all \
 	build build-hosts build-gz build-android build-windows \
 	stats stats-tlds stats-suffixes \
 	index \
-	clean clean-tmp clean-dist
+	clean
 
 all: build
 
@@ -12,46 +17,38 @@ build: build-hosts build-gz build-android build-windows
 
 build-hosts: dist/hosts
 dist/hosts:
-	mkdir -p dist
-	./hblock -O dist/hosts
+	mkdir -p dist/
+	"$(MKFILE_DIR)"/hblock -O dist/hosts
 
 build-gz: build-hosts dist/hosts.gz
 dist/hosts.gz:
 	gzip -c dist/hosts > dist/hosts.gz
 
 build-android: build-hosts dist/hosts_android.zip
-dist/hosts_android.zip: clean-tmp
-	mkdir -p "$(CURDIR)"/.tmp/hosts_android && \
-	cd "$(CURDIR)"/.tmp/hosts_android && \
-	cp -r "$(CURDIR)"/resources/android/* "$(CURDIR)"/dist/hosts . && \
-	zip -r "$(CURDIR)"/dist/hosts_android.zip .
+dist/hosts_android.zip:
+	cd "$(MKFILE_DIR)"/resources/android/ && zip -r "$(WORK_DIR)"/dist/hosts_android.zip ./
+	cd "$(WORK_DIR)"/dist/ && zip -r "$(WORK_DIR)"/dist/hosts_android.zip hosts
 
 build-windows: build-hosts dist/hosts_windows.zip
-dist/hosts_windows.zip: clean-tmp
-	mkdir -p "$(CURDIR)"/.tmp/hosts_windows && \
-	cd "$(CURDIR)"/.tmp/hosts_windows && \
-	cp -r "$(CURDIR)"/resources/windows/* "$(CURDIR)"/dist/hosts . && \
-	unix2dos install.bat hosts && \
-	zip -r "$(CURDIR)"/dist/hosts_windows.zip .
+dist/hosts_windows.zip:
+	cd "$(MKFILE_DIR)"/resources/windows/ && zip -r -l "$(WORK_DIR)"/dist/hosts_windows.zip ./
+	cd "$(WORK_DIR)"/dist/ && zip -r -l "$(WORK_DIR)"/dist/hosts_windows.zip hosts
 
 stats: stats-tlds stats-suffixes
 
 stats-tlds: build-hosts dist/most_abused_tlds.txt
 dist/most_abused_tlds.txt:
-	./resources/stats/suffix.sh dist/hosts none > dist/most_abused_tlds.txt
+	"$(MKFILE_DIR)"/resources/stats/suffix.sh dist/hosts none > dist/most_abused_tlds.txt
 
 stats-suffixes: build-hosts dist/most_abused_suffixes.txt
 dist/most_abused_suffixes.txt:
-	./resources/stats/suffix.sh dist/hosts > dist/most_abused_suffixes.txt
+	"$(MKFILE_DIR)"/resources/stats/suffix.sh dist/hosts > dist/most_abused_suffixes.txt
 
 index: build-hosts dist/index.html
 dist/index.html:
-	./resources/templates/index.sh dist > dist/index.html
+	"$(MKFILE_DIR)"/resources/templates/index.sh dist/ > dist/index.html
 
-clean: clean-tmp clean-dist
-clean-tmp:
-	rm -rf .tmp
-clean-dist:
+clean:
 	rm -f dist/hosts \
 		dist/hosts.gz \
 		dist/hosts_android.zip \
@@ -59,4 +56,4 @@ clean-dist:
 		dist/most_abused_tlds.txt \
 		dist/most_abused_suffixes.txt \
 		dist/index.html
-	-rmdir dist
+	-rmdir dist/
