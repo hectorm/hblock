@@ -61,7 +61,7 @@ main() {
 	fi
 
 	# Sort stats by the number of matches
-	stats=$(printf -- '%s' "$stats" | sort -nr | awk '{print NR"\t"$0}')
+	stats=$(printf -- '%s' "$stats" | sort -k1,1nr -k2,2 | awk '{print NR"\t"$0}')
 
 	printf -- '%s\n%s\n' "$header" "$stats"
 }
