@@ -41,10 +41,13 @@ blocklist=''
 # Default sources
 sources=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/adaway.org/list.txt
+	https://raw.githubusercontent.com/zant95/hmirror/master/data/adblock-nocoin-list/list.txt
+	https://raw.githubusercontent.com/zant95/hmirror/master/data/adguard-simplified/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-ad/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-malvertising/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-malware/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-tracking/list.txt
+	https://raw.githubusercontent.com/zant95/hmirror/master/data/eth-phishing-detect/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.2o7net/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.dead/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.risk/list.txt
@@ -53,11 +56,15 @@ sources=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomainlist.com/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomains.com-justdomains/list.txt
+	https://raw.githubusercontent.com/zant95/hmirror/master/data/matomo.org-spammers/list.txt
+	https://raw.githubusercontent.com/zant95/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/pgl.yoyo.org/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/someonewhocares.org/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/spam404.com/list.txt
+	https://raw.githubusercontent.com/zant95/hmirror/master/data/stevenblack/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/winhelp2002.mvps.org/list.txt
+	https://raw.githubusercontent.com/zant95/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
 	https://raw.githubusercontent.com/zant95/hmirror/master/data/zeustracker.abuse.ch/list.txt
 EOF
 )
