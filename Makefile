@@ -90,7 +90,6 @@ uninstall:
 clean:
 	rm -f \
 		dist/hosts \
-		dist/hosts.gz \
 		dist/hosts_android.zip \
 		dist/hosts_windows.zip \
 		dist/most_abused_tlds.txt \
