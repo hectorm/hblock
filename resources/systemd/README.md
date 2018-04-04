@@ -1,5 +1,5 @@
 # Install Systemd service and timer units
-Assuming you have root permissions, the following commands will schedule a daily update of the hosts file.
+The following commands will schedule a daily update of the hosts file. See [this article](https://wiki.archlinux.org/index.php/Systemd/Timers) for more information about Systemd timers.
 
 ```sh
 curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/zant95/hblock/v1.2.4/resources/systemd/hblock.{service,timer}' \

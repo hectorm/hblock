@@ -39,12 +39,6 @@ I provide nightly builds of the hosts file and installers for **Windows** (batch
 
 ## Installation
 
-#### Through [NPM](https://www.npmjs.com):
-```sh
-npm install -g hblock
-```
-
-#### Manually
 ```sh
 curl -o /tmp/hblock 'https://raw.githubusercontent.com/zant95/hblock/v1.2.4/hblock' \
   && echo 'b52c2b493db56f86a89b379973f302ce46bbb162eae25664ea974104f3722bf2  /tmp/hblock' | shasum -c \
@@ -53,7 +47,12 @@ curl -o /tmp/hblock 'https://raw.githubusercontent.com/zant95/hblock/v1.2.4/hblo
   && sudo chmod 755 /usr/local/bin/hblock
 ```
 
-**Note:** be sure to regularly update the hosts file for new additions.
+**Note:** you can use [this Systemd timer](resources/systemd/README.md) to regularly update the hosts file for new additions.
+
+#### Optionally, it is possible to use [NPX](https://www.npmjs.com/package/npx) to run hBlock without installation
+```sh
+npx hblock
+```
 
 ## Usage
 
