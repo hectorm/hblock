@@ -11,7 +11,7 @@ WORK_DIR=$(shell pwd)
 	index \
 	clean
 
-all: build
+all: build index
 
 build: build-hosts build-android build-windows
 
