@@ -6,23 +6,19 @@ MKFILE_DIR=$(shell dirname -- '$(MKFILE_ABSPATH)')
 WORK_DIR=$(shell pwd)
 
 .PHONY: all \
-	build build-hosts build-gz build-android build-windows \
+	build build-hosts build-android build-windows \
 	stats stats-tlds stats-suffixes \
 	index \
 	clean
 
 all: build
 
-build: build-hosts build-gz build-android build-windows
+build: build-hosts build-android build-windows
 
 build-hosts: dist/hosts
 dist/hosts:
 	mkdir -p dist/
 	"$(MKFILE_DIR)"/hblock -O dist/hosts
-
-build-gz: build-hosts dist/hosts.gz
-dist/hosts.gz:
-	gzip -c dist/hosts > dist/hosts.gz
 
 build-android: build-hosts dist/hosts_android.zip
 dist/hosts_android.zip:
