@@ -41,6 +41,7 @@
     "preversion": "sh resources/version.sh preversion",
     "version": "sh resources/version.sh version && git add -A"
   },
+  "os": ["!win32"],
   "preferGlobal": true,
   "devDependencies": {
     "firebase-tools": "^3.0.0"
