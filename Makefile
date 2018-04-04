@@ -27,12 +27,12 @@ dist/hosts.gz:
 build-android: build-hosts dist/hosts_android.zip
 dist/hosts_android.zip:
 	cd "$(MKFILE_DIR)"/resources/android/ && zip -r "$(WORK_DIR)"/dist/hosts_android.zip ./
-	cd "$(WORK_DIR)"/dist/ && zip -r "$(WORK_DIR)"/dist/hosts_android.zip hosts
+	cd dist/ && zip -r hosts_android.zip hosts
 
 build-windows: build-hosts dist/hosts_windows.zip
 dist/hosts_windows.zip:
-	cd "$(MKFILE_DIR)"/resources/windows/ && zip -r -l "$(WORK_DIR)"/dist/hosts_windows.zip ./
-	cd "$(WORK_DIR)"/dist/ && zip -r -l "$(WORK_DIR)"/dist/hosts_windows.zip hosts
+	cd "$(MKFILE_DIR)"/resources/windows/ && zip -rl "$(WORK_DIR)"/dist/hosts_windows.zip ./
+	cd dist/ && zip -rl hosts_windows.zip hosts
 
 stats: stats-tlds stats-suffixes
 
