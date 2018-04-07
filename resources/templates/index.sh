@@ -50,26 +50,29 @@ main() {
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 
-			<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:;">
+			<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://hblock-check.molinero.xyz; img-src data:;">
 			<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
 			<title>Index of /hBlock</title>
-			<meta name="description" content="Save bandwidth by blocking ads, tracking and malware domains">
+			<meta name="description" content="Improve your security and privacy by blocking ads, tracking and malware domains">
 			<meta name="author" content="Héctor Molinero Fernández <hector@molinero.xyz>">
 			<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
 
 			<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+
+			<!-- This resource is used to check if hBlock is disabled -->
+			<link rel="stylesheet" href="https://hblock-check.molinero.xyz/status.css">
 
 			<style>
 				html {
 					font-family: monospace;
 					font-size: 14px;
 					color: #424242;
-					background-color: #FAFAFA;
+					background-color: #FFFFFF;
 				}
 
 				a {
-					color: inherit;
+					color: #0D47A1;
 					text-decoration: none;
 				}
 
@@ -79,8 +82,12 @@ main() {
 					max-width: 1000px;
 				}
 
-				.title {
+				.header {
 					margin: 0 10px 10px;
+				}
+
+				.title {
+					font-weight: 700;
 					font-size: 22px;
 				}
 
@@ -92,7 +99,10 @@ main() {
 
 				.row {
 					display: table-row;
-					border-bottom: 1px solid #BDBDBD;
+				}
+
+				.row:not(:last-child) {
+					border-bottom: 1px solid #E0E0E0;
 				}
 
 				.cell {
@@ -106,9 +116,13 @@ main() {
 					font-weight: bold;
 				}
 
+				a.row {
+					color: inherit;
+				}
+
 				a.row:hover,
 				a.row:focus {
-					background-color: #EEE;
+					background-color: #FAFAFA;
 				}
 
 				@media all and (max-width: 768px) {
@@ -157,7 +171,12 @@ main() {
 
 		<body>
 			<div class="container">
-				<h1 class="title">Index of <a href="https://github.com/zant95/hblock">/hBlock</a></h1>
+				<div class="header">
+					<h1 class="title">Index of /hBlock</h1>
+					<p>Improve your security and privacy by blocking ads, tracking and malware domains.</p>
+					<p>For details about this project, see <a href="https://github.com/zant95/hblock">github.com/zant95/hblock</a>.</p>
+					<p id="hblock-status"><!-- If hBlock is disabled, an informational text will be displayed here --></p>
+				</div>
 				<div class="table">
 					<div class="row">
 						<div class="cell">Filename</div>

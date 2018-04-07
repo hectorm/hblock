@@ -306,19 +306,20 @@ main() {
 		done
 	fi
 
-	if [ -n "$blocklist" ]; then
-		printInfo 'Remove empty lines'
-		blocklist=$(printf -- '%s' "$blocklist" | sed '/^$/d')
+	# This domain is used to check if hBlock is disabled
+	blocklist=$(printf -- '%s\n%s' "$blocklist" 'hblock-check.molinero.xyz')
 
-		printInfo 'Sort entries'
-		blocklist=$(printf -- '%s' "$blocklist" | sort | uniq)
+	printInfo 'Remove empty lines'
+	blocklist=$(printf -- '%s' "$blocklist" | sed '/^$/d')
 
-		if [ -n "$redirection" ]; then
-			printInfo 'Add new destination IP'
-			# Escape string literal for use as the replacement string in sed
-			escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
-			blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$escapedRedirection /")
-		fi
+	printInfo 'Sort entries'
+	blocklist=$(printf -- '%s' "$blocklist" | sort | uniq)
+
+	if [ -n "$redirection" ]; then
+		printInfo 'Add new destination IP'
+		# Escape string literal for use as the replacement string in sed
+		escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
+		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$escapedRedirection /")
 	fi
 
 	if [ -f "$output" ]; then
