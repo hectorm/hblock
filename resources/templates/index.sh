@@ -44,7 +44,7 @@ main() {
 	# Page template
 	printf -- '%s\n' "$(tr -d '\n' <<-EOF
 		<!DOCTYPE html>
-		<html>
+		<html lang="en">
 
 		<head>
 			<meta charset="utf-8">
@@ -65,7 +65,7 @@ main() {
 
 			<style>
 				html {
-					font-family: monospace;
+					font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
 					font-size: 14px;
 					color: #424242;
 					background-color: #FFFFFF;
@@ -74,6 +74,11 @@ main() {
 				a {
 					color: #0D47A1;
 					text-decoration: none;
+				}
+
+				a:hover,
+				a:focus {
+					text-decoration: underline;
 				}
 
 				.container {
@@ -118,11 +123,12 @@ main() {
 
 				a.row {
 					color: inherit;
+					text-decoration: none;
 				}
 
 				a.row:hover,
 				a.row:focus {
-					background-color: #FAFAFA;
+					background-color: #F5F5F5;
 				}
 
 				@media all and (max-width: 768px) {
