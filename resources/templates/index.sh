@@ -100,6 +100,7 @@ main() {
 					display: table;
 					width: 100%;
 					border-collapse: collapse;
+					table-layout: fixed;
 				}
 
 				.row {
@@ -108,13 +109,6 @@ main() {
 
 				.row:not(:last-child) {
 					border-bottom: 1px solid #E0E0E0;
-				}
-
-				.cell {
-					display: table-cell;
-					padding: 15px 10px;
-					width: 25%;
-					white-space: pre;
 				}
 
 				.row:first-child {
@@ -131,7 +125,22 @@ main() {
 					background-color: #F5F5F5;
 				}
 
-				@media all and (max-width: 768px) {
+				.cell {
+					display: table-cell;
+					padding: 15px 10px;
+					white-space: pre;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
+				@media (min-width: 768px) {
+					.cell:nth-child(1) { width: 35%; }
+					.cell:nth-child(2) { width: 15%; }
+					.cell:nth-child(3) { width: 20%; }
+					.cell:nth-child(4) { width: 30%; }
+				}
+
+				@media (max-width: 767.98px) {
 					.table, .row, .cell {
 						display: block;
 					}
