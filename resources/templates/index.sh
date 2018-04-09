@@ -7,7 +7,20 @@
 set -eu
 export LC_ALL=C
 
-# Process
+endsWith() {
+	[ "${1%$2}" != "$1" ]
+}
+
+encodeURI() {
+	printf -- '%s' "$1" | hexdump -ve '/1 "%02x"' | sed 's|\(..\)|%\1|g'
+}
+
+escapeHTML() {
+	printf -- '%s' "$1" | \
+		sed 's|&|\&#38;|g;s|<|\&#60;|g;s|>|\&#62;|g;s|"|\&#34;|g;s|'\''|\&#39;|g' | \
+		sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\&#10;/g'
+}
+
 main() {
 	directory="${1:-./}"
 
@@ -16,30 +29,39 @@ main() {
 		exit 1
 	fi
 
-	entries=$(find -L "$directory" -maxdepth 1 -type f ! -iname '*.html' | sort |
-		while IFS= read -r file; do
-			if ! [ -r "$file" ]; then
-				>&2 printf -- '%s\n' "Cannot read file '$file'"
-				continue
-			fi
+	entries=$(for file in ./"$directory"/*; do
+		if ! [ -r "$file" ] || endsWith "$file" 'index.html'; then
+			continue
+		fi
 
-			fileName=$(basename "$file")
+		fileName=$(basename "$file")
+		fileNameURI=$(encodeURI "$fileName")
+		fileNameHTML=$(escapeHTML "$fileName")
+
+		if [ -f "$file" ]; then
 			fileSize=$(wc -c < "$file" | awk '{printf "%0.2f kB", $1 / 1000}')
-			fileType=$(file -bL --mime-type "$file")
-			fileDate=$(date -ur "$file" '+%Y-%m-%d %H:%M:%S %Z')
+		else
+			fileSize=$(printf '\x20')
+		fi
+		fileSizeHTML=$(escapeHTML "$fileSize")
 
-			# Entry template
-			printf -- '%s\n' "$(cat <<-EOF
-				<a class="row" href="./${fileName}">
-					<div class="cell">${fileName}</div>
-					<div class="cell">${fileSize}</div>
-					<div class="cell">${fileType}</div>
-					<div class="cell">${fileDate}</div>
-				</a>
-			EOF
-			)"
-		done
-	)
+		fileType=$(file -bL --mime-type "$file")
+		fileTypeHTML=$(escapeHTML "$fileType")
+
+		fileDate=$(date -ur "$file" '+%Y-%m-%d %H:%M:%S %Z')
+		fileDateHTML=$(escapeHTML "$fileDate")
+
+		# Entry template
+		printf -- '%s\n' "$(cat <<-EOF
+			<a class="row" href="./${fileNameURI}" title="${fileNameHTML}">
+				<div class="cell">${fileNameHTML}</div>
+				<div class="cell">${fileSizeHTML}</div>
+				<div class="cell">${fileTypeHTML}</div>
+				<div class="cell">${fileDateHTML}</div>
+			</a>
+		EOF
+		)"
+	done)
 
 	# Page template
 	printf -- '%s\n' "$(tr -d '\n' <<-EOF
