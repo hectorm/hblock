@@ -87,7 +87,7 @@ main() {
 
 			<style>
 				html {
-					font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+					font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
 					font-size: 14px;
 					color: #424242;
 					background-color: #FFFFFF;
