@@ -11,14 +11,26 @@ endsWith() {
 	[ "${1%$2}" != "$1" ]
 }
 
-encodeURI() {
-	printf -- '%s' "$1" | hexdump -ve '/1 "%02x"' | sed 's|\(..\)|%\1|g'
-}
-
 escapeHTML() {
 	printf -- '%s' "$1" | \
 		sed 's|&|\&#38;|g;s|<|\&#60;|g;s|>|\&#62;|g;s|"|\&#34;|g;s|'\''|\&#39;|g' | \
 		sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\&#10;/g'
+}
+
+encodeURI() {
+	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C; _IFS=$IFS; IFS=:
+	hex=$(printf -- '%s' "$1" | hexdump -ve '/1 ":%02X"'); hex=${hex#:}
+	for h in $hex; do
+		case "$h" in
+			3[0-9]|\
+			4[1-9A-F]|5[0-9A]|\
+			6[1-9A-F]|7[0-9A]|\
+			2D|5F|2E|7E\
+			) printf '%b' "\\$(printf '%o' "0x$h")" ;;
+			*) printf '%%%s' "$h"
+		esac
+	done
+	LC_COLLATE=$_LC_COLLATE; IFS=$_IFS
 }
 
 main() {
@@ -35,29 +47,35 @@ main() {
 		fi
 
 		fileName=$(basename "$file")
-		fileNameURI=$(encodeURI "$fileName")
-		fileNameHTML=$(escapeHTML "$fileName")
+		escapedFileName=$(escapeHTML "$fileName")
+		escapedFileNameURI=$(escapeHTML "$(encodeURI "$fileName")")
 
 		if [ -f "$file" ]; then
 			fileSize=$(wc -c < "$file" | awk '{printf "%0.2f kB", $1 / 1000}')
+			escapedFileSize=$(escapeHTML "$fileSize")
 		else
 			fileSize=$(printf '\x20')
+			escapedFileSize=$fileSize
 		fi
-		fileSizeHTML=$(escapeHTML "$fileSize")
 
-		fileType=$(file -bL --mime-type "$file")
-		fileTypeHTML=$(escapeHTML "$fileType")
+		if command -v file >/dev/null; then
+			fileType=$(file -bL --mime-type "$file")
+			escapedFileType=$(escapeHTML "$fileType")
+		else
+			fileType=$(printf '\x20')
+			escapedFileType=$fileType
+		fi
 
 		fileDate=$(date -ur "$file" '+%Y-%m-%d %H:%M:%S %Z')
-		fileDateHTML=$(escapeHTML "$fileDate")
+		escapedFileDate=$(escapeHTML "$fileDate")
 
 		# Entry template
 		printf -- '%s\n' "$(cat <<-EOF
-			<a class="row" href="./${fileNameURI}" title="${fileNameHTML}">
-				<div class="cell">${fileNameHTML}</div>
-				<div class="cell">${fileSizeHTML}</div>
-				<div class="cell">${fileTypeHTML}</div>
-				<div class="cell">${fileDateHTML}</div>
+			<a class="row" href="./${escapedFileNameURI}" title="${escapedFileName}">
+				<div class="cell">${escapedFileName}</div>
+				<div class="cell">${escapedFileSize}</div>
+				<div class="cell">${escapedFileType}</div>
+				<div class="cell">${escapedFileDate}</div>
 			</a>
 		EOF
 		)"
