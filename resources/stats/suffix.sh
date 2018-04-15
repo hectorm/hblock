@@ -7,7 +7,6 @@
 set -eu
 export LC_ALL=C
 
-# Process
 main() {
 	file="${1:-/etc/hosts}"
 	publicSuffixList="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
@@ -21,40 +20,44 @@ main() {
 	stats=''
 
 	# Get blocklist content
-	blocklist=$(cat -- "$file" |
-		awk '/<blocklist>/{p=1;next}/<\/blocklist>/{p=0}p' |
-		sed 's/^.\{1,\}[[:blank:]][^.]\{1,\}//'
-	)
+	blocklist=$(cat -- "$file" | sed '1,/<blocklist>/d;/<\/blocklist>/,$d;')
+
+	# Compact blocklist content (remove lowest level domain and count ocurrences)
+	blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' | sort | uniq -c)
 
 	if [ "$publicSuffixList" != 'none' ]; then
 		# Download public suffix list
 		suffixes=$(curl -fsSL -- "$publicSuffixList")
 
 		# Transform suffix list (punycode encode and sort by length in descending order)
-		suffixes=$(printf -- '%s\n' "$suffixes" |
+		suffixes=$(printf -- '%s' "$suffixes" |
 			sed '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' | CHARSET=UTF-8 idn |
-			awk '{print length($0)":."$0}' | sort -nr | cut -d: -f2
+			awk '{print(length($0)":."$0)}' | sort -nr | cut -d: -f2
 		)
 
+		# Create regex pattern for each suffix
+		suffixesRegex=$(printf -- '%s' "$suffixes" | sed 's/\./\\./g;s/$/$/g')
+
 		# Count blocklist matches for each suffix
-		for suffix in $suffixes; do
-			regex=$(printf -- '%s' "$suffix" | sed 's/\./\\./g')\$
-			count=$(printf -- '%s' "$blocklist" | grep -c "$regex") || true
+		for regex in $suffixesRegex; do
+			match=$(printf -- '%s' "$blocklist" | grep -- "$regex") || true
 
-			if [ "$count" != '0' ]; then
-				stats=$(printf -- '%s\t%s\n%s' "$count" "$suffix" "$stats")
-				blocklist=$(printf -- '%s' "$blocklist" | grep -v "$regex") || true
+			if [ -n "$match" ]; then
+				count=$(printf -- '%s' "$match" | awk '{s+=$1}END{print(s)}')
+				stats=$(printf -- '%s\t%s\n%s' "$count" "$regex" "$stats")
+				blocklist=$(printf -- '%s' "$blocklist" | grep -v -- "$regex") || true
 			fi
-
-			unset regex count
 		done
+
+		# Undo regex pattern
+		stats=$(printf -- '%s' "$stats" | sed 's/\\\././g;s/\$$//g')
 	fi
 
 	# If blocklist is not empty use TLD as suffix
 	if [ -n "$blocklist" ]; then
 		tldStats=$(printf -- '%s' "$blocklist" |
-			grep -o '\.[^.]\{1,\}$' | sort | uniq -c |
-			sed 's/^[[:blank:]]*\([0-9]\{1,\}\)[[:blank:]]\{1,\}/\1	/'
+			sed 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' |
+			awk '{arr[$2]+=$1;}END{for (i in arr) print(arr[i]"\t"i)}'
 		)
 
 		stats=$(printf -- '%s\n%s' "$tldStats" "$stats")
