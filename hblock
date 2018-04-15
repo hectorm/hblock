@@ -335,8 +335,8 @@ main() {
 		# Backup procedure
 		if [ "$backup" = true ]; then
 			printAction 'Backing up hosts file...'
-			[ -z "$backupDir" ] && backupDir=$(dirname "$output")
-			writeFile "$content" "$backupDir/$(basename "$output").$(date +%s).bak"
+			[ -z "$backupDir" ] && backupDir=$(dirname -- "$output")
+			writeFile "$content" "$backupDir/$(basename -- "$output").$(date +%s).bak"
 		fi
 
 		unset content
