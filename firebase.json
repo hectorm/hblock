@@ -5,7 +5,7 @@
       "source": "**",
       "headers": [{
         "key": "Content-Security-Policy",
-        "value": "default-src 'none'; style-src 'unsafe-inline'; img-src data:;"
+        "value": "default-src 'none'; style-src 'unsafe-inline' https://hblock-check.molinero.xyz; img-src data:;"
       }, {
         "key": "X-XSS-Protection",
         "value": "1;mode=block"
@@ -24,12 +24,6 @@
       "headers": [{
         "key": "Content-Type",
         "value": "application/zip"
-      }]
-    }, {
-      "source": "**/*.gz",
-      "headers": [{
-        "key": "Content-Type",
-        "value": "application/gzip"
       }]
     }]
   }
