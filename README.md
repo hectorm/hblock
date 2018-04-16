@@ -62,22 +62,23 @@ You can also change the default behavior using these options:
 Usage: hblock [options...]
  -O, --output FILE            Hosts file location (default: /etc/hosts)
  -R, --redirection IP         Destination IP for all entries in the blocklist
-                              (default: 0.0.0.0)
+                             (default: 0.0.0.0)
  -H, --header HEADER          Content to be included at the beginning of the
-                              hosts file. You can use the output of any other
-                              command (e.g. "$(cat header.txt)")
+                             hosts file. You can use the output of any other
+                             command (e.g. "$(cat header.txt)")
  -S, --sources URLS           Sources to be used to generate the blocklist
-                              (whitespace separated URLs)
+                             (whitespace separated URLs)
  -W, --whitelist ENTRIES      Entries to be removed from the blocklist
-                              (whitespace separated POSIX BREs)
+                             (whitespace separated POSIX BREs)
  -B, --blacklist ENTRIES      Entries to be added to the blocklist
-                              (whitespace separated domain names)
+                             (whitespace separated domain names)
  -b, --backup [DIRECTORY]     Make a time-stamped backup in DIRECTORY
-                              (default: output file directory)
+                             (default: output file directory)
  -l, --lenient                Match any IP address from sources, although it
-                              will be replaced by the destination IP
-                              (default: 0.0.0.0, 127.0.0.1 or none)
+                             will be replaced by the destination IP
+                             (default: 0.0.0.0, 127.0.0.1 or none)
  -i, --ignore-download-error  Do not abort if a download error occurs
+ -q, --quiet                  Suppress non-error messages
  -v, --version                Show version number and quit
  -h, --help                   Show this help and quit
 ```
