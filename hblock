@@ -198,7 +198,7 @@ main() {
 		shift
 		case "$opt" in
 			-*b)
-				if a="$*"; [ "${a#\-}"x != "${a}x" ]
+				if a="$*"; [ -z "$a" ] || [ "${a#\-}x" != "${a}x" ]
 					then set -- "$@" "$opt" ''
 					else set -- "$@" "$opt"
 				fi
