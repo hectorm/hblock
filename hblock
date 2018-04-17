@@ -85,23 +85,31 @@ EOF
 )
 
 # Methods
-printInfo() {
+printStdout() {
 	if [ "$quiet" != true ]; then
-		printf -- '   - %s\n' "$@"
+		# shellcheck disable=SC2059
+		printf -- "$@"
 	fi
 }
 
-printAction() {
-	if [ "$quiet" != true ]; then
-		printf -- '\033[1;33m + \033[1;32m%s \033[0m\n' "$@"
-	fi
+printStderr() {
+	# shellcheck disable=SC2059
+	>&2 printf -- "$@"
 }
 
-printError() {
-	>&2 printf -- '\033[1;33m + \033[1;31m%s \033[0m\n' "$@"
+logInfo() {
+	printStdout '   - %s\n' "$@"
 }
 
-printBool() {
+logAction() {
+	printStdout '\033[1;33m + \033[1;32m%s \033[0m\n' "$@"
+}
+
+logError() {
+	printStderr '\033[1;33m + \033[1;31m%s \033[0m\n' "$@"
+}
+
+getBoolVal() {
 	[ "$1" = true ] && s='yes' || s='no'
 	printf -- '%s' "$s"
 }
@@ -121,21 +129,21 @@ fetchUrl() {
 
 writeFile() {
 	if [ -d "$2" ]; then
-		printError "Cannot write '$2': is a directory"
+		logError "Cannot write '$2': is a directory"
 		exit 1
 	elif ([ -e "$2" ] && [ -w "$2" ]) || touch -- "$2" >/dev/null 2>&1; then
 		printf -- '%s\n' "$1" | tee -- "$2" >/dev/null
 	elif checkBinary sudo; then
 		printf -- '%s\n' "$1" | sudo tee -- "$2" >/dev/null
 	else
-		printError "Cannot write '$2': permission denied"
+		logError "Cannot write '$2': permission denied"
 		exit 1
 	fi
 }
 
 showHelp() {
 	if [ $# -eq 0 ]; then
-		printf -- '%s\n' "$(cat <<-'EOF'
+		printStdout '%s\n' "$(cat <<-'EOF'
 			Usage: hblock [options...]
 			 -O, --output FILE            Hosts file location (default: /etc/hosts)
 			 -R, --redirection IP         Destination IP for all entries in the blocklist
@@ -162,14 +170,14 @@ showHelp() {
 		)"
 		exit 0
 	else
-		[ -n "$1" ] && >&2 printf -- '%s\n' "Illegal option $1"
-		>&2 printf -- '%s\n' "Try 'hblock --help' for more information"
+		[ -n "$1" ] && printStderr '%s\n' "Illegal option $1"
+		printStderr '%s\n' "Try 'hblock --help' for more information"
 		exit 1
 	fi
 }
 
 showVersion() {
-	printf -- '%s\n' '1.3.5'
+	printStdout '%s\n' '1.3.5'
 	exit 0
 }
 
@@ -227,26 +235,26 @@ main() {
 		esac
 	done
 
-	printAction 'Configuration:'
+	logAction 'Configuration:'
 
-	printInfo "Hosts file: $output"
-	printInfo "Destination IP: $redirection"
-	printInfo "Backup: $(printBool "$backup")"
-	printInfo "Lenient: $(printBool "$lenient")"
-	printInfo "Ignore download error: $(printBool "$ignoreDownloadError")"
+	logInfo "Hosts file: $output"
+	logInfo "Backup: $(getBoolVal "$backup")"
+	logInfo "Destination IP: $redirection"
+	logInfo "Lenient: $(getBoolVal "$lenient")"
+	logInfo "Ignore download error: $(getBoolVal "$ignoreDownloadError")"
 
-	printAction 'Downloading lists...'
+	logAction 'Downloading lists...'
 
 	if ! checkBinary curl && ! checkBinary wget; then
-		printError 'Either wget or curl are required for this script'
+		logError 'Either wget or curl are required for this script'
 		exit 1
 	fi
 	for url in $sources; do
-		printInfo "$url"
+		logInfo "$url"
 		content=$(fetchUrl "$url") || true
 
 		if [ -z "$content" ] && [ "$ignoreDownloadError" != true ]; then
-			printError 'Download failed'
+			logError 'Download failed'
 			exit 1
 		fi
 
@@ -254,25 +262,25 @@ main() {
 		unset content
 	done
 
-	printAction 'Parsing lists...'
+	logAction 'Parsing lists...'
 
 	if [ -n "$blocklist" ]; then
-		printInfo 'Remove carriage return'
+		logInfo 'Remove carriage return'
 		blocklist=$(printf -- '%s' "$blocklist" | tr -d '\r')
 
-		printInfo 'Transform to lowercase'
+		logInfo 'Transform to lowercase'
 		blocklist=$(printf -- '%s' "$blocklist" | tr '[:upper:]' '[:lower:]')
 
-		printInfo 'Remove comments'
+		logInfo 'Remove comments'
 		blocklist=$(printf -- '%s' "$blocklist" | sed 's/#.*//')
 
-		printInfo 'Trim spaces'
+		logInfo 'Trim spaces'
 		blocklist=$(printf -- '%s' "$blocklist" | sed \
 			-e 's/^[[:blank:]]*//' \
 			-e 's/[[:blank:]]*$//'
 		)
 
-		printInfo 'Match hosts lines'
+		logInfo 'Match hosts lines'
 		if [ "$lenient" = true ]; then
 			# This regex would be ideal, but it is not POSIX-compliant.
 			# ipOctetRegex='\(25[0-5]\|2[0-4][0-9]\|[01]\{0,1\}[0-9][0-9]\{0,1\}\)'
@@ -284,9 +292,9 @@ main() {
 			ipRegex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
 		fi
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
-		blocklist=$(printf -- '%s' "$blocklist" | sed -n "/^\\($ipRegex[[:blank:]]\\{1,\\}\\)\\{0,1\\}$domainRegex$/p")
+		blocklist=$(printf -- '%s' "$blocklist" | sed -n "/^\\(${ipRegex}[[:blank:]]\\{1,\\}\\)\\{0,1\\}$domainRegex$/p")
 
-		printInfo 'Remove reserved TLDs'
+		logInfo 'Remove reserved TLDs'
 		blocklist=$(printf -- '%s' "$blocklist" | sed \
 			-e '/\.example$/d' \
 			-e '/\.invalid$/d' \
@@ -296,11 +304,11 @@ main() {
 			-e '/\.test$/d'
 		)
 
-		printInfo 'Remove destination IPs'
+		logInfo 'Remove destination IPs'
 		blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]]\{1,\}//')
 
 		if [ -n "$whitelist" ]; then
-			printInfo 'Apply whitelist'
+			logInfo 'Apply whitelist'
 			for domain in $whitelist; do
 				blocklist=$(printf -- '%s' "$blocklist" | sed "/$domain/d")
 			done
@@ -308,7 +316,7 @@ main() {
 	fi
 
 	if [ -n "$blacklist" ]; then
-		printInfo 'Apply blacklist'
+		logInfo 'Apply blacklist'
 		for domain in $blacklist; do
 			blocklist=$(printf -- '%s\n%s' "$blocklist" "$domain")
 		done
@@ -317,14 +325,14 @@ main() {
 	# This domain is used to check if hBlock is disabled
 	blocklist=$(printf -- '%s\n%s' "$blocklist" 'hblock-check.molinero.xyz')
 
-	printInfo 'Remove empty lines'
+	logInfo 'Remove empty lines'
 	blocklist=$(printf -- '%s' "$blocklist" | sed '/^$/d')
 
-	printInfo 'Sort entries'
+	logInfo 'Sort entries'
 	blocklist=$(printf -- '%s' "$blocklist" | sort | uniq)
 
 	if [ -n "$redirection" ]; then
-		printInfo 'Add new destination IP'
+		logInfo 'Add new destination IP'
 		# Escape string literal for use as the replacement string in sed
 		escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
 		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$escapedRedirection /")
@@ -342,7 +350,7 @@ main() {
 
 		# Backup procedure
 		if [ "$backup" = true ]; then
-			printAction 'Backing up hosts file...'
+			logAction 'Backing up hosts file...'
 			[ -z "$backupDir" ] && backupDir=$(dirname -- "$output")
 			writeFile "$content" "$backupDir/$(basename -- "$output").$(date +%s).bak"
 		fi
@@ -352,6 +360,8 @@ main() {
 
 	generationDate=$(date -u)
 	blocklistCount=$([ -n "$blocklist" ] && printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]' || printf '0')
+
+	logAction 'Generating hosts file...'
 
 	# Hosts file
 	hosts=$(cat <<-EOF
@@ -367,10 +377,8 @@ main() {
 	EOF
 	)
 
-	printAction 'Generating hosts file...'
 	writeFile "$hosts" "$output"
-
-	printAction "$blocklistCount blocked domains!"
+	logAction "$blocklistCount blocked domains!"
 }
 
 main "$@"
