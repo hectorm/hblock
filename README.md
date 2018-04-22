@@ -40,8 +40,8 @@ I provide nightly builds of the hosts file and installers for **Windows** (batch
 ## Installation
 
 ```sh
-curl -o /tmp/hblock 'https://raw.githubusercontent.com/zant95/hblock/v1.4.0/hblock' \
-  && echo 'cceaf9feffc8ca8d380238f92073c3cfce308d071cefbd4a341771dbc565eb23  /tmp/hblock' | shasum -c \
+curl -o /tmp/hblock 'https://raw.githubusercontent.com/zant95/hblock/v1.4.1/hblock' \
+  && echo '3da144b2f6cca9ab8e38ed06d05ca96f14ebe554b88eb2918841dfac7ba04a12  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
   && sudo chown root:root /usr/local/bin/hblock \
   && sudo chmod 755 /usr/local/bin/hblock
