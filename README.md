@@ -94,7 +94,7 @@ structure:
 ```
 
 #### Run preview
-[![asciicast](https://asciinema.org/a/149165.png)](https://asciinema.org/a/149165)
+[![asciicast](https://asciinema.org/a/FCwBJiwmUWcZCy2lWN7CNKFxV.png)](https://asciinema.org/a/FCwBJiwmUWcZCy2lWN7CNKFxV)
 
 ## Sources
 | Name                                  | Primary                                          | Mirror                                           |
