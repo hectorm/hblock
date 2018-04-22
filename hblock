@@ -359,6 +359,7 @@ main() {
 		content=$(cat -- "$output")
 
 		# Get custom section
+		logAction 'Reading custom section...'
 		custom=$(
 			printf -- '%s' "$content" | sed '/^#.*<custom>/,/^#.*<\/custom>/!d;//d' &&
 			# "user-defined" is deprecated, use "custom" instead
