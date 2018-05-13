@@ -361,7 +361,7 @@ main() {
 		# Get custom section
 		logAction 'Reading custom section...'
 		custom=$(
-			printf -- '%s' "$content" | sed '/^#.*<custom>/,/^#.*<\/custom>/!d;//d' &&
+			printf -- '%s' "$content" | sed '/^#.*<custom>/,/^#.*<\/custom>/!d;/^#.*<\(\/\|\)custom>/d' &&
 			# "user-defined" is deprecated, use "custom" instead
 			printf -- '%s' "$content" | sed '/^#.*<user-defined>/,/^#.*<\/user-defined>/!d;//d'
 		)
