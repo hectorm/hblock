@@ -20,7 +20,7 @@ main() {
 	stats=''
 
 	# Get blocklist content
-	blocklist=$(cat -- "$file" | sed '1,/<blocklist>/d;/<\/blocklist>/,$d;')
+	blocklist=$(cat -- "$file" | sed '/^#.*<blocklist>/,/^#.*<\/blocklist>/!d;/^\s*#.*$/d')
 
 	# Compact blocklist content (remove lowest level domain and count ocurrences)
 	blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' | sort | uniq -c)

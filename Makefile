@@ -25,28 +25,44 @@ export DEFAULT_HOSTS
 
 .PHONY: all \
 	install uninstall \
-	build build-hosts build-android build-windows \
+	build build-hosts build-domains build-adblock build-dnsmasq build-unbound build-android build-windows \
 	stats stats-tlds stats-suffixes \
 	index \
 	clean
 
 all: build index
 
-build: build-hosts build-android build-windows
+build: build-hosts build-domains build-adblock build-dnsmasq build-unbound build-android build-windows
 
 build-hosts: dist/hosts
 dist/hosts:
 	mkdir -p dist/
 	"$(MKFILE_DIR)"/hblock -O dist/hosts
 
+build-domains: build-hosts dist/hosts_domains.txt
+dist/hosts_domains.txt:
+	"$(MKFILE_DIR)"/resources/alt-formats/domains.sh dist/hosts > dist/hosts_domains.txt
+
+build-adblock: build-hosts dist/hosts_adblock.txt
+dist/hosts_adblock.txt:
+	"$(MKFILE_DIR)"/resources/alt-formats/adblock.sh dist/hosts > dist/hosts_adblock.txt
+
+build-dnsmasq: build-hosts dist/hosts_dnsmasq.conf
+dist/hosts_dnsmasq.conf:
+	"$(MKFILE_DIR)"/resources/alt-formats/dnsmasq.sh dist/hosts > dist/hosts_dnsmasq.conf
+
+build-unbound: build-hosts dist/hosts_unbound.conf
+dist/hosts_unbound.conf:
+	"$(MKFILE_DIR)"/resources/alt-formats/unbound.sh dist/hosts > dist/hosts_unbound.conf
+
 build-android: build-hosts dist/hosts_android.zip
 dist/hosts_android.zip:
-	cd "$(MKFILE_DIR)"/resources/android/ && zip -r "$(CURDIR)"/dist/hosts_android.zip ./
+	cd "$(MKFILE_DIR)"/resources/alt-formats/android/ && zip -r "$(CURDIR)"/dist/hosts_android.zip ./
 	cd dist/ && zip -r hosts_android.zip hosts
 
 build-windows: build-hosts dist/hosts_windows.zip
 dist/hosts_windows.zip:
-	cd "$(MKFILE_DIR)"/resources/windows/ && zip -rl "$(CURDIR)"/dist/hosts_windows.zip ./
+	cd "$(MKFILE_DIR)"/resources/alt-formats/windows/ && zip -rl "$(CURDIR)"/dist/hosts_windows.zip ./
 	cd dist/ && zip -rl hosts_windows.zip hosts
 
 stats: stats-tlds stats-suffixes
@@ -90,6 +106,10 @@ uninstall:
 clean:
 	rm -f \
 		dist/hosts \
+		dist/hosts_domains.txt \
+		dist/hosts_adblock.txt \
+		dist/hosts_dnsmasq.conf \
+		dist/hosts_unbound.conf \
 		dist/hosts_android.zip \
 		dist/hosts_windows.zip \
 		dist/most_abused_tlds.txt \
