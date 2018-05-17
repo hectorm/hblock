@@ -7,6 +7,8 @@
     "ad-blocker",
     "ads",
     "advertisements",
+    "dns",
+    "dnsmasq",
     "domains",
     "filter",
     "filter-lists",
@@ -19,6 +21,7 @@
     "shell",
     "trackers",
     "tracking",
+    "unbound",
     "unified-hosts"
   ],
   "author": "Héctor Molinero Fernández <hector@molinero.xyz>",
