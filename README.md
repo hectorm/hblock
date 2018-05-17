@@ -106,6 +106,8 @@ structure:
 | disconnect.me - Malvertising          | [URL][source-disconnect.me-malvertising]         | [URL][mirror-disconnect.me-malvertising]         |
 | disconnect.me - Malware               | [URL][source-disconnect.me-malware]              | [URL][mirror-disconnect.me-malware]              |
 | disconnect.me - Tracking              | [URL][source-disconnect.me-tracking]             | [URL][mirror-disconnect.me-tracking]             |
+| EasyList                              | [URL][source-easylist]                           | [URL][mirror-easylist]                           |
+| EasyPrivacy                           | [URL][source-easyprivacy]                        | [URL][mirror-easyprivacy]                        |
 | ETH Phishing Detect                   | [URL][source-eth-phishing-detect]                | [URL][mirror-eth-phishing-detect]                |
 | FadeMind - add.2o7Net                 | [URL][source-fademind-add.2o7net]                | [URL][mirror-fademind-add.2o7net]                |
 | FadeMind - add.Dead                   | [URL][source-fademind-add.dead]                  | [URL][mirror-fademind-add.dead]                  |
@@ -140,6 +142,10 @@ structure:
 [mirror-disconnect.me-malware]: https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-malware/list.txt
 [source-disconnect.me-tracking]: https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 [mirror-disconnect.me-tracking]: https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-tracking/list.txt
+[source-easylist]: https://easylist.to/easylist/easylist.txt
+[mirror-easylist]: https://raw.githubusercontent.com/zant95/hmirror/master/data/easylist/list.txt
+[source-easyprivacy]: https://easylist.to/easylist/easyprivacy.txt
+[mirror-easyprivacy]: https://raw.githubusercontent.com/zant95/hmirror/master/data/easyprivacy/list.txt
 [source-eth-phishing-detect]: https://raw.githubusercontent.com/MetaMask/eth-phishing-detect/master/src/hosts.txt
 [mirror-eth-phishing-detect]: https://raw.githubusercontent.com/zant95/hmirror/master/data/eth-phishing-detect/list.txt
 [source-fademind-add.2o7net]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.2o7Net/hosts
