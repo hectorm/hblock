@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/hblock
+# Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
@@ -229,7 +229,7 @@ main() {
 				<div class="header">
 					<h1 class="title">Index of /hBlock</h1>
 					<p>Improve your security and privacy by blocking ads, tracking and malware domains.</p>
-					<p>For details about this project, see <a href="https://github.com/zant95/hblock">github.com/zant95/hblock</a>.</p>
+					<p>For details about this project, see <a href="https://github.com/hectorm/hblock">github.com/hectorm/hblock</a>.</p>
 					<p id="hblock-status"><!-- If hBlock is disabled, an informational text will be displayed here --></p>
 				</div>
 				<div class="table">

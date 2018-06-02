@@ -1,6 +1,6 @@
-[![Build](https://gitlab.com/zant95/hblock/badges/master/build.svg)](https://gitlab.com/zant95/hblock/pipelines)
+[![Build](https://gitlab.com/hectorm/hblock/badges/master/build.svg)](https://gitlab.com/hectorm/hblock/pipelines)
 [![Website](https://img.shields.io/website/https/hblock.molinero.xyz.svg)](https://hblock.molinero.xyz)
-[![License](https://img.shields.io/github/license/zant95/hblock.svg)](LICENSE.md)
+[![License](https://img.shields.io/github/license/hectorm/hblock.svg)](LICENSE.md)
 
 ***
 
@@ -40,7 +40,7 @@ I provide nightly builds of the hosts file and installers for **Windows** (batch
 ## Installation
 
 ```sh
-curl -o /tmp/hblock 'https://raw.githubusercontent.com/zant95/hblock/v1.5.1/hblock' \
+curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v1.5.1/hblock' \
   && echo '77587a6cd11b966cb6a395d948764745f2aebf768bfbf162163a3013ddd21edd  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
   && sudo chown root:root /usr/local/bin/hblock \
@@ -129,61 +129,61 @@ structure:
 | zeustracker.abuse.ch                  | [URL][source-zeustracker.abuse.ch]               | [URL][mirror-zeustracker.abuse.ch]               |
 
 [source-adaway.org]: https://adaway.org/hosts.txt
-[mirror-adaway.org]: https://raw.githubusercontent.com/zant95/hmirror/master/data/adaway.org/list.txt
+[mirror-adaway.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
 [source-adblock-nocoin-list]: https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt
-[mirror-adblock-nocoin-list]: https://raw.githubusercontent.com/zant95/hmirror/master/data/adblock-nocoin-list/list.txt
+[mirror-adblock-nocoin-list]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 [source-adguard-simplified]: https://filters.adtidy.org/extension/chromium/filters/15.txt
-[mirror-adguard-simplified]: https://raw.githubusercontent.com/zant95/hmirror/master/data/adguard-simplified/list.txt
+[mirror-adguard-simplified]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
 [source-disconnect.me-ad]: https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-[mirror-disconnect.me-ad]: https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-ad/list.txt
+[mirror-disconnect.me-ad]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
 [source-disconnect.me-malvertising]: https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
-[mirror-disconnect.me-malvertising]: https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-malvertising/list.txt
+[mirror-disconnect.me-malvertising]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
 [source-disconnect.me-malware]: https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
-[mirror-disconnect.me-malware]: https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-malware/list.txt
+[mirror-disconnect.me-malware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
 [source-disconnect.me-tracking]: https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
-[mirror-disconnect.me-tracking]: https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-tracking/list.txt
+[mirror-disconnect.me-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
 [source-easylist]: https://easylist.to/easylist/easylist.txt
-[mirror-easylist]: https://raw.githubusercontent.com/zant95/hmirror/master/data/easylist/list.txt
+[mirror-easylist]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
 [source-easyprivacy]: https://easylist.to/easylist/easyprivacy.txt
-[mirror-easyprivacy]: https://raw.githubusercontent.com/zant95/hmirror/master/data/easyprivacy/list.txt
+[mirror-easyprivacy]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
 [source-eth-phishing-detect]: https://raw.githubusercontent.com/MetaMask/eth-phishing-detect/master/src/hosts.txt
-[mirror-eth-phishing-detect]: https://raw.githubusercontent.com/zant95/hmirror/master/data/eth-phishing-detect/list.txt
+[mirror-eth-phishing-detect]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
 [source-fademind-add.2o7net]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.2o7Net/hosts
-[mirror-fademind-add.2o7net]: https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.2o7net/list.txt
+[mirror-fademind-add.2o7net]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
 [source-fademind-add.dead]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Dead/hosts
-[mirror-fademind-add.dead]: https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.dead/list.txt
+[mirror-fademind-add.dead]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
 [source-fademind-add.risk]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Risk/hosts
-[mirror-fademind-add.risk]: https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.risk/list.txt
+[mirror-fademind-add.risk]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
 [source-fademind-add.spam]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
-[mirror-fademind-add.spam]: https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.spam/list.txt
+[mirror-fademind-add.spam]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
 [source-kadhosts]: https://raw.githubusercontent.com/azet12/KADhosts/master/KADhosts.txt
-[mirror-kadhosts]: https://raw.githubusercontent.com/zant95/hmirror/master/data/kadhosts/list.txt
+[mirror-kadhosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
 [source-malwaredomainlist.com]: https://www.malwaredomainlist.com/hostslist/hosts.txt
-[mirror-malwaredomainlist.com]: https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomainlist.com/list.txt
+[mirror-malwaredomainlist.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
 [source-malwaredomains.com-immortaldomains]: http://mirror1.malwaredomains.com/files/immortal_domains.txt
-[mirror-malwaredomains.com-immortaldomains]: https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
+[mirror-malwaredomains.com-immortaldomains]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
 [source-malwaredomains.com-justdomains]: http://mirror1.malwaredomains.com/files/justdomains
-[mirror-malwaredomains.com-justdomains]: https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomains.com-justdomains/list.txt
+[mirror-malwaredomains.com-justdomains]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
 [source-matomo.org-spammers]: https://raw.githubusercontent.com/matomo-org/referrer-spam-blacklist/master/spammers.txt
-[mirror-matomo.org-spammers]: https://raw.githubusercontent.com/zant95/hmirror/master/data/matomo.org-spammers/list.txt
+[mirror-matomo.org-spammers]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
 [source-mitchellkrogza-badd-boyz-hosts]: https://raw.githubusercontent.com/mitchellkrogza/Badd-Boyz-Hosts/master/hosts
-[mirror-mitchellkrogza-badd-boyz-hosts]: https://raw.githubusercontent.com/zant95/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
+[mirror-mitchellkrogza-badd-boyz-hosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
 [source-pgl.yoyo.org]: https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
-[mirror-pgl.yoyo.org]: https://raw.githubusercontent.com/zant95/hmirror/master/data/pgl.yoyo.org/list.txt
+[mirror-pgl.yoyo.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
 [source-ransomwaretracker.abuse.ch]: https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
-[mirror-ransomwaretracker.abuse.ch]: https://raw.githubusercontent.com/zant95/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
+[mirror-ransomwaretracker.abuse.ch]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
 [source-someonewhocares.org]: http://someonewhocares.org/hosts/hosts
-[mirror-someonewhocares.org]: https://raw.githubusercontent.com/zant95/hmirror/master/data/someonewhocares.org/list.txt
+[mirror-someonewhocares.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
 [source-spam404.com]: https://raw.githubusercontent.com/Dawsey21/Lists/master/main-blacklist.txt
-[mirror-spam404.com]: https://raw.githubusercontent.com/zant95/hmirror/master/data/spam404.com/list.txt
+[mirror-spam404.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
 [source-stevenblack]: https://raw.githubusercontent.com/StevenBlack/hosts/master/data/StevenBlack/hosts
-[mirror-stevenblack]: https://raw.githubusercontent.com/zant95/hmirror/master/data/stevenblack/list.txt
+[mirror-stevenblack]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
 [source-winhelp2002.mvps.org]: http://winhelp2002.mvps.org/hosts.txt
-[mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/zant95/hmirror/master/data/winhelp2002.mvps.org/list.txt
+[mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 [source-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/ZeroDot1/CoinBlockerLists/master/hosts_browser
-[mirror-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/zant95/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
+[mirror-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
 [source-zeustracker.abuse.ch]: https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
-[mirror-zeustracker.abuse.ch]: https://raw.githubusercontent.com/zant95/hmirror/master/data/zeustracker.abuse.ch/list.txt
+[mirror-zeustracker.abuse.ch]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
 
 ## Disclaimer
 This script, by default, replaces the `/etc/hosts` file of your system. I am not responsible for any damage or loss, always make backups.

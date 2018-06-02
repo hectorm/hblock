@@ -2,7 +2,7 @@
 
 # Version:    1.5.1
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
-# Repository: https://github.com/zant95/hblock
+# Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
@@ -42,34 +42,34 @@ blocklist=''
 
 # Default sources
 sources=$(cat <<-'EOF'
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/adaway.org/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/adblock-nocoin-list/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/adguard-simplified/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-ad/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-malvertising/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-malware/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/disconnect.me-tracking/list.txt
-	https://raw.githubusercontent.com/zant95/hMirror/master/data/easylist/list.txt
-	https://raw.githubusercontent.com/zant95/hMirror/master/data/easyprivacy/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/eth-phishing-detect/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.2o7net/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.dead/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.risk/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/fademind-add.spam/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/kadhosts/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomainlist.com/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/malwaredomains.com-justdomains/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/matomo.org-spammers/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/pgl.yoyo.org/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/someonewhocares.org/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/spam404.com/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/stevenblack/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/winhelp2002.mvps.org/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
-	https://raw.githubusercontent.com/zant95/hmirror/master/data/zeustracker.abuse.ch/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
+	https://raw.githubusercontent.com/hectorm/hMirror/master/data/easylist/list.txt
+	https://raw.githubusercontent.com/hectorm/hMirror/master/data/easyprivacy/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
 EOF
 )
 
@@ -382,7 +382,7 @@ main() {
 	# Hosts file
 	hosts=$(cat <<-EOF
 		# Author:          Héctor Molinero Fernández <hector@molinero.xyz>
-		# Repository:      https://github.com/zant95/hblock
+		# Repository:      https://github.com/hectorm/hblock
 		# Last updated:    $generationDate
 		# Blocked domains: $blocklistCount
 		$(
