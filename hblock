@@ -49,8 +49,8 @@ sources=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
-	https://raw.githubusercontent.com/hectorm/hMirror/master/data/easylist/list.txt
-	https://raw.githubusercontent.com/hectorm/hMirror/master/data/easyprivacy/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
