@@ -25,14 +25,32 @@ export DEFAULT_HOSTS
 
 .PHONY: all \
 	install uninstall \
-	build build-hosts build-domains build-adblock build-dnsmasq build-unbound build-android build-windows \
-	stats stats-tlds stats-suffixes \
+	build \
+		build-hosts \
+		build-domains \
+		build-adblock \
+		build-rpz \
+		build-dnsmasq \
+		build-unbound \
+		build-android \
+		build-windows \
+	stats \
+		stats-tlds \
+		stats-suffixes \
 	index \
 	clean
 
 all: build index
 
-build: build-hosts build-domains build-adblock build-dnsmasq build-unbound build-android build-windows
+build: \
+	build-hosts \
+	build-domains \
+	build-adblock \
+	build-rpz \
+	build-dnsmasq \
+	build-unbound \
+	build-android \
+	build-windows
 
 build-hosts: dist/hosts
 dist/hosts:
@@ -46,6 +64,10 @@ dist/hosts_domains.txt:
 build-adblock: build-hosts dist/hosts_adblock.txt
 dist/hosts_adblock.txt:
 	"$(MKFILE_DIR)"/resources/alt-formats/adblock.sh dist/hosts > dist/hosts_adblock.txt
+
+build-rpz: build-hosts dist/hosts_rpz.txt
+dist/hosts_rpz.txt:
+	"$(MKFILE_DIR)"/resources/alt-formats/rpz.sh dist/hosts > dist/hosts_rpz.txt
 
 build-dnsmasq: build-hosts dist/hosts_dnsmasq.conf
 dist/hosts_dnsmasq.conf:
@@ -108,6 +130,7 @@ clean:
 		dist/hosts \
 		dist/hosts_domains.txt \
 		dist/hosts_adblock.txt \
+		dist/hosts_rpz.txt \
 		dist/hosts_dnsmasq.conf \
 		dist/hosts_unbound.conf \
 		dist/hosts_android.zip \
