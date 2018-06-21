@@ -8,84 +8,8 @@
 set -eu
 export LC_ALL=C
 
-# Default options
-output='/etc/hosts'
-redirection='0.0.0.0'
-backup=false
-backupDir=''
-lenient=false
-ignoreDownloadError=false
-color=auto
-quiet=false
-
 # shellcheck disable=SC2039
-hostname=${HOSTNAME-$(uname -n)}
-
-# Default header block
-header=$(cat <<-EOF
-	127.0.0.1       localhost $hostname
-	255.255.255.255 broadcasthost
-	::1             localhost ip6-localhost ip6-loopback
-	fe00::0         ip6-localnet
-	ff00::0         ip6-mcastprefix
-	ff02::1         ip6-allnodes
-	ff02::2         ip6-allrouters
-	ff02::3         ip6-allhosts
-EOF
-)
-
-# Default custom block
-custom=''
-
-# Default blocklist block
-blocklist=''
-
-# Default sources
-sources=$(cat <<-'EOF'
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
-EOF
-)
-
-# Default whitelist (POSIX basic regex)
-# Examples:
-#   \.com$              -> all domains that ends with '.com'.
-#   ^example            -> all domains that starts with 'example'.
-#   ^sub\.example\.org$ -> domain 'sub.example.org'.
-whitelist=$(cat <<-'EOF'
-EOF
-)
-
-# Default blacklist
-blacklist=$(cat <<-'EOF'
-EOF
-)
+HOSTNAME=${HOSTNAME-$(uname -n)}
 
 # Methods
 printStdout() {
@@ -156,25 +80,35 @@ showHelp() {
 	if [ $# -eq 0 ]; then
 		printStdout '%s\n' "$(cat <<-'EOF'
 			Usage: hblock [options...]
-			 -O, --output FILE            Hosts file location (default: /etc/hosts)
-			 -R, --redirection IP         Destination IP for all entries in the blocklist
+			 -O, --output FILE            Output file location
+			                              (default: /etc/hosts)
+			 -R, --redirection IP         Redirection for all entries in the blocklist
 			                              (default: 0.0.0.0)
 			 -H, --header HEADER          Content to be included at the beginning of the
-			                              hosts file. You can use the output of any other
-			                              command (e.g. "$(cat header.txt)")
+			                              file. You can use the output of any other command
+			                              (e.g. "$(cat header.txt)")
+			 -F, --footer FOOTER          Content to be included at the end of the file.
+			                              You can use the output of any other command
+			                              (e.g. "$(cat footer.txt)")
+			 -T, --template TEMPLATE      POSIX BREs replacement applied to each line
+			                                \1 -> Domain
+			                                \2 -> Redirection
+			                              (default: \2 \1)
+			 -C, --comment COMMENT        Character used for comments
+			                              (default: #)
 			 -S, --sources URLS           Sources to be used to generate the blocklist
 			                              (whitespace separated URLs)
 			 -W, --whitelist ENTRIES      Entries to be removed from the blocklist
 			                              (whitespace separated POSIX BREs)
 			 -B, --blacklist ENTRIES      Entries to be added to the blocklist
-			                              (whitespace separated domain names)
 			 -b, --backup [DIRECTORY]     Make a time-stamped backup in DIRECTORY
 			                              (default: output file directory)
 			 -l, --lenient                Match any IP address from sources, although it
 			                              will be replaced by the destination IP
 			                              (default: 0.0.0.0, 127.0.0.1 or none)
 			 -i, --ignore-download-error  Do not abort if a download error occurs
-			 -c, --color auto|true|false  Colorize the output (default: auto)
+			 -c, --color auto|true|false  Colorize the output
+			                              (default: auto)
 			 -q, --quiet                  Suppress non-error messages
 			 -v, --version                Show version number and quit
 			 -h, --help                   Show this help and quit
@@ -194,6 +128,61 @@ showVersion() {
 }
 
 main() {
+	output='/etc/hosts'
+	redirection='0.0.0.0'
+	header=$(cat <<-EOF
+		127.0.0.1       localhost $HOSTNAME
+		255.255.255.255 broadcasthost
+		::1             localhost ip6-localhost ip6-loopback
+		fe00::0         ip6-localnet
+		ff00::0         ip6-mcastprefix
+		ff02::1         ip6-allnodes
+		ff02::2         ip6-allrouters
+		ff02::3         ip6-allhosts
+	EOF
+	)
+	footer=''
+	template='\2 \1'
+	comment='#'
+	sources=$(cat <<-'EOF'
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
+	EOF
+	)
+	whitelist=''
+	blacklist=''
+	backup=false
+	lenient=false
+	ignoreDownloadError=false
+	color=auto
+	quiet=false
+
 	# Transform long options to short ones
 	for opt in "$@"; do
 		shift
@@ -201,6 +190,9 @@ main() {
 			'--output')                set -- "$@" '-O' ;;
 			'--redirection')           set -- "$@" '-R' ;;
 			'--header')                set -- "$@" '-H' ;;
+			'--footer')                set -- "$@" '-F' ;;
+			'--template')              set -- "$@" '-T' ;;
+			'--comment')               set -- "$@" '-C' ;;
 			'--sources')               set -- "$@" '-S' ;;
 			'--whitelist')             set -- "$@" '-W' ;;
 			'--blacklist')             set -- "$@" '-B' ;;
@@ -229,11 +221,14 @@ main() {
 	done
 	# Read options
 	OPTIND=1
-	while getopts ':O:R:H:S:W:B:b:lic:qvh-:' opt; do
+	while getopts ':O:R:H:F:T:C:S:W:B:b:lic:qvh-:' opt; do
 		case "$opt" in
 			'O') output="$OPTARG" ;;
 			'R') redirection="$OPTARG" ;;
 			'H') header="$OPTARG" ;;
+			'F') footer="$OPTARG" ;;
+			'T') template="$OPTARG" ;;
+			'C') comment="$OPTARG" ;;
 			'S') sources="$OPTARG" ;;
 			'W') whitelist="$OPTARG" ;;
 			'B') blacklist="$OPTARG" ;;
@@ -256,9 +251,9 @@ main() {
 
 	logAction 'Configuration:'
 
-	logInfo "Hosts file: $output"
+	logInfo "Output: $output"
+	logInfo "Redirection: $redirection"
 	logInfo "Backup: $(getBoolVal "$backup")"
-	logInfo "Destination IP: $redirection"
 	logInfo "Lenient: $(getBoolVal "$lenient")"
 	logInfo "Ignore download error: $(getBoolVal "$ignoreDownloadError")"
 
@@ -268,6 +263,8 @@ main() {
 		logError 'Either wget or curl are required for this script'
 		exit 1
 	fi
+
+	blocklist=''
 	for url in $sources; do
 		logInfo "$url"
 		content=$(fetchUrl "$url") || true
@@ -341,32 +338,34 @@ main() {
 		done
 	fi
 
-	# This domain is used to check if hBlock is disabled
+	# This domain is used to check if hBlock is enabled
 	blocklist=$(printf -- '%s\n%s' "$blocklist" 'hblock-check.molinero.xyz')
-
-	logInfo 'Remove empty lines'
-	blocklist=$(printf -- '%s' "$blocklist" | sed '/^$/d')
 
 	logInfo 'Sort entries'
 	blocklist=$(printf -- '%s' "$blocklist" | sort | uniq)
 
-	if [ -n "$redirection" ]; then
-		logInfo 'Add new destination IP'
-		# Escape string literal for use as the replacement string in sed
-		escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
-		blocklist=$(printf -- '%s' "$blocklist" | sed "s/^/$escapedRedirection /")
-	fi
+	# Count blocked domains
+	blocklistCount=$([ -n "$blocklist" ] && printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]' || printf '0')
+
+	logInfo 'Apply format template'
+	# Escape string literal for use as the replacement string in sed
+	escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
+	blocklist=$(printf -- '%s' "$blocklist" | sed "s/$/\t$escapedRedirection/")
+	blocklist=$(printf -- '%s' "$blocklist" | sed "s/^\(.*\)\t\(.*\)$/$template/")
+
+	# Define "C" variable for convenience
+	C=$comment
 
 	if [ -f "$output" ]; then
 		content=$(cat -- "$output")
 
 		# Get custom section
 		logAction 'Reading custom section...'
-		custom=$(printf -- '%s' "$content" | sed '/^#.*<custom>/,/^#.*<\/custom>/!d;/^#.*<\(\/\|\)custom>/d')
+		custom=$(printf -- '%s' "$content" | sed "/^$C.*<custom>/,/^$C.*<\/custom>/!d;/^$C.*<\(\/\|\)custom>/d")
 
 		# Backup procedure
 		if [ "$backup" = true ]; then
-			logAction 'Backing up hosts file...'
+			logAction 'Backing up original file...'
 			[ -z "$backupDir" ] && backupDir=$(dirname -- "$output")
 			writeFile "$content" "$backupDir/$(basename -- "$output").$(date +%s).bak"
 		fi
@@ -374,26 +373,24 @@ main() {
 		unset content
 	fi
 
-	generationDate=$(date -u)
-	blocklistCount=$([ -n "$blocklist" ] && printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]' || printf '0')
+	logAction 'Generating output file...'
 
-	logAction 'Generating hosts file...'
-
-	# Hosts file
-	hosts=$(cat <<-EOF
-		# Author:          Héctor Molinero Fernández <hector@molinero.xyz>
-		# Repository:      https://github.com/hectorm/hblock
-		# Last updated:    $generationDate
-		# Blocked domains: $blocklistCount
+	# Output file
+	content=$(cat <<-EOF
+		$C Author:          Héctor Molinero Fernández <hector@molinero.xyz>
+		$C Repository:      https://github.com/hectorm/hblock
+		$C Last updated:    $(date -u)
+		$C Blocked domains: $blocklistCount
 		$(
-			[ -n "$header" ]    && printf -- '\n%s\n%s\n%s\n' '# <header>'    "$header"    '# </header>'
-			[ -n "$custom" ]    && printf -- '\n%s\n%s\n%s\n' '# <custom>'    "$custom"    '# </custom>'
-			[ -n "$blocklist" ] && printf -- '\n%s\n%s\n%s\n' '# <blocklist>' "$blocklist" '# </blocklist>'
+			[ -n "${header-}"    ] && printf -- '\n%s\n%s\n%s\n' "$C <header>"    "$header"    "$C </header>"
+			[ -n "${custom-}"    ] && printf -- '\n%s\n%s\n%s\n' "$C <custom>"    "$custom"    "$C </custom>"
+			[ -n "${blocklist-}" ] && printf -- '\n%s\n%s\n%s\n' "$C <blocklist>" "$blocklist" "$C </blocklist>"
+			[ -n "${footer-}"    ] && printf -- '\n%s\n%s\n%s\n' "$C <footer>"    "$footer"    "$C </footer>"
 		)
 	EOF
 	)
 
-	writeFile "$hosts" "$output"
+	writeFile "$content" "$output"
 	logAction "$blocklistCount blocked domains!"
 }
 
