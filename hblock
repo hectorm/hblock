@@ -356,7 +356,7 @@ main() {
 	# Define "C" variable for convenience
 	C=$comment
 
-	if [ -f "$output" ]; then
+	if [ "$output" != - ] && [ -f "$output" ]; then
 		content=$(cat -- "$output")
 
 		# Get custom section
@@ -390,7 +390,13 @@ main() {
 	EOF
 	)
 
-	writeFile "$content" "$output"
+	# Print to stdout if the output value is equal to -
+	if [ "$output" = - ]; then
+		printf -- '%s\n' "$content"
+	else
+		writeFile "$content" "$output"
+	fi
+
 	logAction "$blocklistCount blocked domains!"
 }
 
