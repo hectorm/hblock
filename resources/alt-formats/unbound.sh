@@ -8,12 +8,16 @@ set -eu
 export LC_ALL=C
 
 main() {
-	hosts="${1:?}"
+	scriptDir=$(dirname "$(readlink -f "$0")")
+	hblock="$scriptDir/../../hblock"
+	hosts=$(readlink -f "${1:?}")
 
-	sed -n \
-		-e '/^#.*<blocklist>/,/^#.*<\/blocklist>/!d;/^\s*#.*$/d' \
-		-e 's/^\(.\{1,\}\)\s\{1,\}\(.\{1,\}\)\s*/local-zone: "\2" redirect\nlocal-data: "\2 A \1"/p' \
-		"$hosts"
+	$hblock -qO- \
+		--sources "file://$hosts" \
+		--header '' \
+		--footer '' \
+		--template 'local-zone: "\1" redirect\nlocal-data: "\1 A \2"' \
+		--comment '#'
 }
 
 main "$@"
