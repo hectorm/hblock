@@ -356,7 +356,7 @@ main() {
 	blocklist=$(printf -- '%s\n%s' "$blocklist" 'hblock-check.molinero.xyz')
 
 	logInfo 'Sort entries'
-	blocklist=$(printf -- '%s' "$blocklist" | sort | uniq)
+	blocklist=$(printf -- '%s' "$blocklist" | sort | uniq | sed '/^$/d')
 
 	# Count blocked domains
 	blocklistCount=$([ -n "$blocklist" ] && printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]' || printf '0')
