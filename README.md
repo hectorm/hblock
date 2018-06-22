@@ -60,28 +60,50 @@ npx hblock
 You can also change the default behavior using these options:
 ```
 Usage: hblock [options...]
- -O, --output FILE            Hosts file location (default: /etc/hosts)
- -R, --redirection IP         Destination IP for all entries in the blocklist
-                              (default: 0.0.0.0)
- -H, --header HEADER          Content to be included at the beginning of the
-                              hosts file. You can use the output of any other
-                              command (e.g. "$(cat header.txt)")
- -S, --sources URLS           Sources to be used to generate the blocklist
-                              (whitespace separated URLs)
- -W, --whitelist ENTRIES      Entries to be removed from the blocklist
-                              (whitespace separated POSIX BREs)
- -B, --blacklist ENTRIES      Entries to be added to the blocklist
-                              (whitespace separated domain names)
- -b, --backup [DIRECTORY]     Make a time-stamped backup in DIRECTORY
-                              (default: output file directory)
- -l, --lenient                Match any IP address from sources, although it
-                              will be replaced by the destination IP
-                              (default: 0.0.0.0, 127.0.0.1 or none)
- -i, --ignore-download-error  Do not abort if a download error occurs
- -c, --color auto|true|false  Colorize the output (default: auto)
- -q, --quiet                  Suppress non-error messages
- -v, --version                Show version number and quit
- -h, --help                   Show this help and quit
+ -O, --output <FILE>
+        Output file location
+        (default: /etc/hosts)
+ -R, --redirection <REDIRECTION>
+        Redirection for all entries in the blocklist
+        (default: 0.0.0.0)
+ -H, --header <HEADER>
+        Content to be included at the beginning of the file
+        (e.g. "$(cat header.txt)")
+ -F, --footer <FOOTER>
+        Content to be included at the end of the file
+        (e.g. "$(cat footer.txt)")
+ -T, --template <TEMPLATE>
+        POSIX BREs replacement applied to each entry
+        \1 = <DOMAIN>, \2 = <REDIRECTION>
+        (default: \2 \1)
+ -C, --comment <COMMENT>
+        Character used for comments
+        (default: #)
+ -S, --sources <URLS>
+        Sources to be used to generate the blocklist
+        (whitespace separated URLs)
+ -W, --whitelist <ENTRIES>
+        Entries to be removed from the blocklist
+        (whitespace separated POSIX BREs)
+ -B, --blacklist <ENTRIES>
+        Entries to be added to the blocklist
+ -b, --backup [DIRECTORY]
+        Make a time-stamped backup in <DIRECTORY>
+        (default: output file directory)
+ -l, --lenient
+        Match all entries from sources, regardless of their IP
+        (default: 0.0.0.0, 127.0.0.1 or none)
+ -i, --ignore-download-error
+        Do not abort if a download error occurs
+ -c, --color <auto|true|false>
+        Colorize the output
+        (default: auto)
+ -q, --quiet
+        Suppress non-error messages
+ -v, --version
+        Show version number and quit
+ -h, --help
+        Show this help and quit
 ```
 
 #### Preserve content
