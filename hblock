@@ -360,8 +360,10 @@ main() {
 		content=$(cat -- "$output")
 
 		# Get custom section
-		logAction 'Reading custom section...'
-		custom=$(printf -- '%s' "$content" | sed "/^$C.*<custom>/,/^$C.*<\/custom>/!d;/^$C.*<\(\/\|\)custom>/d")
+		if [ -n "$C" ]; then
+			logAction 'Reading custom section...'
+			custom=$(printf -- '%s' "$content" | sed "/^$C.*<custom>/,/^$C.*<\/custom>/!d;/^$C.*<\(\/\|\)custom>/d")
+		fi
 
 		# Backup procedure
 		if [ "$backup" = true ]; then
@@ -376,18 +378,29 @@ main() {
 	logAction 'Generating output file...'
 
 	# Output file
-	content=$(cat <<-EOF
-		$C Author:          Héctor Molinero Fernández <hector@molinero.xyz>
-		$C Repository:      https://github.com/hectorm/hblock
-		$C Last updated:    $(date -u)
-		$C Blocked domains: $blocklistCount
-		$(
-			[ -n "${header-}"    ] && printf -- '\n%s\n%s\n%s\n' "$C <header>"    "$header"    "$C </header>"
-			[ -n "${custom-}"    ] && printf -- '\n%s\n%s\n%s\n' "$C <custom>"    "$custom"    "$C </custom>"
-			[ -n "${blocklist-}" ] && printf -- '\n%s\n%s\n%s\n' "$C <blocklist>" "$blocklist" "$C </blocklist>"
-			[ -n "${footer-}"    ] && printf -- '\n%s\n%s\n%s\n' "$C <footer>"    "$footer"    "$C </footer>"
-		)
-	EOF
+	printBanner() {
+		if [ -n "$C" ]; then
+			printf -- '%s\n' "$(cat <<-EOF
+				$C Author:          Héctor Molinero Fernández <hector@molinero.xyz>
+				$C Repository:      https://github.com/hectorm/hblock
+				$C Last updated:    $(date -u)
+				$C Blocked domains: $blocklistCount
+			EOF
+			)"
+		fi
+	}
+	printSection() {
+		if [ -n "$2" ]; then
+			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <$1>"; fi
+			printf -- '%s\n' "$2"
+			if [ -n "$C" ]; then printf -- '%s\n' "$C </$1>"; fi
+		fi
+	}
+	content=$(printBanner
+		printSection header "${header-}"
+		printSection custom "${custom-}"
+		printSection blocklist "${blocklist-}"
+		printSection footer "${footer-}"
 	)
 
 	# Print to stdout if the output value is equal to -
