@@ -11,7 +11,18 @@ export LC_ALL=C
 # shellcheck disable=SC2039
 HOSTNAME=${HOSTNAME-$(uname -n)}
 
-# Methods
+# Check if a program exists
+checkCommand() { command -v -- "$1" >/dev/null 2>&1; }
+
+# Escape strings in sed
+# See: https://stackoverflow.com/a/29613573
+quoteRe() { printf -- '%s' "$1" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
+quoteSubst() { printf -- '%s' "$1" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
+
+# Translate true/false to yes/no
+getBoolVal() { [ "$1" = true ] && s='yes' || s='no'; printf -- '%s' "$s"; }
+
+# Print to stdout if quiet mode is not enabled
 printStdout() {
 	if [ "$quiet" != true ]; then
 		# shellcheck disable=SC2059
@@ -19,15 +30,18 @@ printStdout() {
 	fi
 }
 
+# Print to stderr
 printStderr() {
 	# shellcheck disable=SC2059
 	>&2 printf -- "$@"
 }
 
+# Print informational message
 logInfo() {
 	printStdout '   - %s\n' "$@"
 }
 
+# Print action message
 logAction() {
 	if [ "$color" = true ]; then
 		printStdout '\033[1;33m + \033[1;32m%s \033[0m\n' "$@"
@@ -36,6 +50,7 @@ logAction() {
 	fi
 }
 
+# Print error message
 logError() {
 	if [ "$color" = true ]; then
 		printStderr '\033[1;33m + \033[1;31m%s \033[0m\n' "$@"
@@ -44,38 +59,33 @@ logError() {
 	fi
 }
 
-getBoolVal() {
-	[ "$1" = true ] && s='yes' || s='no'
-	printf -- '%s' "$s"
+# Create temporary file
+createTempFile() {
+	if checkCommand mktemp; then mktemp
+	else # Since POSIX does not specify mktemp utility, a counter is used as a fallback
+		tempCounter=${tempCounter:-9999}
+		tempFile="${TMPDIR:-/tmp}/hblock.$((tempCounter+=1))"
+		rm -f -- "$tempFile" && touch -- "$tempFile"
+		printf -- '%s\n' "$tempFile"
+	fi
 }
 
-checkBinary() {
-	command -v -- "$@" >/dev/null 2>&1
-}
-
+# Print to stdout the contents of a URL
 fetchUrl() {
-	userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0'
-	if checkBinary curl; then
-		curl -fsSL -A "$userAgent" -- "$@"
+	# If the protocol is "file://" we can omit the download and simply use cat
+	if [ "${1#file://}" != "$1" ]; then cat -- "${1#file://}"
 	else
-		wget -qO- -U "$userAgent" -- "$@"
+		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0'
+		if checkCommand curl; then curl -fsSL -A "$userAgent" -- "$1";
+		elif checkCommand wget; then wget -qO- -U "$userAgent" -- "$1";
+		else
+			logError 'Either wget or curl are required for this script'
+			exit 1
+		fi
 	fi
 }
 
-writeFile() {
-	if [ -d "$2" ]; then
-		logError "Cannot write '$2': is a directory"
-		exit 1
-	elif ([ -e "$2" ] && [ -w "$2" ]) || touch -- "$2" >/dev/null 2>&1; then
-		printf -- '%s\n' "$1" | tee -- "$2" >/dev/null
-	elif checkBinary sudo; then
-		printf -- '%s\n' "$1" | sudo tee -- "$2" >/dev/null
-	else
-		logError "Cannot write '$2': permission denied"
-		exit 1
-	fi
-}
-
+# Show help and quit
 showHelp() {
 	if [ $# -eq 0 ]; then
 		printStdout '%s\n' "$(cat <<-'EOF'
@@ -136,6 +146,7 @@ showHelp() {
 	fi
 }
 
+# Show version number and quit
 showVersion() {
 	printStdout '%s\n' '1.6.0'
 	exit 0
@@ -155,6 +166,7 @@ main() {
 		ff02::3         ip6-allhosts
 	EOF
 	)
+	custom=''
 	footer=''
 	template='\2 \1'
 	comment='#'
@@ -198,42 +210,42 @@ main() {
 	quiet=false
 
 	# Transform long options to short ones
-	for opt in "$@"; do
+	for opt in "${@-}"; do
 		shift
 		case "$opt" in
-			'--output')                set -- "$@" '-O' ;;
-			'--redirection')           set -- "$@" '-R' ;;
-			'--header')                set -- "$@" '-H' ;;
-			'--footer')                set -- "$@" '-F' ;;
-			'--template')              set -- "$@" '-T' ;;
-			'--comment')               set -- "$@" '-C' ;;
-			'--sources')               set -- "$@" '-S' ;;
-			'--whitelist')             set -- "$@" '-W' ;;
-			'--blacklist')             set -- "$@" '-B' ;;
-			'--backup')                set -- "$@" '-b' ;;
-			'--lenient')               set -- "$@" '-l' ;;
-			'--ignore-download-error') set -- "$@" '-i' ;;
-			'--color')                 set -- "$@" '-c' ;;
-			'--quiet')                 set -- "$@" '-q' ;;
-			'--version')               set -- "$@" '-v' ;;
-			'--help')                  set -- "$@" '-h' ;;
-			*)                         set -- "$@" "$opt"
+			'--output')                set -- "${@-}" '-O' ;;
+			'--redirection')           set -- "${@-}" '-R' ;;
+			'--header')                set -- "${@-}" '-H' ;;
+			'--footer')                set -- "${@-}" '-F' ;;
+			'--template')              set -- "${@-}" '-T' ;;
+			'--comment')               set -- "${@-}" '-C' ;;
+			'--sources')               set -- "${@-}" '-S' ;;
+			'--whitelist')             set -- "${@-}" '-W' ;;
+			'--blacklist')             set -- "${@-}" '-B' ;;
+			'--backup')                set -- "${@-}" '-b' ;;
+			'--lenient')               set -- "${@-}" '-l' ;;
+			'--ignore-download-error') set -- "${@-}" '-i' ;;
+			'--color')                 set -- "${@-}" '-c' ;;
+			'--quiet')                 set -- "${@-}" '-q' ;;
+			'--version')               set -- "${@-}" '-v' ;;
+			'--help')                  set -- "${@-}" '-h' ;;
+			*)                         set -- "${@-}" "$opt"
 		esac
 	done
 	# Set omitted arguments to empty strings
-	for opt in "$@"; do
+	for opt in "${@-}"; do
 		shift
 		case "$opt" in
 			-*b)
 				if a="$*"; [ -z "$a" ] || [ "${a#\-}x" != "${a}x" ]
-					then set -- "$@" "$opt" ''
-					else set -- "$@" "$opt"
+					then set -- "${@-}" "$opt" ''
+					else set -- "${@-}" "$opt"
 				fi
 				;;
-			*) set -- "$@" "$opt"
+			*) set -- "${@-}" "$opt"
 		esac
 	done
-	# Read options
+	# Read short options
 	OPTIND=1
 	while getopts ':O:R:H:F:T:C:S:W:B:b:lic:qvh-:' opt; do
 		case "$opt" in
@@ -271,44 +283,45 @@ main() {
 	logInfo "Lenient: $(getBoolVal "$lenient")"
 	logInfo "Ignore download error: $(getBoolVal "$ignoreDownloadError")"
 
+	# Create temporary blocklist file
+	blocklist=$(createTempFile)
+	rmtemp() { rm -f -- "$blocklist" "$blocklist.aux"; }
+	trap rmtemp EXIT
+
 	logAction 'Downloading lists...'
 
-	if ! checkBinary curl && ! checkBinary wget; then
-		logError 'Either wget or curl are required for this script'
-		exit 1
-	fi
-
-	blocklist=''
 	for url in $sources; do
 		logInfo "$url"
-		content=$(fetchUrl "$url") || true
-
-		if [ -z "$content" ] && [ "$ignoreDownloadError" != true ]; then
+		fetchUrl "$url" >> "$blocklist" && exitCode=0 || exitCode=$?
+		if [ "$exitCode" -ne 0 ] && [ "$ignoreDownloadError" != true ]; then
 			logError 'Download failed'
 			exit 1
 		fi
-
-		blocklist=$(printf -- '%s\n%s' "$blocklist" "$content")
-		unset content
 	done
 
 	logAction 'Parsing lists...'
 
-	if [ -n "$blocklist" ]; then
+	if [ -s "$blocklist" ]; then
 		logInfo 'Remove carriage return'
-		blocklist=$(printf -- '%s' "$blocklist" | tr -d '\r')
+		tr -d '\r' \
+			< "$blocklist" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist"
 
 		logInfo 'Transform to lowercase'
-		blocklist=$(printf -- '%s' "$blocklist" | tr '[:upper:]' '[:lower:]')
+		tr '[:upper:]' '[:lower:]' \
+			< "$blocklist" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist"
 
 		logInfo 'Remove comments'
-		blocklist=$(printf -- '%s' "$blocklist" | sed 's/#.*//')
+		sed -e 's/#.*//' \
+			-- "$blocklist" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist"
 
 		logInfo 'Trim spaces'
-		blocklist=$(printf -- '%s' "$blocklist" | sed \
-			-e 's/^[[:blank:]]*//' \
-			-e 's/[[:blank:]]*$//'
-		)
+		sed -e 's/^[[:blank:]]*//' \
+			-e 's/[[:blank:]]*$//' \
+			-- "$blocklist" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist"
 
 		logInfo 'Match hosts lines'
 		if [ "$lenient" = true ]; then
@@ -322,25 +335,32 @@ main() {
 			ipRegex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
 		fi
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
-		blocklist=$(printf -- '%s' "$blocklist" | sed -n "/^\\(${ipRegex}[[:blank:]]\\{1,\\}\\)\\{0,1\\}$domainRegex$/p")
+		sed -n \
+			-e "/^\\(${ipRegex}[[:blank:]]\\{1,\\}\\)\\{0,1\\}$domainRegex$/p" \
+			-- "$blocklist" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist"
 
 		logInfo 'Remove reserved TLDs'
-		blocklist=$(printf -- '%s' "$blocklist" | sed \
-			-e '/\.example$/d' \
+		sed -e '/\.example$/d' \
 			-e '/\.invalid$/d' \
 			-e '/\.local$/d' \
 			-e '/\.localdomain$/d' \
 			-e '/\.localhost$/d' \
-			-e '/\.test$/d'
-		)
+			-e '/\.test$/d' \
+			-- "$blocklist" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist"
 
 		logInfo 'Remove destination IPs'
-		blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]]\{1,\}//')
+		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
+			-- "$blocklist" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist"
 
 		if [ -n "$whitelist" ]; then
 			logInfo 'Apply whitelist'
 			for domain in $whitelist; do
-				blocklist=$(printf -- '%s' "$blocklist" | sed "/$domain/d")
+				sed -e "/$domain/d" \
+					-- "$blocklist" > "$blocklist.aux" \
+					&& mv -f -- "$blocklist.aux" "$blocklist"
 			done
 		fi
 	fi
@@ -348,51 +368,55 @@ main() {
 	if [ -n "$blacklist" ]; then
 		logInfo 'Apply blacklist'
 		for domain in $blacklist; do
-			blocklist=$(printf -- '%s\n%s' "$blocklist" "$domain")
+			printf -- '%s\n' "$domain" >> "$blocklist"
 		done
 	fi
 
 	# This domain is used to check if hBlock is enabled
-	blocklist=$(printf -- '%s\n%s' "$blocklist" 'hblock-check.molinero.xyz')
+	printf -- '%s\n' 'hblock-check.molinero.xyz' >> "$blocklist"
 
 	logInfo 'Sort entries'
-	blocklist=$(printf -- '%s' "$blocklist" | sort | uniq | sed '/^$/d')
+	sort -- "$blocklist" | uniq | sed -e '/^$/d' > "$blocklist.aux" \
+		&& mv -f -- "$blocklist.aux" "$blocklist"
 
 	# Count blocked domains
-	blocklistCount=$([ -n "$blocklist" ] && printf -- '%s\n' "$blocklist" | wc -l | tr -d '[:blank:]' || printf '0')
+	blocklistCount=$(wc -l -- "$blocklist" | cut -d' ' -f1)
 
 	logInfo 'Apply format template'
-	# Escape string literal for use as the replacement string in sed
-	escapedRedirection=$(printf -- '%s' "$redirection" | sed 's/[&/\]/\\&/g')
-	blocklist=$(printf -- '%s' "$blocklist" | sed "s/$/\t$escapedRedirection/")
-	blocklist=$(printf -- '%s' "$blocklist" | sed "s/^\(.*\)\t\(.*\)$/$template/")
+	sed -e "s/$/\t$(quoteSubst "$redirection")/" \
+		-e "s/^\(.*\)\t\(.*\)$/$template/" \
+		-- "$blocklist" > "$blocklist.aux" \
+		&& mv -f -- "$blocklist.aux" "$blocklist"
 
 	# Define "C" variable for convenience
 	C=$comment
 
 	if [ "$output" != - ] && [ -f "$output" ]; then
-		content=$(cat -- "$output")
-
 		# Get custom section
 		if [ -n "$C" ]; then
 			logAction 'Reading custom section...'
-			custom=$(printf -- '%s' "$content" | sed "/^$C.*<custom>/,/^$C.*<\/custom>/!d;/^$C.*<\(\/\|\)custom>/d")
+			custom=$(sed -e "/^$C.*<custom>/,/^$C.*<\/custom>/!d;/^$C.*<\(\/\|\)custom>/d" -- "$output")
 		fi
 
 		# Backup procedure
 		if [ "$backup" = true ]; then
 			logAction 'Backing up original file...'
 			[ -z "$backupDir" ] && backupDir=$(dirname -- "$output")
-			writeFile "$content" "$backupDir/$(basename -- "$output").$(date +%s).bak"
+			backupOutput="$backupDir/$(basename -- "$output").$(date +%s).bak"
+			if touch -- "$backupOutput" >/dev/null 2>&1; then
+				cp -af -- "$output" "$backupOutput"
+			elif checkCommand sudo; then
+				sudo cp -af -- "$output" "$backupOutput"
+			else
+				logError "Cannot write '$backupOutput': permission denied"
+				exit 1
+			fi
 		fi
-
-		unset content
 	fi
 
 	logAction 'Generating output file...'
 
-	# Output file
-	printBanner() {
+	printOutputFile() {
 		if [ -n "$C" ]; then
 			printf -- '%s\n' "$(cat <<-EOF
 				$C Author:          Héctor Molinero Fernández <hector@molinero.xyz>
@@ -402,29 +426,46 @@ main() {
 			EOF
 			)"
 		fi
-	}
-	printSection() {
-		if [ -n "$2" ]; then
-			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <$1>"; fi
-			printf -- '%s\n' "$2"
-			if [ -n "$C" ]; then printf -- '%s\n' "$C </$1>"; fi
+		if [ -n "$header" ]; then
+			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <header>"; fi
+			printf -- '%s\n' "$header"
+			if [ -n "$C" ]; then printf -- '%s\n' "$C </header>"; fi
+		fi
+		if [ -n "$custom" ]; then
+			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <custom>"; fi
+			printf -- '%s\n' "$custom"
+			if [ -n "$C" ]; then printf -- '%s\n' "$C </custom>"; fi
+		fi
+		if [ -n "$blocklist" ]; then
+			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <blocklist>"; fi
+			cat -- "$blocklist"
+			if [ -n "$C" ]; then printf -- '%s\n' "$C </blocklist>"; fi
+		fi
+		if [ -n "$footer" ]; then
+			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <footer>"; fi
+			printf -- '%s\n' "$footer"
+			if [ -n "$C" ]; then printf -- '%s\n' "$C </footer>"; fi
 		fi
 	}
-	content=$(printBanner
-		printSection header "${header-}"
-		printSection custom "${custom-}"
-		printSection blocklist "${blocklist-}"
-		printSection footer "${footer-}"
-	)
 
 	# Print to stdout if the output value is equal to -
 	if [ "$output" = - ]; then
-		printf -- '%s\n' "$content"
+		printOutputFile
 	else
-		writeFile "$content" "$output"
+		if [ -d "$output" ]; then
+			logError "Cannot write '$output': is a directory"
+			exit 1
+		elif touch -- "$output" >/dev/null 2>&1; then
+			printOutputFile > "$output"
+		elif checkCommand sudo && checkCommand tee; then
+			printOutputFile | sudo tee -- "$output" >/dev/null
+		else
+			logError "Cannot write '$output': permission denied"
+			exit 1
+		fi
 	fi
 
 	logAction "$blocklistCount blocked domains!"
 }
 
-main "$@"
+main "${@-}"

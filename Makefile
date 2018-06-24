@@ -89,13 +89,13 @@ dist/hosts_windows.zip:
 
 stats: stats-tlds stats-suffixes
 
-stats-tlds: build-hosts dist/most_abused_tlds.txt
+stats-tlds: build-domains dist/most_abused_tlds.txt
 dist/most_abused_tlds.txt:
-	"$(MKFILE_DIR)"/resources/stats/suffix.sh dist/hosts none > dist/most_abused_tlds.txt
+	"$(MKFILE_DIR)"/resources/stats/suffix.sh dist/hosts_domains.txt none > dist/most_abused_tlds.txt
 
-stats-suffixes: build-hosts dist/most_abused_suffixes.txt
+stats-suffixes: build-domains dist/most_abused_suffixes.txt
 dist/most_abused_suffixes.txt:
-	"$(MKFILE_DIR)"/resources/stats/suffix.sh dist/hosts > dist/most_abused_suffixes.txt
+	"$(MKFILE_DIR)"/resources/stats/suffix.sh dist/hosts_domains.txt > dist/most_abused_suffixes.txt
 
 index: build-hosts dist/index.html
 dist/index.html:

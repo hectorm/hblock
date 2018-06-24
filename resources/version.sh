@@ -6,7 +6,8 @@ scriptDir=$(dirname "$(readlink -f "$0")")
 baseDir="$scriptDir/.."
 action="${1:-nothing}"
 
-# Escape strings in sed: https://stackoverflow.com/a/29613573
+# Escape strings in sed
+# See: https://stackoverflow.com/a/29613573
 quoteRe() { printf -- '%s' "$1" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
 quoteSubst() { printf -- '%s' "$1" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
 replaceLiteral() { sed -i -- "s/$(quoteRe "$1")/$(quoteSubst "$2")/g" "$3"; }

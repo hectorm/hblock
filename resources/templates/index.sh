@@ -7,16 +7,20 @@
 set -eu
 export LC_ALL=C
 
-endsWith() {
-	[ "${1%$2}" != "$1" ]
-}
+# Check if a program exists
+checkCommand() { command -v -- "$1" >/dev/null 2>&1; }
 
+# Check whether a string ends with the characters of a specified string
+endsWith() { str=$1 && substr=$2 && [ "${str%$substr}" != "$str" ]; }
+
+# Escape string for use in HTML
 escapeHTML() {
 	printf -- '%s' "$1" | \
-		sed 's|&|\&#38;|g;s|<|\&#60;|g;s|>|\&#62;|g;s|"|\&#34;|g;s|'\''|\&#39;|g' | \
+		sed -e 's|&|\&#38;|g;s|<|\&#60;|g;s|>|\&#62;|g;s|"|\&#34;|g;s|'\''|\&#39;|g' | \
 		sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\&#10;/g'
 }
 
+# RFC 3986 compliant URL encoding method
 encodeURI() {
 	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C; _IFS=$IFS; IFS=:
 	hex=$(printf -- '%s' "$1" | hexdump -ve '/1 ":%02X"'); hex=${hex#:}
@@ -58,11 +62,11 @@ main() {
 			escapedFileSize=$fileSize
 		fi
 
-		if command -v file >/dev/null; then
+		if checkCommand file; then
 			fileType=$(file -bL --mime-type "$file")
 			escapedFileType=$(escapeHTML "$fileType")
 		else
-			fileType=$(printf '\x20')
+			fileType=$(printf 'application/octet-stream')
 			escapedFileType=$fileType
 		fi
 
@@ -249,4 +253,4 @@ main() {
 	)"
 }
 
-main "$@"
+main "${@-}"

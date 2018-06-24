@@ -7,8 +7,32 @@
 set -eu
 export LC_ALL=C
 
+# Check if a program exists
+checkCommand() { command -v -- "$1" >/dev/null 2>&1; }
+
+# Create temporary file
+createTempFile() {
+	if checkCommand mktemp; then mktemp
+	else # Since POSIX does not specify mktemp utility, a counter is used as a fallback
+		tempCounter=${tempCounter:-9999}
+		tempFile="${TMPDIR:-/tmp}/hblock-stats.$((tempCounter+=1))"
+		rm -f -- "$tempFile" && touch -- "$tempFile"
+		printf -- '%s\n' "$tempFile"
+	fi
+}
+
+# Print to stdout the contents of a URL
+fetchUrl() {
+	if checkCommand curl; then curl -fsSL -- "$1";
+	elif checkCommand wget; then wget -qO- -- "$1";
+	else
+		logError 'Either wget or curl are required for this script'
+		exit 1
+	fi
+}
+
 main() {
-	file="${1:-/etc/hosts}"
+	file="${1:?}"
 	publicSuffixList="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
 
 	if ! [ -f "$file" ] || ! [ -r "$file" ]; then
@@ -19,44 +43,49 @@ main() {
 	header=$(printf -- '%s\t%s\t%s\n' 'Top' 'Hosts' 'Suffix')
 	stats=''
 
-	# Get blocklist content
-	blocklist=$(cat -- "$file" | sed '/^#.*<blocklist>/,/^#.*<\/blocklist>/!d;/^\s*#.*$/d')
+	# Create temporary blocklist file
+	blocklist=$(createTempFile)
+	cp -f -- "$file" "$blocklist"
+	rmtemp() { rm -f -- "$blocklist" "$blocklist".*; }
+	trap rmtemp EXIT
 
 	# Compact blocklist content (remove lowest level domain and count ocurrences)
-	blocklist=$(printf -- '%s' "$blocklist" | sed 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' | sort | uniq -c)
+	sed -e 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' -- "$blocklist" \
+		| sort | uniq -c > "$blocklist.aux" \
+		&& mv -f -- "$blocklist.aux" "$blocklist"
 
 	if [ "$publicSuffixList" != 'none' ]; then
 		# Download public suffix list
-		suffixes=$(curl -fsSL -- "$publicSuffixList")
+		curl -fsSL -- "$publicSuffixList" > "$blocklist.suffixes"
 
 		# Transform suffix list (punycode encode and sort by length in descending order)
-		suffixes=$(printf -- '%s' "$suffixes" |
-			sed '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' | CHARSET=UTF-8 idn |
-			awk '{print(length($0)":."$0)}' | sort -nr | cut -d: -f2
-		)
+		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "$blocklist.suffixes" \
+			| CHARSET=UTF-8 idn | awk '{print(length($0)":."$0)}' \
+			| sort -nr | cut -d: -f2 > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist.suffixes"
 
 		# Create regex pattern for each suffix
-		suffixesRegex=$(printf -- '%s' "$suffixes" | sed 's/\./\\./g;s/$/$/g')
+		sed -e 's/\./\\./g;s/$/$/g' \
+			-- "$blocklist.suffixes" > "$blocklist.aux" \
+			&& mv -f -- "$blocklist.aux" "$blocklist.suffixes"
 
 		# Count blocklist matches for each suffix
-		for regex in $suffixesRegex; do
-			match=$(printf -- '%s' "$blocklist" | grep -- "$regex") || true
-
-			if [ -n "$match" ]; then
-				count=$(printf -- '%s' "$match" | awk '{s+=$1}END{print(s)}')
+		while read -r regex; do
+			if grep -- "$regex" "$blocklist" > "$blocklist.match"; then
+				count=$(awk '{s+=$1}END{print(s)}' "$blocklist.match")
 				stats=$(printf -- '%s\t%s\n%s' "$count" "$regex" "$stats")
-				blocklist=$(printf -- '%s' "$blocklist" | grep -v -- "$regex") || true
+				(grep -v -- "$regex" "$blocklist" > "$blocklist.aux" \
+					&& mv -f -- "$blocklist.aux" "$blocklist") || true
 			fi
-		done
+		done < "$blocklist.suffixes"
 
 		# Undo regex pattern
 		stats=$(printf -- '%s' "$stats" | sed 's/\\\././g;s/\$$//g')
 	fi
 
 	# If blocklist is not empty use TLD as suffix
-	if [ -n "$blocklist" ]; then
-		tldStats=$(printf -- '%s' "$blocklist" |
-			sed 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' |
+	if [ -s "$blocklist" ]; then
+		tldStats=$(sed -e 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' -- "$blocklist" |
 			awk '{arr[$2]+=$1;}END{for (i in arr) print(arr[i]"\t"i)}'
 		)
 
@@ -69,4 +98,4 @@ main() {
 	printf -- '%s\n%s\n' "$header" "$stats"
 }
 
-main "$@"
+main "${@-}"
