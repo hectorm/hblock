@@ -210,39 +210,39 @@ main() {
 	quiet=false
 
 	# Transform long options to short ones
-	for opt in "${@-}"; do
+	for opt in "$@"; do
 		shift
 		case "$opt" in
-			'--output')                set -- "${@-}" '-O' ;;
-			'--redirection')           set -- "${@-}" '-R' ;;
-			'--header')                set -- "${@-}" '-H' ;;
-			'--footer')                set -- "${@-}" '-F' ;;
-			'--template')              set -- "${@-}" '-T' ;;
-			'--comment')               set -- "${@-}" '-C' ;;
-			'--sources')               set -- "${@-}" '-S' ;;
-			'--whitelist')             set -- "${@-}" '-W' ;;
-			'--blacklist')             set -- "${@-}" '-B' ;;
-			'--backup')                set -- "${@-}" '-b' ;;
-			'--lenient')               set -- "${@-}" '-l' ;;
-			'--ignore-download-error') set -- "${@-}" '-i' ;;
-			'--color')                 set -- "${@-}" '-c' ;;
-			'--quiet')                 set -- "${@-}" '-q' ;;
-			'--version')               set -- "${@-}" '-v' ;;
-			'--help')                  set -- "${@-}" '-h' ;;
-			*)                         set -- "${@-}" "$opt"
+			'--output')                set -- "$@" '-O' ;;
+			'--redirection')           set -- "$@" '-R' ;;
+			'--header')                set -- "$@" '-H' ;;
+			'--footer')                set -- "$@" '-F' ;;
+			'--template')              set -- "$@" '-T' ;;
+			'--comment')               set -- "$@" '-C' ;;
+			'--sources')               set -- "$@" '-S' ;;
+			'--whitelist')             set -- "$@" '-W' ;;
+			'--blacklist')             set -- "$@" '-B' ;;
+			'--backup')                set -- "$@" '-b' ;;
+			'--lenient')               set -- "$@" '-l' ;;
+			'--ignore-download-error') set -- "$@" '-i' ;;
+			'--color')                 set -- "$@" '-c' ;;
+			'--quiet')                 set -- "$@" '-q' ;;
+			'--version')               set -- "$@" '-v' ;;
+			'--help')                  set -- "$@" '-h' ;;
+			*)                         set -- "$@" "$opt"
 		esac
 	done
 	# Set omitted arguments to empty strings
-	for opt in "${@-}"; do
+	for opt in "$@"; do
 		shift
 		case "$opt" in
 			-*b)
 				if a="$*"; [ -z "$a" ] || [ "${a#\-}x" != "${a}x" ]
-					then set -- "${@-}" "$opt" ''
-					else set -- "${@-}" "$opt"
+					then set -- "$@" "$opt" ''
+					else set -- "$@" "$opt"
 				fi
 				;;
-			*) set -- "${@-}" "$opt"
+			*) set -- "$@" "$opt"
 		esac
 	done
 	# Read short options
@@ -468,4 +468,4 @@ main() {
 	logAction "$blocklistCount blocked domains!"
 }
 
-main "${@-}"
+main "$@"

@@ -98,4 +98,4 @@ main() {
 	printf -- '%s\n%s\n' "$header" "$stats"
 }
 
-main "${@-}"
+main "$@"
