@@ -4,7 +4,8 @@
 
 ***
 
-# hBlock
+<p align="center"><img src="logo/logotype.svg"></p>
+
 Improve your security and privacy by blocking ads, tracking and malware domains.
 
 ## Table of contents
