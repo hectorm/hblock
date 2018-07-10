@@ -4,7 +4,7 @@
 
 ***
 
-<p align="center"><img src="logo/logotype.svg"></p>
+<p align="center"><img src="resources/logo/logotype.svg"></p>
 
 Improve your security and privacy by blocking ads, tracking and malware domains.
 
