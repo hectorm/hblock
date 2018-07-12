@@ -23,8 +23,8 @@ Improve your security and privacy by blocking ads, tracking and malware domains.
 
 ## What is this for?
 This POSIX-compliant shell script, designed for Unix-like systems, gets a list of domains that serve ads, tracking scripts and malware from
-multiple [reputable sources](#sources) and creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)) that prevents your system from
-connecting to them.
+[multiple sources](#sources) and creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)) (alternative formats are also supported) that
+prevents your system from connecting to them.
 
 ## Is it safe to use?
 Absolutely, this script selects only the domain names for each source, so if a domain name is redirected to a rogue server your system will not be
@@ -32,7 +32,7 @@ affected. In the worst scenario you can lose access to a legitimate domain name 
 the whitelist.
 
 ## Nightly builds
-I provide nightly builds of the hosts file and installers for **Windows** (batch file installer) and **Android** (flashable zip).
+I provide nightly builds of the hosts file and other formats, including installers for **Windows** (batch file) and **Android** (flashable zip).
 
 | URL                         |
 | --------------------------- |
