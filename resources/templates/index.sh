@@ -167,7 +167,7 @@ main() {
 			<meta property="og:description" content="Improve your security and privacy by blocking ads, tracking and malware domains">
 			<meta property="og:type" content="website">
 			<meta property="og:url" content="https://hblock.molinero.xyz/">
-			<meta property="og:image" content="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/bitmap/logotype-1360x408.png">
+			<meta property="og:image" content="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/bitmap/favicon-512x512.png">
 
 			<style>
 				html {
