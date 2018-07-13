@@ -4,7 +4,7 @@
 
 ***
 
-<p align="center"><img src="resources/logo/logotype.svg"></p>
+<p align="center"><img src="https://cdn.rawgit.com/hectorm/hblock/master/resources/logo/logotype.svg" width="320" height="96"></p>
 
 Improve your security and privacy by blocking ads, tracking and malware domains.
 
