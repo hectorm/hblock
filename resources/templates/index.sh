@@ -37,6 +37,13 @@ encodeURI() {
 	LC_COLLATE=$_LC_COLLATE; IFS=$_IFS
 }
 
+# Calculate digest for Content-Security-Policy
+cspDigest() {
+	hex=$(printf -- '%s' "$1" | sha256sum | cut -f1 -d' ' | sed 's|\(.\{2\}\)|\1 |g')
+	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64)
+	printf 'sha256-%s' "$b64"
+}
+
 main() {
 	directory="${1:-./}"
 
@@ -85,10 +92,8 @@ main() {
 		)"
 	done)
 
-	buildDate=$(date '+%Y-%m-%d')
-
 	# Generated with:
-	#  $ (printf '%s' 'data:image/png;base64,'; base64 -w0 'favicon-32x32.png') | fold -w 128
+	#  $ (printf '%s' 'data:image/png;base64,'; base64 -w0 'resources/logo/bitmap/favicon-32x32.png') | fold -w 128
 	favicon=$(tr -d '\n' <<-'EOF'
 		data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE7AAABOwBim79cgAAABl0RVh0U2
 		9mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAOCSURBVFiFvZdPaBRXHMc/v9l13bLWHHIolvRixVkPFVyUSi6VgL3prTcvQmlrNWBrIQfjoaEnQQu1VLS04qHYQ6
@@ -105,7 +110,7 @@ main() {
 	)
 
 	# Generated with:
-	#  $ svgo --datauri=enc --output=- logotype.svg | fold -w 128
+	#  $ svgo --datauri=enc --output=- 'resources/logo/logotype.svg' | fold -w 128
 	logotype=$(tr -d '\n' <<-'EOF'
 		data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22320%22%20height%3D%2296%22%20viewBox
 		%3D%220%200%20500%20150%22%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M60.724%20121.732c-3.263-1.302-11.67-5.523-19.214-16.564-8.9
@@ -138,6 +143,161 @@ main() {
 	EOF
 	)
 
+	# JavaScript
+	javascript=$(tr -d '\n' <<-'EOF'
+		(function(){
+		/* This resource is used to check the status of hBlock */
+		var c=document.getElementById('status').classList;
+		var i=document.createElement('img');c.add('loading');
+		i.src='https://hblock-check.molinero.xyz/1.png?_='+Date.now();
+		i.onload=function(){c.add('disabled');c.remove('loading');};
+		i.onerror=function(){c.add('enabled');c.remove('loading');};
+		})();
+	EOF
+	)
+
+	# CSS
+	css=$(tr -d '\n' <<-'EOF'
+		html {
+			font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+			font-size: 16px;
+			color: #424242;
+			background-color: #FAFAFA;
+		}
+
+		a {
+			color: #0D47A1;
+			text-decoration: none;
+		}
+
+		a:hover,
+		a:focus {
+			text-decoration: underline;
+		}
+
+		.container {
+			margin: 20px auto;
+			width: 100%;
+			max-width: 1000px;
+		}
+
+		.section {
+			margin: 0 10px 10px;
+		}
+
+		.title {
+			font-weight: 700;
+			font-size: 22px;
+		}
+
+		.table {
+			display: table;
+			width: 100%;
+			border-collapse: collapse;
+			table-layout: fixed;
+		}
+
+		.row {
+			display: table-row;
+		}
+
+		.row:not(:last-child) {
+			border-bottom: 1px solid #E0E0E0;
+		}
+
+		.row:first-child {
+			font-weight: bold;
+		}
+
+		a.row {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		a.row:hover,
+		a.row:focus {
+			background-color: #F5F5F5;
+		}
+
+		.cell {
+			display: table-cell;
+			padding: 15px 10px;
+			white-space: pre;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		@media (min-width: 768px) {
+			.cell:nth-child(1) { width: 35%; }
+			.cell:nth-child(2) { width: 15%; }
+			.cell:nth-child(3) { width: 20%; }
+			.cell:nth-child(4) { width: 30%; }
+		}
+
+		@media (max-width: 767.98px) {
+			.table, .row, .cell {
+				display: block;
+			}
+
+			.row {
+				padding: 15px 10px;
+			}
+
+			.row:first-child {
+				display: none;
+			}
+
+			.cell {
+				padding: 0 0 5px;
+				width: auto;
+				white-space: normal;
+			}
+
+			.cell::before {
+				display: inline-block;
+				margin-right: 5px;
+				font-weight: bold;
+			}
+
+			.cell:nth-child(1)::before {
+				content: 'Filename:';
+			}
+
+			.cell:nth-child(2)::before {
+				content: 'Size:';
+			}
+
+			.cell:nth-child(3)::before {
+				content: 'Type:';
+			}
+
+			.cell:nth-child(4)::before {
+				content: 'Modified:';
+			}
+		}
+
+		#status::before {
+			display: inline-block;
+			content: '';
+		}
+
+		#status:not(.loading):before {
+			content: 'It was not possible to determine if you are using hBlock.';
+			color: #37474F;
+		}
+
+		#status.enabled::before {
+			content: 'You are using hBlock.';
+			color: #388E3C;
+		}
+
+		#status.disabled::before {
+			content: 'You are currently not using hBlock.';
+			color: #D32F2F;
+		}
+	EOF
+	)
+
 	# Page template
 	printf -- '%s\n' "$(tr -d '\n' <<-EOF
 		<!DOCTYPE html>
@@ -149,9 +309,9 @@ main() {
 
 			<meta http-equiv="Content-Security-Policy" content="
 				default-src 'none';
-				style-src 'unsafe-inline';
-				script-src 'sha256-ZEd8Gb6Z6KlaO3F9Od+Oz6pLzhpcMVe8o+ssab0YQD0=';
-				img-src data: https://hblock-check.molinero.xyz;
+				 script-src '$(cspDigest "${javascript}")';
+				 style-src '$(cspDigest "${css}")';
+				 img-src data: https://hblock-check.molinero.xyz/1.png;
 			">
 
 			<title>Index of /hBlock</title>
@@ -169,145 +329,7 @@ main() {
 			<meta property="og:url" content="https://hblock.molinero.xyz/">
 			<meta property="og:image" content="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/bitmap/favicon-512x512.png">
 
-			<style>
-				html {
-					font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-					font-size: 16px;
-					color: #424242;
-					background-color: #FAFAFA;
-				}
-
-				a {
-					color: #0D47A1;
-					text-decoration: none;
-				}
-
-				a:hover,
-				a:focus {
-					text-decoration: underline;
-				}
-
-				.container {
-					margin: 20px auto;
-					width: 100%;
-					max-width: 1000px;
-				}
-
-				.section {
-					margin: 0 10px 10px;
-				}
-
-				.title {
-					font-weight: 700;
-					font-size: 22px;
-				}
-
-				.table {
-					display: table;
-					width: 100%;
-					border-collapse: collapse;
-					table-layout: fixed;
-				}
-
-				.row {
-					display: table-row;
-				}
-
-				.row:not(:last-child) {
-					border-bottom: 1px solid #E0E0E0;
-				}
-
-				.row:first-child {
-					font-weight: bold;
-				}
-
-				a.row {
-					color: inherit;
-					text-decoration: none;
-				}
-
-				a.row:hover,
-				a.row:focus {
-					background-color: #F5F5F5;
-				}
-
-				.cell {
-					display: table-cell;
-					padding: 15px 10px;
-					white-space: pre;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
-
-				@media (min-width: 768px) {
-					.cell:nth-child(1) { width: 35%; }
-					.cell:nth-child(2) { width: 15%; }
-					.cell:nth-child(3) { width: 20%; }
-					.cell:nth-child(4) { width: 30%; }
-				}
-
-				@media (max-width: 767.98px) {
-					.table, .row, .cell {
-						display: block;
-					}
-
-					.row {
-						padding: 15px 10px;
-					}
-
-					.row:first-child {
-						display: none;
-					}
-
-					.cell {
-						padding: 0 0 5px;
-						width: auto;
-						white-space: normal;
-					}
-
-					.cell::before {
-						display: inline-block;
-						margin-right: 5px;
-						font-weight: bold;
-					}
-
-					.cell:nth-child(1)::before {
-						content: 'Filename:';
-					}
-
-					.cell:nth-child(2)::before {
-						content: 'Size:';
-					}
-
-					.cell:nth-child(3)::before {
-						content: 'Type:';
-					}
-
-					.cell:nth-child(4)::before {
-						content: 'Modified:';
-					}
-				}
-
-				#status::before {
-					display: inline-block;
-					content: '';
-				}
-
-				#status:not(.loading):before {
-					content: 'It was not possible to determine if you are using hBlock.';
-					color: #37474F;
-				}
-
-				#status.enabled::before {
-					content: 'You are using hBlock.';
-					color: #388E3C;
-				}
-
-				#status.disabled::before {
-					content: 'You are currently not using hBlock.';
-					color: #D32F2F;
-				}
-			</style>
+			<style>${css}</style>
 		</head>
 
 		<body>
@@ -333,7 +355,7 @@ main() {
 					 <span id="status"></span>
 				</div>
 				<div class="section">
-					<h2 class="title">Latest build (${buildDate})</h2>
+					<h2 class="title">Latest build ($(date '+%Y-%m-%d'))</h2>
 					<div class="table">
 						<div class="row">
 							<div class="cell">Filename</div>
@@ -345,14 +367,7 @@ main() {
 					</div>
 				</div>
 			</div>
-			<script>(function(){
-			/* This resource is used to check the status of hBlock */
-			var c=document.getElementById('status').classList;
-			var i=document.createElement('img');c.add('loading');
-			i.src='https://hblock-check.molinero.xyz/1.png?_='+Date.now();
-			i.onload=function(){c.add('disabled');c.remove('loading');};
-			i.onerror=function(){c.add('enabled');c.remove('loading');};
-			})();</script>
+			<script>${javascript}</script>
 		</body>
 
 		</html>
