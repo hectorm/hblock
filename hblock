@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Version:    1.6.3
+# Version:    1.6.4
 # Author:     Héctor Molinero Fernández <hector@molinero.xyz>
 # Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
@@ -153,7 +153,7 @@ showHelp() {
 
 # Show version number and quit
 showVersion() {
-	printStdout '%s\n' '1.6.3'
+	printStdout '%s\n' '1.6.4'
 	exit 0
 }
 
