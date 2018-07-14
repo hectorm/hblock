@@ -1,8 +1,5 @@
 node_modules/
 npm-debug.log*
 
-.firebaserc
-firebase-debug.log
-
 /.tmp/
 /dist/
