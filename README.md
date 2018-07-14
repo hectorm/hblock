@@ -4,7 +4,11 @@
 
 ***
 
-<p align="center"><img src="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/logotype-a.svg?sanitize=true" width="320" height="96"></p>
+<p align="center">
+  <a href="https://hblock.molinero.xyz/">
+    <img src="https://cdn.rawgit.com/hectorm/hblock/master/resources/logo/logotype-a.svg" width="320" height="96">
+  </a>
+</p>
 
 Improve your security and privacy by blocking ads, tracking and malware domains.
 
@@ -117,7 +121,7 @@ structure:
 ```
 
 #### Run preview
-[![asciicast](https://asciinema.org/a/yOioQaUxt552kYgyBgdKpmSz8.png)](https://asciinema.org/a/yOioQaUxt552kYgyBgdKpmSz8)
+![cast](https://cdn.rawgit.com/hectorm/hblock/master/resources/hblock.cast.svg)
 
 ## Sources
 | Name                                  | Primary                                          | Mirror                                           |
