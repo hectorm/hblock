@@ -13,6 +13,7 @@ HOSTNAME=${HOSTNAME-$(uname -n)}
 
 # Check if a program exists
 exists() {
+	# shellcheck disable=SC2230
 	if command -v true; then command -v -- "$1"
 	elif eval type type; then eval type -- "$1"
 	else which -- "$1"; fi >/dev/null 2>&1
@@ -387,8 +388,8 @@ main() {
 	blocklistCount=$(wc -l -- "$blocklist" | cut -d' ' -f1)
 
 	logInfo 'Apply format template'
-	sed -e "s/$/\t$(quoteSubst "$redirection")/" \
-		-e "s/^\(.*\)\t\(.*\)$/$template/" \
+	sed -e "s/$/\\t$(quoteSubst "$redirection")/" \
+		-e "s/^\\(.*\\)\\t\\(.*\\)$/$template/" \
 		-- "$blocklist" > "$blocklist.aux" \
 		&& mv -f -- "$blocklist.aux" "$blocklist"
 
@@ -399,7 +400,7 @@ main() {
 		# Get custom section
 		if [ -n "$C" ]; then
 			logAction 'Reading custom section...'
-			custom=$(sed -e "/^$C.*<custom>/,/^$C.*<\/custom>/!d;/^$C.*<\(\/\|\)custom>/d" -- "$output")
+			custom=$(sed -e "/^$C.*<custom>/,/^$C.*<\\/custom>/!d;/^$C.*<\\(\\/\\|\\)custom>/d" -- "$output")
 		fi
 
 		# Backup procedure

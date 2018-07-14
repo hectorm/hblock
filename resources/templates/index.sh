@@ -9,6 +9,7 @@ export LC_ALL=C
 
 # Check if a program exists
 exists() {
+	# shellcheck disable=SC2230
 	if command -v true; then command -v -- "$1"
 	elif eval type type; then eval type -- "$1"
 	else which -- "$1"; fi >/dev/null 2>&1
