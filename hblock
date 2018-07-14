@@ -12,7 +12,11 @@ export LC_ALL=C
 HOSTNAME=${HOSTNAME-$(uname -n)}
 
 # Check if a program exists
-checkCommand() { command -v -- "$1" >/dev/null 2>&1; }
+exists() {
+	if command -v true; then command -v -- "$1"
+	elif eval type type; then eval type -- "$1"
+	else which -- "$1"; fi >/dev/null 2>&1
+}
 
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
@@ -61,7 +65,7 @@ logError() {
 
 # Create temporary file
 createTempFile() {
-	if checkCommand mktemp; then mktemp
+	if exists mktemp; then mktemp
 	else # Since POSIX does not specify mktemp utility, a counter is used as a fallback
 		tempCounter=${tempCounter:-9999}
 		tempFile="${TMPDIR:-/tmp}/hblock.$((tempCounter+=1))"
@@ -76,8 +80,8 @@ fetchUrl() {
 	if [ "${1#file://}" != "$1" ]; then cat -- "${1#file://}"
 	else
 		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0'
-		if checkCommand curl; then curl -fsSL -A "$userAgent" -- "$1";
-		elif checkCommand wget; then wget -qO- -U "$userAgent" -- "$1";
+		if exists curl; then curl -fsSL -A "$userAgent" -- "$1";
+		elif exists wget; then wget -qO- -U "$userAgent" -- "$1";
 		else
 			logError 'Either wget or curl are required for this script'
 			exit 1
@@ -405,7 +409,7 @@ main() {
 			backupOutput="$backupDir/$(basename -- "$output").$(date +%s).bak"
 			if touch -- "$backupOutput" >/dev/null 2>&1; then
 				cp -af -- "$output" "$backupOutput"
-			elif checkCommand sudo; then
+			elif exists sudo; then
 				sudo cp -af -- "$output" "$backupOutput"
 			else
 				logError "Cannot write '$backupOutput': permission denied"
@@ -457,7 +461,7 @@ main() {
 			exit 1
 		elif touch -- "$output" >/dev/null 2>&1; then
 			printOutputFile > "$output"
-		elif checkCommand sudo && checkCommand tee; then
+		elif exists sudo && exists tee; then
 			printOutputFile | sudo tee -- "$output" >/dev/null
 		else
 			logError "Cannot write '$output': permission denied"

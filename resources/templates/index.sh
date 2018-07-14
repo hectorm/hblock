@@ -8,7 +8,11 @@ set -eu
 export LC_ALL=C
 
 # Check if a program exists
-checkCommand() { command -v -- "$1" >/dev/null 2>&1; }
+exists() {
+	if command -v true; then command -v -- "$1"
+	elif eval type type; then eval type -- "$1"
+	else which -- "$1"; fi >/dev/null 2>&1
+}
 
 # Check whether a string ends with the characters of a specified string
 endsWith() { str=$1 && substr=$2 && [ "${str%$substr}" != "$str" ]; }
@@ -69,7 +73,7 @@ main() {
 			escapedFileSize=$fileSize
 		fi
 
-		if checkCommand file; then
+		if exists file; then
 			fileType=$(file -bL --mime-type "$file")
 			escapedFileType=$(escapeHTML "$fileType")
 		else

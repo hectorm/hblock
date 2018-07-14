@@ -8,11 +8,15 @@ set -eu
 export LC_ALL=C
 
 # Check if a program exists
-checkCommand() { command -v -- "$1" >/dev/null 2>&1; }
+exists() {
+	if command -v true; then command -v -- "$1"
+	elif eval type type; then eval type -- "$1"
+	else which -- "$1"; fi >/dev/null 2>&1
+}
 
 # Create temporary file
 createTempFile() {
-	if checkCommand mktemp; then mktemp
+	if exists mktemp; then mktemp
 	else # Since POSIX does not specify mktemp utility, a counter is used as a fallback
 		tempCounter=${tempCounter:-9999}
 		tempFile="${TMPDIR:-/tmp}/hblock-stats.$((tempCounter+=1))"
@@ -23,8 +27,8 @@ createTempFile() {
 
 # Print to stdout the contents of a URL
 fetchUrl() {
-	if checkCommand curl; then curl -fsSL -- "$1";
-	elif checkCommand wget; then wget -qO- -- "$1";
+	if exists curl; then curl -fsSL -- "$1";
+	elif exists wget; then wget -qO- -- "$1";
 	else
 		logError 'Either wget or curl are required for this script'
 		exit 1
