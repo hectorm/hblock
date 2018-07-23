@@ -207,7 +207,7 @@ structure:
 [mirror-stevenblack]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
 [source-winhelp2002.mvps.org]: http://winhelp2002.mvps.org/hosts.txt
 [mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
-[source-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/ZeroDot1/CoinBlockerLists/master/hosts_browser
+[source-zerodot1-coinblockerlists-browser]: https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
 [mirror-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
 [source-zeustracker.abuse.ch]: https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
 [mirror-zeustracker.abuse.ch]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
