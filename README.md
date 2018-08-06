@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://hblock.molinero.xyz/">
-    <img src="https://cdn.rawgit.com/hectorm/hblock/master/resources/logo/logotype-a.svg" width="320" height="96">
+    <img src="https://cdn.rawgit.com/hectorm/hblock/master/resources/logo/logotype.svg" width="320" height="100">
   </a>
 </p>
 
