@@ -15,14 +15,46 @@ exists() {
 	else which -- "$1"; fi >/dev/null 2>&1
 }
 
+# Get file size (or space if it is not a file)
+getFileSize() {
+	if [ -f "$file" ]; then
+		wc -c < "$file" | awk '{printf "%0.2f kB", $1 / 1000}'
+	fi
+}
+
+# Get file MIME type
+getFileType() {
+	if exists file; then
+		file -bL --mime-type -- "$1"
+	else
+		printf '%s' 'application/octet-stream'
+	fi
+}
+
+# Get file modification time
+getFileModificationTime() {
+	if stat -c '%n' -- "$1" >/dev/null 2>&1; then
+		TZ=UTC stat -c '%.19y UTC' -- "$1"
+	elif stat -f '%Sm' -t '%Z' -- "$1" >/dev/null 2>&1; then
+		TZ=UTC stat -f '%Sm' -t '%Y-%m-%d %H:%M:%S %Z' -- "$1"
+	else
+		printf '%s' '1970-01-01 00:00:00 UTC'
+	fi
+}
+
 # Check whether a string ends with the characters of a specified string
 endsWith() { str=$1 && substr=$2 && [ "${str%$substr}" != "$str" ]; }
 
 # Escape string for use in HTML
 escapeHTML() {
-	printf -- '%s' "$1" | \
-		sed -e 's|&|\&#38;|g;s|<|\&#60;|g;s|>|\&#62;|g;s|"|\&#34;|g;s|'\''|\&#39;|g' | \
-		sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\&#10;/g'
+	printf -- '%s' "$1" | awk -v RS="" '{
+		gsub(/&/,"\\&#38;");
+		gsub(/</,"\\&#60;");
+		gsub(/>/,"\\&#62;");
+		gsub(/"/,"\\&#34;");
+		gsub(/'\''/,"\\&#39;");
+		gsub(/\n/,"\\&#10;");
+	print}'
 }
 
 # RFC 3986 compliant URL encoding method
@@ -45,7 +77,7 @@ encodeURI() {
 # Calculate digest for Content-Security-Policy
 cspDigest() {
 	hex=$(printf -- '%s' "$1" | sha256sum | cut -f1 -d' ' | sed 's|\(.\{2\}\)|\1 |g')
-	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64)
+	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64 | tr -d '\r')
 	printf 'sha256-%s' "$b64"
 }
 
@@ -66,23 +98,13 @@ main() {
 		escapedFileName=$(escapeHTML "$fileName")
 		escapedFileNameURI=$(escapeHTML "$(encodeURI "$fileName")")
 
-		if [ -f "$file" ]; then
-			fileSize=$(wc -c < "$file" | awk '{printf "%0.2f kB", $1 / 1000}')
-			escapedFileSize=$(escapeHTML "$fileSize")
-		else
-			fileSize=$(printf '\x20')
-			escapedFileSize=$fileSize
-		fi
+		fileSize=$(getFileSize "$file")
+		escapedFileSize=$(escapeHTML "$fileSize")
 
-		if exists file; then
-			fileType=$(file -bL --mime-type "$file")
-			escapedFileType=$(escapeHTML "$fileType")
-		else
-			fileType=$(printf 'application/octet-stream')
-			escapedFileType=$fileType
-		fi
+		fileType=$(getFileType "$file")
+		escapedFileType=$(escapeHTML "$fileType")
 
-		fileDate=$(date -ur "$file" '+%Y-%m-%d %H:%M:%S %Z')
+		fileDate=$(getFileModificationTime "$file")
 		escapedFileDate=$(escapeHTML "$fileDate")
 
 		# Entry template

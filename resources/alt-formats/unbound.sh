@@ -7,16 +7,17 @@
 set -eu
 export LC_ALL=C
 
+ENL="$(printf '\\\nx')"; ENL="${ENL%x}"
+
 main() {
-	scriptDir=$(dirname "$(readlink -f "$0")")
-	hblock="$scriptDir/../../hblock"
-	hosts=$(readlink -f "${1:?}")
+	hblock="./hblock"
+	hosts="${1:?}"
 
 	$hblock -qO- \
 		--sources "file://$hosts" \
 		--header '' \
 		--footer '' \
-		--template 'local-zone: "\1" redirect\nlocal-data: "\1 A \2"' \
+		--template 'local-zone: "\1" redirect'"$ENL"'local-data: "\1 A \2"' \
 		--comment '#'
 }
 

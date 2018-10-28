@@ -8,9 +8,8 @@ set -eu
 export LC_ALL=C
 
 main() {
-	scriptDir=$(dirname "$(readlink -f "$0")")
-	hblock="$scriptDir/../../hblock"
-	hosts=$(readlink -f "${1:?}")
+	hblock="./hblock"
+	hosts="${1:?}"
 
 	$hblock -qO- \
 		--sources "file://$hosts" \
