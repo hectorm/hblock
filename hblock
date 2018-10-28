@@ -385,7 +385,7 @@ main() {
 		&& mv -f -- "$blocklist.aux" "$blocklist"
 
 	# Count blocked domains
-	blocklistCount=$(wc -l -- "$blocklist" | cut -d' ' -f1)
+	blocklistCount=$(wc -l < "$blocklist" | tr -d ' ');
 
 	logInfo 'Apply format template'
 	sed -e "s/$/\\t$(quoteSubst "$redirection")/" \
