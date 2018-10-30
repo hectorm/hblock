@@ -5,7 +5,7 @@ PREFIX = $(DESTDIR)/usr/local
 BINDIR = $(PREFIX)/bin
 SYSCONFDIR = $(DESTDIR)/etc
 
-SYSTEMCTL := $(shell which systemctl 2>&1)
+SYSTEMCTL := $(shell which systemctl 2>/dev/null)
 
 define DEFAULT_HOSTS
 127.0.0.1       localhost $(shell uname -n)
