@@ -100,28 +100,33 @@ logo:
 
 .PHONY: install
 install: build-hosts
-	mkdir -p -- "$(PREFIX)" "$(BINDIR)" "$(SYSCONFDIR)"
-	install -m 0755 -- ./dist/hosts "$(SYSCONFDIR)"/hosts
-	install -m 0755 -- ./hblock "$(BINDIR)"/hblock
-	if test -x "$(SYSTEMCTL)" && test -d "$(SYSCONFDIR)"/systemd/system; then \
-		install -m 0644 -- ./resources/systemd/hblock.service "$(SYSCONFDIR)"/systemd/system/hblock.service \
-		&& install -m 0644 -- ./resources/systemd/hblock.timer "$(SYSCONFDIR)"/systemd/system/hblock.timer \
-		&& "$(SYSTEMCTL)" daemon-reload \
-		&& "$(SYSTEMCTL)" enable hblock.timer \
-		&& "$(SYSTEMCTL)" start hblock.timer; \
+	mkdir -p "$(PREFIX)" "$(BINDIR)" "$(SYSCONFDIR)"
+	install -m 0755 ./dist/hosts "$(SYSCONFDIR)"/hosts
+	install -m 0755 ./hblock "$(BINDIR)"/hblock
+	set -eu; \
+	if [ -x "$(SYSTEMCTL)" ] && [ -d "$(SYSCONFDIR)"/systemd/system ]; then \
+		install -m 0644 ./resources/systemd/hblock.service "$(SYSCONFDIR)"/systemd/system/hblock.service; \
+		install -m 0644 ./resources/systemd/hblock.timer "$(SYSCONFDIR)"/systemd/system/hblock.timer; \
+		"$(SYSTEMCTL)" daemon-reload; \
+		"$(SYSTEMCTL)" enable hblock.timer; \
+		"$(SYSTEMCTL)" start hblock.timer; \
 	fi
 
 .PHONY: uninstall
 uninstall:
-	rm -f -- "$(BINDIR)"/hblock
-	printf -- '%s\n' "$$DEFAULT_HOSTS" > "$(SYSCONFDIR)"/hosts
-	if test -x "$(SYSTEMCTL)" && test -d "$(SYSCONFDIR)"/systemd/system; then \
-		"$(SYSTEMCTL)" stop hblock.timer \
-		&& "$(SYSTEMCTL)" disable hblock.timer \
-		&& rm -f -- \
-			"$(SYSCONFDIR)"/systemd/system/hblock.service \
-			"$(SYSCONFDIR)"/systemd/system/hblock.timer \
-		&& "$(SYSTEMCTL)" daemon-reload; \
+	rm -f "$(BINDIR)"/hblock
+	printf '%s\n' "$$DEFAULT_HOSTS" > "$(SYSCONFDIR)"/hosts
+	set -eu; \
+	if [ -x "$(SYSTEMCTL)" ] && [ -d "$(SYSCONFDIR)"/systemd/system ]; then \
+		if [ -f "$(SYSCONFDIR)"/systemd/system/hblock.timer ]; then \
+			"$(SYSTEMCTL)" stop hblock.timer; \
+			"$(SYSTEMCTL)" disable hblock.timer; \
+			rm -f "$(SYSCONFDIR)"/systemd/system/hblock.timer; \
+		fi; \
+		if [ -f "$(SYSCONFDIR)"/systemd/system/hblock.service ]; then \
+			rm -f "$(SYSCONFDIR)"/systemd/system/hblock.service; \
+		fi; \
+		"$(SYSTEMCTL)" daemon-reload; \
 	fi
 
 .PHONY: clean
