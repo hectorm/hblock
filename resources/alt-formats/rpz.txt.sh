@@ -8,15 +8,21 @@ set -eu
 export LC_ALL=C
 
 main() {
-	hblock="./hblock"
-	hosts="${1:?}"
+	hosts="${1:-/etc/hosts}"
+	hblock="${2:-hblock}"
+	#resourcesDir="${3:-./resources}"
 
 	$hblock -qO- \
 		--sources "file://$hosts" \
-		--header '' \
+		--header "$(cat <<-'EOF'
+			$TTL 2h
+			@ IN SOA localhost. root.localhost. (1 6h 1h 1w 2h)
+			  IN NS  localhost.
+		EOF
+		)" \
 		--footer '' \
-		--template 'address=\/\1\/\2' \
-		--comment '#'
+		--template '\1 CNAME .' \
+		--comment ';'
 }
 
 main "$@"

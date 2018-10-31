@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+SHELL = /bin/sh
+
 # pmake might add -J (private)
 FLAGS=${.MAKEFLAGS:C/\-J ([0-9]+,?)+//W}
 

@@ -7,16 +7,19 @@
 set -eu
 export LC_ALL=C
 
+ENL="$(printf '\\\nx')"; ENL="${ENL%x}"
+
 main() {
-	hblock="./hblock"
-	hosts="${1:?}"
+	hosts="${1:-/etc/hosts}"
+	hblock="${2:-hblock}"
+	#resourcesDir="${3:-./resources}"
 
 	$hblock -qO- \
 		--sources "file://$hosts" \
 		--header '' \
 		--footer '' \
-		--template '||\1^' \
-		--comment '!'
+		--template 'local-zone: "\1" redirect'"$ENL"'local-data: "\1 A \2"' \
+		--comment '#'
 }
 
 main "$@"

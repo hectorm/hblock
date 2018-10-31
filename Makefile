@@ -1,13 +1,24 @@
 #!/usr/bin/make -f
 
-DESTDIR =
-PREFIX = $(DESTDIR)/usr/local
-BINDIR = $(PREFIX)/bin
-SYSCONFDIR = $(DESTDIR)/etc
+SHELL := /bin/sh
+
+DESTDIR :=
+PREFIX := $(DESTDIR)/usr/local
+BINDIR := $(PREFIX)/bin
+SYSCONFDIR := $(DESTDIR)/etc
 
 SYSTEMCTL := $(shell which systemctl 2>/dev/null)
 
-define DEFAULT_HOSTS
+DISTDIR := ./dist
+RESOURCESDIR := ./resources
+HBLOCK := ./hblock
+HOSTS := $(DISTDIR)/hosts
+HOSTS_ALT_FORMATS_SH := $(wildcard $(RESOURCESDIR)/alt-formats/*.sh)
+HOSTS_ALT_FORMATS := $(HOSTS_ALT_FORMATS_SH:$(RESOURCESDIR)/alt-formats/%.sh=$(DISTDIR)/hosts_%)
+HOSTS_STATS := $(DISTDIR)/most_abused_tlds.txt $(DISTDIR)/most_abused_suffixes.txt
+HOSTS_INDEX := $(DISTDIR)/index.html
+
+define DEFAULT_HOSTS :=
 127.0.0.1       localhost $(shell uname -n)
 255.255.255.255 broadcasthost
 ::1             localhost ip6-localhost ip6-loopback
@@ -20,127 +31,77 @@ endef
 export DEFAULT_HOSTS
 
 .PHONY: all
-all: build index
+all: build
+
+.PHONY: release
+release:
+	$(MAKE) clean
+	$(MAKE) build stats
+	$(MAKE) index
 
 .PHONY: build
-build: \
-	build-hosts \
-	build-domains \
-	build-adblock \
-	build-rpz \
-	build-dnsmasq \
-	build-unbound \
-	build-android \
-	build-windows
+build: $(HOSTS) $(HOSTS_ALT_FORMATS)
 
-.PHONY: build-hosts
-build-hosts: dist/hosts
-dist/hosts:
-	mkdir -p ./dist/
-	./hblock -O ./dist/hosts
+$(DISTDIR):
+	mkdir -p '$(DISTDIR)'
 
-.PHONY: build-domains
-build-domains: build-hosts dist/hosts_domains.txt
-dist/hosts_domains.txt:
-	./resources/alt-formats/domains.sh ./dist/hosts > ./dist/hosts_domains.txt
+$(HOSTS): | $(DISTDIR)
+	'$(HBLOCK)' -O '$(HOSTS)'
 
-.PHONY: build-adblock
-build-adblock: build-hosts dist/hosts_adblock.txt
-dist/hosts_adblock.txt:
-	./resources/alt-formats/adblock.sh ./dist/hosts > ./dist/hosts_adblock.txt
-
-.PHONY: build-rpz
-build-rpz: build-hosts dist/hosts_rpz.txt
-dist/hosts_rpz.txt:
-	./resources/alt-formats/rpz.sh ./dist/hosts > ./dist/hosts_rpz.txt
-
-.PHONY: build-dnsmasq
-build-dnsmasq: build-hosts dist/hosts_dnsmasq.conf
-dist/hosts_dnsmasq.conf:
-	./resources/alt-formats/dnsmasq.sh ./dist/hosts > ./dist/hosts_dnsmasq.conf
-
-.PHONY: build-unbound
-build-unbound: build-hosts dist/hosts_unbound.conf
-dist/hosts_unbound.conf:
-	./resources/alt-formats/unbound.sh ./dist/hosts > ./dist/hosts_unbound.conf
-
-.PHONY: build-android
-build-android: build-hosts dist/hosts_android.zip
-dist/hosts_android.zip:
-	cd ./resources/alt-formats/android/ && zip -r "$(CURDIR)"/dist/hosts_android.zip ./
-	cd ./dist/ && zip -r ./hosts_android.zip ./hosts
-
-.PHONY: build-windows
-build-windows: build-hosts dist/hosts_windows.zip
-dist/hosts_windows.zip:
-	cd ./resources/alt-formats/windows/ && zip -rl "$(CURDIR)"/dist/hosts_windows.zip ./
-	cd ./dist/ && zip -rl ./hosts_windows.zip ./hosts
+$(HOSTS)_%: $(RESOURCESDIR)/alt-formats/%.sh $(HOSTS)
+	'$<' '$(HOSTS)' '$(HBLOCK)' '$(RESOURCESDIR)' > '$@'
 
 .PHONY: stats
-stats: stats-tlds stats-suffixes
+stats: $(HOSTS_STATS)
 
-.PHONY: stats-tlds
-stats-tlds: build-domains dist/most_abused_tlds.txt
-dist/most_abused_tlds.txt:
-	./resources/stats/suffix.sh ./dist/hosts_domains.txt none > ./dist/most_abused_tlds.txt
+$(DISTDIR)/most_abused_tlds.txt: $(DISTDIR)/hosts_domains.txt
+	'$(RESOURCESDIR)'/stats/suffix.sh '$(DISTDIR)'/hosts_domains.txt none > '$@'
 
-.PHONY: stats-suffixes
-stats-suffixes: build-domains dist/most_abused_suffixes.txt
-dist/most_abused_suffixes.txt:
-	./resources/stats/suffix.sh ./dist/hosts_domains.txt > ./dist/most_abused_suffixes.txt
+$(DISTDIR)/most_abused_suffixes.txt: $(DISTDIR)/hosts_domains.txt
+	'$(RESOURCESDIR)'/stats/suffix.sh '$(DISTDIR)'/hosts_domains.txt > '$@'
 
 .PHONY: index
-index: build-hosts dist/index.html
-dist/index.html:
-	./resources/templates/index.sh ./dist/ > ./dist/index.html
+index: $(HOSTS_INDEX)
+
+%/index.html: $(filter-out index %/index.html,$(MAKECMDGOALS))
+	'$(RESOURCESDIR)'/templates/index.sh "$$(dirname '$@')" > '$@'
 
 .PHONY: logo
 logo:
-	./resources/logo/rasterize.sh
+	'$(RESOURCESDIR)'/logo/rasterize.sh
 
 .PHONY: install
-install: build-hosts
-	mkdir -p "$(PREFIX)" "$(BINDIR)" "$(SYSCONFDIR)"
-	install -m 0755 ./dist/hosts "$(SYSCONFDIR)"/hosts
-	install -m 0755 ./hblock "$(BINDIR)"/hblock
+install: $(HOSTS)
+	mkdir -p '$(PREFIX)' '$(BINDIR)' '$(SYSCONFDIR)'
+	install -m 0755 '$(HOSTS)' '$(SYSCONFDIR)'/hosts
+	install -m 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
 	set -eu; \
-	if [ -x "$(SYSTEMCTL)" ] && [ -d "$(SYSCONFDIR)"/systemd/system ]; then \
-		install -m 0644 ./resources/systemd/hblock.service "$(SYSCONFDIR)"/systemd/system/hblock.service; \
-		install -m 0644 ./resources/systemd/hblock.timer "$(SYSCONFDIR)"/systemd/system/hblock.timer; \
-		"$(SYSTEMCTL)" daemon-reload; \
-		"$(SYSTEMCTL)" enable hblock.timer; \
-		"$(SYSTEMCTL)" start hblock.timer; \
+	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
+		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSCONFDIR)'/systemd/system/hblock.service; \
+		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSCONFDIR)'/systemd/system/hblock.timer; \
+		'$(SYSTEMCTL)' daemon-reload; \
+		'$(SYSTEMCTL)' enable hblock.timer; \
+		'$(SYSTEMCTL)' start hblock.timer; \
 	fi
 
 .PHONY: uninstall
 uninstall:
-	rm -f "$(BINDIR)"/hblock
-	printf '%s\n' "$$DEFAULT_HOSTS" > "$(SYSCONFDIR)"/hosts
+	rm -f '$(BINDIR)'/hblock
+	printf '%s\n' "$$DEFAULT_HOSTS" > '$(SYSCONFDIR)'/hosts
 	set -eu; \
-	if [ -x "$(SYSTEMCTL)" ] && [ -d "$(SYSCONFDIR)"/systemd/system ]; then \
-		if [ -f "$(SYSCONFDIR)"/systemd/system/hblock.timer ]; then \
-			"$(SYSTEMCTL)" stop hblock.timer; \
-			"$(SYSTEMCTL)" disable hblock.timer; \
-			rm -f "$(SYSCONFDIR)"/systemd/system/hblock.timer; \
+	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
+		if [ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; then \
+			'$(SYSTEMCTL)' stop hblock.timer; \
+			'$(SYSTEMCTL)' disable hblock.timer; \
+			rm -f '$(SYSCONFDIR)'/systemd/system/hblock.timer; \
 		fi; \
-		if [ -f "$(SYSCONFDIR)"/systemd/system/hblock.service ]; then \
-			rm -f "$(SYSCONFDIR)"/systemd/system/hblock.service; \
+		if [ -f '$(SYSCONFDIR)'/systemd/system/hblock.service ]; then \
+			rm -f '$(SYSCONFDIR)'/systemd/system/hblock.service; \
 		fi; \
-		"$(SYSTEMCTL)" daemon-reload; \
+		'$(SYSTEMCTL)' daemon-reload; \
 	fi
 
 .PHONY: clean
 clean:
-	rm -f \
-		./dist/hosts \
-		./dist/hosts_domains.txt \
-		./dist/hosts_adblock.txt \
-		./dist/hosts_rpz.txt \
-		./dist/hosts_dnsmasq.conf \
-		./dist/hosts_unbound.conf \
-		./dist/hosts_android.zip \
-		./dist/hosts_windows.zip \
-		./dist/most_abused_tlds.txt \
-		./dist/most_abused_suffixes.txt \
-		./dist/index.html
-	-rmdir ./dist/
+	rm -f $(HOSTS) $(HOSTS_ALT_FORMATS) $(HOSTS_STATS) $(HOSTS_INDEX)
+	if [ -d '$(DISTDIR)' ]; then rmdir '$(DISTDIR)'; fi

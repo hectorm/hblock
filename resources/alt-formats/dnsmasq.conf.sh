@@ -8,15 +8,16 @@ set -eu
 export LC_ALL=C
 
 main() {
-	hblock="./hblock"
-	hosts="${1:?}"
+	hosts="${1:-/etc/hosts}"
+	hblock="${2:-hblock}"
+	#resourcesDir="${3:-./resources}"
 
 	$hblock -qO- \
 		--sources "file://$hosts" \
 		--header '' \
 		--footer '' \
-		--template '\1' \
-		--comment ''
+		--template 'address=\/\1\/\2' \
+		--comment '#'
 }
 
 main "$@"
