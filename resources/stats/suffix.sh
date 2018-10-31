@@ -18,10 +18,10 @@ exists() {
 # Create temporary file
 createTempFile() {
 	if exists mktemp; then mktemp
-	else # Since POSIX does not specify mktemp utility, a counter is used as a fallback
+	else # Since POSIX does not specify mktemp utility, use this as fallback
 		tempCounter=${tempCounter:-9999}
-		tempFile="${TMPDIR:-/tmp}/hblock-stats.$((tempCounter+=1))"
-		rm -f -- "$tempFile" && touch -- "$tempFile"
+		tempFile="${TMPDIR:-/tmp}/hblock.$$.$((tempCounter+=1))"
+		rm -f -- "$tempFile" && (umask 077 && touch -- "$tempFile")
 		printf -- '%s\n' "$tempFile"
 	fi
 }
