@@ -89,7 +89,7 @@ main() {
 		exit 1
 	fi
 
-	entries=$(for file in ./"$directory"/*; do
+	entries=$(cd -- "$directory" && for file in ./*; do
 		if ! [ -r "$file" ] || endsWith "$file" 'index.html'; then
 			continue
 		fi
