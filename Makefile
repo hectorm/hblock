@@ -1,13 +1,15 @@
 #!/usr/bin/make -f
 
 SHELL := /bin/sh
+.SHELLFLAGS = -eu -c
 
 DESTDIR :=
 PREFIX := $(DESTDIR)/usr/local
 BINDIR := $(PREFIX)/bin
 SYSCONFDIR := $(DESTDIR)/etc
 
-SYSTEMCTL := $(shell which systemctl 2>/dev/null)
+SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
+SHELLCHECK := $(shell command -v shellcheck 2>/dev/null)
 
 DISTDIR := ./dist
 RESOURCESDIR := ./resources
@@ -30,17 +32,30 @@ ff02::3         ip6-allhosts
 endef
 export DEFAULT_HOSTS
 
+##################################################
+## "all" target
+##################################################
 .PHONY: all
+
 all: build
 
+##################################################
+## "release" target
+##################################################
 .PHONY: release
+
 release:
 	$(MAKE) clean
+	$(MAKE) lint
 	$(MAKE) build stats
 	$(MAKE) index
 
+##################################################
+## "build" target
+##################################################
 .PHONY: build
-build: $(HOSTS) $(HOSTS_ALT_FORMATS)
+
+build: $(HOSTS)
 
 $(DISTDIR):
 	mkdir -p '$(DISTDIR)'
@@ -48,10 +63,37 @@ $(DISTDIR):
 $(HOSTS): | $(DISTDIR)
 	'$(HBLOCK)' -O '$(HOSTS)'
 
+ifneq ($(SKIP_HOSTS_ALT_FORMATS),1)
+
+build: $(HOSTS_ALT_FORMATS)
+
 $(HOSTS)_%: $(RESOURCESDIR)/alt-formats/%.sh $(HOSTS)
 	'$<' '$(HOSTS)' '$(HBLOCK)' '$(RESOURCESDIR)' > '$@'
 
+endif
+
+##################################################
+## "lint" target
+##################################################
+.PHONY: lint
+
+ifneq ($(SKIP_LINT),1)
+
+lint:
+	@[ -x '$(SHELLCHECK)' ]
+	'$(SHELLCHECK)' '$(HBLOCK)'
+	find '$(RESOURCESDIR)' -type f -name '*.sh' -exec '$(SHELLCHECK)' '{}' '+'
+
+endif
+
+##################################################
+## "stats" target
+##################################################
 .PHONY: stats
+
+ifneq ($(SKIP_STATS),1)
+ifneq ($(SKIP_HOSTS_ALT_FORMATS),1)
+
 stats: $(HOSTS_STATS)
 
 $(DISTDIR)/most_abused_tlds.txt: $(DISTDIR)/hosts_domains.txt
@@ -60,22 +102,40 @@ $(DISTDIR)/most_abused_tlds.txt: $(DISTDIR)/hosts_domains.txt
 $(DISTDIR)/most_abused_suffixes.txt: $(DISTDIR)/hosts_domains.txt
 	'$(RESOURCESDIR)'/stats/suffix.sh '$(DISTDIR)'/hosts_domains.txt > '$@'
 
+endif
+endif
+
+##################################################
+## "index" target
+##################################################
 .PHONY: index
+
+ifneq ($(SKIP_INDEX),1)
+
 index: $(HOSTS_INDEX)
 
 %/index.html: $(filter-out index %/index.html,$(MAKECMDGOALS))
 	'$(RESOURCESDIR)'/templates/index.sh "$$(dirname '$@')" > '$@'
 
+endif
+
+##################################################
+## "logo" target
+##################################################
 .PHONY: logo
+
 logo:
 	'$(RESOURCESDIR)'/logo/rasterize.sh
 
+##################################################
+## "install" target
+##################################################
 .PHONY: install
+
 install: $(HOSTS)
 	mkdir -p '$(PREFIX)' '$(BINDIR)' '$(SYSCONFDIR)'
-	install -m 0644 '$(HOSTS)' '$(SYSCONFDIR)'/hosts
 	install -m 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
-	set -eu; \
+	install -m 0644 '$(HOSTS)' '$(SYSCONFDIR)'/hosts
 	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
 		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSCONFDIR)'/systemd/system/hblock.service; \
 		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSCONFDIR)'/systemd/system/hblock.timer; \
@@ -84,21 +144,27 @@ install: $(HOSTS)
 		'$(SYSTEMCTL)' start hblock.timer; \
 	fi
 
+##################################################
+## "installcheck" target
+##################################################
 .PHONY: installcheck
+
 installcheck:
-	[ -f '$(SYSCONFDIR)'/hosts ]
-	[ -x '$(BINDIR)'/hblock ]
-	set -eu; \
+	[ -x '$(BINDIR)'/hblock ] || exit 1
+	[ -f '$(SYSCONFDIR)'/hosts ] || exit 1
 	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
 		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.service ]; \
 		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; \
 	fi
 
+##################################################
+## "uninstall" target
+##################################################
 .PHONY: uninstall
+
 uninstall:
 	rm -f '$(BINDIR)'/hblock
 	printf '%s\n' "$$DEFAULT_HOSTS" > '$(SYSCONFDIR)'/hosts
-	set -eu; \
 	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
 		if [ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; then \
 			'$(SYSTEMCTL)' stop hblock.timer; \
@@ -111,7 +177,11 @@ uninstall:
 		'$(SYSTEMCTL)' daemon-reload; \
 	fi
 
+##################################################
+## "clean" target
+##################################################
 .PHONY: clean
+
 clean:
 	rm -f $(HOSTS) $(HOSTS_ALT_FORMATS) $(HOSTS_STATS) $(HOSTS_INDEX)
 	if [ -d '$(DISTDIR)' ]; then rmdir '$(DISTDIR)'; fi
