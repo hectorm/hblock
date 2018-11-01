@@ -61,7 +61,7 @@ main() {
 
 	if [ "$publicSuffixList" != 'none' ]; then
 		# Download public suffix list
-		curl -fsSL -- "$publicSuffixList" > "$blocklist.suffixes"
+		fetchUrl "$publicSuffixList" > "$blocklist.suffixes"
 
 		# Transform suffix list (punycode encode and sort by length in descending order)
 		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "$blocklist.suffixes" \
