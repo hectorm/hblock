@@ -1,23 +1,168 @@
-image: node:8-alpine
+image: alpine:latest
 
 stages:
+  - lint
   - build
   - deploy
 
-build:
-  stage: build
+lint:
+  image: koalaman/shellcheck-alpine:stable
+  stage: lint
+  before_script:
+    - apk add --no-cache make
   script:
-    - apk add --no-cache curl file grep libidn make zip
-    - HOSTNAME= make release
+    - make lint
+
+build:ubuntu:latest:
+  image: ubuntu:latest
+  stage: build
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      apt-get update && apt-get install -y --no-install-recommends
+      bsdmainutils ca-certificates curl file gawk grep idn make sed zip
+  script:
+    - >
+      make
+      DISTDIR=dist/ubuntu-latest
+      HOSTNAME=
+      SKIP_LINT=1
+      release -j4
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/
+      - dist/ubuntu-latest/
+
+build:debian:latest:
+  image: debian:latest
+  stage: build
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      apt-get update && apt-get install -y --no-install-recommends
+      bsdmainutils ca-certificates curl file gawk grep idn make sed zip
+  script:
+    - >
+      make
+      DISTDIR=dist/debian-latest
+      HOSTNAME=
+      SKIP_LINT=1
+      release -j4
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/debian-latest/
+
+build:fedora:latest:
+  image: fedora:latest
+  stage: build
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      dnf install -y
+      ca-certificates curl file gawk grep libidn make sed util-linux zip
+  script:
+    - >
+      make
+      DISTDIR=dist/fedora-latest
+      HOSTNAME=
+      SKIP_LINT=1
+      release -j4
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/fedora-latest/
+
+build:centos:latest:
+  image: centos:latest
+  stage: build
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      yum install -y
+      ca-certificates curl file gawk grep libidn make sed util-linux zip
+  script:
+    - >
+      make
+      DISTDIR=dist/centos-latest
+      HOSTNAME=
+      SKIP_LINT=1
+      release -j4
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/centos-latest/
+
+build:opensuse:latest:
+  image: opensuse/leap:latest
+  stage: build
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      zypper install -y
+      ca-certificates curl file gawk grep libidn-tools make sed util-linux zip
+  script:
+    - >
+      make
+      DISTDIR=dist/opensuse-latest
+      HOSTNAME=
+      SKIP_LINT=1
+      release -j4
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/opensuse-latest/
+
+build:alpine:latest:
+  image: alpine:latest
+  stage: build
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      apk add --no-cache
+      file grep libidn make openssl wget zip
+  script:
+    - >
+      make
+      DISTDIR=dist/alpine-latest
+      HOSTNAME=
+      SKIP_LINT=1
+      release -j4
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/alpine-latest/
+
+build:busybox:latest:
+  image: busybox:latest
+  stage: build
+  before_script:
+    - uname -a
+    - busybox | head -1 || true
+  variables:
+    DISTDIR: dist/busybox-latest
+  script:
+    # Partial build, since Busybox does not have the necessary tools
+    - mkdir -p "$DISTDIR"
+    - HOSTNAME= ./hblock -O "$DISTDIR"/hosts
+    - ./resources/alt-formats/domains.txt.sh "$DISTDIR"/hosts ./hblock > "$DISTDIR"/hosts_domains.txt
+    - ./resources/stats/suffix.sh "$DISTDIR"/hosts_domains.txt none > "$DISTDIR"/most_abused_tlds.txt
+    - ./resources/templates/index.sh "$DISTDIR" > "$DISTDIR"/index.html
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/busybox-latest/
 
 pages:
   stage: deploy
   script:
-    - cp -r dist/ public/
+    - cp -r dist/ubuntu-latest/ public/
   artifacts:
     paths:
       - public/
