@@ -73,7 +73,7 @@ logo:
 .PHONY: install
 install: $(HOSTS)
 	mkdir -p '$(PREFIX)' '$(BINDIR)' '$(SYSCONFDIR)'
-	install -m 0755 '$(HOSTS)' '$(SYSCONFDIR)'/hosts
+	install -m 0644 '$(HOSTS)' '$(SYSCONFDIR)'/hosts
 	install -m 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
 	set -eu; \
 	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
