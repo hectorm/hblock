@@ -84,6 +84,16 @@ install: $(HOSTS)
 		'$(SYSTEMCTL)' start hblock.timer; \
 	fi
 
+.PHONY: installcheck
+installcheck:
+	[ -f '$(SYSCONFDIR)'/hosts ]
+	[ -x '$(BINDIR)'/hblock ]
+	set -eu; \
+	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
+		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.service ]; \
+		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; \
+	fi
+
 .PHONY: uninstall
 uninstall:
 	rm -f '$(BINDIR)'/hblock
