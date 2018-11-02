@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://hblock.molinero.xyz/">
-    <img src="https://cdn.rawgit.com/hectorm/hblock/master/resources/logo/logotype.svg" width="320" height="100">
+    <img src="https://hectorm.github.io/hblock/resources/logo/logotype.svg" width="320" height="100">
   </a>
 </p>
 
@@ -121,7 +121,7 @@ structure:
 ```
 
 #### Run preview
-![cast](https://cdn.rawgit.com/hectorm/hblock/master/resources/hblock.cast.svg)
+[![asciicast](https://asciinema.org/a/GKRegEGdHTm3xUqebueo4Wkes.svg)](https://asciinema.org/a/GKRegEGdHTm3xUqebueo4Wkes)
 
 ## Sources
 | Name                                  | Primary                                          | Mirror                                           |
