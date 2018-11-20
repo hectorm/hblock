@@ -12,10 +12,10 @@ main() {
 	hblock="${2:-hblock}"
 	#resourcesDir="${3:-./resources}"
 
+	HBLOCK_HEADER='' \
+	HBLOCK_FOOTER='' \
+	HBLOCK_SOURCES="file://$hosts" \
 	$hblock -qO- \
-		--sources "file://$hosts" \
-		--header '' \
-		--footer '' \
 		--template '||\1^' \
 		--comment '!'
 }

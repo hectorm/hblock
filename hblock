@@ -11,6 +11,53 @@ export LC_ALL=C
 # shellcheck disable=SC2039
 HOSTNAME=${HOSTNAME-$(uname -n)}
 
+# Builtin values
+BUILTIN_HEADER=$(cat <<-EOF
+	127.0.0.1       localhost $HOSTNAME
+	255.255.255.255 broadcasthost
+	::1             localhost ip6-localhost ip6-loopback
+	fe00::0         ip6-localnet
+	ff00::0         ip6-mcastprefix
+	ff02::1         ip6-allnodes
+	ff02::2         ip6-allrouters
+	ff02::3         ip6-allhosts
+EOF
+)
+BUILTIN_FOOTER=''
+BUILTIN_SOURCES=$(cat <<-'EOF'
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
+EOF
+)
+BUILTIN_WHITELIST=''
+BUILTIN_BLACKLIST=''
+
 # Check if a program exists
 exists() {
 	# shellcheck disable=SC2230
@@ -23,6 +70,9 @@ exists() {
 # See: https://stackoverflow.com/a/29613573
 quoteRe() { printf -- '%s' "$1" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
 quoteSubst() { printf -- '%s' "$1" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
+
+# Remove comments from string
+removeComments() { printf -- '%s' "$1" | sed -e 's/[[:blank:]]*#.*//'; }
 
 # Translate true/false to yes/no
 getBoolVal() { [ "$1" = true ] && s='yes' || s='no'; printf -- '%s' "$s"; }
@@ -97,16 +147,30 @@ showHelp() {
 			Usage: hblock [options...]
 			 -O, --output <FILE>
 			        Output file location
-			        (default: /etc/hosts)
+			        (default: "/etc/hosts" file)
+			 -H, --header <FILE>
+			        Content to be included at the beginning of the output file
+			        (default: HBLOCK_HEADER environment variable,
+			        "/etc/hblock.d/header" file or builtin value)
+			 -F, --footer <FILE>
+			        Content to be included at the end of the output file
+			        (default: HBLOCK_FOOTER environment variable,
+			        "/etc/hblock.d/footer" file or builtin value)
+			 -S, --sources <FILE>
+			        Newline separated URLs used to generate the blocklist
+			        (default: HBLOCK_SOURCES environment variable,
+			        "/etc/hblock.d/sources.list" file or builtin value)
+			 -W, --whitelist <FILE>
+			        Newline separated domains to be removed from the blocklist
+			        (default: HBLOCK_WHITELIST environment variable,
+			        "/etc/hblock.d/whitelist.list" file or builtin value)
+			 -B, --blacklist <FILE>
+			        Newline separated domains to be added to the blocklist
+			        (default: HBLOCK_BLACKLIST environment variable,
+			        "/etc/hblock.d/blacklist.list" file or builtin value)
 			 -R, --redirection <REDIRECTION>
 			        Redirection for all entries in the blocklist
 			        (default: 0.0.0.0)
-			 -H, --header <HEADER>
-			        Content to be included at the beginning of the file
-			        (e.g. "$(cat header.txt)")
-			 -F, --footer <FOOTER>
-			        Content to be included at the end of the file
-			        (e.g. "$(cat footer.txt)")
 			 -T, --template <TEMPLATE>
 			        POSIX BREs replacement applied to each entry
 			        \1 = <DOMAIN>, \2 = <REDIRECTION>
@@ -114,20 +178,14 @@ showHelp() {
 			 -C, --comment <COMMENT>
 			        Character used for comments
 			        (default: #)
-			 -S, --sources <URLS>
-			        Sources to be used to generate the blocklist
-			        (whitespace separated URLs)
-			 -W, --whitelist <ENTRIES>
-			        Entries to be removed from the blocklist
-			        (whitespace separated POSIX BREs)
-			 -B, --blacklist <ENTRIES>
-			        Entries to be added to the blocklist
 			 -b, --backup [DIRECTORY]
 			        Make a time-stamped backup in <DIRECTORY>
 			        (default: output file directory)
 			 -l, --lenient
 			        Match all entries from sources, regardless of their IP
 			        (default: 0.0.0.0, 127.0.0.1 or none)
+			 -r, --enable-regex-whitelist
+			        Use POSIX BREs instead of fixed strings
 			 -i, --ignore-download-error
 			        Do not abort if a download error occurs
 			 -c, --color <auto|true|false>
@@ -158,58 +216,18 @@ showVersion() {
 }
 
 main() {
-	output='/etc/hosts'
+	outputFile='/etc/hosts'
+	headerFile='/etc/hblock.d/header'; header=''
+	footerFile='/etc/hblock.d/footer'; footer=''
+	sourcesFile='/etc/hblock.d/sources.list'; sources=''
+	whitelistFile='/etc/hblock.d/whitelist.list'; whitelist=''
+	blacklistFile='/etc/hblock.d/blacklist.list'; blacklist=''
 	redirection='0.0.0.0'
-	header=$(cat <<-EOF
-		127.0.0.1       localhost $HOSTNAME
-		255.255.255.255 broadcasthost
-		::1             localhost ip6-localhost ip6-loopback
-		fe00::0         ip6-localnet
-		ff00::0         ip6-mcastprefix
-		ff02::1         ip6-allnodes
-		ff02::2         ip6-allrouters
-		ff02::3         ip6-allhosts
-	EOF
-	)
-	custom=''
-	footer=''
 	template='\2 \1'
 	comment='#'
-	sources=$(cat <<-'EOF'
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
-	EOF
-	)
-	whitelist=''
-	blacklist=''
 	backup=false
 	lenient=false
+	enableWhitelistRegex=false
 	ignoreDownloadError=false
 	color=auto
 	quiet=false
@@ -218,23 +236,24 @@ main() {
 	for opt in "$@"; do
 		shift
 		case "$opt" in
-			'--output')                set -- "$@" '-O' ;;
-			'--redirection')           set -- "$@" '-R' ;;
-			'--header')                set -- "$@" '-H' ;;
-			'--footer')                set -- "$@" '-F' ;;
-			'--template')              set -- "$@" '-T' ;;
-			'--comment')               set -- "$@" '-C' ;;
-			'--sources')               set -- "$@" '-S' ;;
-			'--whitelist')             set -- "$@" '-W' ;;
-			'--blacklist')             set -- "$@" '-B' ;;
-			'--backup')                set -- "$@" '-b' ;;
-			'--lenient')               set -- "$@" '-l' ;;
-			'--ignore-download-error') set -- "$@" '-i' ;;
-			'--color')                 set -- "$@" '-c' ;;
-			'--quiet')                 set -- "$@" '-q' ;;
-			'--version')               set -- "$@" '-v' ;;
-			'--help')                  set -- "$@" '-h' ;;
-			*)                         set -- "$@" "$opt"
+			'--output')                 set -- "$@" '-O' ;;
+			'--header')                 set -- "$@" '-H' ;;
+			'--footer')                 set -- "$@" '-F' ;;
+			'--sources')                set -- "$@" '-S' ;;
+			'--whitelist')              set -- "$@" '-W' ;;
+			'--blacklist')              set -- "$@" '-B' ;;
+			'--redirection')            set -- "$@" '-R' ;;
+			'--template')               set -- "$@" '-T' ;;
+			'--comment')                set -- "$@" '-C' ;;
+			'--backup')                 set -- "$@" '-b' ;;
+			'--lenient')                set -- "$@" '-l' ;;
+			'--enable-regex-whitelist') set -- "$@" '-r' ;;
+			'--ignore-download-error')  set -- "$@" '-i' ;;
+			'--color')                  set -- "$@" '-c' ;;
+			'--quiet')                  set -- "$@" '-q' ;;
+			'--version')                set -- "$@" '-v' ;;
+			'--help')                   set -- "$@" '-h' ;;
+			*)                          set -- "$@" "$opt"
 		esac
 	done
 	# Set omitted arguments to empty strings
@@ -252,19 +271,20 @@ main() {
 	done
 	# Read short options
 	OPTIND=1
-	while getopts ':O:R:H:F:T:C:S:W:B:b:lic:qvh-:' opt; do
+	while getopts ':O:H:F:S:W:B:R:T:C:b:lric:qvh-:' opt; do
 		case "$opt" in
-			'O') output="$OPTARG" ;;
+			'O') outputFile="$OPTARG" ;;
+			'H') headerFile="$OPTARG" ;;
+			'F') footerFile="$OPTARG" ;;
+			'S') sourcesFile="$OPTARG" ;;
+			'W') whitelistFile="$OPTARG" ;;
+			'B') blacklistFile="$OPTARG" ;;
 			'R') redirection="$OPTARG" ;;
-			'H') header="$OPTARG" ;;
-			'F') footer="$OPTARG" ;;
 			'T') template="$OPTARG" ;;
 			'C') comment="$OPTARG" ;;
-			'S') sources="$OPTARG" ;;
-			'W') whitelist="$OPTARG" ;;
-			'B') blacklist="$OPTARG" ;;
 			'b') backup=true; backupDir="$OPTARG" ;;
 			'l') lenient=true ;;
+			'r') enableWhitelistRegex=true ;;
 			'i') ignoreDownloadError=true ;;
 			'c') color="$OPTARG" ;;
 			'q') quiet=true ;;
@@ -280,21 +300,93 @@ main() {
 		[ -t 1 ] && color=true || color=false
 	fi
 
+	# Priority: $HBLOCK_HEADER > $headerFile > builtin
+	if [ "${HBLOCK_HEADER+def}" = def ]; then
+		header=$HBLOCK_HEADER
+		headerOrigin=environment
+	elif [ -f "$headerFile" ]; then
+		header=$(cat -- "$headerFile")
+		headerOrigin=$headerFile
+	else
+		header=$BUILTIN_HEADER
+		headerOrigin=builtin
+	fi
+
+	# Priority: $HBLOCK_FOOTER > $footerFile > builtin
+	if [ "${HBLOCK_FOOTER+def}" = def ]; then
+		footer=$HBLOCK_FOOTER
+		footerOrigin=environment
+	elif [ -f "$footerFile" ]; then
+		footer=$(cat -- "$footerFile")
+		footerOrigin=$footerFile
+	else
+		footer=$BUILTIN_FOOTER
+		footerOrigin=builtin
+	fi
+
+	# Priority: $HBLOCK_SOURCES > $sourcesFile > builtin
+	if [ "${HBLOCK_SOURCES+def}" = def ]; then
+		sources=$HBLOCK_SOURCES
+		sourcesOrigin=environment
+	elif [ -f "$sourcesFile" ]; then
+		sources=$(cat -- "$sourcesFile")
+		sourcesOrigin=$sourcesFile
+	else
+		sources=$BUILTIN_SOURCES
+		sourcesOrigin=builtin
+	fi
+	sources=$(removeComments "$sources")
+
+	# Priority: $HBLOCK_WHITELIST > $whitelistFile > builtin
+	if [ "${HBLOCK_WHITELIST+def}" = def ]; then
+		whitelist=$HBLOCK_WHITELIST
+		whitelistOrigin=environment
+	elif [ -f "$whitelistFile" ]; then
+		whitelist=$(cat -- "$whitelistFile")
+		whitelistOrigin=$whitelistFile
+	else
+		whitelist=$BUILTIN_WHITELIST
+		whitelistOrigin=builtin
+	fi
+	whitelist=$(removeComments "$whitelist")
+
+	# Priority: $HBLOCK_BLACKLIST > file > builtin
+	if [ "${HBLOCK_BLACKLIST+def}" = def ]; then
+		blacklist=$HBLOCK_BLACKLIST
+		blacklistOrigin=environment
+	elif [ -f "$blacklistFile" ]; then
+		blacklist=$(cat -- "$blacklistFile")
+		blacklistOrigin=$blacklistFile
+	else
+		blacklist=$BUILTIN_BLACKLIST
+		blacklistOrigin=builtin
+	fi
+	blacklist=$(removeComments "$blacklist")
+
 	logAction 'Configuration:'
 
-	logInfo "Output: $output"
+	logInfo "Output: $outputFile"
+	logInfo "Header: $headerOrigin"
+	logInfo "Footer: $footerOrigin"
+	logInfo "Sources: $sourcesOrigin"
+	logInfo "Whitelist: $whitelistOrigin"
+	logInfo "Blacklist: $blacklistOrigin"
 	logInfo "Redirection: $redirection"
+	logInfo "Template: $template"
+	logInfo "Comment: $comment"
 	logInfo "Backup: $(getBoolVal "$backup")"
 	logInfo "Lenient: $(getBoolVal "$lenient")"
+	logInfo "Enable regex in whitelist: $(getBoolVal "$enableWhitelistRegex")"
 	logInfo "Ignore download error: $(getBoolVal "$ignoreDownloadError")"
 
 	# Create temporary blocklist file
 	blocklistFile=$(createTempFile)
-	rmtemp() { rm -f -- "$blocklistFile" "$blocklistFile.aux"; }
+	rmtemp() { rm -f -- "$blocklistFile" "$blocklistFile".aux.*; }
 	trap rmtemp EXIT
 
 	logAction 'Downloading lists...'
 
+	_IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 	for url in $sources; do
 		logInfo "$url"
 		fetchUrl "$url" >> "$blocklistFile" && exitCode=0 || exitCode=$?
@@ -303,30 +395,31 @@ main() {
 			exit 1
 		fi
 	done
+	IFS=$_IFS
 
 	logAction 'Parsing lists...'
 
 	if [ -s "$blocklistFile" ]; then
 		logInfo 'Remove carriage return'
 		tr -d '\r' \
-			< "$blocklistFile" > "$blocklistFile.aux" \
-			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+			< "$blocklistFile" > "$blocklistFile.aux.1" \
+			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
 		logInfo 'Transform to lowercase'
 		tr '[:upper:]' '[:lower:]' \
-			< "$blocklistFile" > "$blocklistFile.aux" \
-			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+			< "$blocklistFile" > "$blocklistFile.aux.1" \
+			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
 		logInfo 'Remove comments'
 		sed -e 's/#.*//' \
-			-- "$blocklistFile" > "$blocklistFile.aux" \
-			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+			-- "$blocklistFile" > "$blocklistFile.aux.1" \
+			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
 		logInfo 'Trim spaces'
 		sed -e 's/^[[:blank:]]*//' \
 			-e 's/[[:blank:]]*$//' \
-			-- "$blocklistFile" > "$blocklistFile.aux" \
-			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+			-- "$blocklistFile" > "$blocklistFile.aux.1" \
+			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
 		logInfo 'Match hosts lines'
 		if [ "$lenient" = true ]; then
@@ -342,8 +435,8 @@ main() {
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
 		sed -n \
 			-e "/^\\(${ipRegex}[[:blank:]]\\{1,\\}\\)\\{0,1\\}$domainRegex$/p" \
-			-- "$blocklistFile" > "$blocklistFile.aux" \
-			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+			-- "$blocklistFile" > "$blocklistFile.aux.1" \
+			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
 		logInfo 'Remove reserved TLDs'
 		sed -e '/\.example$/d' \
@@ -352,37 +445,45 @@ main() {
 			-e '/\.localdomain$/d' \
 			-e '/\.localhost$/d' \
 			-e '/\.test$/d' \
-			-- "$blocklistFile" > "$blocklistFile.aux" \
-			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+			-- "$blocklistFile" > "$blocklistFile.aux.1" \
+			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
 		logInfo 'Remove destination IPs'
 		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
-			-- "$blocklistFile" > "$blocklistFile.aux" \
-			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
-
-		if [ -n "$whitelist" ]; then
-			logInfo 'Apply whitelist'
-			for domain in $whitelist; do
-				sed -e "/$domain/d" \
-					-- "$blocklistFile" > "$blocklistFile.aux" \
-					&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
-			done
-		fi
-	fi
-
-	if [ -n "$blacklist" ]; then
-		logInfo 'Apply blacklist'
-		for domain in $blacklist; do
-			printf -- '%s\n' "$domain" >> "$blocklistFile"
-		done
+			-- "$blocklistFile" > "$blocklistFile.aux.1" \
+			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 	fi
 
 	# This domain is used to check if hBlock is enabled
 	printf -- '%s\n' 'hblock-check.molinero.xyz' >> "$blocklistFile"
 
+	if [ -n "$blacklist" ]; then
+		logInfo 'Apply blacklist'
+		printf -- '%s' "$blacklist" >> "$blocklistFile"
+	fi
+
 	logInfo 'Sort entries'
-	sort -- "$blocklistFile" | uniq | sed -e '/^$/d' > "$blocklistFile.aux" \
-		&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+	sort -- "$blocklistFile" | uniq | sed -e '/^$/d' > "$blocklistFile.aux.1" \
+		&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+
+	if [ -n "$whitelist" ]; then
+		logInfo 'Apply whitelist'
+
+		if [ "$enableWhitelistRegex" = true ]; then
+			_IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
+			for regex in $whitelist; do
+				sed -e "/$regex/d" \
+					-- "$blocklistFile" > "$blocklistFile.aux.1" \
+					&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			done
+			IFS=$_IFS
+		else
+			printf -- '%s' "$whitelist" | sort | uniq > "$blocklistFile.aux.2"
+			comm -23 -- "$blocklistFile" "$blocklistFile.aux.2" > "$blocklistFile.aux.1" \
+				&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile" \
+				&& rm -f -- "$blocklistFile.aux.2"
+		fi
+	fi
 
 	# Count blocked domains
 	blocklistCount=$(wc -l < "$blocklistFile" | tr -d ' ');
@@ -390,30 +491,24 @@ main() {
 	logInfo 'Apply format template'
 	sed -e "s/$/\\t$(quoteSubst "$redirection")/" \
 		-e "s/^\\(.*\\)\\t\\(.*\\)$/$template/" \
-		-- "$blocklistFile" > "$blocklistFile.aux" \
-		&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
+		-- "$blocklistFile" > "$blocklistFile.aux.1" \
+		&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
 	# Define "C" variable for convenience
 	C=$comment
 
-	if [ "$output" != - ] && [ -f "$output" ]; then
-		# Get custom section
-		if [ -n "$C" ]; then
-			logAction 'Reading custom section...'
-			custom=$(sed -e "/^$C.*<custom>/,/^$C.*<\\/custom>/!d;/^$C.*<\\(\\/\\|\\)custom>/d" -- "$output")
-		fi
-
+	if [ "$outputFile" != - ] && [ -f "$outputFile" ]; then
 		# Backup procedure
 		if [ "$backup" = true ]; then
 			logAction 'Backing up original file...'
-			[ -z "$backupDir" ] && backupDir=$(dirname -- "$output")
-			backupOutput="$backupDir/$(basename -- "$output").$(date +%s).bak"
-			if touch -- "$backupOutput" >/dev/null 2>&1; then
-				cp -af -- "$output" "$backupOutput"
+			[ -z "$backupDir" ] && backupDir=$(dirname -- "$outputFile")
+			outputBackup="$backupDir/$(basename -- "$outputFile").$(date +%s).bak"
+			if touch -- "$outputBackup" >/dev/null 2>&1; then
+				cp -af -- "$outputFile" "$outputBackup"
 			elif exists sudo; then
-				sudo cp -af -- "$output" "$backupOutput"
+				sudo cp -af -- "$outputFile" "$outputBackup"
 			else
-				logError "Cannot write '$backupOutput': permission denied"
+				logError "Cannot write '$outputBackup': permission denied"
 				exit 1
 			fi
 		fi
@@ -436,12 +531,7 @@ main() {
 			printf -- '%s\n' "$header"
 			if [ -n "$C" ]; then printf -- '%s\n' "$C </header>"; fi
 		fi
-		if [ -n "$custom" ]; then
-			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <custom>"; fi
-			printf -- '%s\n' "$custom"
-			if [ -n "$C" ]; then printf -- '%s\n' "$C </custom>"; fi
-		fi
-		if [ -n "$blocklistFile" ]; then
+		if [ -s "$blocklistFile" ]; then
 			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <blocklist>"; fi
 			cat -- "$blocklistFile"
 			if [ -n "$C" ]; then printf -- '%s\n' "$C </blocklist>"; fi
@@ -454,18 +544,18 @@ main() {
 	}
 
 	# Print to stdout if the output value is equal to -
-	if [ "$output" = - ]; then
+	if [ "$outputFile" = - ]; then
 		printOutputFile
 	else
-		if [ -d "$output" ]; then
-			logError "Cannot write '$output': is a directory"
+		if [ -d "$outputFile" ]; then
+			logError "Cannot write '$outputFile': is a directory"
 			exit 1
-		elif touch -- "$output" >/dev/null 2>&1; then
-			printOutputFile > "$output"
+		elif touch -- "$outputFile" >/dev/null 2>&1; then
+			printOutputFile > "$outputFile"
 		elif exists sudo && exists tee; then
-			printOutputFile | sudo tee -- "$output" >/dev/null
+			printOutputFile | sudo tee -- "$outputFile" >/dev/null
 		else
-			logError "Cannot write '$output': permission denied"
+			logError "Cannot write '$outputFile': permission denied"
 			exit 1
 		fi
 	fi

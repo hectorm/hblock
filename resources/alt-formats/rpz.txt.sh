@@ -12,15 +12,15 @@ main() {
 	hblock="${2:-hblock}"
 	#resourcesDir="${3:-./resources}"
 
+	HBLOCK_HEADER=$(cat <<-'EOF'
+		$TTL 2h
+		@ IN SOA localhost. root.localhost. (1 6h 1h 1w 2h)
+		  IN NS  localhost.
+	EOF
+	) \
+	HBLOCK_FOOTER='' \
+	HBLOCK_SOURCES="file://$hosts" \
 	$hblock -qO- \
-		--sources "file://$hosts" \
-		--header "$(cat <<-'EOF'
-			$TTL 2h
-			@ IN SOA localhost. root.localhost. (1 6h 1h 1w 2h)
-			  IN NS  localhost.
-		EOF
-		)" \
-		--footer '' \
 		--template '\1 CNAME .' \
 		--comment ';'
 }

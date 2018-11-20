@@ -14,10 +14,10 @@ main() {
 	hblock="${2:-hblock}"
 	#resourcesDir="${3:-./resources}"
 
+	HBLOCK_HEADER='' \
+	HBLOCK_FOOTER='' \
+	HBLOCK_SOURCES="file://$hosts" \
 	$hblock -qO- \
-		--sources "file://$hosts" \
-		--header '' \
-		--footer '' \
 		--template 'local-zone: "\1" redirect'"$ENL"'local-data: "\1 A \2"' \
 		--comment '#'
 }
