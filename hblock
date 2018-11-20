@@ -289,15 +289,15 @@ main() {
 	logInfo "Ignore download error: $(getBoolVal "$ignoreDownloadError")"
 
 	# Create temporary blocklist file
-	blocklist=$(createTempFile)
-	rmtemp() { rm -f -- "$blocklist" "$blocklist.aux"; }
+	blocklistFile=$(createTempFile)
+	rmtemp() { rm -f -- "$blocklistFile" "$blocklistFile.aux"; }
 	trap rmtemp EXIT
 
 	logAction 'Downloading lists...'
 
 	for url in $sources; do
 		logInfo "$url"
-		fetchUrl "$url" >> "$blocklist" && exitCode=0 || exitCode=$?
+		fetchUrl "$url" >> "$blocklistFile" && exitCode=0 || exitCode=$?
 		if [ "$exitCode" -ne 0 ] && [ "$ignoreDownloadError" != true ]; then
 			logError 'Download failed'
 			exit 1
@@ -306,27 +306,27 @@ main() {
 
 	logAction 'Parsing lists...'
 
-	if [ -s "$blocklist" ]; then
+	if [ -s "$blocklistFile" ]; then
 		logInfo 'Remove carriage return'
 		tr -d '\r' \
-			< "$blocklist" > "$blocklist.aux" \
-			&& mv -f -- "$blocklist.aux" "$blocklist"
+			< "$blocklistFile" > "$blocklistFile.aux" \
+			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 		logInfo 'Transform to lowercase'
 		tr '[:upper:]' '[:lower:]' \
-			< "$blocklist" > "$blocklist.aux" \
-			&& mv -f -- "$blocklist.aux" "$blocklist"
+			< "$blocklistFile" > "$blocklistFile.aux" \
+			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 		logInfo 'Remove comments'
 		sed -e 's/#.*//' \
-			-- "$blocklist" > "$blocklist.aux" \
-			&& mv -f -- "$blocklist.aux" "$blocklist"
+			-- "$blocklistFile" > "$blocklistFile.aux" \
+			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 		logInfo 'Trim spaces'
 		sed -e 's/^[[:blank:]]*//' \
 			-e 's/[[:blank:]]*$//' \
-			-- "$blocklist" > "$blocklist.aux" \
-			&& mv -f -- "$blocklist.aux" "$blocklist"
+			-- "$blocklistFile" > "$blocklistFile.aux" \
+			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 		logInfo 'Match hosts lines'
 		if [ "$lenient" = true ]; then
@@ -342,8 +342,8 @@ main() {
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
 		sed -n \
 			-e "/^\\(${ipRegex}[[:blank:]]\\{1,\\}\\)\\{0,1\\}$domainRegex$/p" \
-			-- "$blocklist" > "$blocklist.aux" \
-			&& mv -f -- "$blocklist.aux" "$blocklist"
+			-- "$blocklistFile" > "$blocklistFile.aux" \
+			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 		logInfo 'Remove reserved TLDs'
 		sed -e '/\.example$/d' \
@@ -352,20 +352,20 @@ main() {
 			-e '/\.localdomain$/d' \
 			-e '/\.localhost$/d' \
 			-e '/\.test$/d' \
-			-- "$blocklist" > "$blocklist.aux" \
-			&& mv -f -- "$blocklist.aux" "$blocklist"
+			-- "$blocklistFile" > "$blocklistFile.aux" \
+			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 		logInfo 'Remove destination IPs'
 		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
-			-- "$blocklist" > "$blocklist.aux" \
-			&& mv -f -- "$blocklist.aux" "$blocklist"
+			-- "$blocklistFile" > "$blocklistFile.aux" \
+			&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 		if [ -n "$whitelist" ]; then
 			logInfo 'Apply whitelist'
 			for domain in $whitelist; do
 				sed -e "/$domain/d" \
-					-- "$blocklist" > "$blocklist.aux" \
-					&& mv -f -- "$blocklist.aux" "$blocklist"
+					-- "$blocklistFile" > "$blocklistFile.aux" \
+					&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 			done
 		fi
 	fi
@@ -373,25 +373,25 @@ main() {
 	if [ -n "$blacklist" ]; then
 		logInfo 'Apply blacklist'
 		for domain in $blacklist; do
-			printf -- '%s\n' "$domain" >> "$blocklist"
+			printf -- '%s\n' "$domain" >> "$blocklistFile"
 		done
 	fi
 
 	# This domain is used to check if hBlock is enabled
-	printf -- '%s\n' 'hblock-check.molinero.xyz' >> "$blocklist"
+	printf -- '%s\n' 'hblock-check.molinero.xyz' >> "$blocklistFile"
 
 	logInfo 'Sort entries'
-	sort -- "$blocklist" | uniq | sed -e '/^$/d' > "$blocklist.aux" \
-		&& mv -f -- "$blocklist.aux" "$blocklist"
+	sort -- "$blocklistFile" | uniq | sed -e '/^$/d' > "$blocklistFile.aux" \
+		&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 	# Count blocked domains
-	blocklistCount=$(wc -l < "$blocklist" | tr -d ' ');
+	blocklistCount=$(wc -l < "$blocklistFile" | tr -d ' ');
 
 	logInfo 'Apply format template'
 	sed -e "s/$/\\t$(quoteSubst "$redirection")/" \
 		-e "s/^\\(.*\\)\\t\\(.*\\)$/$template/" \
-		-- "$blocklist" > "$blocklist.aux" \
-		&& mv -f -- "$blocklist.aux" "$blocklist"
+		-- "$blocklistFile" > "$blocklistFile.aux" \
+		&& mv -f -- "$blocklistFile.aux" "$blocklistFile"
 
 	# Define "C" variable for convenience
 	C=$comment
@@ -441,9 +441,9 @@ main() {
 			printf -- '%s\n' "$custom"
 			if [ -n "$C" ]; then printf -- '%s\n' "$C </custom>"; fi
 		fi
-		if [ -n "$blocklist" ]; then
+		if [ -n "$blocklistFile" ]; then
 			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <blocklist>"; fi
-			cat -- "$blocklist"
+			cat -- "$blocklistFile"
 			if [ -n "$C" ]; then printf -- '%s\n' "$C </blocklist>"; fi
 		fi
 		if [ -n "$footer" ]; then
