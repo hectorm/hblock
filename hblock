@@ -217,11 +217,11 @@ showVersion() {
 
 main() {
 	outputFile='/etc/hosts'
-	headerFile='/etc/hblock.d/header'; header=''
-	footerFile='/etc/hblock.d/footer'; footer=''
-	sourcesFile='/etc/hblock.d/sources.list'; sources=''
-	whitelistFile='/etc/hblock.d/whitelist.list'; whitelist=''
-	blacklistFile='/etc/hblock.d/blacklist.list'; blacklist=''
+	headerFile='/etc/hblock.d/header'; defaultHeaderFile=$headerFile; header=''
+	footerFile='/etc/hblock.d/footer'; defaultFooterFile=$footerFile; footer=''
+	sourcesFile='/etc/hblock.d/sources.list'; defaultSourcesFile=$sourcesFile; sources=''
+	whitelistFile='/etc/hblock.d/whitelist.list'; defaultWhitelistFile=$whitelistFile; whitelist=''
+	blacklistFile='/etc/hblock.d/blacklist.list'; defaultBlacklistFile=$blacklistFile; blacklist=''
 	redirection='0.0.0.0'
 	template='\2 \1'
 	comment='#'
@@ -300,8 +300,11 @@ main() {
 		[ -t 1 ] && color=true || color=false
 	fi
 
-	# Priority: $HBLOCK_HEADER > $headerFile > builtin
-	if [ "${HBLOCK_HEADER+def}" = def ]; then
+	# Priority: $headerFile > $HBLOCK_HEADER > $defaultHeaderFile > builtin
+	if [ "$headerFile" != "$defaultHeaderFile" ]; then
+		header=$(cat -- "$headerFile")
+		headerOrigin=$headerFile
+	elif [ "${HBLOCK_HEADER+def}" = def ]; then
 		header=$HBLOCK_HEADER
 		headerOrigin=environment
 	elif [ -f "$headerFile" ]; then
@@ -312,8 +315,11 @@ main() {
 		headerOrigin=builtin
 	fi
 
-	# Priority: $HBLOCK_FOOTER > $footerFile > builtin
-	if [ "${HBLOCK_FOOTER+def}" = def ]; then
+	# Priority: $footerFile > $HBLOCK_FOOTER > $defaultFooterFile > builtin
+	if [ "$footerFile" != "$defaultFooterFile" ]; then
+		footer=$(cat -- "$footerFile")
+		footerOrigin=$footerFile
+	elif [ "${HBLOCK_FOOTER+def}" = def ]; then
 		footer=$HBLOCK_FOOTER
 		footerOrigin=environment
 	elif [ -f "$footerFile" ]; then
@@ -324,8 +330,11 @@ main() {
 		footerOrigin=builtin
 	fi
 
-	# Priority: $HBLOCK_SOURCES > $sourcesFile > builtin
-	if [ "${HBLOCK_SOURCES+def}" = def ]; then
+	# Priority: $sourcesFile > $HBLOCK_SOURCES > $defaultSourcesFile > builtin
+	if [ "$sourcesFile" != "$defaultSourcesFile" ]; then
+		sources=$(cat -- "$sourcesFile")
+		sourcesOrigin=$sourcesFile
+	elif [ "${HBLOCK_SOURCES+def}" = def ]; then
 		sources=$HBLOCK_SOURCES
 		sourcesOrigin=environment
 	elif [ -f "$sourcesFile" ]; then
@@ -337,8 +346,11 @@ main() {
 	fi
 	sources=$(removeComments "$sources")
 
-	# Priority: $HBLOCK_WHITELIST > $whitelistFile > builtin
-	if [ "${HBLOCK_WHITELIST+def}" = def ]; then
+	# Priority: $whitelistFile > $HBLOCK_WHITELIST > $defaultWhitelistFile > builtin
+	if [ "$whitelistFile" != "$defaultWhitelistFile" ]; then
+		whitelist=$(cat -- "$whitelistFile")
+		whitelistOrigin=$whitelistFile
+	elif [ "${HBLOCK_WHITELIST+def}" = def ]; then
 		whitelist=$HBLOCK_WHITELIST
 		whitelistOrigin=environment
 	elif [ -f "$whitelistFile" ]; then
@@ -350,8 +362,11 @@ main() {
 	fi
 	whitelist=$(removeComments "$whitelist")
 
-	# Priority: $HBLOCK_BLACKLIST > file > builtin
-	if [ "${HBLOCK_BLACKLIST+def}" = def ]; then
+	# Priority: $blacklistFile > $HBLOCK_BLACKLIST > $defaultBlacklistFile > builtin
+	if [ "$blacklistFile" != "$defaultBlacklistFile" ]; then
+		blacklist=$(cat -- "$blacklistFile")
+		blacklistOrigin=$blacklistFile
+	elif [ "${HBLOCK_BLACKLIST+def}" = def ]; then
 		blacklist=$HBLOCK_BLACKLIST
 		blacklistOrigin=environment
 	elif [ -f "$blacklistFile" ]; then
