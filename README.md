@@ -67,16 +67,30 @@ You can also change the default behavior using these options:
 Usage: hblock [options...]
  -O, --output <FILE>
         Output file location
-        (default: /etc/hosts)
+        (default: "/etc/hosts" file)
+ -H, --header <FILE>
+        Content to be included at the beginning of the output file
+        (default: HBLOCK_HEADER environment variable,
+        "/etc/hblock.d/header" file or builtin value)
+ -F, --footer <FILE>
+        Content to be included at the end of the output file
+        (default: HBLOCK_FOOTER environment variable,
+        "/etc/hblock.d/footer" file or builtin value)
+ -S, --sources <FILE>
+        Newline separated URLs used to generate the blocklist
+        (default: HBLOCK_SOURCES environment variable,
+        "/etc/hblock.d/sources.list" file or builtin value)
+ -W, --whitelist <FILE>
+        Newline separated domains to be removed from the blocklist
+        (default: HBLOCK_WHITELIST environment variable,
+        "/etc/hblock.d/whitelist.list" file or builtin value)
+ -B, --blacklist <FILE>
+        Newline separated domains to be added to the blocklist
+        (default: HBLOCK_BLACKLIST environment variable,
+        "/etc/hblock.d/blacklist.list" file or builtin value)
  -R, --redirection <REDIRECTION>
         Redirection for all entries in the blocklist
         (default: 0.0.0.0)
- -H, --header <HEADER>
-        Content to be included at the beginning of the file
-        (e.g. "$(cat header.txt)")
- -F, --footer <FOOTER>
-        Content to be included at the end of the file
-        (e.g. "$(cat footer.txt)")
  -T, --template <TEMPLATE>
         POSIX BREs replacement applied to each entry
         \1 = <DOMAIN>, \2 = <REDIRECTION>
@@ -84,20 +98,14 @@ Usage: hblock [options...]
  -C, --comment <COMMENT>
         Character used for comments
         (default: #)
- -S, --sources <URLS>
-        Sources to be used to generate the blocklist
-        (whitespace separated URLs)
- -W, --whitelist <ENTRIES>
-        Entries to be removed from the blocklist
-        (whitespace separated POSIX BREs)
- -B, --blacklist <ENTRIES>
-        Entries to be added to the blocklist
  -b, --backup [DIRECTORY]
         Make a time-stamped backup in <DIRECTORY>
         (default: output file directory)
  -l, --lenient
         Match all entries from sources, regardless of their IP
         (default: 0.0.0.0, 127.0.0.1 or none)
+ -r, --enable-regex-whitelist
+        Use POSIX BREs instead of fixed strings
  -i, --ignore-download-error
         Do not abort if a download error occurs
  -c, --color <auto|true|false>
@@ -111,17 +119,8 @@ Usage: hblock [options...]
         Show this help and quit
 ```
 
-#### Preserve content
-This script replaces the hosts file of your system, if you want to preserve part of its content, you should wrap that content with the following
-structure:
-```
-# <custom>
-...
-# </custom>
-```
-
 #### Run preview
-[![asciicast](https://asciinema.org/a/GKRegEGdHTm3xUqebueo4Wkes.svg)](https://asciinema.org/a/GKRegEGdHTm3xUqebueo4Wkes)
+[![asciicast](https://asciinema.org/a/U0eSfh04zgf3zR9F2hKAZawbm.svg)](https://asciinema.org/a/U0eSfh04zgf3zR9F2hKAZawbm)
 
 ## Sources
 | Name                                  | Primary                                          | Mirror                                           |
