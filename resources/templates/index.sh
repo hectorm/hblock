@@ -17,8 +17,8 @@ exists() {
 
 # Get file size (or space if it is not a file)
 getFileSize() {
-	if [ -f "$file" ]; then
-		wc -c < "$file" | awk '{printf "%0.2f kB", $1 / 1000}'
+	if [ -f "$1" ]; then
+		wc -c < "$1" | awk '{printf "%0.2f kB", $1 / 1000}'
 	fi
 }
 
