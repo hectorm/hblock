@@ -20,18 +20,6 @@ HOSTS_ALT_FORMATS := $(HOSTS_ALT_FORMATS_SH:$(RESOURCESDIR)/alt-formats/%.sh=$(D
 HOSTS_STATS := $(DISTDIR)/most_abused_tlds.txt $(DISTDIR)/most_abused_suffixes.txt
 HOSTS_INDEX := $(DISTDIR)/index.html
 
-define DEFAULT_HOSTS :=
-127.0.0.1       localhost $(shell uname -n)
-255.255.255.255 broadcasthost
-::1             localhost ip6-localhost ip6-loopback
-fe00::0         ip6-localnet
-ff00::0         ip6-mcastprefix
-ff02::1         ip6-allnodes
-ff02::2         ip6-allrouters
-ff02::3         ip6-allhosts
-endef
-export DEFAULT_HOSTS
-
 ##################################################
 ## "all" target
 ##################################################
@@ -132,10 +120,8 @@ logo:
 ##################################################
 .PHONY: install
 
-install: $(HOSTS)
-	mkdir -p '$(PREFIX)' '$(BINDIR)' '$(SYSCONFDIR)'
+install:
 	install -m 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
-	install -m 0644 '$(HOSTS)' '$(SYSCONFDIR)'/hosts
 	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
 		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSCONFDIR)'/systemd/system/hblock.service; \
 		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSCONFDIR)'/systemd/system/hblock.timer; \
@@ -151,7 +137,6 @@ install: $(HOSTS)
 
 installcheck:
 	[ -x '$(BINDIR)'/hblock ] || exit 1
-	[ -f '$(SYSCONFDIR)'/hosts ] || exit 1
 	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
 		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.service ]; \
 		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; \
@@ -164,7 +149,6 @@ installcheck:
 
 uninstall:
 	rm -f '$(BINDIR)'/hblock
-	printf '%s\n' "$$DEFAULT_HOSTS" > '$(SYSCONFDIR)'/hosts
 	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
 		if [ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; then \
 			'$(SYSTEMCTL)' stop hblock.timer; \
