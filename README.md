@@ -45,8 +45,8 @@ I provide nightly builds of the hosts file and other formats, including installe
 ## Installation
 
 ```sh
-curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.0.1/hblock' \
-  && echo 'd730ef6eb354d9ca66cd3465daba393e2659c75b4ccf998c897806a6e9067525  /tmp/hblock' | shasum -c \
+curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.0.2/hblock' \
+  && echo 'e952ffe7c651974236a826f5a3764da81512a40bcb0cfe88c9f4fea7b3ed5cce  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
   && sudo chown root:root /usr/local/bin/hblock \
   && sudo chmod 755 /usr/local/bin/hblock
