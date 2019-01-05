@@ -7,18 +7,23 @@ DESTDIR :=
 PREFIX := $(DESTDIR)/usr/local
 BINDIR := $(PREFIX)/bin
 SYSCONFDIR := $(DESTDIR)/etc
+SYSTEMDUNITDIR := $(DESTDIR)/etc/systemd/system
 
-SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
 SHELLCHECK := $(shell command -v shellcheck 2>/dev/null)
+SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
 
 DISTDIR := ./dist
 RESOURCESDIR := ./resources
 HBLOCK := ./hblock
+HBLOCK_VERSION := $(shell sed -n 's|.*"version":\s*"\([0-9]\.[0-9]\.[0-9]\)",.*|\1|p' ./package.json)
+
 HOSTS := $(DISTDIR)/hosts
 HOSTS_ALT_FORMATS_SH := $(wildcard $(RESOURCESDIR)/alt-formats/*.sh)
 HOSTS_ALT_FORMATS := $(HOSTS_ALT_FORMATS_SH:$(RESOURCESDIR)/alt-formats/%.sh=$(DISTDIR)/hosts_%)
 HOSTS_STATS := $(DISTDIR)/most_abused_tlds.txt $(DISTDIR)/most_abused_suffixes.txt
 HOSTS_INDEX := $(DISTDIR)/index.html
+DEB_PACKAGE := $(DISTDIR)/hblock-$(HBLOCK_VERSION).deb
+RPM_PACKAGE := $(DISTDIR)/hblock-$(HBLOCK_VERSION).rpm
 
 ##################################################
 ## "all" target
@@ -121,13 +126,19 @@ logo:
 .PHONY: install
 
 install:
+	mkdir -p '$(BINDIR)'
 	install -m 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
-	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
-		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSCONFDIR)'/systemd/system/hblock.service; \
-		install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSCONFDIR)'/systemd/system/hblock.timer; \
-		'$(SYSTEMCTL)' daemon-reload; \
-		'$(SYSTEMCTL)' enable hblock.timer; \
-		'$(SYSTEMCTL)' start hblock.timer; \
+	@if [ -x '$(SYSTEMCTL)' ]; then \
+		if [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
+			mkdir -p '$(SYSTEMDUNITDIR)'; \
+			install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSTEMDUNITDIR)'/hblock.service; \
+			install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSTEMDUNITDIR)'/hblock.timer; \
+			if [ '$(SKIP_SERVICE_START)' != 1 ]; then \
+				'$(SYSTEMCTL)' daemon-reload; \
+				'$(SYSTEMCTL)' enable hblock.timer; \
+				'$(SYSTEMCTL)' start hblock.timer; \
+			fi; \
+		fi; \
 	fi
 
 ##################################################
@@ -137,9 +148,11 @@ install:
 
 installcheck:
 	[ -x '$(BINDIR)'/hblock ] || exit 1
-	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
-		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.service ]; \
-		[ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; \
+	@if [ -x '$(SYSTEMCTL)' ]; then \
+		if [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
+			[ -f '$(SYSTEMDUNITDIR)'/hblock.service ]; \
+			[ -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; \
+		fi; \
 	fi
 
 ##################################################
@@ -149,17 +162,48 @@ installcheck:
 
 uninstall:
 	rm -f '$(BINDIR)'/hblock
-	if [ -x '$(SYSTEMCTL)' ] && [ -d '$(SYSCONFDIR)'/systemd/system ]; then \
-		if [ -f '$(SYSCONFDIR)'/systemd/system/hblock.timer ]; then \
+	@if [ -x '$(SYSTEMCTL)' ]; then \
+		if [ -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; then \
 			'$(SYSTEMCTL)' stop hblock.timer; \
 			'$(SYSTEMCTL)' disable hblock.timer; \
-			rm -f '$(SYSCONFDIR)'/systemd/system/hblock.timer; \
+			rm -f '$(SYSTEMDUNITDIR)'/hblock.timer; \
 		fi; \
-		if [ -f '$(SYSCONFDIR)'/systemd/system/hblock.service ]; then \
-			rm -f '$(SYSCONFDIR)'/systemd/system/hblock.service; \
+		if [ -f '$(SYSTEMDUNITDIR)'/hblock.service ]; then \
+			rm -f '$(SYSTEMDUNITDIR)'/hblock.service; \
 		fi; \
 		'$(SYSTEMCTL)' daemon-reload; \
 	fi
+
+##################################################
+## "package-*" targets
+##################################################
+.PHONY: package-deb package-rpm
+
+package-deb: $(DEB_PACKAGE)
+
+$(DEB_PACKAGE):
+	rm -rf ./debian/
+	cp -r '$(RESOURCESDIR)'/deb/ ./debian/
+	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' ./debian/changelog
+	sed -i "s|__PKG_DATE__|$$(LANG=C date -R)|g" ./debian/changelog
+	dpkg-buildpackage -us -uc
+	mkdir -p "$$(dirname '$@')"
+	mv ../hblock_'$(HBLOCK_VERSION)'_all.deb '$@'
+	rm -f ../hblock_'$(HBLOCK_VERSION)'.dsc ../hblock_'$(HBLOCK_VERSION)'.tar.gz
+	rm -f ../hblock_'$(HBLOCK_VERSION)'_*.buildinfo ../hblock_'$(HBLOCK_VERSION)'_*.changes
+	rm -rf ./debian/
+
+package-rpm: $(RPM_PACKAGE)
+
+$(RPM_PACKAGE):
+	rm -rf ./rpmbuild/
+	cp -r '$(RESOURCESDIR)'/rpm/ ./rpmbuild/
+	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' ./rpmbuild/SPECS/hblock.spec
+	tar -czf ./rpmbuild/SOURCES/hblock-'$(HBLOCK_VERSION)'.tar.gz --exclude=./rpmbuild --exclude=./.git ./
+	rpmbuild -D "_topdir $$(pwd)/rpmbuild" -bb ./rpmbuild/SPECS/hblock.spec
+	mkdir -p "$$(dirname '$@')"
+	mv ./rpmbuild/RPMS/noarch/hblock-'$(HBLOCK_VERSION)'-*.noarch.rpm '$@'
+	rm -rf ./rpmbuild/
 
 ##################################################
 ## "clean" target
@@ -167,5 +211,8 @@ uninstall:
 .PHONY: clean
 
 clean:
-	rm -f $(HOSTS) $(HOSTS_ALT_FORMATS) $(HOSTS_STATS) $(HOSTS_INDEX)
-	if [ -d '$(DISTDIR)' ]; then rmdir '$(DISTDIR)'; fi
+	rm -f $(addprefix ', $(addsuffix ', \
+		$(HOSTS) $(HOSTS_ALT_FORMATS) $(HOSTS_STATS) $(HOSTS_INDEX) \
+		$(DEB_PACKAGE) $(RPM_PACKAGE) \
+	))
+	if [ -d '$(DISTDIR)' ] && [ -z "$$(ls -A '$(DISTDIR)')" ]; then rmdir '$(DISTDIR)'; fi

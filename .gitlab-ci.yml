@@ -3,6 +3,7 @@ image: alpine:latest
 stages:
   - lint
   - build
+  - package
   - deploy
 
 lint:
@@ -25,14 +26,14 @@ build:ubuntu:latest:
   script:
     - >
       make
-      DISTDIR=dist/ubuntu-latest
+      DISTDIR=dist/build-ubuntu-latest
       HOSTNAME=
       SKIP_LINT=1
       release -j4
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/ubuntu-latest/
+      - dist/build-ubuntu-latest/
 
 build:debian:latest:
   image: debian:latest
@@ -46,14 +47,14 @@ build:debian:latest:
   script:
     - >
       make
-      DISTDIR=dist/debian-latest
+      DISTDIR=dist/build-debian-latest
       HOSTNAME=
       SKIP_LINT=1
       release -j4
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/debian-latest/
+      - dist/build-debian-latest/
 
 build:fedora:latest:
   image: fedora:latest
@@ -67,14 +68,14 @@ build:fedora:latest:
   script:
     - >
       make
-      DISTDIR=dist/fedora-latest
+      DISTDIR=dist/build-fedora-latest
       HOSTNAME=
       SKIP_LINT=1
       release -j4
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/fedora-latest/
+      - dist/build-fedora-latest/
 
 build:centos:latest:
   image: centos:latest
@@ -88,14 +89,14 @@ build:centos:latest:
   script:
     - >
       make
-      DISTDIR=dist/centos-latest
+      DISTDIR=dist/build-centos-latest
       HOSTNAME=
       SKIP_LINT=1
       release -j4
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/centos-latest/
+      - dist/build-centos-latest/
 
 build:opensuse:latest:
   image: opensuse/leap:latest
@@ -109,14 +110,14 @@ build:opensuse:latest:
   script:
     - >
       make
-      DISTDIR=dist/opensuse-latest
+      DISTDIR=dist/build-opensuse-latest
       HOSTNAME=
       SKIP_LINT=1
       release -j4
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/opensuse-latest/
+      - dist/build-opensuse-latest/
 
 build:alpine:latest:
   image: alpine:latest
@@ -130,14 +131,14 @@ build:alpine:latest:
   script:
     - >
       make
-      DISTDIR=dist/alpine-latest
+      DISTDIR=dist/build-alpine-latest
       HOSTNAME=
       SKIP_LINT=1
       release -j4
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/alpine-latest/
+      - dist/build-alpine-latest/
 
 build:busybox:latest:
   image: busybox:latest
@@ -146,7 +147,7 @@ build:busybox:latest:
     - uname -a
     - busybox | head -1 || true
   variables:
-    DISTDIR: dist/busybox-latest
+    DISTDIR: dist/build-busybox-latest
   script:
     # Partial build, since Busybox does not have the necessary tools
     - mkdir -p "$DISTDIR"
@@ -157,12 +158,50 @@ build:busybox:latest:
   artifacts:
     expire_in: 1 week
     paths:
-      - dist/busybox-latest/
+      - dist/build-busybox-latest/
+
+package:deb:
+  image: ubuntu:latest
+  stage: package
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      apt-get update && apt-get install -y --no-install-recommends
+      build-essential debhelper dh-systemd
+  script:
+    - >
+      make
+      DISTDIR=dist/package-deb
+      package-deb
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/package-deb/
+
+package:rpm:
+  image: fedora:latest
+  stage: package
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      dnf install -y
+      make rpm-build rpmdevtools systemd
+  script:
+    - >
+      make
+      DISTDIR=dist/package-rpm
+      package-rpm
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/package-rpm/
 
 pages:
   stage: deploy
   script:
-    - cp -r dist/ubuntu-latest/ public/
+    - cp -r dist/build-ubuntu-latest/ public/
   artifacts:
     paths:
       - public/

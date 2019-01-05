@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with=systemd
+
+override_dh_auto_build:
+	cp -f "$$(pwd)/resources/systemd/hblock.timer" "$$(pwd)/debian/"
+	cp -f "$$(pwd)/resources/systemd/hblock.service" "$$(pwd)/debian/"
+
+override_dh_auto_install:
+	'$(MAKE)' DESTDIR="$$(pwd)/debian/hblock" PREFIX="$$(pwd)/debian/hblock/usr" SKIP_SERVICE_INSTALL=1 install
+
+override_dh_installinit:
+	true
