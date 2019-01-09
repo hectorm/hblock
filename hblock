@@ -53,6 +53,8 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
+	https://raw.githubusercontent.com/anudeepND/blacklist/master/facebook.txt
+	https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt
 EOF
 )
 BUILTIN_WHITELIST=''
