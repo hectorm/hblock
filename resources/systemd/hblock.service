@@ -4,4 +4,5 @@ Description=hBlock
 [Service]
 Type=oneshot
 TimeoutSec=300
-ExecStart=/bin/sh -c 'until ping -c1 github.com; do sleep 30; done && hblock'
+ExecStartPre=/bin/sh -c 'until ping -c1 raw.githubusercontent.com; do sleep 10; done'
+ExecStart=/bin/sh -c 'hblock'
