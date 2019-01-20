@@ -509,29 +509,29 @@ main() {
 		-- "$blocklistFile" > "$blocklistFile.aux.1" \
 		&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
 
-	# Define "C" variable for convenience
-	C=$comment
+	# Backup procedure
+	if [ "$backup" = true ] && [ "$outputFile" != - ] && [ -f "$outputFile" ]; then
+		logAction 'Backing up original file...'
 
-	if [ "$outputFile" != - ] && [ -f "$outputFile" ]; then
-		# Backup procedure
-		if [ "$backup" = true ]; then
-			logAction 'Backing up original file...'
-			[ -z "$backupDir" ] && backupDir=$(dirname -- "$outputFile")
-			outputBackup="$backupDir/$(basename -- "$outputFile").$(date +%s).bak"
-			if touch -- "$outputBackup" >/dev/null 2>&1; then
-				cp -af -- "$outputFile" "$outputBackup"
-			elif exists sudo; then
-				sudo cp -af -- "$outputFile" "$outputBackup"
-			else
-				logError "Cannot write '$outputBackup': permission denied"
-				exit 1
-			fi
+		[ -z "$backupDir" ] && backupDir=$(dirname -- "$outputFile")
+		backupFile="$backupDir/$(basename -- "$outputFile").$(date +%s).bak"
+
+		if touch -- "$backupFile" >/dev/null 2>&1; then
+			cp -af -- "$outputFile" "$backupFile"
+		elif exists sudo; then
+			sudo cp -af -- "$outputFile" "$backupFile"
+		else
+			logError "Cannot write '$backupFile': permission denied"
+			exit 1
 		fi
 	fi
 
 	logAction 'Generating output file...'
 
 	printOutputFile() {
+		# Define "C" variable for convenience
+		C=$comment
+
 		if [ -n "$C" ]; then
 			printf -- '%s\n' "$(cat <<-EOF
 				$C Author:          Héctor Molinero Fernández <hector@molinero.xyz>
