@@ -147,11 +147,20 @@ install:
 .PHONY: installcheck
 
 installcheck:
-	[ -x '$(BINDIR)'/hblock ] || exit 1
+	@if [ ! -x '$(BINDIR)'/hblock ]; then \
+		>&2 printf '%s\n' 'hblock is not installed'; \
+		exit 1; \
+	fi
 	@if [ -x '$(SYSTEMCTL)' ]; then \
 		if [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
-			[ -f '$(SYSTEMDUNITDIR)'/hblock.service ]; \
-			[ -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; \
+			if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.service ]; then \
+				>&2 printf '%s\n' 'hblock service is not installed'; \
+				exit 1; \
+			fi; \
+			if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; then \
+				>&2 printf '%s\n' 'hblock timer is not installed'; \
+				exit 1; \
+			fi; \
 		fi; \
 	fi
 
