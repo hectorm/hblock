@@ -171,9 +171,11 @@ package:deb:
       build-essential debhelper dh-systemd
   script:
     - >
+      if [ -d ./resources/deb/ ]; then
       make
       DISTDIR=dist/package-deb
-      package-deb
+      package-deb;
+      fi
   artifacts:
     expire_in: 1 week
     paths:
@@ -190,9 +192,11 @@ package:rpm:
       make rpm-build rpmdevtools systemd
   script:
     - >
+      if [ -d ./resources/rpm/ ]; then
       make
       DISTDIR=dist/package-rpm
-      package-rpm
+      package-rpm;
+      fi
   artifacts:
     expire_in: 1 week
     paths:
