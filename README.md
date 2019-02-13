@@ -128,6 +128,7 @@ Usage: hblock [options...]
 | adaway.org                            | [URL][source-adaway.org]                         | [URL][mirror-adaway.org]                         |
 | AdBlock NoCoin List                   | [URL][source-adblock-nocoin-list]                | [URL][mirror-adblock-nocoin-list]                |
 | AdGuard - Simplified                  | [URL][source-adguard-simplified]                 | [URL][mirror-adguard-simplified]                 |
+| anudeepND - adservers                 | [URL][source-anudeepnd-adservers]                | [URL][mirror-anudeepnd-adservers]                |
 | disconnect.me - Ad                    | [URL][source-disconnect.me-ad]                   | [URL][mirror-disconnect.me-ad]                   |
 | disconnect.me - Malvertising          | [URL][source-disconnect.me-malvertising]         | [URL][mirror-disconnect.me-malvertising]         |
 | disconnect.me - Malware               | [URL][source-disconnect.me-malware]              | [URL][mirror-disconnect.me-malware]              |
@@ -160,6 +161,8 @@ Usage: hblock [options...]
 [mirror-adblock-nocoin-list]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 [source-adguard-simplified]: https://filters.adtidy.org/extension/chromium/filters/15.txt
 [mirror-adguard-simplified]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+[source-anudeepnd-adservers]: https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt
+[mirror-anudeepnd-adservers]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/anudeepnd-adservers/list.txt
 [source-disconnect.me-ad]: https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 [mirror-disconnect.me-ad]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
 [source-disconnect.me-malvertising]: https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
