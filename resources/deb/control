@@ -1,7 +1,7 @@
 Source: hblock
 Section: utils
 Priority: optional
-Maintainer: Héctor Molinero Fernández <hector@molinero.xyz>
+Maintainer: Héctor Molinero Fernández <hector@molinero.dev>
 Build-Depends: debhelper (>=9), dh-systemd (>=1.5), make (>=4)
 Standards-Version: 4.0.0
 Homepage: https://github.com/hectorm/hblock

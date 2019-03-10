@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Version:    2.0.4
-# Author:     Héctor Molinero Fernández <hector@molinero.xyz>
+# Author:     Héctor Molinero Fernández <hector@molinero.dev>
 # Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
 
@@ -471,7 +471,7 @@ main() {
 	fi
 
 	# This domain is used to check if hBlock is enabled
-	printf -- '%s\n' 'hblock-check.molinero.xyz' >> "$blocklistFile"
+	printf -- '%s\n' 'hblock-check.molinero.dev' >> "$blocklistFile"
 
 	if [ -n "$blacklist" ]; then
 		logInfo 'Apply blacklist'
@@ -535,7 +535,7 @@ main() {
 
 		if [ -n "$C" ]; then
 			printf -- '%s\n' "$(cat <<-EOF
-				$C Author:          Héctor Molinero Fernández <hector@molinero.xyz>
+				$C Author:          Héctor Molinero Fernández <hector@molinero.dev>
 				$C Repository:      https://github.com/hectorm/hblock
 				$C Last updated:    $(date -u)
 				$C Blocked domains: $blocklistCount

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Author:     Héctor Molinero Fernández <hector@molinero.xyz>
+# Author:     Héctor Molinero Fernández <hector@molinero.dev>
 # Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
 
@@ -170,7 +170,7 @@ main() {
 		/* This resource is used to check the status of hBlock */
 		var c=document.getElementById('status').classList;
 		var i=document.createElement('img');c.add('loading');
-		i.src='https://hblock-check.molinero.xyz/1.png?_='+Date.now();
+		i.src='https://hblock-check.molinero.dev/1.png?_='+Date.now();
 		i.onload=function(){c.add('disabled');c.remove('loading');};
 		i.onerror=function(){c.add('enabled');c.remove('loading');};
 		})();
@@ -332,14 +332,14 @@ main() {
 				default-src 'none';
 				 script-src '$(cspDigest "${javascript}")';
 				 style-src '$(cspDigest "${css}")';
-				 img-src data: https://hblock-check.molinero.xyz/1.png;
+				 img-src data: https://hblock-check.molinero.dev/1.png;
 			">
 
 			<title>Index of /hBlock</title>
 			<meta name="description" content="Improve your security and privacy by blocking ads, tracking and malware domains">
-			<meta name="author" content="Héctor Molinero Fernández <hector@molinero.xyz>">
+			<meta name="author" content="Héctor Molinero Fernández <hector@molinero.dev>">
 			<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
-			<link rel="canonical" href="https://hblock.molinero.xyz/">
+			<link rel="canonical" href="https://hblock.molinero.dev/">
 
 			<link rel="icon" type="image/png" href="${favicon}">
 
@@ -347,7 +347,7 @@ main() {
 			<meta property="og:title" content="Index of /hBlock">
 			<meta property="og:description" content="Improve your security and privacy by blocking ads, tracking and malware domains">
 			<meta property="og:type" content="website">
-			<meta property="og:url" content="https://hblock.molinero.xyz/">
+			<meta property="og:url" content="https://hblock.molinero.dev/">
 			<meta property="og:image" content="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/bitmap/favicon-512x512.png">
 
 			<style>${css}</style>

@@ -1,11 +1,11 @@
 [![Build](https://gitlab.com/hectorm/hblock/badges/master/build.svg)](https://gitlab.com/hectorm/hblock/pipelines)
-[![Website](https://img.shields.io/website/https/hblock.molinero.xyz.svg)](https://hblock.molinero.xyz)
+[![Website](https://img.shields.io/website/https/hblock.molinero.dev.svg)](https://hblock.molinero.dev)
 [![License](https://img.shields.io/github/license/hectorm/hblock.svg)](LICENSE.md)
 
 ***
 
 <p align="center">
-  <a href="https://hblock.molinero.xyz/">
+  <a href="https://hblock.molinero.dev/">
     <img src="https://hectorm.github.io/hblock/resources/logo/logotype.svg" width="320" height="100">
   </a>
 </p>
@@ -40,7 +40,7 @@ I provide nightly builds of the hosts file and other formats, including installe
 
 | URL                         |
 | --------------------------- |
-| https://hblock.molinero.xyz |
+| https://hblock.molinero.dev |
 
 ## Installation
 

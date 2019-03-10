@@ -5,7 +5,7 @@ Name: %{name}
 Version: %{version}
 Release: 1
 Summary: Improve your security and privacy by blocking ads, tracking and malware domains
-Packager: Héctor Molinero Fernández <hector@molinero.xyz>
+Packager: Héctor Molinero Fernández <hector@molinero.dev>
 License: MIT
 URL: https://github.com/hectorm/hblock
 Source0: %{name}-%{version}.tar.gz

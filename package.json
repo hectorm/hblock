@@ -24,9 +24,9 @@
     "unbound",
     "unified-hosts"
   ],
-  "author": "Héctor Molinero Fernández <hector@molinero.xyz>",
+  "author": "Héctor Molinero Fernández <hector@molinero.dev>",
   "license": "MIT",
-  "homepage": "https://hblock.molinero.xyz",
+  "homepage": "https://hblock.molinero.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/hectorm/hblock.git"
