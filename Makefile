@@ -6,9 +6,7 @@ SHELL := /bin/sh
 DESTDIR :=
 PREFIX := $(DESTDIR)/usr/local
 BINDIR := $(PREFIX)/bin
-SYSCONFDIR := $(DESTDIR)/etc
-SYSTEMDUNITDIR := $(DESTDIR)/etc/systemd/system
-
+SYSTEMDUNITDIR := $(DESTDIR)/usr/lib/systemd/system
 SHELLCHECK := $(shell command -v shellcheck 2>/dev/null)
 SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
 
@@ -127,18 +125,10 @@ logo:
 
 install:
 	mkdir -p '$(BINDIR)'
-	install -m 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
-	@if [ -x '$(SYSTEMCTL)' ]; then \
-		if [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
-			mkdir -p '$(SYSTEMDUNITDIR)'; \
-			install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSTEMDUNITDIR)'/hblock.service; \
-			install -m 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSTEMDUNITDIR)'/hblock.timer; \
-			if [ '$(SKIP_SERVICE_START)' != 1 ]; then \
-				'$(SYSTEMCTL)' daemon-reload; \
-				'$(SYSTEMCTL)' enable hblock.timer; \
-				'$(SYSTEMCTL)' start hblock.timer; \
-			fi; \
-		fi; \
+	install -Dm 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
+	@if [ -x '$(SYSTEMCTL)' ] && [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
+		install -Dm 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSTEMDUNITDIR)'/hblock.service; \
+		install -Dm 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSTEMDUNITDIR)'/hblock.timer; \
 	fi
 
 ##################################################
@@ -151,16 +141,14 @@ installcheck:
 		>&2 printf '%s\n' 'hblock is not installed'; \
 		exit 1; \
 	fi
-	@if [ -x '$(SYSTEMCTL)' ]; then \
-		if [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
-			if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.service ]; then \
-				>&2 printf '%s\n' 'hblock service is not installed'; \
-				exit 1; \
-			fi; \
-			if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; then \
-				>&2 printf '%s\n' 'hblock timer is not installed'; \
-				exit 1; \
-			fi; \
+	@if [ -x '$(SYSTEMCTL)' ] && [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
+		if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.service ]; then \
+			>&2 printf '%s\n' 'hblock service is not installed'; \
+			exit 1; \
+		fi; \
+		if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; then \
+			>&2 printf '%s\n' 'hblock timer is not installed'; \
+			exit 1; \
 		fi; \
 	fi
 
@@ -172,15 +160,8 @@ installcheck:
 uninstall:
 	rm -f '$(BINDIR)'/hblock
 	@if [ -x '$(SYSTEMCTL)' ]; then \
-		if [ -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; then \
-			'$(SYSTEMCTL)' stop hblock.timer; \
-			'$(SYSTEMCTL)' disable hblock.timer; \
-			rm -f '$(SYSTEMDUNITDIR)'/hblock.timer; \
-		fi; \
-		if [ -f '$(SYSTEMDUNITDIR)'/hblock.service ]; then \
-			rm -f '$(SYSTEMDUNITDIR)'/hblock.service; \
-		fi; \
-		'$(SYSTEMCTL)' daemon-reload; \
+		rm -f '$(SYSTEMDUNITDIR)'/hblock.service; \
+		rm -f '$(SYSTEMDUNITDIR)'/hblock.timer; \
 	fi
 
 ##################################################

@@ -25,7 +25,7 @@ your system from connecting to them.
 %setup -c
 
 %install
-make DESTDIR="%{buildroot}" PREFIX="%{buildroot}%{_prefix}" SYSTEMDUNITDIR="%{buildroot}%{_unitdir}" SKIP_SERVICE_START=1 install
+make DESTDIR="%{buildroot}" PREFIX="%{buildroot}%{_prefix}" SYSTEMDUNITDIR="%{buildroot}%{_unitdir}" install
 
 %clean
 rm -rf "%{buildroot}"
