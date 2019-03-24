@@ -99,7 +99,7 @@ build:centos:latest:
       - dist/build-centos-latest/
 
 build:opensuse:latest:
-  image: opensuse/leap:latest
+  image: opensuse/tumbleweed:latest
   stage: build
   before_script:
     - uname -a
