@@ -33,6 +33,7 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/dshield.org-high/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
@@ -47,10 +48,14 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt

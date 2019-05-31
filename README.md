@@ -133,6 +133,7 @@ Usage: hblock [options...]
 | disconnect.me - Malvertising          | [URL][source-disconnect.me-malvertising]         | [URL][mirror-disconnect.me-malvertising]         |
 | disconnect.me - Malware               | [URL][source-disconnect.me-malware]              | [URL][mirror-disconnect.me-malware]              |
 | disconnect.me - Tracking              | [URL][source-disconnect.me-tracking]             | [URL][mirror-disconnect.me-tracking]             |
+| DShield.org - High                    | [URL][source-dshield.org-high]                   | [URL][mirror-dshield.org-high]                   |
 | EasyList                              | [URL][source-easylist]                           | [URL][mirror-easylist]                           |
 | EasyPrivacy                           | [URL][source-easyprivacy]                        | [URL][mirror-easyprivacy]                        |
 | ETH Phishing Detect                   | [URL][source-eth-phishing-detect]                | [URL][mirror-eth-phishing-detect]                |
@@ -147,10 +148,14 @@ Usage: hblock [options...]
 | matomo.org - Spammers                 | [URL][source-matomo.org-spammers]                | [URL][mirror-matomo.org-spammers]                |
 | mitchellkrogza - Badd-Boyz-Hosts      | [URL][source-mitchellkrogza-badd-boyz-hosts]     | [URL][mirror-mitchellkrogza-badd-boyz-hosts]     |
 | pgl.yoyo.org                          | [URL][source-pgl.yoyo.org]                       | [URL][mirror-pgl.yoyo.org]                       |
+| Phishing Army                         | [URL][source-phishing.army]                      | [URL][mirror-phishing.army]                      |
 | ransomwaretracker.abuse.ch            | [URL][source-ransomwaretracker.abuse.ch]         | [URL][mirror-ransomwaretracker.abuse.ch]         |
 | someonewhocares.org                   | [URL][source-someonewhocares.org]                | [URL][mirror-someonewhocares.org]                |
 | spam404.com                           | [URL][source-spam404.com]                        | [URL][mirror-spam404.com]                        |
 | StevenBlack                           | [URL][source-stevenblack]                        | [URL][mirror-stevenblack]                        |
+| uBlock                                | [URL][source-ublock]                             | [URL][mirror-ublock]                             |
+| uBlock - Badware                      | [URL][source-ublock-badware]                     | [URL][mirror-ublock-badware]                     |
+| uBlock - Privacy                      | [URL][source-ublock-privacy]                     | [URL][mirror-ublock-privacy]                     |
 | winhelp2002.mvps.org                  | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
 | ZeroDot1 - CoinBlockerLists           | [URL][source-zerodot1-coinblockerlists-browser]  | [URL][mirror-zerodot1-coinblockerlists-browser]  |
 | zeustracker.abuse.ch                  | [URL][source-zeustracker.abuse.ch]               | [URL][mirror-zeustracker.abuse.ch]               |
@@ -171,6 +176,8 @@ Usage: hblock [options...]
 [mirror-disconnect.me-malware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
 [source-disconnect.me-tracking]: https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 [mirror-disconnect.me-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
+[source-dshield.org-high]: https://www.dshield.org/feeds/suspiciousdomains_High.txt
+[mirror-dshield.org-high]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/dshield.org-high/list.txt
 [source-easylist]: https://easylist.to/easylist/easylist.txt
 [mirror-easylist]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
 [source-easyprivacy]: https://easylist.to/easylist/easyprivacy.txt
@@ -199,6 +206,8 @@ Usage: hblock [options...]
 [mirror-mitchellkrogza-badd-boyz-hosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
 [source-pgl.yoyo.org]: https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
 [mirror-pgl.yoyo.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+[source-phishing.army]: https://phishing.army/download/phishing_army_blocklist.txt
+[mirror-phishing.army]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
 [source-ransomwaretracker.abuse.ch]: https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
 [mirror-ransomwaretracker.abuse.ch]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
 [source-someonewhocares.org]: http://someonewhocares.org/hosts/hosts
@@ -207,6 +216,12 @@ Usage: hblock [options...]
 [mirror-spam404.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
 [source-stevenblack]: https://raw.githubusercontent.com/StevenBlack/hosts/master/data/StevenBlack/hosts
 [mirror-stevenblack]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
+[source-ublock]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt
+[mirror-ublock]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
+[source-ublock-badware]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt
+[mirror-ublock-badware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
+[source-ublock-privacy]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt
+[mirror-ublock-privacy]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
 [source-winhelp2002.mvps.org]: http://winhelp2002.mvps.org/hosts.txt
 [mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 [source-zerodot1-coinblockerlists-browser]: https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
