@@ -1,4 +1,5 @@
 # Install Systemd service and timer units
+
 The following commands will schedule a daily update of the hosts file. See [this article](https://wiki.archlinux.org/index.php/Systemd/Timers) for more information about Systemd timers.
 
 ```sh

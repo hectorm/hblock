@@ -13,6 +13,7 @@
 Improve your security and privacy by blocking ads, tracking and malware domains.
 
 ## Table of contents
+
 * [What is this for?](#what-is-this-for)
 * [Is it safe to use?](#is-it-safe-to-use)
 * [Nightly builds](#nightly-builds)
@@ -26,21 +27,22 @@ Improve your security and privacy by blocking ads, tracking and malware domains.
 * [License](#license)
 
 ## What is this for?
+
 This POSIX-compliant shell script, designed for Unix-like systems, gets a list of domains that serve ads, tracking scripts and malware from
 [multiple sources](#sources) and creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)) (alternative formats are also supported) that
 prevents your system from connecting to them.
 
 ## Is it safe to use?
+
 Absolutely, this script selects only the domain names for each source, so if a domain name is redirected to a rogue server your system will not be
 affected. In the worst scenario you can lose access to a legitimate domain name due a false positive, but you can reverse it by adding that domain to
 the whitelist.
 
 ## Nightly builds
+
 I provide nightly builds of the hosts file and other formats, including installers for **Windows** (batch file) and **Android** (flashable zip).
 
-| URL                         |
-| --------------------------- |
-| https://hblock.molinero.dev |
+https://hblock.molinero.dev
 
 ## Installation
 
@@ -55,6 +57,7 @@ curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.0.6/hbl
 **Note:** you can use [this Systemd timer](resources/systemd/README.md) to regularly update the hosts file for new additions.
 
 #### Optionally, it is possible to use [NPX](https://www.npmjs.com/package/npx) to run hBlock without installation
+
 ```sh
 npx hblock
 ```
@@ -62,6 +65,7 @@ npx hblock
 ## Usage
 
 #### Script arguments
+
 You can also change the default behavior using these options:
 ```
 Usage: hblock [options...]
@@ -120,11 +124,13 @@ Usage: hblock [options...]
 ```
 
 #### Run preview
+
 [![asciicast](https://asciinema.org/a/U0eSfh04zgf3zR9F2hKAZawbm.svg)](https://asciinema.org/a/U0eSfh04zgf3zR9F2hKAZawbm)
 
 ## Sources
+
 | Name                                  | Primary                                          | Mirror                                           |
-| ------------------------------------- | :----------------------------------------------: | :----------------------------------------------: |
+|---------------------------------------|:------------------------------------------------:|:------------------------------------------------:|
 | adaway.org                            | [URL][source-adaway.org]                         | [URL][mirror-adaway.org]                         |
 | AdBlock NoCoin List                   | [URL][source-adblock-nocoin-list]                | [URL][mirror-adblock-nocoin-list]                |
 | AdGuard - Simplified                  | [URL][source-adguard-simplified]                 | [URL][mirror-adguard-simplified]                 |
@@ -230,7 +236,9 @@ Usage: hblock [options...]
 [mirror-zeustracker.abuse.ch]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
 
 ## Disclaimer
+
 This script, by default, replaces the `/etc/hosts` file of your system. I am not responsible for any damage or loss, always make backups.
 
 ## License
+
 See the [license](LICENSE.md) file.
