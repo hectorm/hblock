@@ -180,7 +180,7 @@ main() {
 	# CSS
 	css=$(tr -d '\n' <<-'EOF'
 		html {
-			font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+			font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', sans-serif;
 			font-size: 16px;
 			color: #424242;
 			background-color: #FAFAFA;
@@ -248,14 +248,12 @@ main() {
 			text-overflow: ellipsis;
 		}
 
-		@media (min-width: 768px) {
-			.cell:nth-child(1) { width: 35%; }
-			.cell:nth-child(2) { width: 15%; }
-			.cell:nth-child(3) { width: 20%; }
-			.cell:nth-child(4) { width: 30%; }
-		}
+		.cell:nth-child(1) { width: 35%; }
+		.cell:nth-child(2) { width: 15%; }
+		.cell:nth-child(3) { width: 20%; }
+		.cell:nth-child(4) { width: 30%; }
 
-		@media (max-width: 767.98px) {
+		@media (max-width: 768px) {
 			.table, .row, .cell {
 				display: block;
 			}
@@ -270,7 +268,7 @@ main() {
 
 			.cell {
 				padding: 0 0 5px;
-				width: auto;
+				width: auto !important;
 				white-space: normal;
 			}
 
@@ -332,7 +330,7 @@ main() {
 				default-src 'none';
 				 script-src '$(cspDigest "${javascript}")';
 				 style-src '$(cspDigest "${css}")';
-				 img-src data: https://hblock-check.molinero.dev/1.png;
+				 img-src 'self' data: https://hblock-check.molinero.dev/1.png;
 			">
 
 			<title>Index of /hBlock</title>
@@ -373,7 +371,7 @@ main() {
 				</div>
 				<div class="section">
 					<h2 class="title">Status</h2>
-					 <span id="status"></span>
+					<span id="status"></span>
 				</div>
 				<div class="section">
 					<h2 class="title">Latest build ($(date '+%Y-%m-%d'))</h2>
