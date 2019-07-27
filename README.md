@@ -165,7 +165,6 @@ Usage: hblock [options...]
 | uBlock - Privacy                      | [URL][source-ublock-privacy]                     | [URL][mirror-ublock-privacy]                     |
 | winhelp2002.mvps.org                  | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
 | ZeroDot1 - CoinBlockerLists           | [URL][source-zerodot1-coinblockerlists-browser]  | [URL][mirror-zerodot1-coinblockerlists-browser]  |
-| zeustracker.abuse.ch                  | [URL][source-zeustracker.abuse.ch]               | [URL][mirror-zeustracker.abuse.ch]               |
 
 [source-adaway.org]: https://adaway.org/hosts.txt
 [mirror-adaway.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
@@ -235,8 +234,6 @@ Usage: hblock [options...]
 [mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 [source-zerodot1-coinblockerlists-browser]: https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
 [mirror-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
-[source-zeustracker.abuse.ch]: https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
-[mirror-zeustracker.abuse.ch]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
 
 ## Disclaimer
 

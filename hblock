@@ -59,7 +59,6 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zeustracker.abuse.ch/list.txt
 EOF
 )
 BUILTIN_WHITELIST=''
