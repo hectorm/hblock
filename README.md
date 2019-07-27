@@ -47,8 +47,8 @@ https://hblock.molinero.dev
 ## Installation
 
 ```sh
-curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.0.9/hblock' \
-  && echo '8df4678d1bff96bb78c8d8698dbbf9f2b0c0167f1f22b38ee94fe5d2326c2b40  /tmp/hblock' | shasum -c \
+curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.0.10/hblock' \
+  && echo '35ae6655dd9d3cd018d1dd996c1bded7e876d658a6095c75d2793119d39fb277  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
   && sudo chown root:root /usr/local/bin/hblock \
   && sudo chmod 755 /usr/local/bin/hblock
