@@ -331,6 +331,7 @@ main() {
 				 script-src '$(cspDigest "${javascript}")';
 				 style-src '$(cspDigest "${css}")';
 				 img-src 'self' data: https://hblock-check.molinero.dev/1.png;
+				 connect-src 'self';
 			">
 
 			<title>Index of /hBlock</title>
