@@ -36,6 +36,12 @@ fetchUrl() {
 	fi
 }
 
+# Convert an IDN to punycode
+punycodeEncode() {
+	if exists idn2; then CHARSET=UTF-8 idn2;
+	else CHARSET=UTF-8 idn; fi
+}
+
 main() {
 	file="${1:?}"
 	publicSuffixList="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
@@ -65,7 +71,7 @@ main() {
 
 		# Transform suffix list (punycode encode and sort by length in descending order)
 		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "$blocklist.suffixes" \
-			| CHARSET=UTF-8 idn | awk '{print(length($0)":."$0)}' \
+			| punycodeEncode | awk '{print(length($0)":."$0)}' \
 			| sort -nr | cut -d: -f2 > "$blocklist.aux" \
 			&& mv -f -- "$blocklist.aux" "$blocklist.suffixes"
 

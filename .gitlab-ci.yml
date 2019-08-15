@@ -22,7 +22,7 @@ build:ubuntu:latest:
     - cat /etc/os-release
     - >
       apt-get update && apt-get install -y --no-install-recommends
-      bsdmainutils ca-certificates curl file gawk grep idn make sed zip
+      bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - >
       make
@@ -43,7 +43,7 @@ build:debian:latest:
     - cat /etc/os-release
     - >
       apt-get update && apt-get install -y --no-install-recommends
-      bsdmainutils ca-certificates curl file gawk grep idn make sed zip
+      bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - >
       make
@@ -64,7 +64,7 @@ build:fedora:latest:
     - cat /etc/os-release
     - >
       dnf install -y
-      ca-certificates curl file gawk grep libidn make sed util-linux zip
+      ca-certificates curl file gawk grep libidn2 make sed util-linux zip
   script:
     - >
       make
@@ -106,7 +106,7 @@ build:opensuse:latest:
     - cat /etc/os-release
     - >
       zypper install -y
-      ca-certificates curl file gawk grep libidn-tools make sed util-linux zip
+      ca-certificates curl file gawk grep libidn2-tools make sed util-linux zip
   script:
     - >
       make
