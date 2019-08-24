@@ -15,6 +15,68 @@ exists() {
 	else which -- "$1"; fi >/dev/null 2>&1
 }
 
+# Check whether a string ends with the characters of a specified string
+endsWith() { str=$1 && substr=$2 && [ "${str%$substr}" != "$str" ]; }
+
+# Base16 encode
+base16Encode() {
+	if exists hexdump; then hexdump -ve '/1 "%02x"'
+	elif exists od; then od -v -tx1 -An | tr -d '\n '
+	fi
+}
+
+# Base64 encode
+base64Encode() {
+	if exists base64; then base64 | tr -d '\r\n'
+	elif exists uuencode; then uuencode -m - | sed '1d;$d' | tr -d '\r\n'
+	fi
+}
+
+# Calculate a SHA256 checksum
+sha256Checksum() {
+	if exists sha256sum; then sha256sum | cut -c 1-64
+	elif exists sha256; then sha256 | cut -c 1-64
+	elif exists shasum; then shasum -a 256 | cut -c 1-64
+	elif exists openssl; then openssl sha256 -binary | base16Encode
+	fi
+}
+
+# Escape string for use in HTML
+escapeHTML() {
+	printf -- '%s' "$1" | awk -v RS="" '{
+		gsub(/&/,"\\&#38;");
+		gsub(/</,"\\&#60;");
+		gsub(/>/,"\\&#62;");
+		gsub(/"/,"\\&#34;");
+		gsub(/'\''/,"\\&#39;");
+		gsub(/\n/,"\\&#10;");
+	print}'
+}
+
+# RFC 3986 compliant URL encoding method
+encodeURI() {
+	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C
+	hex=$(printf -- '%s' "$1" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')
+	for h in $hex; do
+		case "$h" in
+			3[0-9]|\
+			4[1-9a-f]|5[0-9a]|\
+			6[1-9a-f]|7[0-9a]|\
+			2d|5f|2e|7e\
+			) printf '%b' "\\$(printf '%o' "0x$h")" ;;
+			*) printf '%%%s' "$h"
+		esac
+	done
+	LC_COLLATE=$_LC_COLLATE
+}
+
+# Calculate digest for Content-Security-Policy
+cspDigest() {
+	hex=$(printf -- '%s' "$1" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')
+	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64Encode)
+	printf 'sha256-%s' "$b64"
+}
+
 # Get file size (or space if it is not a file)
 getFileSize() {
 	if [ -f "$1" ]; then
@@ -42,58 +104,6 @@ getFileModificationTime() {
 	else
 		printf '%s' '1970-01-01 00:00:00 UTC'
 	fi
-}
-
-# Check whether a string ends with the characters of a specified string
-endsWith() { str=$1 && substr=$2 && [ "${str%$substr}" != "$str" ]; }
-
-# Escape string for use in HTML
-escapeHTML() {
-	printf -- '%s' "$1" | awk -v RS="" '{
-		gsub(/&/,"\\&#38;");
-		gsub(/</,"\\&#60;");
-		gsub(/>/,"\\&#62;");
-		gsub(/"/,"\\&#34;");
-		gsub(/'\''/,"\\&#39;");
-		gsub(/\n/,"\\&#10;");
-	print}'
-}
-
-# RFC 3986 compliant URL encoding method
-encodeURI() {
-	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C; _IFS=$IFS; IFS=:
-	hex=$(printf -- '%s' "$1" | hexdump -ve '/1 ":%02X"'); hex=${hex#:}
-	for h in $hex; do
-		case "$h" in
-			3[0-9]|\
-			4[1-9A-F]|5[0-9A]|\
-			6[1-9A-F]|7[0-9A]|\
-			2D|5F|2E|7E\
-			) printf '%b' "\\$(printf '%o' "0x$h")" ;;
-			*) printf '%%%s' "$h"
-		esac
-	done
-	LC_COLLATE=$_LC_COLLATE; IFS=$_IFS
-}
-
-# Calculate a SHA256 checksum
-sha256Checksum() {
-	if exists sha256sum; then sha256sum
-	elif exists sha256; then sha256
-	elif exists shasum; then shasum -a 256
-	fi | cut -c 1-64
-}
-
-# Base64 encode
-base64Encode() {
-	uuencode -m - | sed '1d;$d' | tr -d '\r\n'
-}
-
-# Calculate digest for Content-Security-Policy
-cspDigest() {
-	hex=$(printf -- '%s' "$1" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')
-	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64Encode)
-	printf 'sha256-%s' "$b64"
 }
 
 main() {
