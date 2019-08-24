@@ -77,7 +77,7 @@ encodeURI() {
 }
 
 # Calculate a SHA256 checksum
-checksum() {
+sha256Checksum() {
 	if exists sha256sum; then sha256sum
 	elif exists sha256; then sha256
 	elif exists shasum; then shasum -a 256
@@ -91,7 +91,7 @@ base64Encode() {
 
 # Calculate digest for Content-Security-Policy
 cspDigest() {
-	hex=$(printf -- '%s' "$1" | checksum | sed 's|\(.\{2\}\)|\1 |g')
+	hex=$(printf -- '%s' "$1" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')
 	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64Encode)
 	printf 'sha256-%s' "$b64"
 }
