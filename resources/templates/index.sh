@@ -84,10 +84,15 @@ checksum() {
 	fi | cut -c 1-64
 }
 
+# Base64 encode
+base64Encode() {
+	uuencode -m - | sed '1d;$d' | tr -d '\r\n'
+}
+
 # Calculate digest for Content-Security-Policy
 cspDigest() {
 	hex=$(printf -- '%s' "$1" | checksum | sed 's|\(.\{2\}\)|\1 |g')
-	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64 | tr -d '\r')
+	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64Encode)
 	printf 'sha256-%s' "$b64"
 }
 
