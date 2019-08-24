@@ -20,6 +20,8 @@ main() {
 	) \
 	HBLOCK_FOOTER='' \
 	HBLOCK_SOURCES="file://$hosts" \
+	HBLOCK_WHITELIST='' \
+	HBLOCK_BLACKLIST='' \
 	$hblock -qO- \
 		--template '\1 CNAME .' \
 		--comment ';'
