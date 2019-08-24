@@ -108,7 +108,7 @@ Usage: hblock [options...]
  -l, --lenient
         Match all entries from sources, regardless of their IP
         (default: 0.0.0.0, 127.0.0.1 or none)
- -r, --enable-regex-whitelist
+ -r, --enable-whitelist-regex
         Use POSIX BREs instead of fixed strings
  -i, --ignore-download-error
         Do not abort if a download error occurs
