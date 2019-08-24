@@ -13,7 +13,7 @@ SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
 DISTDIR := ./dist
 RESOURCESDIR := ./resources
 HBLOCK := ./hblock
-HBLOCK_VERSION := $(shell sed -n 's|.*"version":\s*"\([^"]*\)",.*|\1|p' ./package.json)
+HBLOCK_VERSION := $(shell sed -n 's|.*"version"[[:space:]]*:[[:space:]]*"\([0-9.]*\)".*|\1|p' ./package.json)
 
 HOSTS := $(DISTDIR)/hosts
 HOSTS_ALT_FORMATS_SH := $(wildcard $(RESOURCESDIR)/alt-formats/*.sh)
