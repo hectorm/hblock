@@ -19,6 +19,8 @@ exists() {
 getFileSize() {
 	if [ -f "$1" ]; then
 		wc -c < "$1" | awk '{printf "%0.2f kB", $1 / 1000}'
+	else
+		printf ' '
 	fi
 }
 
@@ -74,9 +76,17 @@ encodeURI() {
 	LC_COLLATE=$_LC_COLLATE; IFS=$_IFS
 }
 
+# Calculate a SHA256 checksum
+checksum() {
+	if exists sha256sum; then sha256sum
+	elif exists sha256; then sha256
+	elif exists shasum; then shasum -a 256
+	fi | cut -c 1-64
+}
+
 # Calculate digest for Content-Security-Policy
 cspDigest() {
-	hex=$(printf -- '%s' "$1" | sha256sum | cut -f1 -d' ' | sed 's|\(.\{2\}\)|\1 |g')
+	hex=$(printf -- '%s' "$1" | checksum | sed 's|\(.\{2\}\)|\1 |g')
 	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64 | tr -d '\r')
 	printf 'sha256-%s' "$b64"
 }
