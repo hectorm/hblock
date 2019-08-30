@@ -148,6 +148,7 @@ Usage: hblock [options...]
 | FadeMind - add.Dead                   | [URL][source-fademind-add.dead]                  | [URL][mirror-fademind-add.dead]                  |
 | FadeMind - add.Risk                   | [URL][source-fademind-add.risk]                  | [URL][mirror-fademind-add.risk]                  |
 | FadeMind - add.Spam                   | [URL][source-fademind-add.spam]                  | [URL][mirror-fademind-add.spam]                  |
+| hostsVN                               | [URL][source-hostsvn]                            | [URL][mirror-hostsvn]                            |
 | KADhosts                              | [URL][source-kadhosts]                           | [URL][mirror-kadhosts]                           |
 | malwaredomainlist.com                 | [URL][source-malwaredomainlist.com]              | [URL][mirror-malwaredomainlist.com]              |
 | malwaredomains.com - Immortal domains | [URL][source-malwaredomains.com-immortaldomains] | [URL][mirror-malwaredomains.com-immortaldomains] |
@@ -200,6 +201,8 @@ Usage: hblock [options...]
 [mirror-fademind-add.risk]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
 [source-fademind-add.spam]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
 [mirror-fademind-add.spam]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+[source-hostsvn]: https://raw.githubusercontent.com/bigdargon/hostsVN/master/option/hosts-VN
+[mirror-hostsvn]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
 [source-kadhosts]: https://raw.githubusercontent.com/azet12/KADhosts/master/KADhosts.txt
 [mirror-kadhosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
 [source-malwaredomainlist.com]: https://www.malwaredomainlist.com/hostslist/hosts.txt

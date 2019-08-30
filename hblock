@@ -42,6 +42,7 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
