@@ -1,4 +1,4 @@
-image: alpine:latest
+image: docker.io/alpine:latest
 
 stages:
   - lint
@@ -7,7 +7,7 @@ stages:
   - deploy
 
 lint:
-  image: koalaman/shellcheck-alpine:stable
+  image: docker.io/koalaman/shellcheck-alpine:stable
   stage: lint
   before_script:
     - apk add --no-cache make
@@ -15,7 +15,7 @@ lint:
     - make lint
 
 build:ubuntu:latest:
-  image: ubuntu:latest
+  image: docker.io/ubuntu:latest
   stage: build
   before_script:
     - uname -a
@@ -36,7 +36,7 @@ build:ubuntu:latest:
       - dist/build-ubuntu-latest/
 
 build:debian:latest:
-  image: debian:latest
+  image: docker.io/debian:latest
   stage: build
   before_script:
     - uname -a
@@ -57,7 +57,7 @@ build:debian:latest:
       - dist/build-debian-latest/
 
 build:fedora:latest:
-  image: fedora:latest
+  image: docker.io/fedora:latest
   stage: build
   before_script:
     - uname -a
@@ -78,7 +78,7 @@ build:fedora:latest:
       - dist/build-fedora-latest/
 
 build:centos:latest:
-  image: centos:latest
+  image: docker.io/centos:latest
   stage: build
   before_script:
     - uname -a
@@ -99,7 +99,7 @@ build:centos:latest:
       - dist/build-centos-latest/
 
 build:opensuse:latest:
-  image: opensuse/tumbleweed:latest
+  image: docker.io/opensuse/tumbleweed:latest
   stage: build
   before_script:
     - uname -a
@@ -120,7 +120,7 @@ build:opensuse:latest:
       - dist/build-opensuse-latest/
 
 build:alpine:latest:
-  image: alpine:latest
+  image: docker.io/alpine:latest
   stage: build
   before_script:
     - uname -a
@@ -141,7 +141,7 @@ build:alpine:latest:
       - dist/build-alpine-latest/
 
 build:busybox:latest:
-  image: busybox:latest
+  image: docker.io/busybox:latest
   stage: build
   before_script:
     - uname -a
@@ -161,7 +161,7 @@ build:busybox:latest:
       - dist/build-busybox-latest/
 
 package:deb:
-  image: ubuntu:latest
+  image: docker.io/ubuntu:latest
   stage: package
   before_script:
     - uname -a
@@ -182,7 +182,7 @@ package:deb:
       - dist/package-deb/
 
 package:rpm:
-  image: fedora:latest
+  image: docker.io/fedora:latest
   stage: package
   before_script:
     - uname -a
