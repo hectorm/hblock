@@ -2,7 +2,7 @@
 
 set -eu
 
-action="${1:-nothing}"
+action=${1:-nothing}
 
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573

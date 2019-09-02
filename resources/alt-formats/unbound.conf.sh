@@ -7,7 +7,7 @@
 set -eu
 export LC_ALL=C
 
-ENL="$(printf '\\\nx')"; ENL="${ENL%x}"
+ENL=$(printf '\\\nx'); ENL=${ENL%x}
 
 main() {
 	hosts="${1:-/etc/hosts}"

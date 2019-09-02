@@ -14,7 +14,7 @@ _args='--without-gui'
 _inkscape="inkscape ${_args}";
 
 rm -f "$targetDir"/favicon-*x*.png
-favicon="$workDir"/favicon.svg
+favicon=$workDir/favicon.svg
 $_inkscape -w 16  -h 16  -e "$targetDir"/favicon-16x16.png   "$favicon"
 $_inkscape -w 24  -h 24  -e "$targetDir"/favicon-24x24.png   "$favicon"
 $_inkscape -w 32  -h 32  -e "$targetDir"/favicon-32x32.png   "$favicon"
@@ -28,7 +28,7 @@ $_inkscape -w 384 -h 384 -e "$targetDir"/favicon-384x384.png "$favicon"
 $_inkscape -w 512 -h 512 -e "$targetDir"/favicon-512x512.png "$favicon"
 
 rm -f "$targetDir"/logotype-*x*.png
-logotypeA="$workDir"/logotype.svg
+logotypeA=$workDir/logotype.svg
 $_inkscape -w 80   -h 25  -e "$targetDir"/logotype-80x25.png    "$logotypeA"
 $_inkscape -w 160  -h 50  -e "$targetDir"/logotype-160x50.png   "$logotypeA"
 $_inkscape -w 240  -h 75  -e "$targetDir"/logotype-240x75.png   "$logotypeA"
@@ -42,7 +42,7 @@ $_inkscape -w 1200 -h 375 -e "$targetDir"/logotype-1200x375.png "$logotypeA"
 $_inkscape -w 1360 -h 425 -e "$targetDir"/logotype-1360x425.png "$logotypeA"
 
 rm -f "$targetDir"/logotype-alt-*x*.png
-logotypeB="$workDir"/logotype-alt.svg
+logotypeB=$workDir/logotype-alt.svg
 $_inkscape -w 48   -h 36  -e "$targetDir"/logotype-alt-48x36.png   "$logotypeB"
 $_inkscape -w 72   -h 54  -e "$targetDir"/logotype-alt-72x54.png   "$logotypeB"
 $_inkscape -w 96   -h 72  -e "$targetDir"/logotype-alt-96x72.png   "$logotypeB"
