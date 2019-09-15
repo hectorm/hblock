@@ -1,213 +1,174 @@
-image: docker.io/alpine:latest
-
 stages:
-  - lint
-  - build
-  - package
-  - deploy
+  - "lint"
+  - "build"
+  - "package"
+  - "deploy"
+
+default:
+  image: "docker.io/alpine:latest"
 
 lint:
-  image: docker.io/koalaman/shellcheck-alpine:stable
-  stage: lint
+  stage: "lint"
+  image: "docker.io/koalaman/shellcheck-alpine:stable"
   before_script:
-    - apk add --no-cache make
+    - "apk add --no-cache make"
   script:
-    - make lint
+    - "make lint"
 
 build:ubuntu:latest:
-  image: docker.io/ubuntu:latest
-  stage: build
+  stage: "build"
+  image: "docker.io/ubuntu:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       apt-get update && apt-get install -y --no-install-recommends
       bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
   script:
-    - >
-      make
-      DISTDIR=dist/build-ubuntu-latest
-      HOSTNAME=
-      SKIP_LINT=1
-      release -j4
+    - "make DISTDIR=./dist/build-ubuntu-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/build-ubuntu-latest/
+      - "./dist/build-ubuntu-latest/"
 
 build:debian:latest:
-  image: docker.io/debian:latest
-  stage: build
+  stage: "build"
+  image: "docker.io/debian:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       apt-get update && apt-get install -y --no-install-recommends
       bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
   script:
-    - >
-      make
-      DISTDIR=dist/build-debian-latest
-      HOSTNAME=
-      SKIP_LINT=1
-      release -j4
+    - "make DISTDIR=./dist/build-debian-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/build-debian-latest/
+      - "./dist/build-debian-latest/"
 
 build:fedora:latest:
-  image: docker.io/fedora:latest
-  stage: build
+  stage: "build"
+  image: "docker.io/fedora:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       dnf install -y
       ca-certificates curl file gawk grep libidn2 make sed util-linux zip
   script:
-    - >
-      make
-      DISTDIR=dist/build-fedora-latest
-      HOSTNAME=
-      SKIP_LINT=1
-      release -j4
+    - "make DISTDIR=./dist/build-fedora-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/build-fedora-latest/
+      - "./dist/build-fedora-latest/"
 
 build:centos:latest:
-  image: docker.io/centos:latest
-  stage: build
+  stage: "build"
+  image: "docker.io/centos:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       yum install -y
       ca-certificates curl file gawk grep libidn make sed util-linux zip
   script:
-    - >
-      make
-      DISTDIR=dist/build-centos-latest
-      HOSTNAME=
-      SKIP_LINT=1
-      release -j4
+    - "make DISTDIR=./dist/build-centos-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/build-centos-latest/
+      - "./dist/build-centos-latest/"
 
 build:opensuse:latest:
-  image: docker.io/opensuse/tumbleweed:latest
-  stage: build
+  stage: "build"
+  image: "docker.io/opensuse/tumbleweed:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       zypper install -y
       ca-certificates curl file gawk grep libidn2-tools make sed util-linux zip
   script:
-    - >
-      make
-      DISTDIR=dist/build-opensuse-latest
-      HOSTNAME=
-      SKIP_LINT=1
-      release -j4
+    - "make DISTDIR=./dist/build-opensuse-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/build-opensuse-latest/
+      - "./dist/build-opensuse-latest/"
 
 build:alpine:latest:
-  image: docker.io/alpine:latest
-  stage: build
+  stage: "build"
+  image: "docker.io/alpine:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       apk add --no-cache
       file grep libidn make openssl wget zip
   script:
-    - >
-      make
-      DISTDIR=dist/build-alpine-latest
-      HOSTNAME=
-      SKIP_LINT=1
-      release -j4
+    - "make DISTDIR=./dist/build-alpine-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/build-alpine-latest/
+      - "./dist/build-alpine-latest/"
 
 build:busybox:latest:
-  image: docker.io/busybox:latest
-  stage: build
+  stage: "build"
+  image: "docker.io/busybox:latest"
   before_script:
-    - uname -a
-    - busybox | head -1 || true
+    - "uname -a"
+    - "busybox | head -1 || true"
   variables:
-    DISTDIR: dist/build-busybox-latest
+    DISTDIR: "./dist/build-busybox-latest/"
   script:
     # Partial build, since Busybox does not have the necessary tools
-    - mkdir -p "$DISTDIR"
-    - HOSTNAME= ./hblock -O "$DISTDIR"/hosts
-    - ./resources/alt-formats/domains.txt.sh "$DISTDIR"/hosts ./hblock > "$DISTDIR"/hosts_domains.txt
-    - ./resources/stats/suffix.sh "$DISTDIR"/hosts_domains.txt none > "$DISTDIR"/most_abused_tlds.txt
-    - ./resources/templates/index.sh "$DISTDIR" > "$DISTDIR"/index.html
+    - "mkdir -p \"${DISTDIR}\""
+    - "HOSTNAME= ./hblock -O \"${DISTDIR}\"/hosts"
+    - "./resources/alt-formats/domains.txt.sh \"${DISTDIR}\"/hosts ./hblock > \"${DISTDIR}\"/hosts_domains.txt"
+    - "./resources/stats/suffix.sh \"${DISTDIR}\"/hosts_domains.txt none > \"${DISTDIR}\"/most_abused_tlds.txt"
+    - "./resources/templates/index.sh \"${DISTDIR}\" > \"${DISTDIR}\"/index.html"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/build-busybox-latest/
+      - "./dist/build-busybox-latest/"
 
 package:deb:
-  image: docker.io/ubuntu:latest
-  stage: package
+  stage: "package"
+  image: "docker.io/ubuntu:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       apt-get update && apt-get install -y --no-install-recommends
       build-essential debhelper dh-systemd
   script:
-    - >
-      if [ -d ./resources/deb/ ]; then
-      make
-      DISTDIR=dist/package-deb
-      package-deb;
-      fi
+    - "if [ -d ./resources/deb/ ]; then make DISTDIR=./dist/package-deb/ package-deb; fi"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/package-deb/
+      - "./dist/package-deb/"
 
 package:rpm:
-  image: docker.io/fedora:latest
-  stage: package
+  stage: "package"
+  image: "docker.io/fedora:latest"
   before_script:
-    - uname -a
-    - cat /etc/os-release
+    - "uname -a"
+    - "cat /etc/os-release"
     - >
       dnf install -y
       make rpm-build rpmdevtools systemd
   script:
-    - >
-      if [ -d ./resources/rpm/ ]; then
-      make
-      DISTDIR=dist/package-rpm
-      package-rpm;
-      fi
+    - "if [ -d ./resources/rpm/ ]; then make DISTDIR=./dist/package-rpm/ package-rpm; fi"
   artifacts:
-    expire_in: 1 week
+    expire_in: "1 week"
     paths:
-      - dist/package-rpm/
+      - "./dist/package-rpm/"
 
 pages:
-  stage: deploy
+  stage: "deploy"
+  only:
+    - "master"
   script:
-    - cp -r dist/build-ubuntu-latest/ public/
+    - "cp -r ./dist/build-ubuntu-latest/ ./public/"
   artifacts:
     paths:
-      - public/
-  only:
-    - master
+      - "./public/"
