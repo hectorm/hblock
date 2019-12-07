@@ -29,7 +29,6 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/anudeepnd-adservers/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
