@@ -70,8 +70,8 @@ build:centos:latest:
     - "uname -a"
     - "cat /etc/os-release"
     - >
-      yum install -y
-      ca-certificates curl file gawk grep libidn make sed util-linux zip
+      dnf install -y
+      ca-certificates curl file gawk grep libidn2 make sed util-linux zip
   script:
     - "make DISTDIR=./dist/build-centos-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
@@ -103,7 +103,7 @@ build:alpine:latest:
     - "cat /etc/os-release"
     - >
       apk add --no-cache
-      file grep libidn make openssl wget zip
+      file grep libidn2 make openssl wget zip
   script:
     - "make DISTDIR=./dist/build-alpine-latest/ HOSTNAME= SKIP_LINT=1 release -j4"
   artifacts:
