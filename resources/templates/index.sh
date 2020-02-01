@@ -10,13 +10,13 @@ export LC_ALL=C
 # Check if a program exists
 exists() {
 	# shellcheck disable=SC2230
-	if command -v true; then command -v -- "$1"
-	elif eval type type; then eval type -- "$1"
-	else which -- "$1"; fi >/dev/null 2>&1
+	if command -v true; then command -v -- "${1:?}"
+	elif eval type type; then eval type -- "${1:?}"
+	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
 # Check whether a string ends with the characters of a specified string
-endsWith() { str=$1 && substr=$2 && [ "${str%$substr}" != "$str" ]; }
+endsWith() { str=${1:?} && substr=${2:?} && [ "${str%${substr:?}}" != "${str:?}" ]; }
 
 # Base16 encode
 base16Encode() {
@@ -43,7 +43,7 @@ sha256Checksum() {
 
 # Escape string for use in HTML
 escapeHTML() {
-	printf -- '%s' "$1" | awk -v RS="" '{
+	printf -- '%s' "${1?}" | awk -v RS="" '{
 		gsub(/&/,"\\&#38;");
 		gsub(/</,"\\&#60;");
 		gsub(/>/,"\\&#62;");
@@ -56,31 +56,31 @@ escapeHTML() {
 # RFC 3986 compliant URL encoding method
 encodeURI() {
 	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C
-	hex=$(printf -- '%s' "$1" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')
-	for h in $hex; do
-		case "$h" in
+	hex=$(printf -- '%s' "${1?}" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')
+	for h in ${hex?}; do
+		case "${h:?}" in
 			3[0-9]|\
 			4[1-9a-f]|5[0-9a]|\
 			6[1-9a-f]|7[0-9a]|\
 			2d|5f|2e|7e\
-			) printf '%b' "\\$(printf '%o' "0x$h")" ;;
-			*) printf '%%%s' "$h"
+			) printf '%b' "\\$(printf '%o' "0x${h:?}")" ;;
+			*) printf '%%%s' "${h:?}"
 		esac
 	done
-	LC_COLLATE=$_LC_COLLATE
+	LC_COLLATE=${_LC_COLLATE?}
 }
 
 # Calculate digest for Content-Security-Policy
 cspDigest() {
-	hex=$(printf -- '%s' "$1" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')
-	b64=$(for h in $hex; do printf '%b' "\\$(printf '%o' "0x$h")"; done | base64Encode)
-	printf 'sha256-%s' "$b64"
+	hex=$(printf -- '%s' "${1?}" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')
+	b64=$(for h in ${hex?}; do printf '%b' "\\$(printf '%o' "0x${h:?}")"; done | base64Encode)
+	printf 'sha256-%s' "${b64?}"
 }
 
 # Get file size (or space if it is not a file)
 getFileSize() {
-	if [ -f "$1" ]; then
-		wc -c < "$1" | awk '{printf "%0.2f kB", $1 / 1000}'
+	if [ -f "${1:?}" ]; then
+		wc -c < "${1:?}" | awk '{printf "%0.2f kB", $1 / 1000}'
 	else
 		printf ' '
 	fi
@@ -89,7 +89,7 @@ getFileSize() {
 # Get file MIME type
 getFileType() {
 	if exists file; then
-		file -bL --mime-type -- "$1"
+		file -bL --mime-type -- "${1:?}"
 	else
 		printf '%s' 'application/octet-stream'
 	fi
@@ -97,10 +97,10 @@ getFileType() {
 
 # Get file modification time
 getFileModificationTime() {
-	if stat -c '%n' -- "$1" >/dev/null 2>&1; then
-		TZ=UTC stat -c '%.19y UTC' -- "$1"
-	elif stat -f '%Sm' -t '%Z' -- "$1" >/dev/null 2>&1; then
-		TZ=UTC stat -f '%Sm' -t '%Y-%m-%d %H:%M:%S %Z' -- "$1"
+	if stat -c '%n' -- "${1:?}" >/dev/null 2>&1; then
+		TZ=UTC stat -c '%.19y UTC' -- "${1:?}"
+	elif stat -f '%Sm' -t '%Z' -- "${1:?}" >/dev/null 2>&1; then
+		TZ=UTC stat -f '%Sm' -t '%Y-%m-%d %H:%M:%S %Z' -- "${1:?}"
 	else
 		printf '%s' '1970-01-01 00:00:00 UTC'
 	fi
@@ -109,36 +109,36 @@ getFileModificationTime() {
 main() {
 	directory="${1:-./}"
 
-	if ! [ -d "$directory" ] || ! [ -r "$directory" ]; then
-		>&2 printf -- '%s\n' "Cannot read directory '$directory'"
+	if ! [ -d "${directory:?}" ] || ! [ -r "${directory:?}" ]; then
+		>&2 printf -- '%s\n' "Cannot read directory '${directory:?}'"
 		exit 1
 	fi
 
-	entries=$(cd -- "$directory" && for file in ./*; do
-		if ! [ -r "$file" ] || endsWith "$file" 'index.html'; then
+	entries=$(cd -- "${directory:?}" && for file in ./*; do
+		if ! [ -r "${file:?}" ] || endsWith "${file:?}" 'index.html'; then
 			continue
 		fi
 
-		fileName=$(basename "$file")
-		escapedFileName=$(escapeHTML "$fileName")
-		escapedFileNameURI=$(escapeHTML "$(encodeURI "$fileName")")
+		fileName=$(basename "${file:?}")
+		escapedFileName=$(escapeHTML "${fileName:?}")
+		escapedFileNameURI=$(escapeHTML "$(encodeURI "${fileName:?}")")
 
-		fileSize=$(getFileSize "$file")
-		escapedFileSize=$(escapeHTML "$fileSize")
+		fileSize=$(getFileSize "${file:?}")
+		escapedFileSize=$(escapeHTML "${fileSize:?}")
 
-		fileType=$(getFileType "$file")
-		escapedFileType=$(escapeHTML "$fileType")
+		fileType=$(getFileType "${file:?}")
+		escapedFileType=$(escapeHTML "${fileType:?}")
 
-		fileDate=$(getFileModificationTime "$file")
-		escapedFileDate=$(escapeHTML "$fileDate")
+		fileDate=$(getFileModificationTime "${file:?}")
+		escapedFileDate=$(escapeHTML "${fileDate:?}")
 
 		# Entry template
 		printf -- '%s\n' "$(cat <<-EOF
-			<a class="row" href="./${escapedFileNameURI}" title="${escapedFileName}">
-				<div class="cell">${escapedFileName}</div>
-				<div class="cell">${escapedFileSize}</div>
-				<div class="cell">${escapedFileType}</div>
-				<div class="cell">${escapedFileDate}</div>
+			<a class="row" href="./${escapedFileNameURI:?}" title="${escapedFileName:?}">
+				<div class="cell">${escapedFileName:?}</div>
+				<div class="cell">${escapedFileSize:?}</div>
+				<div class="cell">${escapedFileType:?}</div>
+				<div class="cell">${escapedFileDate:?}</div>
 			</a>
 		EOF
 		)"
@@ -353,8 +353,8 @@ main() {
 
 			<meta http-equiv="Content-Security-Policy" content="
 				default-src 'none';
-				 script-src '$(cspDigest "${javascript}")';
-				 style-src '$(cspDigest "${css}")';
+				 script-src '$(cspDigest "${javascript?}")';
+				 style-src '$(cspDigest "${css?}")';
 				 img-src 'self' data: https://hblock-check.molinero.dev/1.png;
 				 connect-src 'self';
 			">
@@ -365,7 +365,7 @@ main() {
 			<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
 			<link rel="canonical" href="https://hblock.molinero.dev/">
 
-			<link rel="icon" type="image/png" href="${favicon}">
+			<link rel="icon" type="image/png" href="${favicon?}">
 
 			<!-- See: http://ogp.me -->
 			<meta property="og:title" content="Index of /hBlock">
@@ -374,14 +374,14 @@ main() {
 			<meta property="og:url" content="https://hblock.molinero.dev/">
 			<meta property="og:image" content="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/bitmap/favicon-512x512.png">
 
-			<style>${css}</style>
+			<style>${css?}</style>
 		</head>
 
 		<body>
 			<div class="container">
 				<div class="section">
 					<a title="hBlock project page" href="https://github.com/hectorm/hblock">
-						<img src="${logotype}" width="160" height="50" alt="hBlock">
+						<img src="${logotype?}" width="160" height="50" alt="hBlock">
 					</a>
 					<p>
 						hBlock is a POSIX-compliant shell script, designed for Unix-like systems, that gets a list of domains that serve ads, tracking
@@ -408,11 +408,11 @@ main() {
 							<div class="cell">Type</div>
 							<div class="cell">Modified</div>
 						</div>
-						${entries}
+						${entries?}
 					</div>
 				</div>
 			</div>
-			<script>${javascript}</script>
+			<script>${javascript?}</script>
 		</body>
 
 		</html>

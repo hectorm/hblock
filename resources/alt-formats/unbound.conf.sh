@@ -16,11 +16,11 @@ main() {
 
 	HBLOCK_HEADER='' \
 	HBLOCK_FOOTER='' \
-	HBLOCK_SOURCES="file://$hosts" \
+	HBLOCK_SOURCES="file://${hosts:?}" \
 	HBLOCK_WHITELIST='' \
 	HBLOCK_BLACKLIST='' \
-	$hblock -qO- \
-		--template 'local-zone: "\1" redirect'"$ENL"'local-data: "\1 A \2"' \
+	${hblock:?} -qO- \
+		--template 'local-zone: "\1" redirect'"${ENL:?}"'local-data: "\1 A \2"' \
 		--comment '#'
 }
 

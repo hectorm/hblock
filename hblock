@@ -13,7 +13,7 @@ HOSTNAME=${HOSTNAME-$(uname -n)}
 
 # Builtin values
 BUILTIN_HEADER=$(cat <<-EOF
-	127.0.0.1       localhost $HOSTNAME
+	127.0.0.1       localhost ${HOSTNAME?}
 	255.255.255.255 broadcasthost
 	::1             localhost ip6-localhost ip6-loopback
 	fe00::0         ip6-localnet
@@ -66,25 +66,25 @@ BUILTIN_BLACKLIST=''
 # Check if a program exists
 exists() {
 	# shellcheck disable=SC2230
-	if command -v true; then command -v -- "$1"
-	elif eval type type; then eval type -- "$1"
-	else which -- "$1"; fi >/dev/null 2>&1
+	if command -v true; then command -v -- "${1:?}"
+	elif eval type type; then eval type -- "${1:?}"
+	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
-quoteRe() { printf -- '%s' "$1" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
-quoteSubst() { printf -- '%s' "$1" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
+quoteRe() { printf -- '%s' "${1?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
+quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
 
 # Remove comments from string
-removeComments() { printf -- '%s' "$1" | sed -e 's/[[:blank:]]*#.*//'; }
+removeComments() { printf -- '%s' "${1?}" | sed -e 's/[[:blank:]]*#.*//'; }
 
 # Translate true/false to yes/no
-getBoolVal() { [ "$1" = true ] && s='yes' || s='no'; printf -- '%s' "$s"; }
+getBoolVal() { [ "${1?}" = true ] && s='yes' || s='no'; printf -- '%s' "${s:?}"; }
 
 # Print to stdout if quiet mode is not enabled
 printStdout() {
-	if [ "$quiet" != true ]; then
+	if [ "${quiet:?}" != true ]; then
 		# shellcheck disable=SC2059
 		printf -- "$@"
 	fi
@@ -103,7 +103,7 @@ logInfo() {
 
 # Print action message
 logAction() {
-	if [ "$color" = true ]; then
+	if [ "${color:?}" = true ]; then
 		printStdout '\033[1;33m + \033[1;32m%s \033[0m\n' "$@"
 	else
 		printStdout ' + %s \n' "$@"
@@ -112,7 +112,7 @@ logAction() {
 
 # Print error message
 logError() {
-	if [ "$color" = true ]; then
+	if [ "${color:?}" = true ]; then
 		printStderr '\033[1;33m + \033[1;31m%s \033[0m\n' "$@"
 	else
 		printStderr ' + %s \n' "$@"
@@ -125,19 +125,19 @@ createTempFile() {
 	else # Since POSIX does not specify mktemp utility, use this as fallback
 		tempCounter=${tempCounter:-9999}
 		tempFile="${TMPDIR:-/tmp}/hblock.$$.$((tempCounter+=1))"
-		rm -f -- "$tempFile" && (umask 077 && touch -- "$tempFile")
-		printf -- '%s\n' "$tempFile"
+		rm -f -- "${tempFile:?}" && (umask 077 && touch -- "${tempFile:?}")
+		printf -- '%s\n' "${tempFile:?}"
 	fi
 }
 
 # Print to stdout the contents of a URL
 fetchUrl() {
 	# If the protocol is "file://" we can omit the download and simply use cat
-	if [ "${1#file://}" != "$1" ]; then cat -- "${1#file://}"
+	if [ "${1#file://}" != "${1:?}" ]; then cat -- "${1#file://}"
 	else
 		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'
-		if exists curl; then curl -fsSL -A "$userAgent" -- "$1";
-		elif exists wget; then wget -qO- -U "$userAgent" -- "$1";
+		if exists curl; then curl -fsSL -A "${userAgent:?}" -- "${1:?}";
+		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}";
 		else
 			logError 'Either wget or curl are required for this script'
 			exit 1
@@ -208,7 +208,7 @@ showHelp() {
 		)"
 		exit 0
 	else
-		[ -n "$1" ] && printStderr '%s\n' "Illegal option $1"
+		[ -n "${1?}" ] && printStderr '%s\n' "Illegal option ${1?}"
 		printStderr '%s\n' "Try 'hblock --help' for more information"
 		exit 1
 	fi
@@ -222,11 +222,11 @@ showVersion() {
 
 main() {
 	outputFile='/etc/hosts'
-	headerFile='/etc/hblock.d/header'; defaultHeaderFile=$headerFile; header=''
-	footerFile='/etc/hblock.d/footer'; defaultFooterFile=$footerFile; footer=''
-	sourcesFile='/etc/hblock.d/sources.list'; defaultSourcesFile=$sourcesFile; sources=''
-	whitelistFile='/etc/hblock.d/whitelist.list'; defaultWhitelistFile=$whitelistFile; whitelist=''
-	blacklistFile='/etc/hblock.d/blacklist.list'; defaultBlacklistFile=$blacklistFile; blacklist=''
+	headerFile='/etc/hblock.d/header'; defaultHeaderFile=${headerFile:?}; header=''
+	footerFile='/etc/hblock.d/footer'; defaultFooterFile=${footerFile:?}; footer=''
+	sourcesFile='/etc/hblock.d/sources.list'; defaultSourcesFile=${sourcesFile:?}; sources=''
+	whitelistFile='/etc/hblock.d/whitelist.list'; defaultWhitelistFile=${whitelistFile:?}; whitelist=''
+	blacklistFile='/etc/hblock.d/blacklist.list'; defaultBlacklistFile=${blacklistFile:?}; blacklist=''
 	redirection='0.0.0.0'
 	template='\2 \1'
 	comment='#'
@@ -240,7 +240,7 @@ main() {
 	# Transform long options to short ones
 	for opt in "$@"; do
 		shift
-		case "$opt" in
+		case "${opt?}" in
 			'--output')                 set -- "$@" '-O' ;;
 			'--header')                 set -- "$@" '-H' ;;
 			'--footer')                 set -- "$@" '-F' ;;
@@ -258,194 +258,194 @@ main() {
 			'--quiet')                  set -- "$@" '-q' ;;
 			'--version')                set -- "$@" '-v' ;;
 			'--help')                   set -- "$@" '-h' ;;
-			*)                          set -- "$@" "$opt"
+			*)                          set -- "$@" "${opt?}"
 		esac
 	done
 	# Set omitted arguments to empty strings
 	for opt in "$@"; do
 		shift
-		case "$opt" in
+		case "${opt?}" in
 			-*b)
-				if a="$*"; [ -z "$a" ] || [ "${a#\-}x" != "${a}x" ]
-					then set -- "$@" "$opt" ''
-					else set -- "$@" "$opt"
+				if a="$*"; [ -z "${a?}" ] || [ "${a#\-}x" != "${a?}x" ]
+					then set -- "$@" "${opt?}" ''
+					else set -- "$@" "${opt?}"
 				fi
 				;;
-			*) set -- "$@" "$opt"
+			*) set -- "$@" "${opt?}"
 		esac
 	done
 	# Read short options
 	OPTIND=1
 	while getopts ':O:H:F:S:W:B:R:T:C:b:lric:qvh-:' opt; do
-		case "$opt" in
-			'O') outputFile="$OPTARG" ;;
-			'H') headerFile="$OPTARG" ;;
-			'F') footerFile="$OPTARG" ;;
-			'S') sourcesFile="$OPTARG" ;;
-			'W') whitelistFile="$OPTARG" ;;
-			'B') blacklistFile="$OPTARG" ;;
-			'R') redirection="$OPTARG" ;;
-			'T') template="$OPTARG" ;;
-			'C') comment="$OPTARG" ;;
-			'b') backup=true; backupDir="$OPTARG" ;;
+		case "${opt?}" in
+			'O') outputFile="${OPTARG?}" ;;
+			'H') headerFile="${OPTARG?}" ;;
+			'F') footerFile="${OPTARG?}" ;;
+			'S') sourcesFile="${OPTARG?}" ;;
+			'W') whitelistFile="${OPTARG?}" ;;
+			'B') blacklistFile="${OPTARG?}" ;;
+			'R') redirection="${OPTARG?}" ;;
+			'T') template="${OPTARG?}" ;;
+			'C') comment="${OPTARG?}" ;;
+			'b') backup=true; backupDir="${OPTARG?}" ;;
 			'l') lenient=true ;;
 			'r') enableWhitelistRegex=true ;;
 			'i') ignoreDownloadError=true ;;
-			'c') color="$OPTARG" ;;
+			'c') color="${OPTARG?}" ;;
 			'q') quiet=true ;;
 			'v') showVersion ;;
 			'h') showHelp ;;
-			'-') showHelp "--$OPTARG" ;;
-			*)   showHelp "-$OPTARG"
+			'-') showHelp "--${OPTARG?}" ;;
+			*)   showHelp "-${OPTARG?}"
 		esac
 	done
 
 	# Check color support
-	if [ "$color" = auto ]; then
+	if [ "${color:?}" = auto ]; then
 		[ -t 1 ] && color=true || color=false
 	fi
 
-	# Priority: $headerFile > $HBLOCK_HEADER > $defaultHeaderFile > builtin
-	if [ "$headerFile" != "$defaultHeaderFile" ]; then
-		header=$(cat -- "$headerFile")
-		headerOrigin=$headerFile
+	# Priority: ${headerFile} > ${HBLOCK_HEADER} > ${defaultHeaderFile} > builtin
+	if [ "${headerFile:?}" != "${defaultHeaderFile:?}" ]; then
+		header=$(cat -- "${headerFile:?}")
+		headerOrigin=${headerFile:?}
 	elif [ "${HBLOCK_HEADER+def}" = def ]; then
-		header=$HBLOCK_HEADER
+		header=${HBLOCK_HEADER?}
 		headerOrigin=environment
-	elif [ -f "$headerFile" ]; then
-		header=$(cat -- "$headerFile")
-		headerOrigin=$headerFile
+	elif [ -f "${headerFile:?}" ]; then
+		header=$(cat -- "${headerFile:?}")
+		headerOrigin=${headerFile:?}
 	else
-		header=$BUILTIN_HEADER
+		header=${BUILTIN_HEADER?}
 		headerOrigin=builtin
 	fi
 
-	# Priority: $footerFile > $HBLOCK_FOOTER > $defaultFooterFile > builtin
-	if [ "$footerFile" != "$defaultFooterFile" ]; then
-		footer=$(cat -- "$footerFile")
-		footerOrigin=$footerFile
+	# Priority: ${footerFile} > ${HBLOCK_FOOTER} > ${defaultFooterFile} > builtin
+	if [ "${footerFile:?}" != "${defaultFooterFile:?}" ]; then
+		footer=$(cat -- "${footerFile:?}")
+		footerOrigin=${footerFile:?}
 	elif [ "${HBLOCK_FOOTER+def}" = def ]; then
-		footer=$HBLOCK_FOOTER
+		footer=${HBLOCK_FOOTER?}
 		footerOrigin=environment
-	elif [ -f "$footerFile" ]; then
-		footer=$(cat -- "$footerFile")
-		footerOrigin=$footerFile
+	elif [ -f "${footerFile:?}" ]; then
+		footer=$(cat -- "${footerFile:?}")
+		footerOrigin=${footerFile:?}
 	else
-		footer=$BUILTIN_FOOTER
+		footer=${BUILTIN_FOOTER?}
 		footerOrigin=builtin
 	fi
 
-	# Priority: $sourcesFile > $HBLOCK_SOURCES > $defaultSourcesFile > builtin
-	if [ "$sourcesFile" != "$defaultSourcesFile" ]; then
-		sources=$(cat -- "$sourcesFile")
-		sourcesOrigin=$sourcesFile
+	# Priority: ${sourcesFile} > ${HBLOCK_SOURCES} > ${defaultSourcesFile} > builtin
+	if [ "${sourcesFile:?}" != "${defaultSourcesFile:?}" ]; then
+		sources=$(cat -- "${sourcesFile:?}")
+		sourcesOrigin=${sourcesFile:?}
 	elif [ "${HBLOCK_SOURCES+def}" = def ]; then
-		sources=$HBLOCK_SOURCES
+		sources=${HBLOCK_SOURCES?}
 		sourcesOrigin=environment
-	elif [ -f "$sourcesFile" ]; then
-		sources=$(cat -- "$sourcesFile")
-		sourcesOrigin=$sourcesFile
+	elif [ -f "${sourcesFile:?}" ]; then
+		sources=$(cat -- "${sourcesFile:?}")
+		sourcesOrigin=${sourcesFile:?}
 	else
-		sources=$BUILTIN_SOURCES
+		sources=${BUILTIN_SOURCES?}
 		sourcesOrigin=builtin
 	fi
-	sources=$(removeComments "$sources")
+	sources=$(removeComments "${sources?}")
 
-	# Priority: $whitelistFile > $HBLOCK_WHITELIST > $defaultWhitelistFile > builtin
-	if [ "$whitelistFile" != "$defaultWhitelistFile" ]; then
-		whitelist=$(cat -- "$whitelistFile")
-		whitelistOrigin=$whitelistFile
+	# Priority: ${whitelistFile} > ${HBLOCK_WHITELIST} > ${defaultWhitelistFile} > builtin
+	if [ "${whitelistFile:?}" != "${defaultWhitelistFile:?}" ]; then
+		whitelist=$(cat -- "${whitelistFile:?}")
+		whitelistOrigin=${whitelistFile:?}
 	elif [ "${HBLOCK_WHITELIST+def}" = def ]; then
-		whitelist=$HBLOCK_WHITELIST
+		whitelist=${HBLOCK_WHITELIST?}
 		whitelistOrigin=environment
-	elif [ -f "$whitelistFile" ]; then
-		whitelist=$(cat -- "$whitelistFile")
-		whitelistOrigin=$whitelistFile
+	elif [ -f "${whitelistFile:?}" ]; then
+		whitelist=$(cat -- "${whitelistFile:?}")
+		whitelistOrigin=${whitelistFile:?}
 	else
-		whitelist=$BUILTIN_WHITELIST
+		whitelist=${BUILTIN_WHITELIST?}
 		whitelistOrigin=builtin
 	fi
-	whitelist=$(removeComments "$whitelist")
+	whitelist=$(removeComments "${whitelist?}")
 
-	# Priority: $blacklistFile > $HBLOCK_BLACKLIST > $defaultBlacklistFile > builtin
-	if [ "$blacklistFile" != "$defaultBlacklistFile" ]; then
-		blacklist=$(cat -- "$blacklistFile")
-		blacklistOrigin=$blacklistFile
+	# Priority: ${blacklistFile} > ${HBLOCK_BLACKLIST} > ${defaultBlacklistFile} > builtin
+	if [ "${blacklistFile:?}" != "${defaultBlacklistFile:?}" ]; then
+		blacklist=$(cat -- "${blacklistFile:?}")
+		blacklistOrigin=${blacklistFile:?}
 	elif [ "${HBLOCK_BLACKLIST+def}" = def ]; then
-		blacklist=$HBLOCK_BLACKLIST
+		blacklist=${HBLOCK_BLACKLIST?}
 		blacklistOrigin=environment
-	elif [ -f "$blacklistFile" ]; then
-		blacklist=$(cat -- "$blacklistFile")
-		blacklistOrigin=$blacklistFile
+	elif [ -f "${blacklistFile:?}" ]; then
+		blacklist=$(cat -- "${blacklistFile:?}")
+		blacklistOrigin=${blacklistFile:?}
 	else
-		blacklist=$BUILTIN_BLACKLIST
+		blacklist=${BUILTIN_BLACKLIST?}
 		blacklistOrigin=builtin
 	fi
-	blacklist=$(removeComments "$blacklist")
+	blacklist=$(removeComments "${blacklist?}")
 
 	logAction 'Configuration:'
 
-	logInfo "Output: $outputFile"
-	logInfo "Header: $headerOrigin"
-	logInfo "Footer: $footerOrigin"
-	logInfo "Sources: $sourcesOrigin"
-	logInfo "Whitelist: $whitelistOrigin"
-	logInfo "Blacklist: $blacklistOrigin"
-	logInfo "Redirection: $redirection"
-	logInfo "Template: $template"
-	logInfo "Comment: $comment"
-	logInfo "Backup: $(getBoolVal "$backup")"
-	logInfo "Lenient: $(getBoolVal "$lenient")"
-	logInfo "Enable regex in whitelist: $(getBoolVal "$enableWhitelistRegex")"
-	logInfo "Ignore download error: $(getBoolVal "$ignoreDownloadError")"
+	logInfo "Output: ${outputFile:?}"
+	logInfo "Header: ${headerOrigin:?}"
+	logInfo "Footer: ${footerOrigin:?}"
+	logInfo "Sources: ${sourcesOrigin:?}"
+	logInfo "Whitelist: ${whitelistOrigin:?}"
+	logInfo "Blacklist: ${blacklistOrigin:?}"
+	logInfo "Redirection: ${redirection?}"
+	logInfo "Template: ${template?}"
+	logInfo "Comment: ${comment?}"
+	logInfo "Backup: $(getBoolVal "${backup:?}")"
+	logInfo "Lenient: $(getBoolVal "${lenient:?}")"
+	logInfo "Enable regex in whitelist: $(getBoolVal "${enableWhitelistRegex:?}")"
+	logInfo "Ignore download error: $(getBoolVal "${ignoreDownloadError:?}")"
 
 	# Create temporary blocklist file
 	blocklistFile=$(createTempFile)
-	rmtemp() { rm -f -- "$blocklistFile" "$blocklistFile".aux.*; }
+	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".aux.*; }
 	trap rmtemp EXIT
 
 	logAction 'Downloading lists...'
 
-	_IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-	for url in $sources; do
-		logInfo "$url"
-		fetchUrl "$url" >> "$blocklistFile" && exitCode=0 || exitCode=$?
-		if [ "$exitCode" -ne 0 ] && [ "$ignoreDownloadError" != true ]; then
+	_IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
+	for url in ${sources?}; do
+		logInfo "${url:?}"
+		fetchUrl "${url:?}" >> "${blocklistFile:?}" && exitCode=0 || exitCode=$?
+		if [ "${exitCode:?}" -ne 0 ] && [ "${ignoreDownloadError:?}" != true ]; then
 			logError 'Download failed'
 			exit 1
 		fi
 	done
-	IFS=$_IFS
+	IFS=${_IFS?}
 
 	logAction 'Parsing lists...'
 
-	if [ -s "$blocklistFile" ]; then
+	if [ -s "${blocklistFile:?}" ]; then
 		logInfo 'Remove carriage return'
 		tr -d '\r' \
-			< "$blocklistFile" > "$blocklistFile.aux.1" \
-			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		logInfo 'Transform to lowercase'
 		tr '[:upper:]' '[:lower:]' \
-			< "$blocklistFile" > "$blocklistFile.aux.1" \
-			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		logInfo 'Remove comments'
 		sed -e 's/#.*//' \
-			-- "$blocklistFile" > "$blocklistFile.aux.1" \
-			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		logInfo 'Trim spaces'
 		sed -e 's/^[[:blank:]]*//' \
 			-e 's/[[:blank:]]*$//' \
-			-- "$blocklistFile" > "$blocklistFile.aux.1" \
-			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		logInfo 'Match hosts lines'
-		if [ "$lenient" = true ]; then
+		if [ "${lenient:?}" = true ]; then
 			# This regex would be ideal, but it is not POSIX-compliant.
 			# ipOctetRegex='\(25[0-5]\|2[0-4][0-9]\|[01]\{0,1\}[0-9][0-9]\{0,1\}\)'
-			# ipRegex="\\($ipOctetRegex\\.$ipOctetRegex\\.$ipOctetRegex\\.$ipOctetRegex\\)"
+			# ipRegex="\\(${ipOctetRegex:?}\\.${ipOctetRegex:?}\\.${ipOctetRegex:?}\\.${ipOctetRegex:?}\\)"
 			ipRegex='\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}'
 		else
 			# Same as above.
@@ -454,9 +454,9 @@ main() {
 		fi
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
 		sed -n \
-			-e "/^\\(${ipRegex}[[:blank:]]\\{1,\\}\\)\\{0,1\\}$domainRegex$/p" \
-			-- "$blocklistFile" > "$blocklistFile.aux.1" \
-			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			-e "/^\\(${ipRegex:?}[[:blank:]]\\{1,\\}\\)\\{0,1\\}${domainRegex:?}$/p" \
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		logInfo 'Remove reserved TLDs'
 		sed -e '/\.example$/d' \
@@ -465,68 +465,68 @@ main() {
 			-e '/\.localdomain$/d' \
 			-e '/\.localhost$/d' \
 			-e '/\.test$/d' \
-			-- "$blocklistFile" > "$blocklistFile.aux.1" \
-			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		logInfo 'Remove destination IPs'
 		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
-			-- "$blocklistFile" > "$blocklistFile.aux.1" \
-			&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 	fi
 
 	# This domain is used to check if hBlock is enabled
-	printf -- '%s\n' 'hblock-check.molinero.dev' >> "$blocklistFile"
+	printf -- '%s\n' 'hblock-check.molinero.dev' >> "${blocklistFile:?}"
 
-	if [ -n "$blacklist" ]; then
+	if [ -n "${blacklist?}" ]; then
 		logInfo 'Apply blacklist'
-		printf -- '%s' "$blacklist" >> "$blocklistFile"
+		printf -- '%s' "${blacklist?}" >> "${blocklistFile:?}"
 	fi
 
 	logInfo 'Sort entries'
-	sort -- "$blocklistFile" | uniq | sed -e '/^$/d' > "$blocklistFile.aux.1" \
-		&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+	sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux.1" \
+		&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
-	if [ -n "$whitelist" ]; then
+	if [ -n "${whitelist?}" ]; then
 		logInfo 'Apply whitelist'
 
-		if [ "$enableWhitelistRegex" = true ]; then
-			_IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-			for regex in $whitelist; do
-				sed -e "/$regex/d" \
-					-- "$blocklistFile" > "$blocklistFile.aux.1" \
-					&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+		if [ "${enableWhitelistRegex:?}" = true ]; then
+			_IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
+			for regex in ${whitelist?}; do
+				sed -e "/${regex:?}/d" \
+					-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+					&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 			done
-			IFS=$_IFS
+			IFS=${_IFS?}
 		else
-			printf -- '%s' "$whitelist" | sort | uniq > "$blocklistFile.aux.2"
-			comm -23 -- "$blocklistFile" "$blocklistFile.aux.2" > "$blocklistFile.aux.1" \
-				&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile" \
-				&& rm -f -- "$blocklistFile.aux.2"
+			printf -- '%s' "${whitelist?}" | sort | uniq > "${blocklistFile:?}.aux.2"
+			comm -23 -- "${blocklistFile:?}" "${blocklistFile:?}.aux.2" > "${blocklistFile:?}.aux.1" \
+				&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}" \
+				&& rm -f -- "${blocklistFile:?}.aux.2"
 		fi
 	fi
 
 	# Count blocked domains
-	blocklistCount=$(wc -l < "$blocklistFile" | tr -d ' ');
+	blocklistCount=$(wc -l < "${blocklistFile:?}" | tr -d ' ');
 
 	logInfo 'Apply format template'
-	sed -e "s/$/\\t$(quoteSubst "$redirection")/" \
-		-e "s/^\\(.*\\)\\t\\(.*\\)$/$template/" \
-		-- "$blocklistFile" > "$blocklistFile.aux.1" \
-		&& mv -f -- "$blocklistFile.aux.1" "$blocklistFile"
+	sed -e "s/$/\\t$(quoteSubst "${redirection?}")/" \
+		-e "s/^\\(.*\\)\\t\\(.*\\)$/${template?}/" \
+		-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+		&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 	# Backup procedure
-	if [ "$backup" = true ] && [ "$outputFile" != - ] && [ -f "$outputFile" ]; then
+	if [ "${backup:?}" = true ] && [ "${outputFile:?}" != - ] && [ -f "${outputFile:?}" ]; then
 		logAction 'Backing up original file...'
 
-		[ -z "$backupDir" ] && backupDir=$(dirname -- "$outputFile")
-		backupFile="$backupDir/$(basename -- "$outputFile").$(date +%s).bak"
+		[ -z "${backupDir?}" ] && backupDir=$(dirname -- "${outputFile:?}")
+		backupFile="${backupDir:?}/$(basename -- "${outputFile:?}").$(date +%s).bak"
 
-		if touch -- "$backupFile" >/dev/null 2>&1; then
-			cp -af -- "$outputFile" "$backupFile"
+		if touch -- "${backupFile:?}" >/dev/null 2>&1; then
+			cp -af -- "${outputFile:?}" "${backupFile:?}"
 		elif exists sudo; then
-			sudo cp -af -- "$outputFile" "$backupFile"
+			sudo cp -af -- "${outputFile:?}" "${backupFile:?}"
 		else
-			logError "Cannot write '$backupFile': permission denied"
+			logError "Cannot write '${backupFile:?}': permission denied"
 			exit 1
 		fi
 	fi
@@ -535,52 +535,52 @@ main() {
 
 	printOutputFile() {
 		# Define "C" variable for convenience
-		C=$comment
+		C=${comment?}
 
-		if [ -n "$C" ]; then
+		if [ -n "${C?}" ]; then
 			printf -- '%s\n' "$(cat <<-EOF
-				$C Author:          Héctor Molinero Fernández <hector@molinero.dev>
-				$C Repository:      https://github.com/hectorm/hblock
-				$C Last updated:    $(date -u)
-				$C Blocked domains: $blocklistCount
+				${C?} Author:          Héctor Molinero Fernández <hector@molinero.dev>
+				${C?} Repository:      https://github.com/hectorm/hblock
+				${C?} Last updated:    $(date -u)
+				${C?} Blocked domains: ${blocklistCount:?}
 			EOF
 			)"
 		fi
-		if [ -n "$header" ]; then
-			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <header>"; fi
-			printf -- '%s\n' "$header"
-			if [ -n "$C" ]; then printf -- '%s\n' "$C </header>"; fi
+		if [ -n "${header?}" ]; then
+			if [ -n "${C?}" ]; then printf -- '\n%s\n' "${C?} <header>"; fi
+			printf -- '%s\n' "${header?}"
+			if [ -n "${C?}" ]; then printf -- '%s\n' "${C?} </header>"; fi
 		fi
-		if [ -s "$blocklistFile" ]; then
-			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <blocklist>"; fi
-			cat -- "$blocklistFile"
-			if [ -n "$C" ]; then printf -- '%s\n' "$C </blocklist>"; fi
+		if [ -s "${blocklistFile:?}" ]; then
+			if [ -n "${C?}" ]; then printf -- '\n%s\n' "${C?} <blocklist>"; fi
+			cat -- "${blocklistFile:?}"
+			if [ -n "${C?}" ]; then printf -- '%s\n' "${C?} </blocklist>"; fi
 		fi
-		if [ -n "$footer" ]; then
-			if [ -n "$C" ]; then printf -- '\n%s\n' "$C <footer>"; fi
-			printf -- '%s\n' "$footer"
-			if [ -n "$C" ]; then printf -- '%s\n' "$C </footer>"; fi
+		if [ -n "${footer?}" ]; then
+			if [ -n "${C?}" ]; then printf -- '\n%s\n' "${C?} <footer>"; fi
+			printf -- '%s\n' "${footer?}"
+			if [ -n "${C?}" ]; then printf -- '%s\n' "${C?} </footer>"; fi
 		fi
 	}
 
 	# Print to stdout if the output value is equal to -
-	if [ "$outputFile" = - ]; then
+	if [ "${outputFile:?}" = - ]; then
 		printOutputFile
 	else
-		if [ -d "$outputFile" ]; then
-			logError "Cannot write '$outputFile': is a directory"
+		if [ -d "${outputFile:?}" ]; then
+			logError "Cannot write '${outputFile:?}': is a directory"
 			exit 1
-		elif touch -- "$outputFile" >/dev/null 2>&1; then
-			printOutputFile > "$outputFile"
+		elif touch -- "${outputFile:?}" >/dev/null 2>&1; then
+			printOutputFile > "${outputFile:?}"
 		elif exists sudo && exists tee; then
-			printOutputFile | sudo tee -- "$outputFile" >/dev/null
+			printOutputFile | sudo tee -- "${outputFile:?}" >/dev/null
 		else
-			logError "Cannot write '$outputFile': permission denied"
+			logError "Cannot write '${outputFile:?}': permission denied"
 			exit 1
 		fi
 	fi
 
-	logAction "$blocklistCount blocked domains!"
+	logAction "${blocklistCount:?} blocked domains!"
 }
 
 main "$@"

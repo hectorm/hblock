@@ -15,9 +15,9 @@ main() {
 	zip=$(printf -- '%s\n' "${TMPDIR:-/tmp}"/hblock.$$)
 	trap 'rm -f ${zip:?}' EXIT
 
-	(cd "$resourcesDir"/alt-formats/android/ && zip -qr "$zip" ./)
-	(cd "$(dirname "$hosts")" && zip -q "$zip" "$(basename "$hosts")")
-	cat "$zip"
+	(cd "${resourcesDir:?}"/alt-formats/android/ && zip -qr "${zip:?}" ./)
+	(cd "$(dirname "${hosts:?}")" && zip -q "${zip:?}" "$(basename "${hosts:?}")")
+	cat "${zip:?}"
 }
 
 main "$@"
