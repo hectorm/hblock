@@ -156,7 +156,6 @@ Usage: hblock [options...]
 | mitchellkrogza - Badd-Boyz-Hosts      | [URL][source-mitchellkrogza-badd-boyz-hosts]     | [URL][mirror-mitchellkrogza-badd-boyz-hosts]     |
 | pgl.yoyo.org                          | [URL][source-pgl.yoyo.org]                       | [URL][mirror-pgl.yoyo.org]                       |
 | Phishing Army                         | [URL][source-phishing.army]                      | [URL][mirror-phishing.army]                      |
-| ransomwaretracker.abuse.ch            | [URL][source-ransomwaretracker.abuse.ch]         | [URL][mirror-ransomwaretracker.abuse.ch]         |
 | someonewhocares.org                   | [URL][source-someonewhocares.org]                | [URL][mirror-someonewhocares.org]                |
 | spam404.com                           | [URL][source-spam404.com]                        | [URL][mirror-spam404.com]                        |
 | StevenBlack                           | [URL][source-stevenblack]                        | [URL][mirror-stevenblack]                        |
@@ -216,8 +215,6 @@ Usage: hblock [options...]
 [mirror-pgl.yoyo.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
 [source-phishing.army]: https://phishing.army/download/phishing_army_blocklist.txt
 [mirror-phishing.army]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
-[source-ransomwaretracker.abuse.ch]: https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
-[mirror-ransomwaretracker.abuse.ch]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ransomwaretracker.abuse.ch/list.txt
 [source-someonewhocares.org]: http://someonewhocares.org/hosts/hosts
 [mirror-someonewhocares.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
 [source-spam404.com]: https://raw.githubusercontent.com/Dawsey21/Lists/master/main-blacklist.txt
