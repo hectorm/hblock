@@ -41,8 +41,7 @@
     "/hblock"
   ],
   "scripts": {
-    "preversion": "sh resources/version.sh preversion",
-    "version": "sh resources/version.sh version && git add -A"
+    "version": "./resources/version.sh set && git add -A"
   },
   "os": [
     "!win32"

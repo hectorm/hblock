@@ -1,44 +1,71 @@
 #!/bin/sh
 
-set -eu
+# Author:     Héctor Molinero Fernández <hector@molinero.dev>
+# Repository: https://github.com/hectorm/hblock
+# License:    MIT, https://opensource.org/licenses/MIT
 
-action=${1:-nothing}
+set -eu
+export LC_ALL=C
+
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+PROJECT_DIR=${SCRIPT_DIR:?}/../
+
+# Check if a program exists
+exists() {
+	# shellcheck disable=SC2230
+	if command -v true; then command -v -- "${1:?}"
+	elif eval type type; then eval type -- "${1:?}"
+	else which -- "${1:?}"; fi >/dev/null 2>&1
+}
 
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
 quoteRe() { printf -- '%s' "${1:?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
 quoteSubst() { printf -- '%s' "${1:?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
-replaceLiteral() { sed -i -- "s/$(quoteRe "${1:?}")/$(quoteSubst "${2:?}")/g" "${3:?}"; }
 
-version() {
-	jq -r '.version' ./package.json
-}
-
-checksum() {
-	if [ "${action:?}" = 'preversion' ]; then
-		git show "v$(version):${1:?}" | sha256sum | cut -c 1-64
-	elif [ "${action:?}" = 'version' ]; then
-		sha256sum "${1:?}" | cut -c 1-64
+# Calculate a SHA256 checksum
+sha256Checksum() {
+	if exists sha256sum; then sha256sum | cut -c 1-64
+	elif exists sha256; then sha256 | cut -c 1-64
+	elif exists shasum; then shasum -a 256 | cut -c 1-64
+	elif exists openssl; then openssl sha256 -binary | base16Encode
 	fi
 }
 
-if [ "${action:?}" = 'preversion' ]; then
-	replaceLiteral "# Version:    $(version)" '# Version:    __VERSION__' ./hblock
-	replaceLiteral "'%s\\n' '$(version)'" "'%s\\n' '__VERSION__'" ./hblock
+# Print hBlock version
+getVersion() {
+	sed -n 's|.*"version"[[:space:]]*:[[:space:]]*"\([0-9]\.[0-9]\.[0-9]\)".*|\1|p' "${PROJECT_DIR:?}"/package.json
+}
 
-	replaceLiteral "hblock/v$(version)/" 'hblock/v__VERSION__/' ./README.md
-	replaceLiteral "$(checksum hblock)" '__CHECKSUM_HBLOCK__' ./README.md
+# Update hBlock version
+setVersion() {
+	version=${1:?}
+	quotedVersion=$(quoteSubst "${version:?}")
 
-	replaceLiteral "hblock/v$(version)/" 'hblock/v__VERSION__/' ./resources/systemd/README.md
-	replaceLiteral "$(checksum resources/systemd/hblock.service)" '__CHECKSUM_HBLOCK_SERVICE__' ./resources/systemd/README.md
-	replaceLiteral "$(checksum resources/systemd/hblock.timer)" '__CHECKSUM_HBLOCK_TIMER__' ./resources/systemd/README.md
-elif [ "${action:?}" = 'version' ]; then
-	replaceLiteral '__VERSION__' "$(version)" ./hblock
+	sed -i \
+		-e "s|^\(.*# Version:.*\)[0-9]\.[0-9]\.[0-9]\(.*\)$|\1${quotedVersion:?}\2|g" \
+		-e "s|^\(.*printStdout.*'\)[0-9]\.[0-9]\.[0-9]\('.*\)$|\1${quotedVersion:?}\2|g" \
+		"${PROJECT_DIR:?}"/hblock
 
-	replaceLiteral '__VERSION__' "$(version)" ./README.md
-	replaceLiteral '__CHECKSUM_HBLOCK__' "$(checksum hblock)" ./README.md
+	hblockScriptChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)
 
-	replaceLiteral '__VERSION__' "$(version)" ./resources/systemd/README.md
-	replaceLiteral '__CHECKSUM_HBLOCK_SERVICE__' "$(checksum resources/systemd/hblock.service)" ./resources/systemd/README.md
-	replaceLiteral '__CHECKSUM_HBLOCK_TIMER__' "$(checksum resources/systemd/hblock.timer)" ./resources/systemd/README.md
+	sed -i \
+		-e "s|^\(.*/hblock/v\)[0-9]\.[0-9]\.[0-9]\(/.*\)$|\1${quotedVersion:?}\2|g" \
+		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.*\)$|\1${hblockScriptChecksum:?}\2|g" \
+		"${PROJECT_DIR:?}"/README.md
+
+	hblockServiceChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.service)
+	hblockTimerChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.timer)
+
+	sed -i \
+		-e "s|^\(.*/hblock/v\)[0-9]\.[0-9]\.[0-9]\(/.*\)$|\1${quotedVersion:?}\2|g" \
+		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.service.*\)$|\1${hblockServiceChecksum:?}\2|g" \
+		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.timer.*\)$|\1${hblockTimerChecksum:?}\2|g" \
+		"${PROJECT_DIR:?}"/resources/systemd/README.md
+}
+
+if [ "${1:?}" = 'get' ]; then
+	getVersion
+elif [ "${1:?}" = 'set' ]; then
+	setVersion "$(getVersion)"
 fi
