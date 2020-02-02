@@ -15,14 +15,15 @@ exists() {
 	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
-# Create temporary file
+# Create a temporary file
 createTempFile() {
 	if exists mktemp; then mktemp
 	else # Since POSIX does not specify mktemp utility, use this as fallback
-		tempCounter=${tempCounter:-9999}
-		tempFile="${TMPDIR:-/tmp}/hblock.$$.$((tempCounter+=1))"
-		rm -f -- "${tempFile:?}" && (umask 077 && touch -- "${tempFile:?}")
-		printf -- '%s\n' "${tempFile:?}"
+		# Wait a second to avoid name collisions. Horrible hack, I know
+		rand=$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')
+		file="${TMPDIR:-/tmp}/tmp.$$.${rand:?}"
+		(umask 077 && touch -- "${file:?}")
+		printf -- '%s\n' "${file:?}"
 	fi
 }
 
