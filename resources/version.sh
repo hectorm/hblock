@@ -23,6 +23,13 @@ exists() {
 quoteRe() { printf -- '%s' "${1:?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
 quoteSubst() { printf -- '%s' "${1:?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
 
+# Base16 encode
+base16Encode() {
+	if exists hexdump; then hexdump -ve '/1 "%02x"'
+	elif exists od; then od -v -tx1 -An | tr -d '\n '
+	fi
+}
+
 # Calculate a SHA256 checksum
 sha256Checksum() {
 	if exists sha256sum; then sha256sum | cut -c 1-64
