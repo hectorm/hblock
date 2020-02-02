@@ -149,6 +149,7 @@ Usage: hblock [options...]
 | FadeMind - add.Spam                   | [URL][source-fademind-add.spam]                  | [URL][mirror-fademind-add.spam]                  |
 | hostsVN                               | [URL][source-hostsvn]                            | [URL][mirror-hostsvn]                            |
 | KADhosts                              | [URL][source-kadhosts]                           | [URL][mirror-kadhosts]                           |
+| lightswitch05 - Ads & Tracking        | [URL][source-lightswitch05-ads-and-tracking]     | [URL][mirror-lightswitch05-ads-and-tracking]     |
 | malwaredomainlist.com                 | [URL][source-malwaredomainlist.com]              | [URL][mirror-malwaredomainlist.com]              |
 | malwaredomains.com - Immortal domains | [URL][source-malwaredomains.com-immortaldomains] | [URL][mirror-malwaredomains.com-immortaldomains] |
 | malwaredomains.com - Just domains     | [URL][source-malwaredomains.com-justdomains]     | [URL][mirror-malwaredomains.com-justdomains]     |
@@ -201,6 +202,8 @@ Usage: hblock [options...]
 [mirror-hostsvn]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
 [source-kadhosts]: https://raw.githubusercontent.com/azet12/KADhosts/master/KADhosts.txt
 [mirror-kadhosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
+[source-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/lightswitch05/hosts/master/ads-and-tracking-extended.txt
+[mirror-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
 [source-malwaredomainlist.com]: https://www.malwaredomainlist.com/hostslist/hosts.txt
 [mirror-malwaredomainlist.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
 [source-malwaredomains.com-immortaldomains]: http://mirror1.malwaredomains.com/files/immortal_domains.txt
