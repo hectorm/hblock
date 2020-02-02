@@ -28,11 +28,16 @@ createTempFile() {
 
 # Print to stdout the contents of a URL
 fetchUrl() {
-	if exists curl; then curl -fsSL -- "${1:?}";
-	elif exists wget; then wget -qO- -- "${1:?}";
+	# If the protocol is "file://" we can omit the download and simply use cat
+	if [ "${1#file://}" != "${1:?}" ]; then cat -- "${1#file://}"
 	else
-		logError 'Either wget or curl are required for this script'
-		exit 1
+		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'
+		if exists curl; then curl -fsSL -A "${userAgent:?}" -- "${1:?}";
+		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}";
+		else
+			logError 'Either wget or curl are required for this script'
+			exit 1
+		fi
 	fi
 }
 
