@@ -56,6 +56,10 @@ setVersion() {
 
 	hblockScriptChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)
 
+	printf '%s  %s\n' \
+		"${hblockScriptChecksum}" "hblock" \
+		> "${PROJECT_DIR:?}"/SHA256SUMS
+
 	sed -i \
 		-e "s|^\(.*/hblock/v\)[0-9]\.[0-9]\.[0-9]\(/.*\)$|\1${quotedVersion:?}\2|g" \
 		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.*\)$|\1${hblockScriptChecksum:?}\2|g" \
@@ -63,6 +67,11 @@ setVersion() {
 
 	hblockServiceChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.service)
 	hblockTimerChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.timer)
+
+	printf '%s  %s\n' \
+		"${hblockServiceChecksum}" "hblock.service" \
+		"${hblockTimerChecksum}"   "hblock.timer" \
+		> "${PROJECT_DIR:?}"/resources/systemd/SHA256SUMS
 
 	sed -i \
 		-e "s|^\(.*/hblock/v\)[0-9]\.[0-9]\.[0-9]\(/.*\)$|\1${quotedVersion:?}\2|g" \
@@ -74,5 +83,5 @@ setVersion() {
 if [ "${1:?}" = 'get' ]; then
 	getVersion
 elif [ "${1:?}" = 'set' ]; then
-	setVersion "$(getVersion)"
+	setVersion "${2-$(getVersion)}"
 fi
