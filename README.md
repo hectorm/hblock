@@ -18,6 +18,8 @@ Improve your security and privacy by blocking ads, tracking and malware domains.
 * [Is it safe to use?](#is-it-safe-to-use)
 * [Nightly builds](#nightly-builds)
 * [Installation](#installation)
+  * [Manual](#manual)
+  * [Gentoo](#gentoo)
 * [Usage](#usage)
   * [Script arguments](#script-arguments)
   * [Preserve content](#preserve-content)
@@ -46,6 +48,8 @@ https://hblock.molinero.dev
 
 ## Installation
 
+### Manual
+
 ```sh
 curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.5/hblock' \
   && echo '5e9daba7a9a00a3e71d20b57d8fb46db560cd9834bf3b1b72b3f206fe32762e0  /tmp/hblock' | shasum -c \
@@ -60,6 +64,18 @@ curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.5/hbl
 
 ```sh
 npx hblock
+```
+
+### Gentoo
+
+Add the src_prepare overlay with the help of the [official repository](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay).
+
+Unmask the `net-firewall/hblock` package with the help of the [Gentoo wiki](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package).
+
+Run:
+
+```
+emerge --verbose net-firewall/hblock
 ```
 
 ## Usage
