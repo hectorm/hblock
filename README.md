@@ -218,7 +218,7 @@ Usage: hblock [options...]
 [mirror-hostsvn]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
 [source-kadhosts]: https://raw.githubusercontent.com/azet12/KADhosts/master/KADhosts.txt
 [mirror-kadhosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
-[source-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/lightswitch05/hosts/master/ads-and-tracking-extended.txt
+[source-lightswitch05-ads-and-tracking]: https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt
 [mirror-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
 [source-malwaredomainlist.com]: https://www.malwaredomainlist.com/hostslist/hosts.txt
 [mirror-malwaredomainlist.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
