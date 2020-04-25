@@ -22,7 +22,7 @@ build:ubuntu:latest:
     - uname -a
     - cat /etc/os-release
     - >
-      apt-get update && apt-get install -y --no-install-recommends
+      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
       bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - make DISTDIR=./dist/build-ubuntu-latest/ HOSTNAME= SKIP_LINT=1 release -j4
@@ -38,7 +38,7 @@ build:debian:latest:
     - uname -a
     - cat /etc/os-release
     - >
-      apt-get update && apt-get install -y --no-install-recommends
+      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
       bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - make DISTDIR=./dist/build-debian-latest/ HOSTNAME= SKIP_LINT=1 release -j4
@@ -138,7 +138,7 @@ package:deb:
     - uname -a
     - cat /etc/os-release
     - >
-      apt-get update && apt-get install -y --no-install-recommends
+      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
       build-essential debhelper dh-systemd
   script:
     - if [ -d ./resources/deb/ ]; then make DISTDIR=./dist/package-deb/ package-deb; fi
