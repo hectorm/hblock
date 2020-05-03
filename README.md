@@ -51,8 +51,8 @@ https://hblock.molinero.dev
 ### Manual
 
 ```sh
-curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.5/hblock' \
-  && echo '5e9daba7a9a00a3e71d20b57d8fb46db560cd9834bf3b1b72b3f206fe32762e0  /tmp/hblock' | shasum -c \
+curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.6/hblock' \
+  && echo '9e22c32c8ae4d93df18a41f08d31e8668ef4342fda82ca91ec4aa47f718fdadc  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
   && sudo chown root:root /usr/local/bin/hblock \
   && sudo chmod 755 /usr/local/bin/hblock
