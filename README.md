@@ -145,42 +145,43 @@ Usage: hblock [options...]
 
 ## Sources
 
-| Name                                  | Primary                                          | Mirror                                           |
-|---------------------------------------|:------------------------------------------------:|:------------------------------------------------:|
-| adaway.org                            | [URL][source-adaway.org]                         | [URL][mirror-adaway.org]                         |
-| AdBlock NoCoin List                   | [URL][source-adblock-nocoin-list]                | [URL][mirror-adblock-nocoin-list]                |
-| AdGuard - Simplified                  | [URL][source-adguard-simplified]                 | [URL][mirror-adguard-simplified]                 |
-| AntiPopads                            | [URL][source-antipopads]                         | [URL][mirror-antipopads]                         |
-| disconnect.me - Ad                    | [URL][source-disconnect.me-ad]                   | [URL][mirror-disconnect.me-ad]                   |
-| disconnect.me - Malvertising          | [URL][source-disconnect.me-malvertising]         | [URL][mirror-disconnect.me-malvertising]         |
-| disconnect.me - Malware               | [URL][source-disconnect.me-malware]              | [URL][mirror-disconnect.me-malware]              |
-| disconnect.me - Tracking              | [URL][source-disconnect.me-tracking]             | [URL][mirror-disconnect.me-tracking]             |
-| DShield.org - High                    | [URL][source-dshield.org-high]                   | [URL][mirror-dshield.org-high]                   |
-| EasyList                              | [URL][source-easylist]                           | [URL][mirror-easylist]                           |
-| EasyPrivacy                           | [URL][source-easyprivacy]                        | [URL][mirror-easyprivacy]                        |
-| ETH Phishing Detect                   | [URL][source-eth-phishing-detect]                | [URL][mirror-eth-phishing-detect]                |
-| FadeMind - add.2o7Net                 | [URL][source-fademind-add.2o7net]                | [URL][mirror-fademind-add.2o7net]                |
-| FadeMind - add.Dead                   | [URL][source-fademind-add.dead]                  | [URL][mirror-fademind-add.dead]                  |
-| FadeMind - add.Risk                   | [URL][source-fademind-add.risk]                  | [URL][mirror-fademind-add.risk]                  |
-| FadeMind - add.Spam                   | [URL][source-fademind-add.spam]                  | [URL][mirror-fademind-add.spam]                  |
-| hostsVN                               | [URL][source-hostsvn]                            | [URL][mirror-hostsvn]                            |
-| KADhosts                              | [URL][source-kadhosts]                           | [URL][mirror-kadhosts]                           |
-| lightswitch05 - Ads & Tracking        | [URL][source-lightswitch05-ads-and-tracking]     | [URL][mirror-lightswitch05-ads-and-tracking]     |
-| malwaredomainlist.com                 | [URL][source-malwaredomainlist.com]              | [URL][mirror-malwaredomainlist.com]              |
-| malwaredomains.com - Immortal domains | [URL][source-malwaredomains.com-immortaldomains] | [URL][mirror-malwaredomains.com-immortaldomains] |
-| malwaredomains.com - Just domains     | [URL][source-malwaredomains.com-justdomains]     | [URL][mirror-malwaredomains.com-justdomains]     |
-| matomo.org - Spammers                 | [URL][source-matomo.org-spammers]                | [URL][mirror-matomo.org-spammers]                |
-| mitchellkrogza - Badd-Boyz-Hosts      | [URL][source-mitchellkrogza-badd-boyz-hosts]     | [URL][mirror-mitchellkrogza-badd-boyz-hosts]     |
-| pgl.yoyo.org                          | [URL][source-pgl.yoyo.org]                       | [URL][mirror-pgl.yoyo.org]                       |
-| Phishing Army                         | [URL][source-phishing.army]                      | [URL][mirror-phishing.army]                      |
-| someonewhocares.org                   | [URL][source-someonewhocares.org]                | [URL][mirror-someonewhocares.org]                |
-| spam404.com                           | [URL][source-spam404.com]                        | [URL][mirror-spam404.com]                        |
-| StevenBlack                           | [URL][source-stevenblack]                        | [URL][mirror-stevenblack]                        |
-| uBlock                                | [URL][source-ublock]                             | [URL][mirror-ublock]                             |
-| uBlock - Badware                      | [URL][source-ublock-badware]                     | [URL][mirror-ublock-badware]                     |
-| uBlock - Privacy                      | [URL][source-ublock-privacy]                     | [URL][mirror-ublock-privacy]                     |
-| winhelp2002.mvps.org                  | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
-| ZeroDot1 - CoinBlockerLists           | [URL][source-zerodot1-coinblockerlists-browser]  | [URL][mirror-zerodot1-coinblockerlists-browser]  |
+| Name                                    | Primary                                          | Mirror                                           |
+|-----------------------------------------|:------------------------------------------------:|:------------------------------------------------:|
+| adaway.org                              | [URL][source-adaway.org]                         | [URL][mirror-adaway.org]                         |
+| AdBlock NoCoin List                     | [URL][source-adblock-nocoin-list]                | [URL][mirror-adblock-nocoin-list]                |
+| AdGuard - Simplified                    | [URL][source-adguard-simplified]                 | [URL][mirror-adguard-simplified]                 |
+| AntiPopads                              | [URL][source-antipopads]                         | [URL][mirror-antipopads]                         |
+| disconnect.me - Ad                      | [URL][source-disconnect.me-ad]                   | [URL][mirror-disconnect.me-ad]                   |
+| disconnect.me - Malvertising            | [URL][source-disconnect.me-malvertising]         | [URL][mirror-disconnect.me-malvertising]         |
+| disconnect.me - Malware                 | [URL][source-disconnect.me-malware]              | [URL][mirror-disconnect.me-malware]              |
+| disconnect.me - Tracking                | [URL][source-disconnect.me-tracking]             | [URL][mirror-disconnect.me-tracking]             |
+| DShield.org - High                      | [URL][source-dshield.org-high]                   | [URL][mirror-dshield.org-high]                   |
+| EasyList                                | [URL][source-easylist]                           | [URL][mirror-easylist]                           |
+| EasyPrivacy                             | [URL][source-easyprivacy]                        | [URL][mirror-easyprivacy]                        |
+| ETH Phishing Detect                     | [URL][source-eth-phishing-detect]                | [URL][mirror-eth-phishing-detect]                |
+| FadeMind - add.2o7Net                   | [URL][source-fademind-add.2o7net]                | [URL][mirror-fademind-add.2o7net]                |
+| FadeMind - add.Dead                     | [URL][source-fademind-add.dead]                  | [URL][mirror-fademind-add.dead]                  |
+| FadeMind - add.Risk                     | [URL][source-fademind-add.risk]                  | [URL][mirror-fademind-add.risk]                  |
+| FadeMind - add.Spam                     | [URL][source-fademind-add.spam]                  | [URL][mirror-fademind-add.spam]                  |
+| Geoffrey Frogeye - First-party trackers | [URL][source-gfrogeye-firstparty-trackers]       | [URL][mirror-gfrogeye-firstparty-trackers]       |
+| hostsVN                                 | [URL][source-hostsvn]                            | [URL][mirror-hostsvn]                            |
+| KADhosts                                | [URL][source-kadhosts]                           | [URL][mirror-kadhosts]                           |
+| lightswitch05 - Ads & Tracking          | [URL][source-lightswitch05-ads-and-tracking]     | [URL][mirror-lightswitch05-ads-and-tracking]     |
+| malwaredomainlist.com                   | [URL][source-malwaredomainlist.com]              | [URL][mirror-malwaredomainlist.com]              |
+| malwaredomains.com - Immortal domains   | [URL][source-malwaredomains.com-immortaldomains] | [URL][mirror-malwaredomains.com-immortaldomains] |
+| malwaredomains.com - Just domains       | [URL][source-malwaredomains.com-justdomains]     | [URL][mirror-malwaredomains.com-justdomains]     |
+| matomo.org - Spammers                   | [URL][source-matomo.org-spammers]                | [URL][mirror-matomo.org-spammers]                |
+| mitchellkrogza - Badd-Boyz-Hosts        | [URL][source-mitchellkrogza-badd-boyz-hosts]     | [URL][mirror-mitchellkrogza-badd-boyz-hosts]     |
+| pgl.yoyo.org                            | [URL][source-pgl.yoyo.org]                       | [URL][mirror-pgl.yoyo.org]                       |
+| Phishing Army                           | [URL][source-phishing.army]                      | [URL][mirror-phishing.army]                      |
+| someonewhocares.org                     | [URL][source-someonewhocares.org]                | [URL][mirror-someonewhocares.org]                |
+| spam404.com                             | [URL][source-spam404.com]                        | [URL][mirror-spam404.com]                        |
+| StevenBlack                             | [URL][source-stevenblack]                        | [URL][mirror-stevenblack]                        |
+| uBlock                                  | [URL][source-ublock]                             | [URL][mirror-ublock]                             |
+| uBlock - Badware                        | [URL][source-ublock-badware]                     | [URL][mirror-ublock-badware]                     |
+| uBlock - Privacy                        | [URL][source-ublock-privacy]                     | [URL][mirror-ublock-privacy]                     |
+| winhelp2002.mvps.org                    | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
+| ZeroDot1 - CoinBlockerLists             | [URL][source-zerodot1-coinblockerlists-browser]  | [URL][mirror-zerodot1-coinblockerlists-browser]  |
 
 [source-adaway.org]: https://adaway.org/hosts.txt
 [mirror-adaway.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
@@ -214,6 +215,8 @@ Usage: hblock [options...]
 [mirror-fademind-add.risk]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
 [source-fademind-add.spam]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
 [mirror-fademind-add.spam]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+[source-gfrogeye-firstparty-trackers]: https://hostfiles.frogeye.fr/firstparty-trackers.txt
+[mirror-gfrogeye-firstparty-trackers]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/gfrogeye-firstparty-trackers/list.txt
 [source-hostsvn]: https://raw.githubusercontent.com/bigdargon/hostsVN/master/option/hosts-VN
 [mirror-hostsvn]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
 [source-kadhosts]: https://raw.githubusercontent.com/azet12/KADhosts/master/KADhosts.txt
