@@ -463,8 +463,13 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		logInfo 'Remove reserved TLDs'
-		sed -e '/\.example$/d' \
+		sed -e '/\.corp$/d' \
+			-e '/\.domain$/d' \
+			-e '/\.example$/d' \
+			-e '/\.home$/d' \
+			-e '/\.host$/d' \
 			-e '/\.invalid$/d' \
+			-e '/\.lan$/d' \
 			-e '/\.local$/d' \
 			-e '/\.localdomain$/d' \
 			-e '/\.localhost$/d' \
