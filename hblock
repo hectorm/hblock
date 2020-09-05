@@ -81,9 +81,6 @@ quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&
 # Remove comments from string
 removeComments() { printf -- '%s' "${1?}" | sed -e 's/[[:blank:]]*#.*//'; }
 
-# Translate true/false to yes/no
-getBoolVal() { [ "${1?}" = true ] && s='yes' || s='no'; printf -- '%s' "${s:?}"; }
-
 # Print to stdout if quiet mode is not enabled
 printStdout() {
 	if [ "${quiet:?}" != true ]; then
@@ -398,10 +395,10 @@ main() {
 	logInfo "Redirection: ${redirection?}"
 	logInfo "Template: ${template?}"
 	logInfo "Comment: ${comment?}"
-	logInfo "Backup: $(getBoolVal "${backup:?}")"
-	logInfo "Lenient: $(getBoolVal "${lenient:?}")"
-	logInfo "Enable regex in whitelist: $(getBoolVal "${enableWhitelistRegex:?}")"
-	logInfo "Ignore download error: $(getBoolVal "${ignoreDownloadError:?}")"
+	logInfo "Backup: ${backup:?}"
+	logInfo "Lenient: ${lenient:?}"
+	logInfo "Enable regex in whitelist: ${enableWhitelistRegex:?}"
+	logInfo "Ignore download error: ${ignoreDownloadError:?}"
 
 	# Create temporary blocklist file
 	blocklistFile=$(createTempFile)
