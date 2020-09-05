@@ -65,7 +65,7 @@ main() {
 	blocklistFile=$(createTempFile)
 	cp -f -- "${file:?}" "${blocklistFile:?}"
 	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".*; }
-	trap rmtemp EXIT
+	trap 'rmtemp; trap - EXIT; exit 0' EXIT TERM INT HUP
 
 	# Compact blocklist content (remove lowest level domain and count ocurrences)
 	sed -e 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' -- "${blocklistFile:?}" \

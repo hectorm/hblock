@@ -13,7 +13,7 @@ main() {
 	resourcesDir="${3:-./resources}"
 
 	zip=$(printf -- '%s\n' "${TMPDIR:-/tmp}"/hblock.$$)
-	trap 'rm -f ${zip:?}' EXIT
+	trap 'rm -f ${zip:?}; trap - EXIT; exit 0' EXIT TERM INT HUP
 
 	(cd "${resourcesDir:?}"/alt-formats/android/ && zip -qr "${zip:?}" ./)
 	(cd "$(dirname "${hosts:?}")" && zip -q "${zip:?}" "$(basename "${hosts:?}")")

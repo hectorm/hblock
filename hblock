@@ -402,8 +402,8 @@ main() {
 
 	# Create temporary blocklist file
 	blocklistFile=$(createTempFile)
-	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".aux.*; }
-	trap rmtemp EXIT
+	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".*; }
+	trap 'rmtemp; trap - EXIT; exit 0' EXIT TERM INT HUP
 
 	logAction 'Downloading lists...'
 
