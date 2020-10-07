@@ -37,7 +37,7 @@ fetchUrl() {
 		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}";
 		elif exists fetch; then fetch -qo- --user-agent="${userAgent:?}" -- "${1:?}";
 		else
-			logError 'Either curl, wget or fetch is required for this script'
+			printError 'curl, wget or fetch are required for this script'
 			exit 1
 		fi
 	fi
