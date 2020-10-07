@@ -11,7 +11,7 @@ export LC_ALL=C
 # shellcheck disable=SC2039
 HOSTNAME=${HOSTNAME-$(uname -n)}
 
-# Builtin values
+# Built-in values
 BUILTIN_HEADER=$(cat <<-EOF
 	127.0.0.1       localhost ${HOSTNAME?}
 	255.255.255.255 broadcasthost
@@ -23,7 +23,9 @@ BUILTIN_HEADER=$(cat <<-EOF
 	ff02::3         ip6-allhosts
 EOF
 )
-BUILTIN_FOOTER=''
+BUILTIN_FOOTER=$(cat <<-EOF
+EOF
+)
 BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
@@ -62,8 +64,12 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
 EOF
 )
-BUILTIN_WHITELIST=''
-BUILTIN_BLACKLIST=''
+BUILTIN_WHITELIST=$(cat <<-'EOF'
+EOF
+)
+BUILTIN_BLACKLIST=$(cat <<-'EOF'
+EOF
+)
 
 # Check if a program exists
 exists() {
