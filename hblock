@@ -87,40 +87,24 @@ quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&
 # Remove comments from string
 removeComments() { printf -- '%s' "${1?}" | sed -e 's/[[:blank:]]*#.*//'; }
 
-# Print to stdout if quiet mode is not enabled
-printStdout() {
-	if [ "${quiet:?}" != true ]; then
-		# shellcheck disable=SC2059
-		printf -- "$@"
+# Pretty print methods
+printInfo() {
+	if [ "${quiet-}" != true ]; then
+		if [ "${color-}" != true ]; then printf -- '%s\n' "$@"
+		else printf -- '\033[0m\033[1;32m%s\033[0m\n' "$@"; fi
 	fi
 }
-
-# Print to stderr
-printStderr() {
-	# shellcheck disable=SC2059
-	>&2 printf -- "$@"
+printWarn() {
+	if [ "${color-}" != true ]; then printf -- '%s\n' "$@" >&2
+	else printf -- '\033[0m\033[1;33m%s\033[0m\n' "$@" >&2; fi
 }
-
-# Print informational message
-logInfo() {
-	printStdout '   - %s\n' "$@"
+printError() {
+	if [ "${color-}" != true ]; then printf -- '%s\n' "$@" >&2
+	else printf -- '\033[0m\033[1;31m%s\033[0m\n' "$@" >&2; fi
 }
-
-# Print action message
-logAction() {
-	if [ "${color:?}" = true ]; then
-		printStdout '\033[1;33m + \033[1;32m%s \033[0m\n' "$@"
-	else
-		printStdout ' + %s \n' "$@"
-	fi
-}
-
-# Print error message
-logError() {
-	if [ "${color:?}" = true ]; then
-		printStderr '\033[1;33m + \033[1;31m%s \033[0m\n' "$@"
-	else
-		printStderr ' + %s \n' "$@"
+printList() {
+	if [ "${quiet-}" != true ]; then
+		printf -- ' - %s\n' "$@"
 	fi
 }
 
@@ -146,7 +130,7 @@ fetchUrl() {
 		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}";
 		elif exists fetch; then fetch -qo- --user-agent="${userAgent:?}" -- "${1:?}";
 		else
-			logError 'curl, wget or fetch are required for this script'
+			printError 'curl, wget or fetch are required for this script'
 			exit 1
 		fi
 	fi
@@ -155,7 +139,7 @@ fetchUrl() {
 # Show help and quit
 showHelp() {
 	if [ $# -eq 0 ]; then
-		printStdout '%s\n' "$(cat <<-'EOF'
+		printf -- '%s\n' "$(cat <<-'EOF'
 			Usage: hblock [options...]
 			 -O, --output <FILE>
 			        Output file location
@@ -215,15 +199,15 @@ showHelp() {
 		)"
 		exit 0
 	else
-		[ -n "${1?}" ] && printStderr '%s\n' "Illegal option ${1?}"
-		printStderr '%s\n' "Try 'hblock --help' for more information"
+		[ -n "${1?}" ] && printf -- '%s\n' "Illegal option ${1?}" >&2
+		printf -- '%s\n' "Try 'hblock --help' for more information" >&2
 		exit 1
 	fi
 }
 
 # Show version number and quit
 showVersion() {
-	printStdout '%s\n' '2.1.7'
+	printf -- '%s\n' '2.1.7'
 	exit 0
 }
 
@@ -390,65 +374,68 @@ main() {
 	fi
 	blacklist=$(removeComments "${blacklist?}")
 
-	logAction 'Configuration:'
+	printInfo 'Configuration'
 
-	logInfo "Output: ${outputFile:?}"
-	logInfo "Header: ${headerOrigin:?}"
-	logInfo "Footer: ${footerOrigin:?}"
-	logInfo "Sources: ${sourcesOrigin:?}"
-	logInfo "Whitelist: ${whitelistOrigin:?}"
-	logInfo "Blacklist: ${blacklistOrigin:?}"
-	logInfo "Redirection: ${redirection?}"
-	logInfo "Template: ${template?}"
-	logInfo "Comment: ${comment?}"
-	logInfo "Backup: ${backup:?}"
-	logInfo "Lenient: ${lenient:?}"
-	logInfo "Enable regex in whitelist: ${enableWhitelistRegex:?}"
-	logInfo "Ignore download error: ${ignoreDownloadError:?}"
+	printList "Output: ${outputFile:?}"
+	printList "Header: ${headerOrigin:?}"
+	printList "Footer: ${footerOrigin:?}"
+	printList "Sources: ${sourcesOrigin:?}"
+	printList "Whitelist: ${whitelistOrigin:?}"
+	printList "Blacklist: ${blacklistOrigin:?}"
+	printList "Redirection: ${redirection?}"
+	printList "Template: ${template?}"
+	printList "Comment: ${comment?}"
+	printList "Backup: ${backup:?}"
+	printList "Lenient: ${lenient:?}"
+	printList "Enable regex in whitelist: ${enableWhitelistRegex:?}"
+	printList "Ignore download error: ${ignoreDownloadError:?}"
 
 	# Create temporary blocklist file
 	blocklistFile=$(createTempFile)
 	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".*; }
 	trap 'rmtemp; trap - EXIT; exit 0' EXIT TERM INT HUP
 
-	logAction 'Downloading lists...'
+	printInfo 'Downloading lists'
 
 	_IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 	for url in ${sources?}; do
-		logInfo "${url:?}"
-		fetchUrl "${url:?}" >> "${blocklistFile:?}" && exitCode=0 || exitCode=$?
-		if [ "${exitCode:?}" -ne 0 ] && [ "${ignoreDownloadError:?}" != true ]; then
-			logError 'Download failed'
-			exit 1
+		printList "${url:?}"
+		if ! fetchUrl "${url:?}" >> "${blocklistFile:?}"; then
+			if [ "${ignoreDownloadError:?}" = true ]; then
+				printWarn "Cannot obtain source: ${url:?}"
+			else
+				printError "Cannot obtain source: ${url:?}"
+				exit 1
+			fi
 		fi
 	done
 	IFS=${_IFS?}
 
-	logAction 'Parsing lists...'
+	printInfo 'Parsing lists'
 
 	if [ -s "${blocklistFile:?}" ]; then
-		logInfo 'Remove carriage return'
+		printList 'Removing carriage return'
 		tr -d '\r' \
 			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
-		logInfo 'Transform to lowercase'
+		printList 'Transforming to lowercase'
 		tr '[:upper:]' '[:lower:]' \
 			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
-		logInfo 'Remove comments'
+		printList 'Removing comments'
 		sed -e 's/#.*//' \
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
-		logInfo 'Trim spaces'
+		printList 'Trimming spaces'
 		sed -e 's/^[[:blank:]]*//' \
 			-e 's/[[:blank:]]*$//' \
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
-		logInfo 'Match hosts lines'
+		printList 'Matching hosts lines'
 		if [ "${lenient:?}" = true ]; then
 			# This regex would be ideal, but it is not POSIX-compliant.
 			# ipOctetRegex='\(25[0-5]\|2[0-4][0-9]\|[01]\{0,1\}[0-9][0-9]\{0,1\}\)'
@@ -465,7 +452,7 @@ main() {
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
-		logInfo 'Remove reserved TLDs'
+		printList 'Removing reserved TLDs'
 		sed -e '/\.corp$/d' \
 			-e '/\.domain$/d' \
 			-e '/\.example$/d' \
@@ -480,7 +467,7 @@ main() {
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
-		logInfo 'Remove destination IPs'
+		printList 'Removing destination IPs'
 		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
@@ -490,16 +477,16 @@ main() {
 	printf -- '%s\n' 'hblock-check.molinero.dev' >> "${blocklistFile:?}"
 
 	if [ -n "${blacklist?}" ]; then
-		logInfo 'Apply blacklist'
+		printList 'Applying blacklist'
 		printf -- '%s' "${blacklist?}" >> "${blocklistFile:?}"
 	fi
 
-	logInfo 'Sort entries'
+	printList 'Sorting entries'
 	sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux.1" \
 		&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 	if [ -n "${whitelist?}" ]; then
-		logInfo 'Apply whitelist'
+		printList 'Applying whitelist'
 
 		if [ "${enableWhitelistRegex:?}" = true ]; then
 			_IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
@@ -520,7 +507,7 @@ main() {
 	# Count blocked domains
 	blocklistCount=$(wc -l < "${blocklistFile:?}" | tr -d ' ');
 
-	logInfo 'Apply format template'
+	printList 'Applying format template'
 	sed -e "s/$/\\t$(quoteSubst "${redirection?}")/" \
 		-e "s/^\\(.*\\)\\t\\(.*\\)$/${template?}/" \
 		-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
@@ -528,7 +515,7 @@ main() {
 
 	# Backup procedure
 	if [ "${backup:?}" = true ] && [ "${outputFile:?}" != - ] && [ -f "${outputFile:?}" ]; then
-		logAction 'Backing up original file...'
+		printInfo 'Backing up original file'
 
 		[ -z "${backupDir?}" ] && backupDir=$(dirname -- "${outputFile:?}")
 		backupFile="${backupDir:?}/$(basename -- "${outputFile:?}").$(date +%s).bak"
@@ -538,12 +525,12 @@ main() {
 		elif exists sudo; then
 			sudo cp -af -- "${outputFile:?}" "${backupFile:?}"
 		else
-			logError "Cannot write '${backupFile:?}': permission denied"
+			printError "Cannot write '${backupFile:?}': permission denied"
 			exit 1
 		fi
 	fi
 
-	logAction 'Generating output file...'
+	printInfo 'Generating output file'
 
 	printOutputFile() {
 		# Define "C" variable for convenience
@@ -580,19 +567,19 @@ main() {
 		printOutputFile
 	else
 		if [ -d "${outputFile:?}" ]; then
-			logError "Cannot write '${outputFile:?}': is a directory"
+			printError "Cannot write '${outputFile:?}': is a directory"
 			exit 1
 		elif touch -- "${outputFile:?}" >/dev/null 2>&1; then
 			printOutputFile > "${outputFile:?}"
 		elif exists sudo && exists tee; then
 			printOutputFile | sudo tee -- "${outputFile:?}" >/dev/null
 		else
-			logError "Cannot write '${outputFile:?}': permission denied"
+			printError "Cannot write '${outputFile:?}': permission denied"
 			exit 1
 		fi
 	fi
 
-	logAction "${blocklistCount:?} blocked domains!"
+	printInfo "${blocklistCount:?} blocked domains!"
 }
 
 main "$@"

@@ -51,7 +51,7 @@ setVersion() {
 
 	sed -i \
 		-e "s|^\(.*# Version:.*\)[0-9]\.[0-9]\.[0-9]\(.*\)$|\1${quotedVersion:?}\2|g" \
-		-e "s|^\(.*printStdout.*'\)[0-9]\.[0-9]\.[0-9]\('.*\)$|\1${quotedVersion:?}\2|g" \
+		-e "s|^\(.*printf.*'\)[0-9]\.[0-9]\.[0-9]\('.*\)$|\1${quotedVersion:?}\2|g" \
 		"${PROJECT_DIR:?}"/hblock
 
 	hblockScriptChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)
