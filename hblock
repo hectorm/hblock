@@ -202,7 +202,7 @@ showHelp() {
 	else
 		[ -n "${1?}" ] && printf -- '%s\n' "Illegal option ${1?}" >&2
 		printf -- '%s\n' "Try 'hblock --help' for more information" >&2
-		exit 1
+		exit 2
 	fi
 }
 
