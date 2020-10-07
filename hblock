@@ -292,9 +292,14 @@ main() {
 		esac
 	done
 
-	# Check color support
+	# Check for color support, but honor ${NO_COLOR} variable
+	# See: https://no-color.org
 	if [ "${color:?}" = auto ]; then
-		[ -t 1 ] && color=true || color=false
+		if [ -z "${NO_COLOR+x}" ] && [ -t 1 ]; then
+			color=true
+		else
+			color=false
+		fi
 	fi
 
 	# Priority: ${headerFile} > ${HBLOCK_HEADER} > ${defaultHeaderFile} > builtin
