@@ -5,12 +5,12 @@
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
-export LC_ALL=C
+export LC_ALL='C'
 
 main() {
-	hosts=${1:-/etc/hosts}
-	hblock=${2:-hblock}
-	#resourcesDir=${3:-./resources}
+	hosts="${1:-/etc/hosts}"
+	hblock="${2:-hblock}"
+	#resourcesDir="${3:-./resources}"
 
 	HBLOCK_HEADER='' \
 	HBLOCK_FOOTER='' \
@@ -22,4 +22,4 @@ main() {
 		--comment '!'
 }
 
-main "$@"
+main "${@}"

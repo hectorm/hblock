@@ -5,14 +5,14 @@
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
-export LC_ALL=C
+export LC_ALL='C'
 
-SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+SCRIPT_DIR="$(dirname "$(readlink -f "${0:?}")")"
 
 inkscapeArgs='--without-gui'
-inkscapeCmd="inkscape ${inkscapeArgs:?}";
+inkscapeCmd="inkscape ${inkscapeArgs:?}"
 
-favicon=${SCRIPT_DIR:?}/favicon.svg
+favicon="${SCRIPT_DIR:?}/favicon.svg"
 rm -f "${SCRIPT_DIR:?}"/bitmap/favicon-*x*.png
 ${inkscapeCmd:?} -w 16  -h 16  -e "${SCRIPT_DIR:?}"/bitmap/favicon-16x16.png   "${favicon:?}"
 ${inkscapeCmd:?} -w 24  -h 24  -e "${SCRIPT_DIR:?}"/bitmap/favicon-24x24.png   "${favicon:?}"
@@ -26,7 +26,7 @@ ${inkscapeCmd:?} -w 256 -h 256 -e "${SCRIPT_DIR:?}"/bitmap/favicon-256x256.png "
 ${inkscapeCmd:?} -w 384 -h 384 -e "${SCRIPT_DIR:?}"/bitmap/favicon-384x384.png "${favicon:?}"
 ${inkscapeCmd:?} -w 512 -h 512 -e "${SCRIPT_DIR:?}"/bitmap/favicon-512x512.png "${favicon:?}"
 
-logotype=${SCRIPT_DIR:?}/logotype.svg
+logotype="${SCRIPT_DIR:?}/logotype.svg"
 rm -f "${SCRIPT_DIR:?}"/bitmap/logotype-*x*.png
 ${inkscapeCmd:?} -w 80   -h 25  -e "${SCRIPT_DIR:?}"/bitmap/logotype-80x25.png    "${logotype:?}"
 ${inkscapeCmd:?} -w 160  -h 50  -e "${SCRIPT_DIR:?}"/bitmap/logotype-160x50.png   "${logotype:?}"
@@ -40,7 +40,7 @@ ${inkscapeCmd:?} -w 1040 -h 325 -e "${SCRIPT_DIR:?}"/bitmap/logotype-1040x325.pn
 ${inkscapeCmd:?} -w 1200 -h 375 -e "${SCRIPT_DIR:?}"/bitmap/logotype-1200x375.png "${logotype:?}"
 ${inkscapeCmd:?} -w 1360 -h 425 -e "${SCRIPT_DIR:?}"/bitmap/logotype-1360x425.png "${logotype:?}"
 
-logotypeAlt=${SCRIPT_DIR:?}/logotype-alt.svg
+logotypeAlt="${SCRIPT_DIR:?}/logotype-alt.svg"
 rm -f "${SCRIPT_DIR:?}"/bitmap/logotype-alt-*x*.png
 ${inkscapeCmd:?} -w 48   -h 36  -e "${SCRIPT_DIR:?}"/bitmap/logotype-alt-48x36.png   "${logotypeAlt:?}"
 ${inkscapeCmd:?} -w 72   -h 54  -e "${SCRIPT_DIR:?}"/bitmap/logotype-alt-72x54.png   "${logotypeAlt:?}"

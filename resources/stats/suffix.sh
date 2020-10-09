@@ -5,7 +5,7 @@
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
-export LC_ALL=C
+export LC_ALL='C'
 
 # Check if a program exists
 exists() {
@@ -18,10 +18,11 @@ exists() {
 # Create a temporary file
 createTempFile() {
 	if exists mktemp; then mktemp
-	else # Since POSIX does not specify mktemp utility, use this as fallback
+	else
+		# Since POSIX does not specify mktemp utility, use this as fallback
 		# Wait a second to avoid name collisions. Horrible hack, I know
-		rand=$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')
-		file="${TMPDIR:-/tmp}/tmp.$$.${rand:?}"
+		rand="$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')"
+		file="${TMPDIR:-/tmp}/tmp.${$}.${rand:?}"
 		(umask 077 && touch -- "${file:?}")
 		printf -- '%s\n' "${file:?}"
 	fi
@@ -33,9 +34,9 @@ fetchUrl() {
 	if [ "${1#file://}" != "${1:?}" ]; then cat -- "${1#file://}"
 	else
 		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'
-		if exists curl; then curl -fsSL -A "${userAgent:?}" -- "${1:?}";
-		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}";
-		elif exists fetch; then fetch -qo- --user-agent="${userAgent:?}" -- "${1:?}";
+		if exists curl; then curl -fsSL -A "${userAgent:?}" -- "${1:?}"
+		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}"
+		elif exists fetch; then fetch -qo- --user-agent="${userAgent:?}" -- "${1:?}"
 		else
 			printError 'curl, wget or fetch are required for this script'
 			exit 1
@@ -45,8 +46,12 @@ fetchUrl() {
 
 # Convert an IDN to punycode
 punycodeEncode() {
-	if exists idn2; then CHARSET=UTF-8 idn2;
-	else CHARSET=UTF-8 idn; fi
+	if exists idn2; then CHARSET='UTF-8' idn2
+	elif exists idn; then CHARSET='UTF-8' idn
+	else
+		printError 'idn2 or idn are required for this script'
+		exit 1
+	fi
 }
 
 main() {
@@ -58,11 +63,11 @@ main() {
 		exit 1
 	fi
 
-	header=$(printf -- '%s\t%s\t%s\n' 'Top' 'Hosts' 'Suffix')
+	header="$(printf -- '%s\t%s\t%s\n' 'Top' 'Hosts' 'Suffix')"
 	stats=''
 
 	# Create temporary blocklist file
-	blocklistFile=$(createTempFile)
+	blocklistFile="$(createTempFile)"
 	cp -f -- "${file:?}" "${blocklistFile:?}"
 	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".*; }
 	trap 'rmtemp; trap - EXIT; exit 0' EXIT TERM INT HUP
@@ -90,30 +95,30 @@ main() {
 		# Count blocklist matches for each suffix
 		while read -r regex; do
 			if grep -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.match"; then
-				count=$(awk '{s+=$1}END{print(s)}' "${blocklistFile:?}.match")
-				stats=$(printf -- '%s\t%s\n%s' "${count:?}" "${regex:?}" "${stats?}")
+				count="$(awk '{s+=$1}END{print(s)}' "${blocklistFile:?}.match")"
+				stats="$(printf -- '%s\t%s\n%s' "${count:?}" "${regex:?}" "${stats?}")"
 				(grep -v -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
 					&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}") || true
 			fi
 		done < "${blocklistFile:?}.suffixes"
 
 		# Undo regex pattern
-		stats=$(printf -- '%s' "${stats?}" | sed 's/\\\././g;s/\$$//g')
+		stats="$(printf -- '%s' "${stats?}" | sed 's/\\\././g;s/\$$//g')"
 	fi
 
 	# If blocklist is not empty use TLD as suffix
 	if [ -s "${blocklistFile:?}" ]; then
-		tldStats=$(sed -e 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' -- "${blocklistFile:?}" |
+		tldStats="$(sed -e 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' -- "${blocklistFile:?}" |
 			awk '{arr[$2]+=$1;}END{for (i in arr) print(arr[i]"\t"i)}'
-		)
+		)"
 
-		stats=$(printf -- '%s\n%s' "${tldStats?}" "${stats?}")
+		stats="$(printf -- '%s\n%s' "${tldStats?}" "${stats?}")"
 	fi
 
 	# Sort stats by the number of matches
-	stats=$(printf -- '%s' "${stats?}" | sort -k1,1nr -k2,2 | awk '{print NR"\t"$0}')
+	stats="$(printf -- '%s' "${stats?}" | sort -k1,1nr -k2,2 | awk '{print NR"\t"$0}')"
 
 	printf -- '%s\n%s\n' "${header:?}" "${stats?}"
 }
 
-main "$@"
+main "${@}"

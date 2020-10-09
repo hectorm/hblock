@@ -6,13 +6,13 @@
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
-export LC_ALL=C
+export LC_ALL='C'
 
 # shellcheck disable=SC2039
-HOSTNAME=${HOSTNAME-$(uname -n)}
+HOSTNAME="${HOSTNAME-$(uname -n)}"
 
 # Built-in values
-BUILTIN_HEADER=$(cat <<-EOF
+BUILTIN_HEADER="$(cat <<-EOF
 	127.0.0.1       localhost ${HOSTNAME?}
 	255.255.255.255 broadcasthost
 	::1             localhost ${HOSTNAME?}
@@ -23,11 +23,11 @@ BUILTIN_HEADER=$(cat <<-EOF
 	ff02::2         ip6-allrouters
 	ff02::3         ip6-allhosts
 EOF
-)
-BUILTIN_FOOTER=$(cat <<-EOF
+)"
+BUILTIN_FOOTER="$(cat <<-EOF
 EOF
-)
-BUILTIN_SOURCES=$(cat <<-'EOF'
+)"
+BUILTIN_SOURCES="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
@@ -64,13 +64,13 @@ BUILTIN_SOURCES=$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
 EOF
-)
-BUILTIN_WHITELIST=$(cat <<-'EOF'
+)"
+BUILTIN_WHITELIST="$(cat <<-'EOF'
 EOF
-)
-BUILTIN_BLACKLIST=$(cat <<-'EOF'
+)"
+BUILTIN_BLACKLIST="$(cat <<-'EOF'
 EOF
-)
+)"
 
 # Check if a program exists
 exists() {
@@ -90,32 +90,33 @@ removeComments() { printf -- '%s' "${1?}" | sed -e 's/[[:blank:]]*#.*//'; }
 
 # Pretty print methods
 printInfo() {
-	if [ "${quiet-}" != true ]; then
-		if [ "${color-}" != true ]; then printf -- '%s\n' "$@"
-		else printf -- '\033[0m\033[1;32m%s\033[0m\n' "$@"; fi
+	if [ "${quiet-}" != 'true' ]; then
+		if [ "${color-}" != 'true' ]; then printf -- '%s\n' "${@}"
+		else printf -- '\033[0m\033[1;32m%s\033[0m\n' "${@}"; fi
 	fi
 }
 printWarn() {
-	if [ "${color-}" != true ]; then printf -- '%s\n' "$@" >&2
-	else printf -- '\033[0m\033[1;33m%s\033[0m\n' "$@" >&2; fi
+	if [ "${color-}" != 'true' ]; then printf -- '%s\n' "${@}" >&2
+	else printf -- '\033[0m\033[1;33m%s\033[0m\n' "${@}" >&2; fi
 }
 printError() {
-	if [ "${color-}" != true ]; then printf -- '%s\n' "$@" >&2
-	else printf -- '\033[0m\033[1;31m%s\033[0m\n' "$@" >&2; fi
+	if [ "${color-}" != 'true' ]; then printf -- '%s\n' "${@}" >&2
+	else printf -- '\033[0m\033[1;31m%s\033[0m\n' "${@}" >&2; fi
 }
 printList() {
-	if [ "${quiet-}" != true ]; then
-		printf -- ' - %s\n' "$@"
+	if [ "${quiet-}" != 'true' ]; then
+		printf -- ' - %s\n' "${@}"
 	fi
 }
 
 # Create a temporary file
 createTempFile() {
 	if exists mktemp; then mktemp
-	else # Since POSIX does not specify mktemp utility, use this as fallback
+	else
+		# Since POSIX does not specify mktemp utility, use this as fallback
 		# Wait a second to avoid name collisions. Horrible hack, I know
-		rand=$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')
-		file="${TMPDIR:-/tmp}/tmp.$$.${rand:?}"
+		rand="$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')"
+		file="${TMPDIR:-/tmp}/tmp.${$}.${rand:?}"
 		(umask 077 && touch -- "${file:?}")
 		printf -- '%s\n' "${file:?}"
 	fi
@@ -127,9 +128,9 @@ fetchUrl() {
 	if [ "${1#file://}" != "${1:?}" ]; then cat -- "${1#file://}"
 	else
 		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'
-		if exists curl; then curl -fsSL -A "${userAgent:?}" -- "${1:?}";
-		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}";
-		elif exists fetch; then fetch -qo- --user-agent="${userAgent:?}" -- "${1:?}";
+		if exists curl; then curl -fsSL -A "${userAgent:?}" -- "${1:?}"
+		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}"
+		elif exists fetch; then fetch -qo- --user-agent="${userAgent:?}" -- "${1:?}"
 		else
 			printError 'curl, wget or fetch are required for this script'
 			exit 1
@@ -213,21 +214,61 @@ showVersion() {
 }
 
 main() {
+	# Output file location
 	outputFile='/etc/hosts'
-	headerFile='/etc/hblock.d/header'; defaultHeaderFile=${headerFile:?}; header=''
-	footerFile='/etc/hblock.d/footer'; defaultFooterFile=${footerFile:?}; footer=''
-	sourcesFile='/etc/hblock.d/sources.list'; defaultSourcesFile=${sourcesFile:?}; sources=''
-	whitelistFile='/etc/hblock.d/whitelist.list'; defaultWhitelistFile=${whitelistFile:?}; whitelist=''
-	blacklistFile='/etc/hblock.d/blacklist.list'; defaultBlacklistFile=${blacklistFile:?}; blacklist=''
+
+	# Content to be included at the beginning of the output file
+	headerFile='/etc/hblock.d/header'
+	headerDefaultFile="${headerFile:?}"
+	header=''
+
+	# Content to be included at the end of the output file
+	footerFile='/etc/hblock.d/footer'
+	footerDefaultFile="${footerFile:?}"
+	footer=''
+
+	# Newline separated URLs used to generate the blocklist
+	sourcesFile='/etc/hblock.d/sources.list'
+	sourcesDefaultFile="${sourcesFile:?}"
+	sources=''
+
+	# Newline separated domains to be removed from the blocklist
+	whitelistFile='/etc/hblock.d/whitelist.list'
+	whitelistDefaultFile="${whitelistFile:?}"
+	whitelist=''
+
+	# Newline separated domains to be added to the blocklist
+	blacklistFile='/etc/hblock.d/blacklist.list'
+	blacklistDefaultFile="${blacklistFile:?}"
+	blacklist=''
+
+	# Redirection for all entries in the blocklist
 	redirection='0.0.0.0'
+
+	# POSIX BREs replacement applied to each entry
 	template='\2 \1'
+
+	# Character used for comments
 	comment='#'
-	backup=false
-	lenient=false
-	enableWhitelistRegex=false
-	ignoreDownloadError=false
-	color=auto
-	quiet=false
+
+	# Make a time-stamped backup in ${backupDir}
+	backup='false'
+	backupDir=''
+
+	# Match all entries from sources, regardless of their IP
+	lenient='false'
+
+	# Use POSIX BREs instead of fixed strings
+	enableWhitelistRegex='false'
+
+	# Do not abort if a download error occurs
+	ignoreDownloadError='false'
+
+	# Colorize the output
+	color='auto'
+
+	# Suppress non-error messages
+	quiet='false'
 
 	# Transform long options to short ones
 	for opt in "$@"; do
@@ -267,7 +308,7 @@ main() {
 		esac
 	done
 	# Read short options
-	OPTIND=1
+	OPTIND='1'
 	while getopts ':O:H:F:S:W:B:R:T:C:b:lric:qvh-:' opt; do
 		case "${opt?}" in
 			'O') outputFile="${OPTARG?}" ;;
@@ -294,91 +335,91 @@ main() {
 
 	# Check for color support, but honor ${NO_COLOR} variable
 	# See: https://no-color.org
-	if [ "${color:?}" = auto ]; then
+	if [ "${color:?}" = 'auto' ]; then
 		if [ -z "${NO_COLOR+x}" ] && [ -t 1 ]; then
-			color=true
+			color='true'
 		else
-			color=false
+			color='false'
 		fi
 	fi
 
-	# Priority: ${headerFile} > ${HBLOCK_HEADER} > ${defaultHeaderFile} > builtin
-	if [ "${headerFile:?}" != "${defaultHeaderFile:?}" ]; then
-		header=$(cat -- "${headerFile:?}")
-		headerOrigin=${headerFile:?}
-	elif [ "${HBLOCK_HEADER+def}" = def ]; then
-		header=${HBLOCK_HEADER?}
-		headerOrigin=environment
+	# Priority: ${headerFile} > ${HBLOCK_HEADER} > ${headerDefaultFile} > builtin
+	if [ "${headerFile:?}" != "${headerDefaultFile:?}" ]; then
+		header="$(cat -- "${headerFile:?}")"
+		headerOrigin="${headerFile:?}"
+	elif [ "${HBLOCK_HEADER+x}" = 'x' ]; then
+		header="${HBLOCK_HEADER?}"
+		headerOrigin='environment'
 	elif [ -f "${headerFile:?}" ]; then
-		header=$(cat -- "${headerFile:?}")
-		headerOrigin=${headerFile:?}
+		header="$(cat -- "${headerFile:?}")"
+		headerOrigin="${headerFile:?}"
 	else
-		header=${BUILTIN_HEADER?}
-		headerOrigin=builtin
+		header="${BUILTIN_HEADER?}"
+		headerOrigin='builtin'
 	fi
 
-	# Priority: ${footerFile} > ${HBLOCK_FOOTER} > ${defaultFooterFile} > builtin
-	if [ "${footerFile:?}" != "${defaultFooterFile:?}" ]; then
-		footer=$(cat -- "${footerFile:?}")
-		footerOrigin=${footerFile:?}
-	elif [ "${HBLOCK_FOOTER+def}" = def ]; then
-		footer=${HBLOCK_FOOTER?}
-		footerOrigin=environment
+	# Priority: ${footerFile} > ${HBLOCK_FOOTER} > ${footerDefaultFile} > builtin
+	if [ "${footerFile:?}" != "${footerDefaultFile:?}" ]; then
+		footer="$(cat -- "${footerFile:?}")"
+		footerOrigin="${footerFile:?}"
+	elif [ "${HBLOCK_FOOTER+x}" = 'x' ]; then
+		footer="${HBLOCK_FOOTER?}"
+		footerOrigin='environment'
 	elif [ -f "${footerFile:?}" ]; then
-		footer=$(cat -- "${footerFile:?}")
-		footerOrigin=${footerFile:?}
+		footer="$(cat -- "${footerFile:?}")"
+		footerOrigin="${footerFile:?}"
 	else
-		footer=${BUILTIN_FOOTER?}
-		footerOrigin=builtin
+		footer="${BUILTIN_FOOTER?}"
+		footerOrigin='builtin'
 	fi
 
-	# Priority: ${sourcesFile} > ${HBLOCK_SOURCES} > ${defaultSourcesFile} > builtin
-	if [ "${sourcesFile:?}" != "${defaultSourcesFile:?}" ]; then
-		sources=$(cat -- "${sourcesFile:?}")
-		sourcesOrigin=${sourcesFile:?}
-	elif [ "${HBLOCK_SOURCES+def}" = def ]; then
-		sources=${HBLOCK_SOURCES?}
-		sourcesOrigin=environment
+	# Priority: ${sourcesFile} > ${HBLOCK_SOURCES} > ${sourcesDefaultFile} > builtin
+	if [ "${sourcesFile:?}" != "${sourcesDefaultFile:?}" ]; then
+		sources="$(cat -- "${sourcesFile:?}")"
+		sourcesOrigin="${sourcesFile:?}"
+	elif [ "${HBLOCK_SOURCES+x}" = 'x' ]; then
+		sources="${HBLOCK_SOURCES?}"
+		sourcesOrigin='environment'
 	elif [ -f "${sourcesFile:?}" ]; then
-		sources=$(cat -- "${sourcesFile:?}")
-		sourcesOrigin=${sourcesFile:?}
+		sources="$(cat -- "${sourcesFile:?}")"
+		sourcesOrigin="${sourcesFile:?}"
 	else
-		sources=${BUILTIN_SOURCES?}
-		sourcesOrigin=builtin
+		sources="${BUILTIN_SOURCES?}"
+		sourcesOrigin='builtin'
 	fi
-	sources=$(removeComments "${sources?}")
+	sources="$(removeComments "${sources?}")"
 
-	# Priority: ${whitelistFile} > ${HBLOCK_WHITELIST} > ${defaultWhitelistFile} > builtin
-	if [ "${whitelistFile:?}" != "${defaultWhitelistFile:?}" ]; then
-		whitelist=$(cat -- "${whitelistFile:?}")
-		whitelistOrigin=${whitelistFile:?}
-	elif [ "${HBLOCK_WHITELIST+def}" = def ]; then
-		whitelist=${HBLOCK_WHITELIST?}
-		whitelistOrigin=environment
+	# Priority: ${whitelistFile} > ${HBLOCK_WHITELIST} > ${whitelistDefaultFile} > builtin
+	if [ "${whitelistFile:?}" != "${whitelistDefaultFile:?}" ]; then
+		whitelist="$(cat -- "${whitelistFile:?}")"
+		whitelistOrigin="${whitelistFile:?}"
+	elif [ "${HBLOCK_WHITELIST+x}" = 'x' ]; then
+		whitelist="${HBLOCK_WHITELIST?}"
+		whitelistOrigin='environment'
 	elif [ -f "${whitelistFile:?}" ]; then
-		whitelist=$(cat -- "${whitelistFile:?}")
-		whitelistOrigin=${whitelistFile:?}
+		whitelist="$(cat -- "${whitelistFile:?}")"
+		whitelistOrigin="${whitelistFile:?}"
 	else
-		whitelist=${BUILTIN_WHITELIST?}
-		whitelistOrigin=builtin
+		whitelist="${BUILTIN_WHITELIST?}"
+		whitelistOrigin='builtin'
 	fi
-	whitelist=$(removeComments "${whitelist?}")
+	whitelist="$(removeComments "${whitelist?}")"
 
-	# Priority: ${blacklistFile} > ${HBLOCK_BLACKLIST} > ${defaultBlacklistFile} > builtin
-	if [ "${blacklistFile:?}" != "${defaultBlacklistFile:?}" ]; then
-		blacklist=$(cat -- "${blacklistFile:?}")
-		blacklistOrigin=${blacklistFile:?}
-	elif [ "${HBLOCK_BLACKLIST+def}" = def ]; then
-		blacklist=${HBLOCK_BLACKLIST?}
-		blacklistOrigin=environment
+	# Priority: ${blacklistFile} > ${HBLOCK_BLACKLIST} > ${blacklistDefaultFile} > builtin
+	if [ "${blacklistFile:?}" != "${blacklistDefaultFile:?}" ]; then
+		blacklist="$(cat -- "${blacklistFile:?}")"
+		blacklistOrigin="${blacklistFile:?}"
+	elif [ "${HBLOCK_BLACKLIST+x}" = 'x' ]; then
+		blacklist="${HBLOCK_BLACKLIST?}"
+		blacklistOrigin='environment'
 	elif [ -f "${blacklistFile:?}" ]; then
-		blacklist=$(cat -- "${blacklistFile:?}")
-		blacklistOrigin=${blacklistFile:?}
+		blacklist="$(cat -- "${blacklistFile:?}")"
+		blacklistOrigin="${blacklistFile:?}"
 	else
-		blacklist=${BUILTIN_BLACKLIST?}
-		blacklistOrigin=builtin
+		blacklist="${BUILTIN_BLACKLIST?}"
+		blacklistOrigin='builtin'
 	fi
-	blacklist=$(removeComments "${blacklist?}")
+	blacklist="$(removeComments "${blacklist?}")"
 
 	printInfo 'Configuration'
 
@@ -397,17 +438,17 @@ main() {
 	printList "Ignore download error: ${ignoreDownloadError:?}"
 
 	# Create temporary blocklist file
-	blocklistFile=$(createTempFile)
+	blocklistFile="$(createTempFile)"
 	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".*; }
 	trap 'rmtemp; trap - EXIT; exit 0' EXIT TERM INT HUP
 
 	printInfo 'Downloading lists'
 
-	_IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
+	_IFS="${IFS-}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 	for url in ${sources?}; do
 		printList "${url:?}"
 		if ! fetchUrl "${url:?}" >> "${blocklistFile:?}"; then
-			if [ "${ignoreDownloadError:?}" = true ]; then
+			if [ "${ignoreDownloadError:?}" = 'true' ]; then
 				printWarn "Cannot obtain source: ${url:?}"
 			else
 				printError "Cannot obtain source: ${url:?}"
@@ -415,7 +456,7 @@ main() {
 			fi
 		fi
 	done
-	IFS=${_IFS?}
+	IFS="${_IFS?}"
 
 	printInfo 'Parsing lists'
 
@@ -442,7 +483,7 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		printList 'Matching hosts lines'
-		if [ "${lenient:?}" = true ]; then
+		if [ "${lenient:?}" = 'true' ]; then
 			# This regex would be ideal, but it is not POSIX-compliant.
 			# ipOctetRegex='\(25[0-5]\|2[0-4][0-9]\|[01]\{0,1\}[0-9][0-9]\{0,1\}\)'
 			# ipRegex="\\(${ipOctetRegex:?}\\.${ipOctetRegex:?}\\.${ipOctetRegex:?}\\.${ipOctetRegex:?}\\)"
@@ -494,14 +535,14 @@ main() {
 	if [ -n "${whitelist?}" ]; then
 		printList 'Applying whitelist'
 
-		if [ "${enableWhitelistRegex:?}" = true ]; then
-			_IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
+		if [ "${enableWhitelistRegex:?}" = 'true' ]; then
+			_IFS="${IFS-}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 			for regex in ${whitelist?}; do
 				sed -e "/${regex:?}/d" \
 					-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 					&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 			done
-			IFS=${_IFS?}
+			IFS="${_IFS?}"
 		else
 			printf -- '%s' "${whitelist?}" | sort | uniq > "${blocklistFile:?}.aux.2"
 			comm -23 -- "${blocklistFile:?}" "${blocklistFile:?}.aux.2" > "${blocklistFile:?}.aux.1" \
@@ -511,7 +552,7 @@ main() {
 	fi
 
 	# Count blocked domains
-	blocklistCount=$(wc -l < "${blocklistFile:?}" | tr -d ' ');
+	blocklistCount="$(wc -l < "${blocklistFile:?}" | tr -d ' ')"
 
 	printList 'Applying format template'
 	sed -e "s/$/\\t$(quoteSubst "${redirection?}")/" \
@@ -520,10 +561,10 @@ main() {
 		&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 	# Backup procedure
-	if [ "${backup:?}" = true ] && [ "${outputFile:?}" != - ] && [ -f "${outputFile:?}" ]; then
+	if [ "${backup:?}" = 'true' ] && [ "${outputFile:?}" != '-' ] && [ -f "${outputFile:?}" ]; then
 		printInfo 'Backing up original file'
 
-		[ -z "${backupDir?}" ] && backupDir=$(dirname -- "${outputFile:?}")
+		[ -z "${backupDir?}" ] && backupDir="$(dirname -- "${outputFile:?}")"
 		backupFile="${backupDir:?}/$(basename -- "${outputFile:?}").$(date +%s).bak"
 
 		if touch -- "${backupFile:?}" >/dev/null 2>&1; then
@@ -540,7 +581,7 @@ main() {
 
 	printOutputFile() {
 		# Define "C" variable for convenience
-		C=${comment?}
+		C="${comment?}"
 
 		if [ -n "${C?}" ]; then
 			printf -- '%s\n' "$(cat <<-EOF
@@ -569,7 +610,7 @@ main() {
 	}
 
 	# Print to stdout if the output value is equal to -
-	if [ "${outputFile:?}" = - ]; then
+	if [ "${outputFile:?}" = '-' ]; then
 		printOutputFile
 	else
 		if [ -d "${outputFile:?}" ]; then
@@ -588,4 +629,4 @@ main() {
 	printInfo "${blocklistCount:?} blocked domains!"
 }
 
-main "$@"
+main "${@}"

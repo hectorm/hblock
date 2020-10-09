@@ -5,7 +5,7 @@
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
-export LC_ALL=C
+export LC_ALL='C'
 
 # Check if a program exists
 exists() {
@@ -16,7 +16,7 @@ exists() {
 }
 
 # Check whether a string ends with the characters of a specified string
-endsWith() { str=${1:?} && substr=${2:?} && [ "${str%${substr:?}}" != "${str:?}" ]; }
+endsWith() { [ "${1%${2?}}" != "${1?}" ]; }
 
 # Base16 encode
 base16Encode() {
@@ -55,8 +55,8 @@ escapeHTML() {
 
 # RFC 3986 compliant URL encoding method
 encodeURI() {
-	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C
-	hex=$(printf -- '%s' "${1?}" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')
+	_LC_COLLATE="${LC_COLLATE-}"; LC_COLLATE='C'
+	hex="$(printf -- '%s' "${1?}" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')"
 	for h in ${hex?}; do
 		case "${h:?}" in
 			3[0-9]|\
@@ -67,13 +67,13 @@ encodeURI() {
 			*) printf '%%%s' "${h:?}"
 		esac
 	done
-	LC_COLLATE=${_LC_COLLATE?}
+	LC_COLLATE="${_LC_COLLATE?}"
 }
 
 # Calculate digest for Content-Security-Policy
 cspDigest() {
-	hex=$(printf -- '%s' "${1?}" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')
-	b64=$(for h in ${hex?}; do printf '%b' "\\$(printf '%o' "0x${h:?}")"; done | base64Encode)
+	hex="$(printf -- '%s' "${1?}" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')"
+	b64="$(for h in ${hex?}; do printf '%b' "\\$(printf '%o' "0x${h:?}")"; done | base64Encode)"
 	printf 'sha256-%s' "${b64?}"
 }
 
@@ -98,9 +98,9 @@ getFileType() {
 # Get file modification time
 getFileModificationTime() {
 	if stat -c '%n' -- "${1:?}" >/dev/null 2>&1; then
-		TZ=UTC stat -c '%.19y UTC' -- "${1:?}"
+		TZ='UTC' stat -c '%.19y UTC' -- "${1:?}"
 	elif stat -f '%Sm' -t '%Z' -- "${1:?}" >/dev/null 2>&1; then
-		TZ=UTC stat -f '%Sm' -t '%Y-%m-%d %H:%M:%S %Z' -- "${1:?}"
+		TZ='UTC' stat -f '%Sm' -t '%Y-%m-%d %H:%M:%S %Z' -- "${1:?}"
 	else
 		printf '%s' '1970-01-01 00:00:00 UTC'
 	fi
@@ -114,23 +114,23 @@ main() {
 		exit 1
 	fi
 
-	entries=$(cd -- "${directory:?}" && for file in ./*; do
+	entries="$(cd -- "${directory:?}" && for file in ./*; do
 		if ! [ -r "${file:?}" ] || endsWith "${file:?}" 'index.html'; then
 			continue
 		fi
 
-		fileName=$(basename "${file:?}")
-		escapedFileName=$(escapeHTML "${fileName:?}")
-		escapedFileNameURI=$(escapeHTML "$(encodeURI "${fileName:?}")")
+		fileName="$(basename "${file:?}")"
+		escapedFileName="$(escapeHTML "${fileName:?}")"
+		escapedFileNameURI="$(escapeHTML "$(encodeURI "${fileName:?}")")"
 
-		fileSize=$(getFileSize "${file:?}")
-		escapedFileSize=$(escapeHTML "${fileSize:?}")
+		fileSize="$(getFileSize "${file:?}")"
+		escapedFileSize="$(escapeHTML "${fileSize:?}")"
 
-		fileType=$(getFileType "${file:?}")
-		escapedFileType=$(escapeHTML "${fileType:?}")
+		fileType="$(getFileType "${file:?}")"
+		escapedFileType="$(escapeHTML "${fileType:?}")"
 
-		fileDate=$(getFileModificationTime "${file:?}")
-		escapedFileDate=$(escapeHTML "${fileDate:?}")
+		fileDate="$(getFileModificationTime "${file:?}")"
+		escapedFileDate="$(escapeHTML "${fileDate:?}")"
 
 		# Entry template
 		printf -- '%s\n' "$(cat <<-EOF
@@ -142,11 +142,11 @@ main() {
 			</a>
 		EOF
 		)"
-	done)
+	done)"
 
 	# Generated with:
 	#  $ (printf '%s' 'data:image/png;base64,'; base64 -w0 'resources/logo/bitmap/favicon-32x32.png') | fold -w 128
-	favicon=$(tr -d '\n' <<-'EOF'
+	favicon="$(tr -d '\n' <<-'EOF'
 		data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U2
 		9mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAP4SURBVFiFtZdPaBR3FMc/7zdrIy20kJtdaGpddtcGxINVPJlAA0LIQZr0UA+xRfBQKKWHiL2IIuQQCiUJpd1LTg
 		ENWgSR2FOTiwRFSKE0brLaliTGVDE0NEt0Z+b1MNmdmd2Z7CbbfmHhzZv3vu/7+/N+81toAppKtWgq1dIMR6KZZNeyRhF5DehvhmdXcLLZr51MRp1MRp1s9sJueWQ3SX
@@ -161,11 +161,11 @@ main() {
 		vdCADQVOp915gJRNpjQn41rvuxLCzMxbyvQewmjIIUCr+ZYvEDVEfYuoeUtQHDZmPj6E6Kwy7/mgGU0ukPjcgYkFDXPZtYWKjfo/81tL29VdvbW5vh+BfQNoY2crpxWA
 		AAAABJRU5ErkJggg==
 	EOF
-	)
+	)"
 
 	# Generated with:
 	#  $ svgo --datauri=enc --output=- 'resources/logo/logotype.svg' | fold -w 128
-	logotype=$(tr -d '\n' <<-'EOF'
+	logotype="$(tr -d '\n' <<-'EOF'
 		data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221024%22%20height%3D%22320%22%20viewB
 		ox%3D%220%200%204000%201250%22%3E%3Cg%20stroke%3D%22%23FD2727%22%20stroke-width%3D%22133.2%22%3E%3Cpath%20fill%3D%22%23FFF%22%20
 		d%3D%22M542.134%20130.213c-133.2%20159.839-133.2%20186.479-399.597%20149.183%200%20623.37%20133.2%20676.65%20399.597%20863.128C8
@@ -187,10 +187,10 @@ main() {
 		49.041s-22.77%2057.8-71.811%2057.8zm0%20231.198V688.142h61.302c59.55%200%2087.575%2015.764%2087.575%2057.8s-28.024%2063.054-87.5
 		75%2063.054z%22%2F%3E%3C%2Fsvg%3E
 	EOF
-	)
+	)"
 
 	# JavaScript
-	javascript=$(tr -d '\n' <<-'EOF'
+	javascript="$(tr -d '\n' <<-'EOF'
 		(function(){
 		/* This resource is used to check the status of hBlock */
 		var c=document.getElementById('status').classList;
@@ -200,10 +200,10 @@ main() {
 		i.onerror=function(){c.add('enabled');c.remove('loading');};
 		})();
 	EOF
-	)
+	)"
 
 	# CSS
-	css=$(tr -d '\n' <<-'EOF'
+	css="$(tr -d '\n' <<-'EOF'
 		html {
 			font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', sans-serif;
 			font-size: 16px;
@@ -340,7 +340,7 @@ main() {
 			color: #D32F2F;
 		}
 	EOF
-	)
+	)"
 
 	# Page template
 	printf -- '%s\n' "$(tr -d '\n' <<-EOF
@@ -420,4 +420,4 @@ main() {
 	)"
 }
 
-main "$@"
+main "${@}"

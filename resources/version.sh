@@ -5,10 +5,10 @@
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
-export LC_ALL=C
+export LC_ALL='C'
 
-SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-PROJECT_DIR=${SCRIPT_DIR:?}/../
+SCRIPT_DIR="$(dirname "$(readlink -f "${0:?}")")"
+PROJECT_DIR="${SCRIPT_DIR:?}/../"
 
 # Check if a program exists
 exists() {
@@ -20,8 +20,8 @@ exists() {
 
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
-quoteRe() { printf -- '%s' "${1:?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
-quoteSubst() { printf -- '%s' "${1:?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
+quoteRe() { printf -- '%s' "${1?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
+quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
 
 # Base16 encode
 base16Encode() {
@@ -46,15 +46,15 @@ getVersion() {
 
 # Update hBlock version
 setVersion() {
-	version=${1:?}
-	quotedVersion=$(quoteSubst "${version:?}")
+	version="${1:?}"
+	quotedVersion="$(quoteSubst "${version:?}")"
 
 	sed -i \
 		-e "s|^\(.*# Version:.*\)[0-9]\.[0-9]\.[0-9]\(.*\)$|\1${quotedVersion:?}\2|g" \
 		-e "s|^\(.*printf.*'\)[0-9]\.[0-9]\.[0-9]\('.*\)$|\1${quotedVersion:?}\2|g" \
 		"${PROJECT_DIR:?}"/hblock
 
-	hblockScriptChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)
+	hblockScriptChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)"
 
 	printf '%s  %s\n' \
 		"${hblockScriptChecksum}" "hblock" \
@@ -65,8 +65,8 @@ setVersion() {
 		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.*\)$|\1${hblockScriptChecksum:?}\2|g" \
 		"${PROJECT_DIR:?}"/README.md
 
-	hblockServiceChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.service)
-	hblockTimerChecksum=$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.timer)
+	hblockServiceChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.service)"
+	hblockTimerChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.timer)"
 
 	printf '%s  %s\n' \
 		"${hblockServiceChecksum}" "hblock.service" \

@@ -5,9 +5,9 @@
 # License:    MIT, https://opensource.org/licenses/MIT
 
 set -eu
-export LC_ALL=C
+export LC_ALL='C'
 
-ENL=$(printf '\\\nx'); ENL=${ENL%x}
+ENL="$(printf '\\\nx')"; ENL="${ENL%x}"
 
 main() {
 	hosts="${1:-/etc/hosts}"
@@ -24,4 +24,4 @@ main() {
 		--comment '#'
 }
 
-main "$@"
+main "${@}"
