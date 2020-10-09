@@ -118,9 +118,6 @@ Usage: hblock [options...]
  -C, --comment <COMMENT>
         Character used for comments
         (default: #)
- -b, --backup [DIRECTORY]
-        Make a time-stamped backup in <DIRECTORY>
-        (default: output file directory)
  -l, --lenient
         Match all entries from sources, regardless of their IP
         (default: 0.0.0.0, 127.0.0.1 or none)

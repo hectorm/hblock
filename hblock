@@ -176,9 +176,6 @@ showHelp() {
 			 -C, --comment <COMMENT>
 			        Character used for comments
 			        (default: #)
-			 -b, --backup [DIRECTORY]
-			        Make a time-stamped backup in <DIRECTORY>
-			        (default: output file directory)
 			 -l, --lenient
 			        Match all entries from sources, regardless of their IP
 			        (default: 0.0.0.0, 127.0.0.1 or none)
@@ -251,10 +248,6 @@ main() {
 	# Character used for comments
 	comment='#'
 
-	# Make a time-stamped backup in ${backupDir}
-	backup='false'
-	backupDir=''
-
 	# Match all entries from sources, regardless of their IP
 	lenient='false'
 
@@ -283,7 +276,6 @@ main() {
 			'--redirection')            set -- "$@" '-R' ;;
 			'--template')               set -- "$@" '-T' ;;
 			'--comment')                set -- "$@" '-C' ;;
-			'--backup')                 set -- "$@" '-b' ;;
 			'--lenient')                set -- "$@" '-l' ;;
 			'--enable-whitelist-regex') set -- "$@" '-r' ;;
 			'--ignore-download-error')  set -- "$@" '-i' ;;
@@ -309,7 +301,7 @@ main() {
 	done
 	# Read short options
 	OPTIND='1'
-	while getopts ':O:H:F:S:W:B:R:T:C:b:lric:qvh-:' opt; do
+	while getopts ':O:H:F:S:W:B:R:T:C:lric:qvh-:' opt; do
 		case "${opt?}" in
 			'O') outputFile="${OPTARG?}" ;;
 			'H') headerFile="${OPTARG?}" ;;
@@ -320,7 +312,6 @@ main() {
 			'R') redirection="${OPTARG?}" ;;
 			'T') template="${OPTARG?}" ;;
 			'C') comment="${OPTARG?}" ;;
-			'b') backup=true; backupDir="${OPTARG?}" ;;
 			'l') lenient=true ;;
 			'r') enableWhitelistRegex=true ;;
 			'i') ignoreDownloadError=true ;;
@@ -432,7 +423,6 @@ main() {
 	printList "Redirection: ${redirection?}"
 	printList "Template: ${template?}"
 	printList "Comment: ${comment?}"
-	printList "Backup: ${backup:?}"
 	printList "Lenient: ${lenient:?}"
 	printList "Enable regex in whitelist: ${enableWhitelistRegex:?}"
 	printList "Ignore download error: ${ignoreDownloadError:?}"
@@ -559,23 +549,6 @@ main() {
 		-e "s/^\\(.*\\)\\t\\(.*\\)$/${template?}/" \
 		-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 		&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
-
-	# Backup procedure
-	if [ "${backup:?}" = 'true' ] && [ "${outputFile:?}" != '-' ] && [ -f "${outputFile:?}" ]; then
-		printInfo 'Backing up original file'
-
-		[ -z "${backupDir?}" ] && backupDir="$(dirname -- "${outputFile:?}")"
-		backupFile="${backupDir:?}/$(basename -- "${outputFile:?}").$(date +%s).bak"
-
-		if touch -- "${backupFile:?}" >/dev/null 2>&1; then
-			cp -af -- "${outputFile:?}" "${backupFile:?}"
-		elif exists sudo; then
-			sudo cp -af -- "${outputFile:?}" "${backupFile:?}"
-		else
-			printError "Cannot write '${backupFile:?}': permission denied"
-			exit 1
-		fi
-	fi
 
 	printInfo 'Generating output file'
 
