@@ -93,31 +93,31 @@ npx hblock
         If the default file does not exist or equals "builtin" the built-in
         value is used instead.
          * Environment variable: HBLOCK_HEADER_FILE
-         * Default value: /etc/hblock.d/header
+         * Default value: /etc/hblock/header
  -F, --footer <FILE>
         File to be included at the end of the output file.
         If the default file does not exist or equals "builtin" the built-in
         value is used instead.
          * Environment variable: HBLOCK_FOOTER_FILE
-         * Default value: /etc/hblock.d/footer
+         * Default value: /etc/hblock/footer
  -S, --sources <FILE>
         File with line separated URLs used to generate the blocklist.
         If the default file does not exist or equals "builtin" the built-in
         value is used instead.
          * Environment variable: HBLOCK_SOURCES_FILE
-         * Default value: /etc/hblock.d/sources.list
+         * Default value: /etc/hblock/sources.list
  -A, --allowlist <FILE>
         File with line separated entries to be removed from the blocklist.
         If the default file does not exist or equals "builtin" the built-in
         value is used instead.
          * Environment variable: HBLOCK_ALLOWLIST_FILE
-         * Default value: /etc/hblock.d/allow.list
+         * Default value: /etc/hblock/allow.list
  -D, --denylist <FILE>
         File with line separated entries to be added to the blocklist.
         If the default file does not exist or equals "builtin" the built-in
         value is used instead.
          * Environment variable: HBLOCK_DENYLIST_FILE
-         * Default value: /etc/hblock.d/deny.list
+         * Default value: /etc/hblock/deny.list
  -R, --redirection <REDIRECTION>
         Redirection for all entries in the blocklist.
          * Environment variable: HBLOCK_REDIRECTION

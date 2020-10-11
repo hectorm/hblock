@@ -306,23 +306,23 @@ main() {
 	outputFile="${outputFileDefault?}"
 
 	# File to be included at the beginning of the output file.
-	headerFileDefault="${HBLOCK_HEADER_FILE-/etc/hblock.d/header}"
+	headerFileDefault="${HBLOCK_HEADER_FILE-/etc/hblock/header}"
 	headerFile="${headerFileDefault?}"
 
 	# File to be included at the end of the output file.
-	footerFileDefault="${HBLOCK_FOOTER_FILE-/etc/hblock.d/footer}"
+	footerFileDefault="${HBLOCK_FOOTER_FILE-/etc/hblock/footer}"
 	footerFile="${footerFileDefault?}"
 
 	# File with line separated URLs used to generate the blocklist.
-	sourcesFileDefault="${HBLOCK_SOURCES_FILE-/etc/hblock.d/sources.list}"
+	sourcesFileDefault="${HBLOCK_SOURCES_FILE-/etc/hblock/sources.list}"
 	sourcesFile="${sourcesFileDefault?}"
 
 	# File with line separated entries to be removed from the blocklist.
-	allowlistFileDefault="${HBLOCK_ALLOWLIST_FILE-/etc/hblock.d/allow.list}"
+	allowlistFileDefault="${HBLOCK_ALLOWLIST_FILE-/etc/hblock/allow.list}"
 	allowlistFile="${allowlistFileDefault?}"
 
 	# File with line separated entries to be added to the blocklist.
-	denylistFileDefault="${HBLOCK_DENYLIST_FILE-/etc/hblock.d/deny.list}"
+	denylistFileDefault="${HBLOCK_DENYLIST_FILE-/etc/hblock/deny.list}"
 	denylistFile="${denylistFileDefault?}"
 
 	# Redirection for all entries in the blocklist.
