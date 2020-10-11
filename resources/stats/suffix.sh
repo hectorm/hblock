@@ -65,7 +65,7 @@ main() {
 	trap 'rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit 0' EXIT TERM INT HUP
 
 	# Copy blocklist file.
-	blocklistFile="${tmpWorkDir:?}/blocklist"
+	blocklistFile="${tmpWorkDir:?}/block.list"
 	cp -f -- "${file:?}" "${blocklistFile:?}"
 
 	# Compact blocklist content (remove lowest level domain and count ocurrences).

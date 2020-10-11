@@ -19,7 +19,7 @@ main() {
 	export HBLOCK_TEMPLATE='local-zone: "\1" redirect'"${ENL:?}"'local-data: "\1 A \2"'
 	export HBLOCK_COMMENT='#'
 
-	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -W 'builtin' -B 'builtin' -qO-
+	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -qO-
 }
 
 main "${@}"

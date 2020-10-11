@@ -17,7 +17,7 @@ main() {
 	export HBLOCK_TEMPLATE='address=\/\1\/\2'
 	export HBLOCK_COMMENT='#'
 
-	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -W 'builtin' -B 'builtin' -qO-
+	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -qO-
 }
 
 main "${@}"

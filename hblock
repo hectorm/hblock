@@ -72,14 +72,14 @@ if [ -z "${HBLOCK_SOURCES+x}" ]; then
 	)"
 fi
 
-# Built-in whitelist.
-if [ -z "${HBLOCK_WHITELIST+x}" ]; then
-	HBLOCK_WHITELIST=''
+# Built-in allowlist.
+if [ -z "${HBLOCK_ALLOWLIST+x}" ]; then
+	HBLOCK_ALLOWLIST=''
 fi
 
-# Built-in blacklist.
-if [ -z "${HBLOCK_BLACKLIST+x}" ]; then
-	HBLOCK_BLACKLIST="$(cat <<-'EOF'
+# Built-in denylist.
+if [ -z "${HBLOCK_DENYLIST+x}" ]; then
+	HBLOCK_DENYLIST="$(cat <<-'EOF'
 		# Special domain that is used to check if hBlock is enabled.
 		hblock-check.molinero.dev
 	EOF
@@ -96,8 +96,8 @@ optParse() {
 			'-H'*|'--header') optArgStr "${@}"; headerFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-F'*|'--footer') optArgStr "${@}"; footerFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-S'*|'--sources') optArgStr "${@}"; sourcesFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-W'*|'--whitelist') optArgStr "${@}"; whitelistFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-B'*|'--blacklist') optArgStr "${@}"; blacklistFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-A'*|'--allowlist') optArgStr "${@}"; allowlistFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-D'*|'--denylist') optArgStr "${@}"; denylistFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-R'*|'--redirection') optArgStr "${@}"; redirection="${optArg?}"; shift "${optShift:?}" ;;
 			'-T'*|'--template') optArgStr "${@}"; template="${optArg?}"; shift "${optShift:?}" ;;
 			'-C'*|'--comment') optArgStr "${@}"; comment="${optArg?}"; shift "${optShift:?}" ;;
@@ -168,18 +168,18 @@ showHelp() {
 		        value is used instead.
 		         * Environment variable: HBLOCK_SOURCES_FILE
 		         * Default value: ${sourcesFileDefault?}
-		 -W, --whitelist <FILE>
+		 -A, --allowlist <FILE>
 		        File with line separated entries to be removed from the blocklist.
 		        If the default file does not exist or equals "builtin" the built-in
 		        value is used instead.
-		         * Environment variable: HBLOCK_WHITELIST_FILE
-		         * Default value: ${whitelistFile?}
-		 -B, --blacklist <FILE>
+		         * Environment variable: HBLOCK_ALLOWLIST_FILE
+		         * Default value: ${allowlistFile?}
+		 -D, --denylist <FILE>
 		        File with line separated entries to be added to the blocklist.
 		        If the default file does not exist or equals "builtin" the built-in
 		        value is used instead.
-		         * Environment variable: HBLOCK_BLACKLIST_FILE
-		         * Default value: ${blacklistFile?}
+		         * Environment variable: HBLOCK_DENYLIST_FILE
+		         * Default value: ${denylistFile?}
 		 -R, --redirection <REDIRECTION>
 		        Redirection for all entries in the blocklist.
 		         * Environment variable: HBLOCK_REDIRECTION
@@ -199,7 +199,7 @@ showHelp() {
 		         * Environment variable: HBLOCK_LENIENT
 		         * Default value: ${lenientDefault?}
 		 -r, --[no-]regex
-		        Use POSIX BREs in the whitelist instead of fixed strings.
+		        Use POSIX BREs in the allowlist instead of fixed strings.
 		         * Environment variable: HBLOCK_REGEX
 		         * Default value: ${regexDefault?}
 		 -c, --[no-]continue
@@ -318,12 +318,12 @@ main() {
 	sourcesFile="${sourcesFileDefault?}"
 
 	# File with line separated entries to be removed from the blocklist.
-	whitelistFileDefault="${HBLOCK_WHITELIST_FILE-/etc/hblock.d/whitelist.list}"
-	whitelistFile="${whitelistFileDefault?}"
+	allowlistFileDefault="${HBLOCK_ALLOWLIST_FILE-/etc/hblock.d/allow.list}"
+	allowlistFile="${allowlistFileDefault?}"
 
 	# File with line separated entries to be added to the blocklist.
-	blacklistFileDefault="${HBLOCK_BLACKLIST_FILE-/etc/hblock.d/blacklist.list}"
-	blacklistFile="${blacklistFileDefault?}"
+	denylistFileDefault="${HBLOCK_DENYLIST_FILE-/etc/hblock.d/deny.list}"
+	denylistFile="${denylistFileDefault?}"
 
 	# Redirection for all entries in the blocklist.
 	redirectionDefault="${HBLOCK_REDIRECTION-0.0.0.0}"
@@ -410,32 +410,32 @@ main() {
 		fi
 	fi
 
-	# Check if the whitelist file exists.
-	if [ ! -e "${whitelistFile:?}" ]; then
+	# Check if the allowlist file exists.
+	if [ ! -e "${allowlistFile:?}" ]; then
 		# If it is the default path or equals "builtin", use the built-in value instead.
-		if [ "${whitelistFile:?}" = "${whitelistFileDefault:?}" ] || [ "${whitelistFile:?}" = 'builtin' ]; then
-			whitelistFile="${tmpWorkDir:?}/whitelist.list"
-			printf -- '%s' "${HBLOCK_WHITELIST?}" > "${whitelistFile:?}"
+		if [ "${allowlistFile:?}" = "${allowlistFileDefault:?}" ] || [ "${allowlistFile:?}" = 'builtin' ]; then
+			allowlistFile="${tmpWorkDir:?}/allow.list"
+			printf -- '%s' "${HBLOCK_ALLOWLIST?}" > "${allowlistFile:?}"
 		else
-			printError "No such file: ${whitelistFile:?}"
+			printError "No such file: ${allowlistFile:?}"
 			exit 1
 		fi
 	fi
 
-	# Check if the blacklist file exists.
-	if [ ! -e "${blacklistFile:?}" ]; then
+	# Check if the denylist file exists.
+	if [ ! -e "${denylistFile:?}" ]; then
 		# If it is the default path or equals "builtin", use the built-in value instead.
-		if [ "${blacklistFile:?}" = "${blacklistFileDefault:?}" ] || [ "${blacklistFile:?}" = 'builtin' ]; then
-			blacklistFile="${tmpWorkDir:?}/blacklist.list"
-			printf -- '%s' "${HBLOCK_BLACKLIST?}" > "${blacklistFile:?}"
+		if [ "${denylistFile:?}" = "${denylistFileDefault:?}" ] || [ "${denylistFile:?}" = 'builtin' ]; then
+			denylistFile="${tmpWorkDir:?}/deny.list"
+			printf -- '%s' "${HBLOCK_DENYLIST?}" > "${denylistFile:?}"
 		else
-			printError "No such file: ${blacklistFile:?}"
+			printError "No such file: ${denylistFile:?}"
 			exit 1
 		fi
 	fi
 
 	# Create an empty blocklist file.
-	blocklistFile="${tmpWorkDir:?}/blocklist"
+	blocklistFile="${tmpWorkDir:?}/block.list"
 	:> "${blocklistFile:?}"
 
 	# If the sources file is not empty, each entry is downloaded and appended to the blocklist file.
@@ -518,10 +518,10 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 	fi
 
-	# If the blacklist file is not empty, it is appended to the blocklist file.
-	if [ -s "${blacklistFile:?}" ]; then
-		printInfo 'Applying blacklist'
-		sed -e '/^#/d;/^$/d' -- "${blacklistFile:?}" >> "${blocklistFile:?}"
+	# If the denylist file is not empty, it is appended to the blocklist file.
+	if [ -s "${denylistFile:?}" ]; then
+		printInfo 'Applying denylist'
+		sed -e '/^#/d;/^$/d' -- "${denylistFile:?}" >> "${blocklistFile:?}"
 	fi
 
 	# If the blocklist file is not empty, it is sorted.
@@ -532,22 +532,22 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 	fi
 
-	# If the whitelist file is not empty, the entries on it are removed from the blocklist file.
-	if [ -s "${whitelistFile:?}" ]; then
-		printInfo 'Applying whitelist'
+	# If the allowlist file is not empty, the entries on it are removed from the blocklist file.
+	if [ -s "${allowlistFile:?}" ]; then
+		printInfo 'Applying allowlist'
 
 		# If the regex option is active, each entry is treated as a regex.
 		if [ "${regex:?}" = 'true' ]; then
-			# Read the whitelist file ignoring lines that start with "#" or are empty.
+			# Read the allowlist file ignoring lines that start with "#" or are empty.
 			_IFS="${IFS?}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-			sed -e '/^#/d;/^$/d' -- "${whitelistFile:?}" | while read -r regex || [ -n "${regex?}" ]; do
+			sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" | while read -r regex || [ -n "${regex?}" ]; do
 				sed -e "/${regex:?}/d" \
 					-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 					&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 			done
 			IFS="${_IFS?}"
 		else
-			sed -e '/^#/d;/^$/d' -- "${whitelistFile:?}" | sort | uniq > "${blocklistFile:?}.aux.1"
+			sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" | sort | uniq > "${blocklistFile:?}.aux.1"
 			comm -23 -- "${blocklistFile:?}" "${blocklistFile:?}.aux.1" > "${blocklistFile:?}.aux.2" \
 				&& mv -f -- "${blocklistFile:?}.aux.2" "${blocklistFile:?}" \
 				&& rm -f -- "${blocklistFile:?}.aux.1"

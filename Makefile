@@ -54,7 +54,7 @@ $(DISTDIR):
 	mkdir -p '$(DISTDIR)'
 
 $(HOSTS): | $(DISTDIR)
-	HOSTNAME='' '$(HBLOCK)' -H 'builtin' -F 'builtin' -S 'builtin' -W 'builtin' -B 'builtin' -O '$(HOSTS)'
+	HOSTNAME='' '$(HBLOCK)' -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O '$(HOSTS)'
 
 ifneq ($(SKIP_HOSTS_ALT_FORMATS),1)
 

@@ -39,7 +39,7 @@ prevents your system from connecting to them.
 
 Absolutely, this script selects only the domain names for each source, so if a domain name is redirected to a rogue server your system will not be
 affected. In the worst scenario you can lose access to a legitimate domain name due a false positive, but you can reverse it by adding that domain to
-the whitelist.
+the allowlist.
 
 ## Nightly builds
 
@@ -106,18 +106,18 @@ npx hblock
         value is used instead.
          * Environment variable: HBLOCK_SOURCES_FILE
          * Default value: /etc/hblock.d/sources.list
- -W, --whitelist <FILE>
+ -A, --allowlist <FILE>
         File with line separated entries to be removed from the blocklist.
         If the default file does not exist or equals "builtin" the built-in
         value is used instead.
-         * Environment variable: HBLOCK_WHITELIST_FILE
-         * Default value: /etc/hblock.d/whitelist.list
- -B, --blacklist <FILE>
+         * Environment variable: HBLOCK_ALLOWLIST_FILE
+         * Default value: /etc/hblock.d/allow.list
+ -D, --denylist <FILE>
         File with line separated entries to be added to the blocklist.
         If the default file does not exist or equals "builtin" the built-in
         value is used instead.
-         * Environment variable: HBLOCK_BLACKLIST_FILE
-         * Default value: /etc/hblock.d/blacklist.list
+         * Environment variable: HBLOCK_DENYLIST_FILE
+         * Default value: /etc/hblock.d/deny.list
  -R, --redirection <REDIRECTION>
         Redirection for all entries in the blocklist.
          * Environment variable: HBLOCK_REDIRECTION
@@ -137,7 +137,7 @@ npx hblock
          * Environment variable: HBLOCK_LENIENT
          * Default value: false
  -r, --[no-]regex
-        Use POSIX BREs in the whitelist instead of fixed strings.
+        Use POSIX BREs in the allowlist instead of fixed strings.
          * Environment variable: HBLOCK_REGEX
          * Default value: false
  -c, --[no-]continue
