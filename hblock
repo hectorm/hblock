@@ -2,77 +2,242 @@
 
 # Version:    2.1.7
 # Author:     Héctor Molinero Fernández <hector@molinero.dev>
-# Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
+# Repository: https://github.com/hectorm/hblock
 
 set -eu
 export LC_ALL='C'
 
-# shellcheck disable=SC2039
-HOSTNAME="${HOSTNAME-$(uname -n)}"
+# Built-in header.
+if [ -z "${HBLOCK_HEADER+x}" ]; then
+	HOSTNAME="${HOSTNAME-$(uname -n)}"
+	HBLOCK_HEADER="$(cat <<-EOF
+		127.0.0.1       localhost ${HOSTNAME?}
+		255.255.255.255 broadcasthost
+		::1             localhost ${HOSTNAME?}
+		::1             ip6-localhost ip6-loopback
+		fe00::0         ip6-localnet
+		ff00::0         ip6-mcastprefix
+		ff02::1         ip6-allnodes
+		ff02::2         ip6-allrouters
+		ff02::3         ip6-allhosts
+	EOF
+	)"
+fi
 
-# Built-in values
-BUILTIN_HEADER="$(cat <<-EOF
-	127.0.0.1       localhost ${HOSTNAME?}
-	255.255.255.255 broadcasthost
-	::1             localhost ${HOSTNAME?}
-	::1             ip6-localhost ip6-loopback
-	fe00::0         ip6-localnet
-	ff00::0         ip6-mcastprefix
-	ff02::1         ip6-allnodes
-	ff02::2         ip6-allrouters
-	ff02::3         ip6-allhosts
-EOF
-)"
-BUILTIN_FOOTER="$(cat <<-EOF
-EOF
-)"
-BUILTIN_SOURCES="$(cat <<-'EOF'
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/dshield.org-high/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/gfrogeye-firstparty-trackers/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
-EOF
-)"
-BUILTIN_WHITELIST="$(cat <<-'EOF'
-EOF
-)"
-BUILTIN_BLACKLIST="$(cat <<-'EOF'
-EOF
-)"
+# Built-in footer.
+if [ -z "${HBLOCK_FOOTER+x}" ]; then
+	HBLOCK_FOOTER=''
+fi
 
-# Check if a program exists
+# Built-in sources.
+if [ -z "${HBLOCK_SOURCES+x}" ]; then
+	HBLOCK_SOURCES="$(cat <<-'EOF'
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/dshield.org-high/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/gfrogeye-firstparty-trackers/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
+	EOF
+	)"
+fi
+
+# Built-in whitelist.
+if [ -z "${HBLOCK_WHITELIST+x}" ]; then
+	HBLOCK_WHITELIST=''
+fi
+
+# Built-in blacklist.
+if [ -z "${HBLOCK_BLACKLIST+x}" ]; then
+	HBLOCK_BLACKLIST="$(cat <<-'EOF'
+		# Special domain that is used to check if hBlock is enabled.
+		hblock-check.molinero.dev
+	EOF
+	)"
+fi
+
+# Parse command line options.
+optParse() {
+	while [ "${#}" -gt '0' ]; do
+		case "${1?}" in
+			# Short options that accept an argument need a "*" in their pattern because they can be
+			# found in the "-A<value>" form.
+			'-O'*|'--output') optArgStr "${@}"; outputFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-H'*|'--header') optArgStr "${@}"; headerFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-F'*|'--footer') optArgStr "${@}"; footerFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-S'*|'--sources') optArgStr "${@}"; sourcesFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-W'*|'--whitelist') optArgStr "${@}"; whitelistFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-B'*|'--blacklist') optArgStr "${@}"; blacklistFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-R'*|'--redirection') optArgStr "${@}"; redirection="${optArg?}"; shift "${optShift:?}" ;;
+			'-T'*|'--template') optArgStr "${@}"; template="${optArg?}"; shift "${optShift:?}" ;;
+			'-C'*|'--comment') optArgStr "${@}"; comment="${optArg?}"; shift "${optShift:?}" ;;
+			'-l' |'--lenient'|'--no-lenient') optArgBool "${@}"; lenient="${optArg:?}" ;;
+			'-r' |'--regex'|'--no-regex') optArgBool "${@}"; regex="${optArg:?}" ;;
+			'-c' |'--continue'|'--no-continue') optArgBool "${@}"; continue="${optArg:?}" ;;
+			'-q' |'--quiet'|'--no-quiet') optArgBool "${@}"; quiet="${optArg:?}" ;;
+			'-x'*|'--color') optArgStr "${@}"; color="${optArg?}"; shift "${optShift:?}" ;;
+			'-v' |'--version') showVersion ;;
+			'-h' |'--help') showHelp ;;
+			# If "--" is found, the remaining positional arguments are saved and the parsing ends.
+			--) shift; posArgs="${posArgs-} ${*}"; break ;;
+			# If a long option in the form "--opt=value" is found, it is split into "--opt" and "value".
+			--*=*) optSplitEquals "${@}"; shift; set -- "${optName:?}" "${optArg?}" "${@}"; continue ;;
+			# If an option did not match any pattern, an error is thrown.
+			-?|--*) optDie "Illegal option ${1:?}" ;;
+			# If multiple short options in the form "-AB" are found, they are split into "-A" and "-B".
+			-?*) optSplitShort "${@}"; shift; set -- "${optAName:?}" "${optBName:?}" "${@}"; continue ;;
+			# If a positional argument is found, it is saved.
+			*) posArgs="${posArgs-} ${1?}" ;;
+		esac
+		shift
+	done
+}
+optSplitShort() {
+	optAName="${1%${1#??}}"; optBName="-${1#??}"
+}
+optSplitEquals() {
+	optName="${1%=${1#--*=}}"; optArg="${1#--*=}"
+}
+optArgStr() {
+	if [ -n "${1#??}" ] && [ "${1#--}" = "${1:?}" ]; then optArg="${1#??}"; optShift='0';
+	elif [ -n "${2+x}" ]; then optArg="${2-}"; optShift='1';
+	else optDie "No argument for ${1:?} option"; fi
+}
+optArgBool() {
+	if [ "${1#--no-}" = "${1:?}" ]; then optArg='true';
+	else optArg='false'; fi
+}
+optDie() {
+	printf -- '%s\n' "${@}" "Try '${0:?} --help' for more information" >&2
+	exit 2
+}
+
+# Show help and quit.
+showHelp() {
+	printf -- '%s\n' "$(cat <<-EOF
+		Usage: ${0:?} [options...]
+		 -O, --output <FILE>
+		        Output file location.
+		         * Environment variable: HBLOCK_OUTPUT_FILE
+		         * Default value: ${outputFileDefault?}
+		 -H, --header <FILE>
+		        File to be included at the beginning of the output file.
+		        If the default file does not exist or equals "builtin" the built-in
+		        value is used instead.
+		         * Environment variable: HBLOCK_HEADER_FILE
+		         * Default value: ${headerFileDefault?}
+		 -F, --footer <FILE>
+		        File to be included at the end of the output file.
+		        If the default file does not exist or equals "builtin" the built-in
+		        value is used instead.
+		         * Environment variable: HBLOCK_FOOTER_FILE
+		         * Default value: ${footerFileDefault?}
+		 -S, --sources <FILE>
+		        File with line separated URLs used to generate the blocklist.
+		        If the default file does not exist or equals "builtin" the built-in
+		        value is used instead.
+		         * Environment variable: HBLOCK_SOURCES_FILE
+		         * Default value: ${sourcesFileDefault?}
+		 -W, --whitelist <FILE>
+		        File with line separated entries to be removed from the blocklist.
+		        If the default file does not exist or equals "builtin" the built-in
+		        value is used instead.
+		         * Environment variable: HBLOCK_WHITELIST_FILE
+		         * Default value: ${whitelistFile?}
+		 -B, --blacklist <FILE>
+		        File with line separated entries to be added to the blocklist.
+		        If the default file does not exist or equals "builtin" the built-in
+		        value is used instead.
+		         * Environment variable: HBLOCK_BLACKLIST_FILE
+		         * Default value: ${blacklistFile?}
+		 -R, --redirection <REDIRECTION>
+		        Redirection for all entries in the blocklist.
+		         * Environment variable: HBLOCK_REDIRECTION
+		         * Default value: ${redirectionDefault?}
+		 -T, --template <TEMPLATE>
+		        POSIX BREs replacement applied to each entry.
+		        Capturing group backreferences: \1 = <DOMAIN>, \2 = <REDIRECTION>
+		         * Environment variable: HBLOCK_TEMPLATE
+		         * Default value: ${templateDefault?}
+		 -C, --comment <COMMENT>
+		        Character used for comments.
+		         * Environment variable: HBLOCK_COMMENT
+		         * Default value: ${commentDefault?}
+		 -l, --[no-]lenient
+		        Match all entries from sources regardless of their IP, instead
+		        of 0.0.0.0, 127.0.0.1 or nothing.
+		         * Environment variable: HBLOCK_LENIENT
+		         * Default value: ${lenientDefault?}
+		 -r, --[no-]regex
+		        Use POSIX BREs in the whitelist instead of fixed strings.
+		         * Environment variable: HBLOCK_REGEX
+		         * Default value: ${regexDefault?}
+		 -c, --[no-]continue
+		        Do not abort if a download error occurs.
+		         * Environment variable: HBLOCK_CONTINUE
+		         * Default value: ${continueDefault?}
+		 -q, --[no-]quiet
+		        Suppress non-error messages.
+		         * Environment variable: HBLOCK_QUIET
+		         * Default value: ${quietDefault?}
+		 -x, --color <auto|true|false>
+		        Colorize the output.
+		         * Environment variable: HBLOCK_COLOR
+		         * Default value: ${colorDefault?}
+		 -v, --version
+		        Show version number and quit.
+		 -h, --help
+		        Show this help and quit.
+
+		Report bugs to: <https://github.com/hectorm/hblock/issues>.
+	EOF
+	)"
+	exit 0
+}
+
+# Show version number and quit.
+showVersion() {
+	printf -- '%s\n' "$(cat <<-EOF
+		hBlock 2.1.7
+		Author:     Héctor Molinero Fernández <hector@molinero.dev>
+		License:    MIT, https://opensource.org/licenses/MIT
+		Repository: https://github.com/hectorm/hblock
+	EOF
+	)"
+	exit 0
+}
+
+# Check if a program exists.
 exists() {
 	# shellcheck disable=SC2230
 	if command -v true; then command -v -- "${1:?}"
@@ -80,51 +245,48 @@ exists() {
 	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
-# Escape strings in sed
-# See: https://stackoverflow.com/a/29613573
+# Escape strings in sed (https://stackoverflow.com/a/29613573).
 quoteRe() { printf -- '%s' "${1?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
 quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
 
-# Remove comments from string
-removeComments() { printf -- '%s' "${1?}" | sed -e 's/[[:blank:]]*#.*//'; }
-
-# Pretty print methods
+# Pretty print methods.
 printInfo() {
 	if [ "${quiet-}" != 'true' ]; then
-		if [ "${color-}" != 'true' ]; then printf -- '%s\n' "${@}"
-		else printf -- '\033[0m\033[1;32m%s\033[0m\n' "${@}"; fi
+		if [ "${color-}" != 'true' ]; then printf -- '[INFO] %s\n' "${@}"
+		else printf -- '\033[0m[\033[1;32mINFO\033[0m] %s\n' "${@}"; fi
 	fi
 }
 printWarn() {
-	if [ "${color-}" != 'true' ]; then printf -- '%s\n' "${@}" >&2
-	else printf -- '\033[0m\033[1;33m%s\033[0m\n' "${@}" >&2; fi
+	if [ "${color-}" != 'true' ]; then printf -- '[WARN] %s\n' "${@}" >&2
+	else printf -- '\033[0m[\033[1;33mWARN\033[0m] %s\n' "${@}"; fi
 }
 printError() {
-	if [ "${color-}" != 'true' ]; then printf -- '%s\n' "${@}" >&2
-	else printf -- '\033[0m\033[1;31m%s\033[0m\n' "${@}" >&2; fi
+	if [ "${color-}" != 'true' ]; then printf -- '[ERROR] %s\n' "${@}" >&2
+	else printf -- '\033[0m[\033[1;31mERROR\033[0m] %s\n' "${@}"; fi
 }
 printList() {
 	if [ "${quiet-}" != 'true' ]; then
-		printf -- ' - %s\n' "${@}"
+		if [ "${color-}" != 'true' ]; then printf -- ' * %s\n' "${@}"
+		else printf -- '\033[0m \033[1;36m*\033[0m %s\n' "${@}"; fi
 	fi
 }
 
-# Create a temporary file
-createTempFile() {
-	if exists mktemp; then mktemp
+# Create a temporary directory.
+createTempDir() {
+	if exists mktemp; then mktemp -d
 	else
-		# Since POSIX does not specify mktemp utility, use this as fallback
-		# Wait a second to avoid name collisions. Horrible hack, I know
-		rand="$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')"
-		file="${TMPDIR:-/tmp}/tmp.${$}.${rand:?}"
-		(umask 077 && touch -- "${file:?}")
-		printf -- '%s\n' "${file:?}"
+		# Since POSIX does not specify mktemp utility, use this as fallback.
+		# And wait a second as a horrible hack to avoid name collisions.
+		rnd="$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')"
+		dir="${TMPDIR:-/tmp}/tmp.${$}${rnd:?}"
+		(umask 077 && mkdir -- "${dir:?}")
+		printf -- '%s' "${dir:?}"
 	fi
 }
 
-# Print to stdout the contents of a URL
+# Print to stdout the contents of a URL.
 fetchUrl() {
-	# If the protocol is "file://" we can omit the download and simply use cat
+	# If the protocol is "file://" we can omit the download and simply use cat.
 	if [ "${1#file://}" != "${1:?}" ]; then cat -- "${1#file://}"
 	else
 		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'
@@ -138,319 +300,165 @@ fetchUrl() {
 	fi
 }
 
-# Show help and quit
-showHelp() {
-	if [ $# -eq 0 ]; then
-		printf -- '%s\n' "$(cat <<-'EOF'
-			Usage: hblock [options...]
-			 -O, --output <FILE>
-			        Output file location
-			        (default: "/etc/hosts" file)
-			 -H, --header <FILE>
-			        Content to be included at the beginning of the output file
-			        (default: HBLOCK_HEADER environment variable,
-			        "/etc/hblock.d/header" file or builtin value)
-			 -F, --footer <FILE>
-			        Content to be included at the end of the output file
-			        (default: HBLOCK_FOOTER environment variable,
-			        "/etc/hblock.d/footer" file or builtin value)
-			 -S, --sources <FILE>
-			        Newline separated URLs used to generate the blocklist
-			        (default: HBLOCK_SOURCES environment variable,
-			        "/etc/hblock.d/sources.list" file or builtin value)
-			 -W, --whitelist <FILE>
-			        Newline separated domains to be removed from the blocklist
-			        (default: HBLOCK_WHITELIST environment variable,
-			        "/etc/hblock.d/whitelist.list" file or builtin value)
-			 -B, --blacklist <FILE>
-			        Newline separated domains to be added to the blocklist
-			        (default: HBLOCK_BLACKLIST environment variable,
-			        "/etc/hblock.d/blacklist.list" file or builtin value)
-			 -R, --redirection <REDIRECTION>
-			        Redirection for all entries in the blocklist
-			        (default: 0.0.0.0)
-			 -T, --template <TEMPLATE>
-			        POSIX BREs replacement applied to each entry
-			        \1 = <DOMAIN>, \2 = <REDIRECTION>
-			        (default: \2 \1)
-			 -C, --comment <COMMENT>
-			        Character used for comments
-			        (default: #)
-			 -l, --lenient
-			        Match all entries from sources, regardless of their IP
-			        (default: 0.0.0.0, 127.0.0.1 or none)
-			 -r, --enable-whitelist-regex
-			        Use POSIX BREs instead of fixed strings
-			 -i, --ignore-download-error
-			        Do not abort if a download error occurs
-			 -c, --color <auto|true|false>
-			        Colorize the output
-			        (default: auto)
-			 -q, --quiet
-			        Suppress non-error messages
-			 -v, --version
-			        Show version number and quit
-			 -h, --help
-			        Show this help and quit
-
-			Report bugs to: <https://github.com/hectorm/hblock/issues>.
-		EOF
-		)"
-		exit 0
-	else
-		[ -n "${1?}" ] && printf -- '%s\n' "Illegal option ${1?}" >&2
-		printf -- '%s\n' "Try 'hblock --help' for more information" >&2
-		exit 2
-	fi
-}
-
-# Show version number and quit
-showVersion() {
-	printf -- '%s\n' '2.1.7'
-	exit 0
-}
-
 main() {
-	# Output file location
-	outputFile='/etc/hosts'
+	# Output file location.
+	outputFileDefault="${HBLOCK_OUTPUT_FILE-/etc/hosts}"
+	outputFile="${outputFileDefault?}"
 
-	# Content to be included at the beginning of the output file
-	headerFile='/etc/hblock.d/header'
-	headerDefaultFile="${headerFile:?}"
-	header=''
+	# File to be included at the beginning of the output file.
+	headerFileDefault="${HBLOCK_HEADER_FILE-/etc/hblock.d/header}"
+	headerFile="${headerFileDefault?}"
 
-	# Content to be included at the end of the output file
-	footerFile='/etc/hblock.d/footer'
-	footerDefaultFile="${footerFile:?}"
-	footer=''
+	# File to be included at the end of the output file.
+	footerFileDefault="${HBLOCK_FOOTER_FILE-/etc/hblock.d/footer}"
+	footerFile="${footerFileDefault?}"
 
-	# Newline separated URLs used to generate the blocklist
-	sourcesFile='/etc/hblock.d/sources.list'
-	sourcesDefaultFile="${sourcesFile:?}"
-	sources=''
+	# File with line separated URLs used to generate the blocklist.
+	sourcesFileDefault="${HBLOCK_SOURCES_FILE-/etc/hblock.d/sources.list}"
+	sourcesFile="${sourcesFileDefault?}"
 
-	# Newline separated domains to be removed from the blocklist
-	whitelistFile='/etc/hblock.d/whitelist.list'
-	whitelistDefaultFile="${whitelistFile:?}"
-	whitelist=''
+	# File with line separated entries to be removed from the blocklist.
+	whitelistFileDefault="${HBLOCK_WHITELIST_FILE-/etc/hblock.d/whitelist.list}"
+	whitelistFile="${whitelistFileDefault?}"
 
-	# Newline separated domains to be added to the blocklist
-	blacklistFile='/etc/hblock.d/blacklist.list'
-	blacklistDefaultFile="${blacklistFile:?}"
-	blacklist=''
+	# File with line separated entries to be added to the blocklist.
+	blacklistFileDefault="${HBLOCK_BLACKLIST_FILE-/etc/hblock.d/blacklist.list}"
+	blacklistFile="${blacklistFileDefault?}"
 
-	# Redirection for all entries in the blocklist
-	redirection='0.0.0.0'
+	# Redirection for all entries in the blocklist.
+	redirectionDefault="${HBLOCK_REDIRECTION-0.0.0.0}"
+	redirection="${redirectionDefault?}"
 
-	# POSIX BREs replacement applied to each entry
-	template='\2 \1'
+	# POSIX BREs replacement applied to each entry.
+	templateDefault="${HBLOCK_TEMPLATE-\2 \1}"
+	template="${templateDefault?}"
 
-	# Character used for comments
-	comment='#'
+	# Character used for comments.
+	commentDefault="${HBLOCK_COMMENT-#}"
+	comment="${commentDefault?}"
 
-	# Match all entries from sources, regardless of their IP
-	lenient='false'
+	# Match all entries from sources, regardless of their IP.
+	lenientDefault="${HBLOCK_LENIENT-false}"
+	lenient="${lenientDefault?}"
 
-	# Use POSIX BREs instead of fixed strings
-	enableWhitelistRegex='false'
+	# Use POSIX BREs instead of fixed strings.
+	regexDefault="${HBLOCK_REGEX-false}"
+	regex="${regexDefault?}"
 
-	# Do not abort if a download error occurs
-	ignoreDownloadError='false'
+	# Abort if a download error occurs.
+	continueDefault="${HBLOCK_CONTINUE-false}"
+	continue="${continueDefault?}"
 
-	# Colorize the output
-	color='auto'
+	# Colorize the output.
+	colorDefault="${HBLOCK_COLOR-auto}"
+	color="${colorDefault?}"
 
-	# Suppress non-error messages
-	quiet='false'
+	# Suppress non-error messages.
+	quietDefault="${HBLOCK_QUIET-false}"
+	quiet="${quietDefault?}"
 
-	# Transform long options to short ones
-	for opt in "$@"; do
-		shift
-		case "${opt?}" in
-			'--output')                 set -- "$@" '-O' ;;
-			'--header')                 set -- "$@" '-H' ;;
-			'--footer')                 set -- "$@" '-F' ;;
-			'--sources')                set -- "$@" '-S' ;;
-			'--whitelist')              set -- "$@" '-W' ;;
-			'--blacklist')              set -- "$@" '-B' ;;
-			'--redirection')            set -- "$@" '-R' ;;
-			'--template')               set -- "$@" '-T' ;;
-			'--comment')                set -- "$@" '-C' ;;
-			'--lenient')                set -- "$@" '-l' ;;
-			'--enable-whitelist-regex') set -- "$@" '-r' ;;
-			'--ignore-download-error')  set -- "$@" '-i' ;;
-			'--color')                  set -- "$@" '-c' ;;
-			'--quiet')                  set -- "$@" '-q' ;;
-			'--version')                set -- "$@" '-v' ;;
-			'--help')                   set -- "$@" '-h' ;;
-			*)                          set -- "$@" "${opt?}"
-		esac
-	done
-	# Set omitted arguments to empty strings
-	for opt in "$@"; do
-		shift
-		case "${opt?}" in
-			-*b)
-				if a="$*"; [ -z "${a?}" ] || [ "${a#\-}x" != "${a?}x" ]
-					then set -- "$@" "${opt?}" ''
-					else set -- "$@" "${opt?}"
-				fi
-				;;
-			*) set -- "$@" "${opt?}"
-		esac
-	done
-	# Read short options
-	OPTIND='1'
-	while getopts ':O:H:F:S:W:B:R:T:C:lric:qvh-:' opt; do
-		case "${opt?}" in
-			'O') outputFile="${OPTARG?}" ;;
-			'H') headerFile="${OPTARG?}" ;;
-			'F') footerFile="${OPTARG?}" ;;
-			'S') sourcesFile="${OPTARG?}" ;;
-			'W') whitelistFile="${OPTARG?}" ;;
-			'B') blacklistFile="${OPTARG?}" ;;
-			'R') redirection="${OPTARG?}" ;;
-			'T') template="${OPTARG?}" ;;
-			'C') comment="${OPTARG?}" ;;
-			'l') lenient=true ;;
-			'r') enableWhitelistRegex=true ;;
-			'i') ignoreDownloadError=true ;;
-			'c') color="${OPTARG?}" ;;
-			'q') quiet=true ;;
-			'v') showVersion ;;
-			'h') showHelp ;;
-			'-') showHelp "--${OPTARG?}" ;;
-			*)   showHelp "-${OPTARG?}"
-		esac
-	done
+	# Parse command line options.
+	# shellcheck disable=SC2086
+	{ optParse "${@}"; set -- ${posArgs-}; }
 
-	# Check for color support, but honor ${NO_COLOR} variable
-	# See: https://no-color.org
 	if [ "${color:?}" = 'auto' ]; then
-		if [ -z "${NO_COLOR+x}" ] && [ -t 1 ]; then
+		# Check color support, but honor ${NO_COLOR} variable (https://no-color.org).
+		if [ -t 1 ] && [ -z "${NO_COLOR+x}" ]; then
 			color='true'
 		else
 			color='false'
 		fi
 	fi
 
-	# Priority: ${headerFile} > ${HBLOCK_HEADER} > ${headerDefaultFile} > builtin
-	if [ "${headerFile:?}" != "${headerDefaultFile:?}" ]; then
-		header="$(cat -- "${headerFile:?}")"
-		headerOrigin="${headerFile:?}"
-	elif [ "${HBLOCK_HEADER+x}" = 'x' ]; then
-		header="${HBLOCK_HEADER?}"
-		headerOrigin='environment'
-	elif [ -f "${headerFile:?}" ]; then
-		header="$(cat -- "${headerFile:?}")"
-		headerOrigin="${headerFile:?}"
-	else
-		header="${BUILTIN_HEADER?}"
-		headerOrigin='builtin'
-	fi
+	# Create a temporary work directory.
+	tmpWorkDir="$(createTempDir)"
+	trap 'rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit 0' EXIT TERM INT HUP
 
-	# Priority: ${footerFile} > ${HBLOCK_FOOTER} > ${footerDefaultFile} > builtin
-	if [ "${footerFile:?}" != "${footerDefaultFile:?}" ]; then
-		footer="$(cat -- "${footerFile:?}")"
-		footerOrigin="${footerFile:?}"
-	elif [ "${HBLOCK_FOOTER+x}" = 'x' ]; then
-		footer="${HBLOCK_FOOTER?}"
-		footerOrigin='environment'
-	elif [ -f "${footerFile:?}" ]; then
-		footer="$(cat -- "${footerFile:?}")"
-		footerOrigin="${footerFile:?}"
-	else
-		footer="${BUILTIN_FOOTER?}"
-		footerOrigin='builtin'
-	fi
-
-	# Priority: ${sourcesFile} > ${HBLOCK_SOURCES} > ${sourcesDefaultFile} > builtin
-	if [ "${sourcesFile:?}" != "${sourcesDefaultFile:?}" ]; then
-		sources="$(cat -- "${sourcesFile:?}")"
-		sourcesOrigin="${sourcesFile:?}"
-	elif [ "${HBLOCK_SOURCES+x}" = 'x' ]; then
-		sources="${HBLOCK_SOURCES?}"
-		sourcesOrigin='environment'
-	elif [ -f "${sourcesFile:?}" ]; then
-		sources="$(cat -- "${sourcesFile:?}")"
-		sourcesOrigin="${sourcesFile:?}"
-	else
-		sources="${BUILTIN_SOURCES?}"
-		sourcesOrigin='builtin'
-	fi
-	sources="$(removeComments "${sources?}")"
-
-	# Priority: ${whitelistFile} > ${HBLOCK_WHITELIST} > ${whitelistDefaultFile} > builtin
-	if [ "${whitelistFile:?}" != "${whitelistDefaultFile:?}" ]; then
-		whitelist="$(cat -- "${whitelistFile:?}")"
-		whitelistOrigin="${whitelistFile:?}"
-	elif [ "${HBLOCK_WHITELIST+x}" = 'x' ]; then
-		whitelist="${HBLOCK_WHITELIST?}"
-		whitelistOrigin='environment'
-	elif [ -f "${whitelistFile:?}" ]; then
-		whitelist="$(cat -- "${whitelistFile:?}")"
-		whitelistOrigin="${whitelistFile:?}"
-	else
-		whitelist="${BUILTIN_WHITELIST?}"
-		whitelistOrigin='builtin'
-	fi
-	whitelist="$(removeComments "${whitelist?}")"
-
-	# Priority: ${blacklistFile} > ${HBLOCK_BLACKLIST} > ${blacklistDefaultFile} > builtin
-	if [ "${blacklistFile:?}" != "${blacklistDefaultFile:?}" ]; then
-		blacklist="$(cat -- "${blacklistFile:?}")"
-		blacklistOrigin="${blacklistFile:?}"
-	elif [ "${HBLOCK_BLACKLIST+x}" = 'x' ]; then
-		blacklist="${HBLOCK_BLACKLIST?}"
-		blacklistOrigin='environment'
-	elif [ -f "${blacklistFile:?}" ]; then
-		blacklist="$(cat -- "${blacklistFile:?}")"
-		blacklistOrigin="${blacklistFile:?}"
-	else
-		blacklist="${BUILTIN_BLACKLIST?}"
-		blacklistOrigin='builtin'
-	fi
-	blacklist="$(removeComments "${blacklist?}")"
-
-	printInfo 'Configuration'
-
-	printList "Output: ${outputFile:?}"
-	printList "Header: ${headerOrigin:?}"
-	printList "Footer: ${footerOrigin:?}"
-	printList "Sources: ${sourcesOrigin:?}"
-	printList "Whitelist: ${whitelistOrigin:?}"
-	printList "Blacklist: ${blacklistOrigin:?}"
-	printList "Redirection: ${redirection?}"
-	printList "Template: ${template?}"
-	printList "Comment: ${comment?}"
-	printList "Lenient: ${lenient:?}"
-	printList "Enable regex in whitelist: ${enableWhitelistRegex:?}"
-	printList "Ignore download error: ${ignoreDownloadError:?}"
-
-	# Create temporary blocklist file
-	blocklistFile="$(createTempFile)"
-	rmtemp() { rm -f -- "${blocklistFile:?}" "${blocklistFile:?}".*; }
-	trap 'rmtemp; trap - EXIT; exit 0' EXIT TERM INT HUP
-
-	printInfo 'Downloading lists'
-
-	_IFS="${IFS-}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-	for url in ${sources?}; do
-		printList "${url:?}"
-		if ! fetchUrl "${url:?}" >> "${blocklistFile:?}"; then
-			if [ "${ignoreDownloadError:?}" = 'true' ]; then
-				printWarn "Cannot obtain source: ${url:?}"
-			else
-				printError "Cannot obtain source: ${url:?}"
-				exit 1
-			fi
+	# Check if the header file exists.
+	if [ ! -e "${headerFile:?}" ]; then
+		# If it is the default path or equals "builtin", use the built-in value instead.
+		if [ "${headerFile:?}" = "${headerFileDefault:?}" ] || [ "${headerFile:?}" = 'builtin' ]; then
+			headerFile="${tmpWorkDir:?}/header"
+			printf -- '%s' "${HBLOCK_HEADER?}" > "${headerFile:?}"
+		else
+			printError "No such file: ${headerFile:?}"
+			exit 1
 		fi
-	done
-	IFS="${_IFS?}"
+	fi
 
-	printInfo 'Parsing lists'
+	# Check if the footer file exists.
+	if [ ! -e "${footerFile:?}" ]; then
+		# If it is the default path or equals "builtin", use the built-in value instead.
+		if [ "${footerFile:?}" = "${footerFileDefault:?}" ] || [ "${footerFile:?}" = 'builtin' ]; then
+			footerFile="${tmpWorkDir:?}/footer"
+			printf -- '%s' "${HBLOCK_FOOTER?}" > "${footerFile:?}"
+		else
+			printError "No such file: ${footerFile:?}"
+			exit 1
+		fi
+	fi
 
-	if [ -s "${blocklistFile:?}" ]; then
+	# Check if the sources file exists.
+	if [ ! -e "${sourcesFile:?}" ]; then
+		# If it is the default path or equals "builtin", use the built-in value instead.
+		if [ "${sourcesFile:?}" = "${sourcesFileDefault:?}" ] || [ "${sourcesFile:?}" = 'builtin' ]; then
+			sourcesFile="${tmpWorkDir:?}/sources.list"
+			printf -- '%s' "${HBLOCK_SOURCES?}" > "${sourcesFile:?}"
+		else
+			printError "No such file: ${sourcesFile:?}"
+			exit 1
+		fi
+	fi
+
+	# Check if the whitelist file exists.
+	if [ ! -e "${whitelistFile:?}" ]; then
+		# If it is the default path or equals "builtin", use the built-in value instead.
+		if [ "${whitelistFile:?}" = "${whitelistFileDefault:?}" ] || [ "${whitelistFile:?}" = 'builtin' ]; then
+			whitelistFile="${tmpWorkDir:?}/whitelist.list"
+			printf -- '%s' "${HBLOCK_WHITELIST?}" > "${whitelistFile:?}"
+		else
+			printError "No such file: ${whitelistFile:?}"
+			exit 1
+		fi
+	fi
+
+	# Check if the blacklist file exists.
+	if [ ! -e "${blacklistFile:?}" ]; then
+		# If it is the default path or equals "builtin", use the built-in value instead.
+		if [ "${blacklistFile:?}" = "${blacklistFileDefault:?}" ] || [ "${blacklistFile:?}" = 'builtin' ]; then
+			blacklistFile="${tmpWorkDir:?}/blacklist.list"
+			printf -- '%s' "${HBLOCK_BLACKLIST?}" > "${blacklistFile:?}"
+		else
+			printError "No such file: ${blacklistFile:?}"
+			exit 1
+		fi
+	fi
+
+	# Create an empty blocklist file.
+	blocklistFile="${tmpWorkDir:?}/blocklist"
+	:> "${blocklistFile:?}"
+
+	# If the sources file is not empty, each entry is downloaded and appended to the blocklist file.
+	if [ -s "${sourcesFile:?}" ]; then
+		printInfo 'Downloading lists'
+
+		# Read the sources file ignoring lines that start with "#" or are empty.
+		_IFS="${IFS?}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
+		sed -e '/^#/d;/^$/d' -- "${sourcesFile:?}" | while read -r url || [ -n "${url?}" ]; do
+			printList "${url:?}"
+			if ! fetchUrl "${url:?}" >> "${blocklistFile:?}"; then
+				if [ "${continue:?}" = 'true' ]; then
+					printWarn "Cannot obtain source: ${url:?}"
+				else
+					printError "Cannot obtain source: ${url:?}"
+					exit 1
+				fi
+			fi
+		done
+		IFS="${_IFS?}"
+
+		printInfo 'Parsing lists'
+
 		printList 'Removing carriage return'
 		tr -d '\r' \
 			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
@@ -510,91 +518,104 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 	fi
 
-	# This domain is used to check if hBlock is enabled
-	printf -- '%s\n' 'hblock-check.molinero.dev' >> "${blocklistFile:?}"
-
-	if [ -n "${blacklist?}" ]; then
-		printList 'Applying blacklist'
-		printf -- '%s' "${blacklist?}" >> "${blocklistFile:?}"
+	# If the blacklist file is not empty, it is appended to the blocklist file.
+	if [ -s "${blacklistFile:?}" ]; then
+		printInfo 'Applying blacklist'
+		sed -e '/^#/d;/^$/d' -- "${blacklistFile:?}" >> "${blocklistFile:?}"
 	fi
 
-	printList 'Sorting entries'
-	sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux.1" \
-		&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+	# If the blocklist file is not empty, it is sorted.
+	if [ -s "${blocklistFile:?}" ]; then
+		printInfo 'Sorting entries'
 
-	if [ -n "${whitelist?}" ]; then
-		printList 'Applying whitelist'
+		sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+	fi
 
-		if [ "${enableWhitelistRegex:?}" = 'true' ]; then
-			_IFS="${IFS-}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-			for regex in ${whitelist?}; do
+	# If the whitelist file is not empty, the entries on it are removed from the blocklist file.
+	if [ -s "${whitelistFile:?}" ]; then
+		printInfo 'Applying whitelist'
+
+		# If the regex option is active, each entry is treated as a regex.
+		if [ "${regex:?}" = 'true' ]; then
+			# Read the whitelist file ignoring lines that start with "#" or are empty.
+			_IFS="${IFS?}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
+			sed -e '/^#/d;/^$/d' -- "${whitelistFile:?}" | while read -r regex || [ -n "${regex?}" ]; do
 				sed -e "/${regex:?}/d" \
 					-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 					&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 			done
 			IFS="${_IFS?}"
 		else
-			printf -- '%s' "${whitelist?}" | sort | uniq > "${blocklistFile:?}.aux.2"
-			comm -23 -- "${blocklistFile:?}" "${blocklistFile:?}.aux.2" > "${blocklistFile:?}.aux.1" \
-				&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}" \
-				&& rm -f -- "${blocklistFile:?}.aux.2"
+			sed -e '/^#/d;/^$/d' -- "${whitelistFile:?}" | sort | uniq > "${blocklistFile:?}.aux.1"
+			comm -23 -- "${blocklistFile:?}" "${blocklistFile:?}.aux.1" > "${blocklistFile:?}.aux.2" \
+				&& mv -f -- "${blocklistFile:?}.aux.2" "${blocklistFile:?}" \
+				&& rm -f -- "${blocklistFile:?}.aux.1"
 		fi
 	fi
 
-	# Count blocked domains
+	# Count blocked domains.
 	blocklistCount="$(wc -l < "${blocklistFile:?}" | tr -d ' ')"
 
-	printList 'Applying format template'
-	sed -e "s/$/\\t$(quoteSubst "${redirection?}")/" \
-		-e "s/^\\(.*\\)\\t\\(.*\\)$/${template?}/" \
-		-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-		&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+	# If the blocklist file is not empty, the format template is applied.
+	if [ -s "${blocklistFile:?}" ]; then
+		printInfo 'Applying format template'
 
-	printInfo 'Generating output file'
+		sed -e "s/$/\\t$(quoteSubst "${redirection?}")/" \
+			-e "s/^\\(.*\\)\\t\\(.*\\)$/${template?}/" \
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+	fi
 
-	printOutputFile() {
-		# Define "C" variable for convenience
-		C="${comment?}"
+	# Create an auxiliary output file.
+	outputFileAux="${tmpWorkDir:?}/output"
+	:> "${outputFileAux:?}"
 
-		if [ -n "${C?}" ]; then
-			printf -- '%s\n' "$(cat <<-EOF
-				${C?} Author:          Héctor Molinero Fernández <hector@molinero.dev>
-				${C?} Repository:      https://github.com/hectorm/hblock
-				${C?} Last updated:    $(date -u)
-				${C?} Blocked domains: ${blocklistCount:?}
-			EOF
-			)"
-		fi
-		if [ -n "${header?}" ]; then
-			if [ -n "${C?}" ]; then printf -- '\n%s\n' "${C?} <header>"; fi
-			printf -- '%s\n' "${header?}"
-			if [ -n "${C?}" ]; then printf -- '%s\n' "${C?} </header>"; fi
-		fi
-		if [ -s "${blocklistFile:?}" ]; then
-			if [ -n "${C?}" ]; then printf -- '\n%s\n' "${C?} <blocklist>"; fi
-			cat -- "${blocklistFile:?}"
-			if [ -n "${C?}" ]; then printf -- '%s\n' "${C?} </blocklist>"; fi
-		fi
-		if [ -n "${footer?}" ]; then
-			if [ -n "${C?}" ]; then printf -- '\n%s\n' "${C?} <footer>"; fi
-			printf -- '%s\n' "${footer?}"
-			if [ -n "${C?}" ]; then printf -- '%s\n' "${C?} </footer>"; fi
-		fi
-	}
+	# Define "C" variable for convenience.
+	C="${comment?}"
 
-	# Print to stdout if the output value is equal to -
+	# Append banner to the output file. 
+	[ -z "${C?}" ] || cat <<-EOF >> "${outputFileAux:?}"
+		${C?} Generated with:  https://github.com/hectorm/hblock
+		${C?} Blocked domains: ${blocklistCount:?}
+	EOF
+
+	# If the header file is not empty, it is appended to the output file.
+	if [ -s "${headerFile:?}" ]; then
+		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN HEADER" >> "${outputFileAux:?}"
+		cat -- "${headerFile:?}" >> "${outputFileAux:?}"
+		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} END HEADER" >> "${outputFileAux:?}"
+	fi
+
+	# If the blocklist file is not empty, it is appended to the output file.
+	if [ -s "${blocklistFile:?}" ]; then
+		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN BLOCKLIST" >> "${outputFileAux:?}"
+		cat -- "${blocklistFile:?}" >> "${outputFileAux:?}"
+		[ -z "${C?}" ] || printf -- '%s\n' "${C?} END BLOCKLIST" >> "${outputFileAux:?}"
+	fi
+
+	# If the footer file is not empty, it is appended to the output file.
+	if [ -s "${footerFile:?}" ]; then
+		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN FOOTER" >> "${outputFileAux:?}"
+		cat -- "${footerFile:?}" >> "${outputFileAux:?}"
+		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} END FOOTER" >> "${outputFileAux:?}"
+	fi
+
+	# Print to stdout if the output file is "-".
 	if [ "${outputFile:?}" = '-' ]; then
-		printOutputFile
+		cat -- "${outputFileAux:?}"
 	else
-		if [ -d "${outputFile:?}" ]; then
-			printError "Cannot write '${outputFile:?}': is a directory"
-			exit 1
-		elif touch -- "${outputFile:?}" >/dev/null 2>&1; then
-			printOutputFile > "${outputFile:?}"
+		printInfo 'Writing output file'
+
+		# Try writing the output file.
+		if touch -- "${outputFile:?}" >/dev/null 2>&1; then
+			cat -- "${outputFileAux:?}" > "${outputFile:?}"
+		# Try with sudo if the writing fails.
 		elif exists sudo && exists tee; then
-			printOutputFile | sudo tee -- "${outputFile:?}" >/dev/null
+			# shellcheck disable=SC2024
+			sudo tee -- "${outputFile:?}" < "${outputFileAux:?}" >/dev/null
 		else
-			printError "Cannot write '${outputFile:?}': permission denied"
+			printError "Cannot write file: ${outputFile:?}"
 			exit 1
 		fi
 	fi

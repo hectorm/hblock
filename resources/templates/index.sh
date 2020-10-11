@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.dev>
-# Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
+# Repository: https://github.com/hectorm/hblock
 
 set -eu
 export LC_ALL='C'
 
-# Check if a program exists
+# Check if a program exists.
 exists() {
 	# shellcheck disable=SC2230
 	if command -v true; then command -v -- "${1:?}"
@@ -15,33 +15,33 @@ exists() {
 	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
-# Check whether a string ends with the characters of a specified string
+# Check whether a string ends with the characters of a specified string.
 endsWith() { [ "${1%${2?}}" != "${1?}" ]; }
 
-# Base16 encode
+# Base16 encode.
 base16Encode() {
 	if exists hexdump; then hexdump -ve '/1 "%02x"'
 	elif exists od; then od -v -tx1 -An | tr -d '\n '
-	fi
+	else exit 1; fi
 }
 
-# Base64 encode
+# Base64 encode.
 base64Encode() {
 	if exists base64; then base64 | tr -d '\r\n'
 	elif exists uuencode; then uuencode -m - | sed '1d;$d' | tr -d '\r\n'
-	fi
+	else exit 1; fi
 }
 
-# Calculate a SHA256 checksum
+# Calculate a SHA256 checksum.
 sha256Checksum() {
 	if exists sha256sum; then sha256sum | cut -c 1-64
 	elif exists sha256; then sha256 | cut -c 1-64
 	elif exists shasum; then shasum -a 256 | cut -c 1-64
 	elif exists openssl; then openssl sha256 -binary | base16Encode
-	fi
+	else exit 1; fi
 }
 
-# Escape string for use in HTML
+# Escape string for use in HTML.
 escapeHTML() {
 	printf -- '%s' "${1?}" | awk -v RS="" '{
 		gsub(/&/,"\\&#38;");
@@ -53,7 +53,7 @@ escapeHTML() {
 	print}'
 }
 
-# RFC 3986 compliant URL encoding method
+# RFC 3986 compliant URL encoding method.
 encodeURI() {
 	_LC_COLLATE="${LC_COLLATE-}"; LC_COLLATE='C'
 	hex="$(printf -- '%s' "${1?}" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')"
@@ -70,14 +70,14 @@ encodeURI() {
 	LC_COLLATE="${_LC_COLLATE?}"
 }
 
-# Calculate digest for Content-Security-Policy
+# Calculate digest for Content-Security-Policy.
 cspDigest() {
 	hex="$(printf -- '%s' "${1?}" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')"
 	b64="$(for h in ${hex?}; do printf '%b' "\\$(printf '%o' "0x${h:?}")"; done | base64Encode)"
 	printf 'sha256-%s' "${b64?}"
 }
 
-# Get file size (or space if it is not a file)
+# Get file size (or space if it is not a file).
 getFileSize() {
 	if [ -f "${1:?}" ]; then
 		wc -c < "${1:?}" | awk '{printf "%0.2f kB", $1 / 1000}'
@@ -86,7 +86,7 @@ getFileSize() {
 	fi
 }
 
-# Get file MIME type
+# Get file MIME type.
 getFileType() {
 	if exists file; then
 		file -bL --mime-type -- "${1:?}"
@@ -95,7 +95,7 @@ getFileType() {
 	fi
 }
 
-# Get file modification time
+# Get file modification time.
 getFileModificationTime() {
 	if stat -c '%n' -- "${1:?}" >/dev/null 2>&1; then
 		TZ='UTC' stat -c '%.19y UTC' -- "${1:?}"
@@ -109,13 +109,13 @@ getFileModificationTime() {
 main() {
 	directory="${1:-./}"
 
-	if ! [ -d "${directory:?}" ] || ! [ -r "${directory:?}" ]; then
-		>&2 printf -- '%s\n' "Cannot read directory '${directory:?}'"
+	if [ ! -d "${directory:?}" ] || [ ! -r "${directory:?}" ]; then
+		printf -- '%s\n' "Cannot read directory: '${directory:?}'" >&2
 		exit 1
 	fi
 
 	entries="$(cd -- "${directory:?}" && for file in ./*; do
-		if ! [ -r "${file:?}" ] || endsWith "${file:?}" 'index.html'; then
+		if [ ! -r "${file:?}" ] || endsWith "${file:?}" 'index.html'; then
 			continue
 		fi
 
@@ -132,7 +132,6 @@ main() {
 		fileDate="$(getFileModificationTime "${file:?}")"
 		escapedFileDate="$(escapeHTML "${fileDate:?}")"
 
-		# Entry template
 		printf -- '%s\n' "$(cat <<-EOF
 			<a class="row" href="./${escapedFileNameURI:?}" title="${escapedFileName:?}">
 				<div class="cell">${escapedFileName:?}</div>
@@ -189,7 +188,7 @@ main() {
 	EOF
 	)"
 
-	# JavaScript
+	# JavaScript.
 	javascript="$(tr -d '\n' <<-'EOF'
 		(function(){
 		/* This resource is used to check the status of hBlock */
@@ -202,7 +201,7 @@ main() {
 	EOF
 	)"
 
-	# CSS
+	# CSS.
 	css="$(tr -d '\n' <<-'EOF'
 		html {
 			font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', sans-serif;
@@ -342,7 +341,7 @@ main() {
 	EOF
 	)"
 
-	# Page template
+	# HTML.
 	printf -- '%s\n' "$(tr -d '\n' <<-EOF
 		<!DOCTYPE html>
 		<html lang="en">

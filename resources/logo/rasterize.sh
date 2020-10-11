@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.dev>
-# Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
+# Repository: https://github.com/hectorm/hblock
 
 set -eu
 export LC_ALL='C'

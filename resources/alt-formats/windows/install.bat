@@ -1,6 +1,6 @@
 :: Author:     Héctor Molinero Fernández <hector@molinero.dev>
-:: Repository: https://github.com/hectorm/hblock
 :: License:    MIT, https://opensource.org/licenses/MIT
+:: Repository: https://github.com/hectorm/hblock
 
 :: This script needs administrator privileges.
 :: WARNING: consider disabling "DNS Client" service if your machine slows down.

@@ -20,6 +20,7 @@ Improve your security and privacy by blocking ads, tracking and malware domains.
 * [Installation](#installation)
   * [Manual](#manual)
   * [Gentoo](#gentoo)
+  * [NPX](#npx)
 * [Usage](#usage)
   * [Script arguments](#script-arguments)
   * [Preserve content](#preserve-content)
@@ -42,7 +43,7 @@ the whitelist.
 
 ## Nightly builds
 
-I provide nightly builds of the hosts file and other formats, including installers for **Windows** (batch file) and **Android** (flashable zip).
+Nightly builds of the hosts file are available here among other formats.
 
 https://hblock.molinero.dev
 
@@ -58,82 +59,103 @@ curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.7/hbl
   && sudo chmod 755 /usr/local/bin/hblock
 ```
 
-**Note:** you can use [this Systemd timer](resources/systemd/README.md) to regularly update the hosts file for new additions.
-
-#### Optionally, it is possible to use [NPX](https://www.npmjs.com/package/npx) to run hBlock without installation
-
-```sh
-npx hblock
-```
+**Note:** you can use [this systemd timer](resources/systemd/README.md) to regularly update the hosts file for new additions.
 
 ### Gentoo
 
-Add the src_prepare overlay with the help of the [official repository](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay).
+ * Add the src_prepare overlay with the help of the [official repository](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay).
+ * Unmask the `net-firewall/hblock` package with the help of the [Gentoo wiki](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package).
+ * Run:
 
-Unmask the `net-firewall/hblock` package with the help of the [Gentoo wiki](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package).
+   ```sh
+   emerge --verbose net-firewall/hblock
+   ```
 
-Run:
+### NPX
 
-```
-emerge --verbose net-firewall/hblock
+It is possible to use [NPX](https://www.npmjs.com/package/npx) to run hBlock without installation.
+
+```sh
+npx hblock
 ```
 
 ## Usage
 
 #### Script arguments
 
-You can also change the default behavior using these options:
 ```
-Usage: hblock [options...]
  -O, --output <FILE>
-        Output file location
-        (default: "/etc/hosts" file)
+        Output file location.
+         * Environment variable: HBLOCK_OUTPUT_FILE
+         * Default value: /etc/hosts
  -H, --header <FILE>
-        Content to be included at the beginning of the output file
-        (default: HBLOCK_HEADER environment variable,
-        "/etc/hblock.d/header" file or builtin value)
+        File to be included at the beginning of the output file.
+        If the default file does not exist or equals "builtin" the built-in
+        value is used instead.
+         * Environment variable: HBLOCK_HEADER_FILE
+         * Default value: /etc/hblock.d/header
  -F, --footer <FILE>
-        Content to be included at the end of the output file
-        (default: HBLOCK_FOOTER environment variable,
-        "/etc/hblock.d/footer" file or builtin value)
+        File to be included at the end of the output file.
+        If the default file does not exist or equals "builtin" the built-in
+        value is used instead.
+         * Environment variable: HBLOCK_FOOTER_FILE
+         * Default value: /etc/hblock.d/footer
  -S, --sources <FILE>
-        Newline separated URLs used to generate the blocklist
-        (default: HBLOCK_SOURCES environment variable,
-        "/etc/hblock.d/sources.list" file or builtin value)
+        File with line separated URLs used to generate the blocklist.
+        If the default file does not exist or equals "builtin" the built-in
+        value is used instead.
+         * Environment variable: HBLOCK_SOURCES_FILE
+         * Default value: /etc/hblock.d/sources.list
  -W, --whitelist <FILE>
-        Newline separated domains to be removed from the blocklist
-        (default: HBLOCK_WHITELIST environment variable,
-        "/etc/hblock.d/whitelist.list" file or builtin value)
+        File with line separated entries to be removed from the blocklist.
+        If the default file does not exist or equals "builtin" the built-in
+        value is used instead.
+         * Environment variable: HBLOCK_WHITELIST_FILE
+         * Default value: /etc/hblock.d/whitelist.list
  -B, --blacklist <FILE>
-        Newline separated domains to be added to the blocklist
-        (default: HBLOCK_BLACKLIST environment variable,
-        "/etc/hblock.d/blacklist.list" file or builtin value)
+        File with line separated entries to be added to the blocklist.
+        If the default file does not exist or equals "builtin" the built-in
+        value is used instead.
+         * Environment variable: HBLOCK_BLACKLIST_FILE
+         * Default value: /etc/hblock.d/blacklist.list
  -R, --redirection <REDIRECTION>
-        Redirection for all entries in the blocklist
-        (default: 0.0.0.0)
+        Redirection for all entries in the blocklist.
+         * Environment variable: HBLOCK_REDIRECTION
+         * Default value: 0.0.0.0
  -T, --template <TEMPLATE>
-        POSIX BREs replacement applied to each entry
-        \1 = <DOMAIN>, \2 = <REDIRECTION>
-        (default: \2 \1)
+        POSIX BREs replacement applied to each entry.
+        Capturing group backreferences: \1 = <DOMAIN>, \2 = <REDIRECTION>
+         * Environment variable: HBLOCK_TEMPLATE
+         * Default value: \2 \1
  -C, --comment <COMMENT>
-        Character used for comments
-        (default: #)
- -l, --lenient
-        Match all entries from sources, regardless of their IP
-        (default: 0.0.0.0, 127.0.0.1 or none)
- -r, --enable-whitelist-regex
-        Use POSIX BREs instead of fixed strings
- -i, --ignore-download-error
-        Do not abort if a download error occurs
- -c, --color <auto|true|false>
-        Colorize the output
-        (default: auto)
- -q, --quiet
-        Suppress non-error messages
+        Character used for comments.
+         * Environment variable: HBLOCK_COMMENT
+         * Default value: #
+ -l, --[no-]lenient
+        Match all entries from sources regardless of their IP, instead
+        of 0.0.0.0, 127.0.0.1 or nothing.
+         * Environment variable: HBLOCK_LENIENT
+         * Default value: false
+ -r, --[no-]regex
+        Use POSIX BREs in the whitelist instead of fixed strings.
+         * Environment variable: HBLOCK_REGEX
+         * Default value: false
+ -c, --[no-]continue
+        Do not abort if a download error occurs.
+         * Environment variable: HBLOCK_CONTINUE
+         * Default value: false
+ -q, --[no-]quiet
+        Suppress non-error messages.
+         * Environment variable: HBLOCK_QUIET
+         * Default value: false
+ -x, --color <auto|true|false>
+        Colorize the output.
+         * Environment variable: HBLOCK_COLOR
+         * Default value: auto
  -v, --version
-        Show version number and quit
+        Show version number and quit.
  -h, --help
-        Show this help and quit
+        Show this help and quit.
 ```
 
 #### Run preview

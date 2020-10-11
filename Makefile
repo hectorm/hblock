@@ -1,12 +1,13 @@
 #!/usr/bin/make -f
 
 SHELL := /bin/sh
-.SHELLFLAGS = -eu -c
+.SHELLFLAGS := -euc
 
 DESTDIR :=
 PREFIX := $(DESTDIR)/usr/local
 BINDIR := $(PREFIX)/bin
-SYSTEMDUNITDIR := $(DESTDIR)/usr/lib/systemd/system
+LIBDIR := $(PREFIX)/lib
+SYSTEMDUNITDIR := $(LIBDIR)/systemd/system
 
 SHELLCHECK := $(shell command -v shellcheck 2>/dev/null)
 SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
@@ -53,7 +54,7 @@ $(DISTDIR):
 	mkdir -p '$(DISTDIR)'
 
 $(HOSTS): | $(DISTDIR)
-	'$(HBLOCK)' -O '$(HOSTS)'
+	HOSTNAME='' '$(HBLOCK)' -H 'builtin' -F 'builtin' -S 'builtin' -W 'builtin' -B 'builtin' -O '$(HOSTS)'
 
 ifneq ($(SKIP_HOSTS_ALT_FORMATS),1)
 
@@ -72,9 +73,9 @@ endif
 ifneq ($(SKIP_LINT),1)
 
 lint:
-	@[ -x '$(SHELLCHECK)' ]
+	[ -x '$(SHELLCHECK)' ]
 	'$(SHELLCHECK)' '$(HBLOCK)'
-	find '$(RESOURCESDIR)' -type f -name '*.sh' -exec '$(SHELLCHECK)' '{}' '+'
+	find '$(RESOURCESDIR)' -type f -name '*.sh' -exec '$(SHELLCHECK)' '{}' ';'
 
 endif
 
@@ -127,7 +128,7 @@ logo:
 install:
 	mkdir -p '$(BINDIR)'
 	install -Dm 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
-	@if [ -x '$(SYSTEMCTL)' ] && [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
+	if [ -x '$(SYSTEMCTL)' ] && [ '$(SKIP_INSTALL_SERVICE)' != 1 ]; then \
 		install -Dm 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSTEMDUNITDIR)'/hblock.service; \
 		install -Dm 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSTEMDUNITDIR)'/hblock.timer; \
 	fi
@@ -138,17 +139,17 @@ install:
 .PHONY: installcheck
 
 installcheck:
-	@if [ ! -x '$(BINDIR)'/hblock ]; then \
-		>&2 printf '%s\n' 'hblock is not installed'; \
+	if [ ! -x '$(BINDIR)'/hblock ]; then \
+		printf '%s\n' 'hblock is not installed' >&2; \
 		exit 1; \
 	fi
-	@if [ -x '$(SYSTEMCTL)' ] && [ '$(SKIP_SERVICE_INSTALL)' != 1 ]; then \
+	if [ -x '$(SYSTEMCTL)' ] && [ '$(SKIP_INSTALL_SERVICE)' != 1 ]; then \
 		if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.service ]; then \
-			>&2 printf '%s\n' 'hblock service is not installed'; \
+			printf '%s\n' 'hblock service is not installed' >&2; \
 			exit 1; \
 		fi; \
 		if [ ! -f '$(SYSTEMDUNITDIR)'/hblock.timer ]; then \
-			>&2 printf '%s\n' 'hblock timer is not installed'; \
+			printf '%s\n' 'hblock timer is not installed' >&2; \
 			exit 1; \
 		fi; \
 	fi
@@ -160,7 +161,7 @@ installcheck:
 
 uninstall:
 	rm -f '$(BINDIR)'/hblock
-	@if [ -x '$(SYSTEMCTL)' ]; then \
+	if [ -x '$(SYSTEMCTL)' ]; then \
 		rm -f '$(SYSTEMDUNITDIR)'/hblock.service; \
 		rm -f '$(SYSTEMDUNITDIR)'/hblock.timer; \
 	fi

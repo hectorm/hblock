@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.dev>
-# Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
+# Repository: https://github.com/hectorm/hblock
 
 set -eu
 export LC_ALL='C'
@@ -12,14 +12,12 @@ main() {
 	hblock="${2:-hblock}"
 	#resourcesDir="${3:-./resources}"
 
-	HBLOCK_HEADER='' \
-	HBLOCK_FOOTER='' \
-	HBLOCK_SOURCES="file://${hosts:?}" \
-	HBLOCK_WHITELIST='' \
-	HBLOCK_BLACKLIST='' \
-	${hblock:?} -qO- \
-		--template '\1' \
-		--comment ''
+	export HBLOCK_HEADER=''
+	export HBLOCK_SOURCES="file://${hosts:?}"
+	export HBLOCK_TEMPLATE='\1'
+	export HBLOCK_COMMENT=''
+
+	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -W 'builtin' -B 'builtin' -qO-
 }
 
 main "${@}"

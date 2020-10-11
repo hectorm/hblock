@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Author:     Héctor Molinero Fernández <hector@molinero.dev>
-# Repository: https://github.com/hectorm/hblock
 # License:    MIT, https://opensource.org/licenses/MIT
+# Repository: https://github.com/hectorm/hblock
 
 set -eu
 export LC_ALL='C'
@@ -12,19 +12,18 @@ main() {
 	hblock="${2:-hblock}"
 	#resourcesDir="${3:-./resources}"
 
-	HBLOCK_HEADER="$(cat <<-'EOF'
+	# shellcheck disable=SC2155
+	export HBLOCK_HEADER="$(cat <<-'EOF'
 		$TTL 2h
 		@ IN SOA localhost. root.localhost. (1 6h 1h 1w 2h)
 		  IN NS  localhost.
 	EOF
-	)" \
-	HBLOCK_FOOTER='' \
-	HBLOCK_SOURCES="file://${hosts:?}" \
-	HBLOCK_WHITELIST='' \
-	HBLOCK_BLACKLIST='' \
-	${hblock:?} -qO- \
-		--template '\1 CNAME .' \
-		--comment ';'
+	)"
+	export HBLOCK_SOURCES="file://${hosts:?}"
+	export HBLOCK_TEMPLATE='\1 CNAME .'
+	export HBLOCK_COMMENT=';'
+
+	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -W 'builtin' -B 'builtin' -qO-
 }
 
 main "${@}"
