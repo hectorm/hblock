@@ -133,7 +133,7 @@ npx hblock
          * Default value: #
  -l, --[no-]lenient
         Match all entries from sources regardless of their IP, instead
-        of 0.0.0.0, 127.0.0.1 or nothing.
+        of 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.
          * Environment variable: HBLOCK_LENIENT
          * Default value: false
  -r, --[no-]regex

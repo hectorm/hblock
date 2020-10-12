@@ -195,7 +195,7 @@ showHelp() {
 		         * Default value: ${commentDefault?}
 		 -l, --[no-]lenient
 		        Match all entries from sources regardless of their IP, instead
-		        of 0.0.0.0, 127.0.0.1 or nothing.
+		        of 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.
 		         * Environment variable: HBLOCK_LENIENT
 		         * Default value: ${lenientDefault?}
 		 -r, --[no-]regex
@@ -482,14 +482,15 @@ main() {
 
 		printList 'Matching hosts lines'
 		if [ "${lenient:?}" = 'true' ]; then
-			# This regex would be ideal, but it is not POSIX-compliant.
-			# ipOctetRegex='\(25[0-5]\|2[0-4][0-9]\|[01]\{0,1\}[0-9][0-9]\{0,1\}\)'
-			# ipRegex="\\(${ipOctetRegex:?}\\.${ipOctetRegex:?}\\.${ipOctetRegex:?}\\.${ipOctetRegex:?}\\)"
-			ipRegex='\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}'
+			# This regex is not ideal as it matches technically invalid addresses, but it is POSIX-compliant.
+			ipv4Regex='\(\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}\)\{0,1\}'
+			ipv6Regex='\(\([0-9a-f]\{0,4\}:\)\{1,7\}[0-9a-f]\{0,4\}\)\{0,1\}'
+			ipRegex="${ipv4Regex:?}${ipv6Regex:?}"
 		else
-			# Same as above.
-			# ipRegex='\(\(0\.0\.0\.0\)\|\(127\.0\.0\.1\)\)'
-			ipRegex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
+			# This regex is not ideal as it matches technically invalid addresses, but it is POSIX-compliant.
+			ipv4Regex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
+			ipv6Regex='\(::\)\{0,1\}\(::1\)\{0,1\}'
+			ipRegex="${ipv4Regex:?}${ipv6Regex:?}"
 		fi
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
 		sed -n \
