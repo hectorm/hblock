@@ -160,7 +160,7 @@ npx hblock
 
 #### Run preview
 
-[![asciicast](https://asciinema.org/a/U0eSfh04zgf3zR9F2hKAZawbm.svg)](https://asciinema.org/a/U0eSfh04zgf3zR9F2hKAZawbm)
+[![asciicast](https://asciinema.org/a/GmZOda836hfjonpy299PnFcJl.svg)](https://asciinema.org/a/GmZOda836hfjonpy299PnFcJl)
 
 ## Sources
 
