@@ -19,8 +19,10 @@ Improve your security and privacy by blocking ads, tracking and malware domains.
 * [Nightly builds](#nightly-builds)
 * [Installation](#installation)
   * [Manual](#manual)
+  * [Arch Linux](#arch-linux)
   * [Gentoo](#gentoo)
-  * [NPX](#npx)
+  * [FreeBSD](#freebsd)
+  * [Node.js](#nodejs)
 * [Usage](#usage)
   * [Script arguments](#script-arguments)
   * [Preserve content](#preserve-content)
@@ -61,20 +63,38 @@ curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.7/hbl
 
 **Note:** you can use [this systemd timer](resources/systemd/README.md) to regularly update the hosts file for new additions.
 
+### Arch Linux
+
+A package for Arch Linux users is [available in the Arch User Repository (AUR)](https://aur.archlinux.org/packages/hblock/).
+
+Use your favorite [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers) to perform the installation.
+
 ### Gentoo
 
- * Add the src_prepare overlay with the help of the [official repository](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay).
+ * Add the `src_prepare` overlay with the help of the [official repository](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay).
  * Unmask the `net-firewall/hblock` package with the help of the [Gentoo wiki](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package).
- * Run:
+ * Install hBlock through Portage:
 
    ```sh
    emerge --verbose net-firewall/hblock
    ```
 
-### NPX
+### FreeBSD
 
-It is possible to use [NPX](https://www.npmjs.com/package/npx) to run hBlock without installation.
+A package for FreeBSD users is [available in FreshPorts](https://www.freshports.org/net/hblock/).
 
+```sh
+pkg install hblock
+```
+
+### Node.js
+
+A package for Node.js users is [available in npm](https://www.npmjs.com/package/hblock).
+
+```sh
+npm install -g hblock
+```
+or
 ```sh
 npx hblock
 ```
