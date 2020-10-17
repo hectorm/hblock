@@ -23,7 +23,7 @@ build:ubuntu:latest:
     - cat /etc/os-release
     - >
       apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
+      ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - make DISTDIR=./dist/build-ubuntu-latest/ SKIP_LINT=1 release -j4
   artifacts:
@@ -39,7 +39,7 @@ build:debian:latest:
     - cat /etc/os-release
     - >
       apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      bsdmainutils ca-certificates curl file gawk grep idn2 make sed zip
+      ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - make DISTDIR=./dist/build-debian-latest/ SKIP_LINT=1 release -j4
   artifacts:
@@ -55,7 +55,7 @@ build:fedora:latest:
     - cat /etc/os-release
     - >
       dnf install -y
-      ca-certificates curl file gawk grep libidn2 make sed util-linux zip
+      ca-certificates curl file gawk grep libidn2 make sed zip
   script:
     - make DISTDIR=./dist/build-fedora-latest/ SKIP_LINT=1 release -j4
   artifacts:
@@ -71,7 +71,7 @@ build:centos:latest:
     - cat /etc/os-release
     - >
       dnf install -y
-      ca-certificates curl file gawk grep libidn2 make sed util-linux zip
+      ca-certificates curl file gawk grep libidn2 make sed zip
   script:
     - make DISTDIR=./dist/build-centos-latest/ SKIP_LINT=1 release -j4
   artifacts:
@@ -87,7 +87,7 @@ build:opensuse:latest:
     - cat /etc/os-release
     - >
       zypper install -y
-      ca-certificates curl file gawk grep libidn2-tools make sed util-linux zip
+      ca-certificates curl file gawk grep libidn2-tools make sed zip
   script:
     - make DISTDIR=./dist/build-opensuse-latest/ SKIP_LINT=1 release -j4
   artifacts:
@@ -103,7 +103,7 @@ build:alpine:latest:
     - cat /etc/os-release
     - >
       apk add --no-cache
-      file grep libidn2 make openssl wget zip
+      ca-certificates curl file gawk grep libidn2 make sed zip
   script:
     - make DISTDIR=./dist/build-alpine-latest/ SKIP_LINT=1 release -j4
   artifacts:
