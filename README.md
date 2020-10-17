@@ -200,6 +200,7 @@ npx hblock
 | uBlock - Abuse                          | [URL][source-ublock-abuse]                       | [URL][mirror-ublock-abuse]                       |
 | uBlock - Badware                        | [URL][source-ublock-badware]                     | [URL][mirror-ublock-badware]                     |
 | uBlock - Privacy                        | [URL][source-ublock-privacy]                     | [URL][mirror-ublock-privacy]                     |
+| URLhaus                                 | [URL][source-urlhaus]                            | [URL][mirror-urlhaus]                            |
 | winhelp2002.mvps.org                    | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
 | ZeroDot1 - CoinBlockerLists             | [URL][source-zerodot1-coinblockerlists-browser]  | [URL][mirror-zerodot1-coinblockerlists-browser]  |
 
@@ -271,6 +272,8 @@ npx hblock
 [mirror-ublock-badware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
 [source-ublock-privacy]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt
 [mirror-ublock-privacy]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
+[source-urlhaus]: https://curben.gitlab.io/malware-filter/urlhaus-filter-hosts.txt
+[mirror-urlhaus]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/urlhaus/list.txt
 [source-winhelp2002.mvps.org]: https://winhelp2002.mvps.org/hosts.txt
 [mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 [source-zerodot1-coinblockerlists-browser]: https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
