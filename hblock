@@ -64,6 +64,7 @@ if [ -z "${HBLOCK_SOURCES+x}" ]; then
 		https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
 		https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
 		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
+		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-abuse/list.txt
 		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
 		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
 		https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt

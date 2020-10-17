@@ -197,6 +197,7 @@ npx hblock
 | spam404.com                             | [URL][source-spam404.com]                        | [URL][mirror-spam404.com]                        |
 | StevenBlack                             | [URL][source-stevenblack]                        | [URL][mirror-stevenblack]                        |
 | uBlock                                  | [URL][source-ublock]                             | [URL][mirror-ublock]                             |
+| uBlock - Abuse                          | [URL][source-ublock-abuse]                       | [URL][mirror-ublock-abuse]                       |
 | uBlock - Badware                        | [URL][source-ublock-badware]                     | [URL][mirror-ublock-badware]                     |
 | uBlock - Privacy                        | [URL][source-ublock-privacy]                     | [URL][mirror-ublock-privacy]                     |
 | winhelp2002.mvps.org                    | [URL][source-winhelp2002.mvps.org]               | [URL][mirror-winhelp2002.mvps.org]               |
@@ -264,6 +265,8 @@ npx hblock
 [mirror-stevenblack]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
 [source-ublock]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt
 [mirror-ublock]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
+[source-ublock-abuse]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt
+[mirror-ublock-abuse]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-abuse/list.txt
 [source-ublock-badware]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt
 [mirror-ublock-badware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
 [source-ublock-privacy]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt
