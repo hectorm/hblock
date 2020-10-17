@@ -198,7 +198,6 @@ npx hblock
 | disconnect.me - Malvertising            | [URL][source-disconnect.me-malvertising]         | [URL][mirror-disconnect.me-malvertising]         |
 | disconnect.me - Malware                 | [URL][source-disconnect.me-malware]              | [URL][mirror-disconnect.me-malware]              |
 | disconnect.me - Tracking                | [URL][source-disconnect.me-tracking]             | [URL][mirror-disconnect.me-tracking]             |
-| DShield.org - High                      | [URL][source-dshield.org-high]                   | [URL][mirror-dshield.org-high]                   |
 | EasyList                                | [URL][source-easylist]                           | [URL][mirror-easylist]                           |
 | EasyPrivacy                             | [URL][source-easyprivacy]                        | [URL][mirror-easyprivacy]                        |
 | ETH Phishing Detect                     | [URL][source-eth-phishing-detect]                | [URL][mirror-eth-phishing-detect]                |
@@ -244,8 +243,6 @@ npx hblock
 [mirror-disconnect.me-malware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
 [source-disconnect.me-tracking]: https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 [mirror-disconnect.me-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
-[source-dshield.org-high]: https://www.dshield.org/feeds/suspiciousdomains_High.txt
-[mirror-dshield.org-high]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/dshield.org-high/list.txt
 [source-easylist]: https://easylist.to/easylist/easylist.txt
 [mirror-easylist]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
 [source-easyprivacy]: https://easylist.to/easylist/easyprivacy.txt
