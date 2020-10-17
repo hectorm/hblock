@@ -245,9 +245,9 @@ npx hblock
 [mirror-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
 [source-malwaredomainlist.com]: https://www.malwaredomainlist.com/hostslist/hosts.txt
 [mirror-malwaredomainlist.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
-[source-malwaredomains.com-immortaldomains]: http://mirror1.malwaredomains.com/files/immortal_domains.txt
+[source-malwaredomains.com-immortaldomains]: https://mirror1.malwaredomains.com/files/immortal_domains.txt
 [mirror-malwaredomains.com-immortaldomains]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
-[source-malwaredomains.com-justdomains]: http://mirror1.malwaredomains.com/files/justdomains
+[source-malwaredomains.com-justdomains]: https://mirror1.malwaredomains.com/files/justdomains
 [mirror-malwaredomains.com-justdomains]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
 [source-matomo.org-spammers]: https://raw.githubusercontent.com/matomo-org/referrer-spam-blacklist/master/spammers.txt
 [mirror-matomo.org-spammers]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
@@ -257,7 +257,7 @@ npx hblock
 [mirror-pgl.yoyo.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
 [source-phishing.army]: https://phishing.army/download/phishing_army_blocklist.txt
 [mirror-phishing.army]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
-[source-someonewhocares.org]: http://someonewhocares.org/hosts/hosts
+[source-someonewhocares.org]: https://someonewhocares.org/hosts/hosts
 [mirror-someonewhocares.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
 [source-spam404.com]: https://raw.githubusercontent.com/Spam404/lists/master/main-blacklist.txt
 [mirror-spam404.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
@@ -271,7 +271,7 @@ npx hblock
 [mirror-ublock-badware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
 [source-ublock-privacy]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt
 [mirror-ublock-privacy]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
-[source-winhelp2002.mvps.org]: http://winhelp2002.mvps.org/hosts.txt
+[source-winhelp2002.mvps.org]: https://winhelp2002.mvps.org/hosts.txt
 [mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 [source-zerodot1-coinblockerlists-browser]: https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
 [mirror-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
