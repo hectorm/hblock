@@ -476,7 +476,7 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
 		printList 'Transforming to lowercase'
-		tr '[:upper:]' '[:lower:]' \
+		awk '{print(tolower($0))}' \
 			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
