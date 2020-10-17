@@ -95,6 +95,22 @@ build:opensuse:latest:
     paths:
       - "./dist/build-opensuse-latest/"
 
+build:archlinux:latest:
+  stage: "build"
+  image: "docker.io/archlinux:latest"
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      pacman -Sy --noconfirm --needed
+      ca-certificates curl file gawk grep libidn2 make sed zip
+  script:
+    - make DISTDIR=./dist/build-archlinux-latest/ SKIP_LINT=1 release -j4
+  artifacts:
+    expire_in: "1 week"
+    paths:
+      - ./dist/build-archlinux-latest/
+
 build:alpine:latest:
   stage: "build"
   image: "docker.io/alpine:latest"
