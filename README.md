@@ -142,6 +142,10 @@ npx hblock
         Redirection for all entries in the blocklist.
          * Environment variable: HBLOCK_REDIRECTION
          * Default value: 0.0.0.0
+ -W, --WRAP <NUMBER>
+        Break blocklist lines after this number of entries.
+         * Environment variable: HBLOCK_WRAP
+         * Default value: 1
  -T, --template <TEMPLATE>
         POSIX BREs replacement applied to each entry.
         Capturing group backreferences: \1 = <DOMAIN>, \2 = <REDIRECTION>

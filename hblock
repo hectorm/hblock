@@ -101,6 +101,7 @@ optParse() {
 			'-A'*|'--allowlist') optArgStr "${@}"; allowlistFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-D'*|'--denylist') optArgStr "${@}"; denylistFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-R'*|'--redirection') optArgStr "${@}"; redirection="${optArg?}"; shift "${optShift:?}" ;;
+			'-W'*|'--wrap') optArgStr "${@}"; wrap="${optArg?}"; shift "${optShift:?}" ;;
 			'-T'*|'--template') optArgStr "${@}"; template="${optArg?}"; shift "${optShift:?}" ;;
 			'-C'*|'--comment') optArgStr "${@}"; comment="${optArg?}"; shift "${optShift:?}" ;;
 			'-l' |'--lenient'|'--no-lenient') optArgBool "${@}"; lenient="${optArg:?}" ;;
@@ -186,6 +187,10 @@ showHelp() {
 		        Redirection for all entries in the blocklist.
 		         * Environment variable: HBLOCK_REDIRECTION
 		         * Default value: ${redirectionDefault?}
+		 -W, --WRAP <NUMBER>
+		        Break blocklist lines after this number of entries.
+		         * Environment variable: HBLOCK_WRAP
+		         * Default value: ${wrapDefault?}
 		 -T, --template <TEMPLATE>
 		        POSIX BREs replacement applied to each entry.
 		        Capturing group backreferences: \1 = <DOMAIN>, \2 = <REDIRECTION>
@@ -330,6 +335,10 @@ main() {
 	# Redirection for all entries in the blocklist.
 	redirectionDefault="${HBLOCK_REDIRECTION-0.0.0.0}"
 	redirection="${redirectionDefault?}"
+
+	# Break blocklist lines after this number of entries.
+	wrapDefault="${HBLOCK_WRAP-1}"
+	wrap="${wrapDefault?}"
 
 	# POSIX BREs replacement applied to each entry.
 	templateDefault="${HBLOCK_TEMPLATE-\2 \1}"
@@ -495,8 +504,7 @@ main() {
 			ipRegex="${ipv4Regex:?}${ipv6Regex:?}"
 		fi
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
-		sed -n \
-			-e "/^\\(${ipRegex:?}[[:blank:]]\\{1,\\}\\)\\{0,1\\}${domainRegex:?}$/p" \
+		sed -ne "/^\\(${ipRegex:?}[[:blank:]]\\{1,\\}\\)\\{0,1\\}${domainRegex:?}$/p" \
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 
@@ -563,6 +571,12 @@ main() {
 	# If the blocklist file is not empty, the format template is applied.
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Applying format template'
+
+		if [ "${wrap:?}" -gt '1' ]; then
+			awk -v FS=' ' -v RS='\n' -v W="${wrap:?}" '{ORS=(NR%W?FS:RS)}1;END{if(NR%W){printf(RS)}}' \
+				< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+				&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+		fi
 
 		sed -e "s/$/\\t$(quoteSubst "${redirection?}")/" \
 			-e "s/^\\(.*\\)\\t\\(.*\\)$/${template?}/" \
