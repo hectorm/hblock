@@ -8,10 +8,10 @@ Summary: Improve your security and privacy by blocking ads, tracking and malware
 Packager: Héctor Molinero Fernández <hector@molinero.dev>
 License: MIT
 URL: https://github.com/hectorm/hblock
-Source0: %{name}-%{version}.tar.gz
+Source0: %{name}-%{version}.tar
 BuildArch: noarch
 BuildRequires: make systemd
-Requires: curl
+Requires: (curl or wget)
 
 %{?systemd_requires}
 

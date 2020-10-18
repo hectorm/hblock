@@ -12,34 +12,14 @@ SYSTEMDUNITDIR := $(LIBDIR)/systemd/system
 SHELLCHECK := $(shell command -v shellcheck 2>/dev/null)
 SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
 
-DISTDIR := $(CURDIR)/dist
-RESOURCESDIR := $(CURDIR)/resources
-HBLOCK := $(CURDIR)/hblock
-HBLOCK_VERSION := $(shell '$(RESOURCESDIR)'/version.sh get)
-
-HOSTS := $(DISTDIR)/hosts
-HOSTS_ALT_FORMATS_SH := $(wildcard $(RESOURCESDIR)/alt-formats/*.sh)
-HOSTS_ALT_FORMATS := $(HOSTS_ALT_FORMATS_SH:$(RESOURCESDIR)/alt-formats/%.sh=$(DISTDIR)/hosts_%)
-HOSTS_STATS := $(DISTDIR)/most_abused_tlds.txt $(DISTDIR)/most_abused_suffixes.txt
-HOSTS_INDEX := $(DISTDIR)/index.html
-DEB_PACKAGE := $(DISTDIR)/hblock-$(HBLOCK_VERSION).deb
-RPM_PACKAGE := $(DISTDIR)/hblock-$(HBLOCK_VERSION).rpm
+VERSION := $(shell ./resources/version/version.sh get)
 
 ##################################################
 ## "all" target
 ##################################################
 .PHONY: all
 
-all: build
-
-##################################################
-## "release" target
-##################################################
-.PHONY: release
-
-release:
-	$(MAKE) clean
-	$(MAKE) lint
+all:
 	$(MAKE) build stats
 	$(MAKE) index
 
@@ -48,69 +28,42 @@ release:
 ##################################################
 .PHONY: build
 
-build: $(HOSTS)
+ALT_FORMATS_SH := $(wildcard ./resources/alt-formats/*.sh)
+ALT_FORMATS_OUT := $(ALT_FORMATS_SH:./resources/alt-formats/%.sh=./dist/hosts_%)
 
-$(DISTDIR):
-	mkdir -p '$(DISTDIR)'
+build: ./dist/hosts $(ALT_FORMATS_OUT)
 
-$(HOSTS): | $(DISTDIR)
-	HOSTNAME='' '$(HBLOCK)' -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O '$(HOSTS)'
+./dist/:
+	mkdir -p ./dist/
 
-ifneq ($(SKIP_HOSTS_ALT_FORMATS),1)
+./dist/hosts: | ./dist/
+	HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O './dist/hosts'
 
-build: $(HOSTS_ALT_FORMATS)
-
-$(HOSTS)_%: $(RESOURCESDIR)/alt-formats/%.sh $(HOSTS)
-	'$<' '$(HOSTS)' '$(HBLOCK)' '$(RESOURCESDIR)' > '$@'
-
-endif
-
-##################################################
-## "lint" target
-##################################################
-.PHONY: lint
-
-ifneq ($(SKIP_LINT),1)
-
-lint:
-	[ -x '$(SHELLCHECK)' ]
-	'$(SHELLCHECK)' '$(HBLOCK)'
-	find '$(RESOURCESDIR)' -type f -name '*.sh' -exec '$(SHELLCHECK)' '{}' ';'
-
-endif
+./dist/hosts_%: ./resources/alt-formats/%.sh ./dist/hosts
+	'$<' './dist/hosts' ./hblock ./resources/ > '$@'
 
 ##################################################
 ## "stats" target
 ##################################################
 .PHONY: stats
 
-ifneq ($(SKIP_STATS),1)
-ifneq ($(SKIP_HOSTS_ALT_FORMATS),1)
+stats: ./dist/most_abused_tlds.txt ./dist/most_abused_suffixes.txt
 
-stats: $(HOSTS_STATS)
+./dist/most_abused_tlds.txt: ./dist/hosts_domains.txt
+	./resources/stats/suffix.sh ./dist/hosts_domains.txt none > '$@'
 
-$(DISTDIR)/most_abused_tlds.txt: $(DISTDIR)/hosts_domains.txt
-	'$(RESOURCESDIR)'/stats/suffix.sh '$(DISTDIR)'/hosts_domains.txt none > '$@'
-
-$(DISTDIR)/most_abused_suffixes.txt: $(DISTDIR)/hosts_domains.txt
-	'$(RESOURCESDIR)'/stats/suffix.sh '$(DISTDIR)'/hosts_domains.txt > '$@'
-
-endif
-endif
+./dist/most_abused_suffixes.txt: ./dist/hosts_domains.txt
+	./resources/stats/suffix.sh ./dist/hosts_domains.txt > '$@'
 
 ##################################################
 ## "index" target
 ##################################################
 .PHONY: index
 
-ifneq ($(SKIP_INDEX),1)
-
-index: $(HOSTS_INDEX)
+index: ./dist/index.html
 
 %/index.html: $(filter-out index %/index.html,$(MAKECMDGOALS))
-	'$(RESOURCESDIR)'/templates/index.sh "$$(dirname '$@')" > '$@'
-
-endif
+	./resources/templates/index.sh "$$(dirname '$@')" > '$@'
 
 ##################################################
 ## "logo" target
@@ -118,7 +71,20 @@ endif
 .PHONY: logo
 
 logo:
-	'$(RESOURCESDIR)'/logo/rasterize.sh
+	./resources/logo/rasterize.sh
+
+##################################################
+## "lint" target
+##################################################
+.PHONY: lint
+
+lint:
+	'$(SHELLCHECK)' ./hblock
+	'$(SHELLCHECK)' ./resources/alt-formats/*.sh
+	'$(SHELLCHECK)' ./resources/logo/rasterize.sh
+	'$(SHELLCHECK)' ./resources/stats/suffix.sh
+	'$(SHELLCHECK)' ./resources/templates/index.sh
+	'$(SHELLCHECK)' ./resources/version/version.sh
 
 ##################################################
 ## "install" target
@@ -127,10 +93,10 @@ logo:
 
 install:
 	mkdir -p '$(BINDIR)'
-	install -Dm 0755 '$(HBLOCK)' '$(BINDIR)'/hblock
+	install -Dm 0755 ./hblock '$(BINDIR)'/hblock
 	if [ -x '$(SYSTEMCTL)' ] && [ '$(SKIP_INSTALL_SERVICE)' != 1 ]; then \
-		install -Dm 0644 '$(RESOURCESDIR)'/systemd/hblock.service '$(SYSTEMDUNITDIR)'/hblock.service; \
-		install -Dm 0644 '$(RESOURCESDIR)'/systemd/hblock.timer '$(SYSTEMDUNITDIR)'/hblock.timer; \
+		install -Dm 0644 ./resources/systemd/hblock.service '$(SYSTEMDUNITDIR)'/hblock.service; \
+		install -Dm 0644 ./resources/systemd/hblock.timer '$(SYSTEMDUNITDIR)'/hblock.timer; \
 	fi
 
 ##################################################
@@ -171,29 +137,31 @@ uninstall:
 ##################################################
 .PHONY: package-deb package-rpm
 
-package-deb: $(DEB_PACKAGE)
+package-deb: ./dist/hblock-$(VERSION).deb
 
-$(DEB_PACKAGE): | $(DISTDIR)
-	rm -rf '$(DISTDIR)'/debian/
-	cp -a '$(RESOURCESDIR)'/deb/ '$(DISTDIR)'/debian/
-	cp -a '$(RESOURCESDIR)'/systemd/hblock.service '$(DISTDIR)'/debian/
-	cp -a '$(RESOURCESDIR)'/systemd/hblock.timer '$(DISTDIR)'/debian/
-	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' '$(DISTDIR)'/debian/changelog
-	sed -i "s|__PKG_DATE__|$$(LC_ALL=C date -Ru)|g" '$(DISTDIR)'/debian/changelog
-	cd '$(DISTDIR)' && dpkg-buildpackage -us -uc
-	mv -f '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'_all.deb '$@'
-	rm -f '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'.dsc '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'.tar.gz
-	rm -f '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'_*.buildinfo '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'_*.changes
+./dist/hblock-$(VERSION).deb: | ./dist/
+	rm -rf ./dist/debbuild/; mkdir ./dist/debbuild/
+	cp -a ./hblock ./dist/debbuild/
+	cp -a ./resources/deb/ ./dist/debbuild/debian/
+	cp -a ./resources/systemd/hblock.* ./dist/debbuild/debian/
+	sed -i 's|__PKG_VERSION__|$(VERSION)|g' ./dist/debbuild/debian/changelog
+	sed -i "s|__PKG_DATE__|$$(LC_ALL=C date -Ru)|g" ./dist/debbuild/debian/changelog
+	cd ./dist/debbuild/ && dpkg-buildpackage -us -uc
+	mv -f ./dist/hblock_'$(VERSION)'_all.deb '$@'
+	rm -f ./dist/hblock_'$(VERSION)'.dsc ./dist/hblock_'$(VERSION)'.tar.*
+	rm -f ./dist/hblock_'$(VERSION)'_*.buildinfo ./dist/hblock_'$(VERSION)'_*.changes
 
-package-rpm: $(RPM_PACKAGE)
+package-rpm: ./dist/hblock-$(VERSION).rpm
 
-$(RPM_PACKAGE): | $(DISTDIR)
-	rm -rf '$(DISTDIR)'/rpmbuild/
-	cp -a '$(RESOURCESDIR)'/rpm/ '$(DISTDIR)'/rpmbuild/
-	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' '$(DISTDIR)'/rpmbuild/SPECS/hblock.spec
-	tar -czf '$(DISTDIR)'/rpmbuild/SOURCES/hblock-'$(HBLOCK_VERSION)'.tar.gz --exclude-vcs --exclude='$(DISTDIR)' '$(CURDIR)'
-	rpmbuild -D "_topdir $$(readlink -f '$(DISTDIR)'/rpmbuild/)" -bb '$(DISTDIR)'/rpmbuild/SPECS/hblock.spec
-	mv -f '$(DISTDIR)'/rpmbuild/RPMS/noarch/hblock-'$(HBLOCK_VERSION)'-*.noarch.rpm '$@'
+./dist/hblock-$(VERSION).rpm: | ./dist/
+	rm -rf ./dist/rpmbuild/; mkdir ./dist/rpmbuild/
+	cp -a ./resources/rpm/* ./dist/rpmbuild/
+	sed -i 's|__PKG_VERSION__|$(VERSION)|g' ./dist/rpmbuild/SPECS/hblock.spec
+	tar -cf ./dist/rpmbuild/SOURCES/hblock-'$(VERSION)'.tar ./hblock
+	tar -rf ./dist/rpmbuild/SOURCES/hblock-'$(VERSION)'.tar ./Makefile
+	tar -rf ./dist/rpmbuild/SOURCES/hblock-'$(VERSION)'.tar ./resources/systemd/hblock.*
+	rpmbuild -D "_topdir $$(readlink -f ./dist/rpmbuild/)" -bb ./dist/rpmbuild/SPECS/hblock.spec
+	mv -f ./dist/rpmbuild/RPMS/noarch/hblock-'$(VERSION)'-*.noarch.rpm '$@'
 
 ##################################################
 ## "clean" target
@@ -201,6 +169,4 @@ $(RPM_PACKAGE): | $(DISTDIR)
 .PHONY: clean
 
 clean:
-	rm -f $(addprefix ', $(addsuffix ', $(HOSTS) $(HOSTS_ALT_FORMATS) $(HOSTS_STATS) $(HOSTS_INDEX) $(DEB_PACKAGE) $(RPM_PACKAGE)))
-	rm -rf $(addprefix ', $(addsuffix ', $(DISTDIR)/debian/ $(DISTDIR)/rpmbuild/))
-	if [ -d '$(DISTDIR)' ] && [ -z "$$(ls -A '$(DISTDIR)')" ]; then rmdir '$(DISTDIR)'; fi
+	rm -rf ./dist/

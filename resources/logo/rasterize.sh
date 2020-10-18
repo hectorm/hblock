@@ -37,6 +37,7 @@ main() {
 					inkscapeOpts="${inkscapeOpts:?} --export-background=${background:?}"
 				fi
 
+				# shellcheck disable=SC2086
 				inkscape ${inkscapeOpts:?} "${SCRIPT_DIR:?}/${src:?}"
 			done
 		done

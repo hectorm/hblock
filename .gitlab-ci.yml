@@ -25,11 +25,12 @@ build:ubuntu:latest:
       apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
       ca-certificates curl file gawk grep idn2 make sed zip
   script:
-    - make DISTDIR=./dist/build-ubuntu-latest/ SKIP_LINT=1 release -j4
+    - make all
+    - mv ./dist/ ./dist-build-ubuntu-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/build-ubuntu-latest/"
+      - "./dist-build-ubuntu-latest/"
 
 build:debian:latest:
   stage: "build"
@@ -41,11 +42,12 @@ build:debian:latest:
       apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
       ca-certificates curl file gawk grep idn2 make sed zip
   script:
-    - make DISTDIR=./dist/build-debian-latest/ SKIP_LINT=1 release -j4
+    - make all
+    - mv ./dist/ ./dist-build-debian-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/build-debian-latest/"
+      - "./dist-build-debian-latest/"
 
 build:fedora:latest:
   stage: "build"
@@ -57,11 +59,12 @@ build:fedora:latest:
       dnf install -y
       ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - make DISTDIR=./dist/build-fedora-latest/ SKIP_LINT=1 release -j4
+    - make all
+    - mv ./dist/ ./dist-build-fedora-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - ./dist/build-fedora-latest/
+      - ./dist-build-fedora-latest/
 
 build:centos:latest:
   stage: "build"
@@ -73,11 +76,12 @@ build:centos:latest:
       dnf install -y
       ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - make DISTDIR=./dist/build-centos-latest/ SKIP_LINT=1 release -j4
+    - make all
+    - mv ./dist/ ./dist-build-centos-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/build-centos-latest/"
+      - "./dist-build-centos-latest/"
 
 build:opensuse:latest:
   stage: "build"
@@ -89,11 +93,12 @@ build:opensuse:latest:
       zypper install -y
       ca-certificates curl file gawk grep libidn2-tools make sed zip
   script:
-    - make DISTDIR=./dist/build-opensuse-latest/ SKIP_LINT=1 release -j4
+    - make all
+    - mv ./dist/ ./dist-build-opensuse-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/build-opensuse-latest/"
+      - "./dist-build-opensuse-latest/"
 
 build:archlinux:latest:
   stage: "build"
@@ -105,11 +110,12 @@ build:archlinux:latest:
       pacman -Sy --noconfirm --needed
       ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - make DISTDIR=./dist/build-archlinux-latest/ SKIP_LINT=1 release -j4
+    - make all
+    - mv ./dist/ ./dist-build-archlinux-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - ./dist/build-archlinux-latest/
+      - ./dist-build-archlinux-latest/
 
 build:alpine:latest:
   stage: "build"
@@ -121,11 +127,12 @@ build:alpine:latest:
       apk add --no-cache
       ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - make DISTDIR=./dist/build-alpine-latest/ SKIP_LINT=1 release -j4
+    - make all
+    - mv ./dist/ ./dist-build-alpine-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/build-alpine-latest/"
+      - "./dist-build-alpine-latest/"
 
 build:busybox:latest:
   stage: "build"
@@ -133,19 +140,18 @@ build:busybox:latest:
   before_script:
     - uname -a
     - busybox | head -1 || true
-  variables:
-    DISTDIR: "./dist/build-busybox-latest/"
   script:
     # Partial build, since Busybox does not have the necessary tools.
-    - mkdir -p "${DISTDIR:?}"
-    - HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O "${DISTDIR:?}"/hosts
-    - ./resources/alt-formats/domains.txt.sh "${DISTDIR:?}"/hosts ./hblock > "${DISTDIR:?}"/hosts_domains.txt
-    - ./resources/stats/suffix.sh "${DISTDIR:?}"/hosts_domains.txt none > "${DISTDIR:?}"/most_abused_tlds.txt
-    - ./resources/templates/index.sh "${DISTDIR:?}" > "${DISTDIR:?}"/index.html
+    - mkdir ./dist/
+    - HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts
+    - ./resources/alt-formats/domains.txt.sh ./dist/hosts ./hblock > ./dist/hosts_domains.txt
+    - ./resources/stats/suffix.sh ./dist/hosts_domains.txt none > ./dist/most_abused_tlds.txt
+    - ./resources/templates/index.sh ./dist/ > ./dist/index.html
+    - mv ./dist/ ./dist-build-busybox-latest/
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/build-busybox-latest/"
+      - "./dist-build-busybox-latest/"
 
 package:deb:
   stage: "package"
@@ -155,13 +161,19 @@ package:deb:
     - cat /etc/os-release
     - >
       apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      build-essential debhelper dh-systemd dpkg-dev make
+      build-essential debhelper dh-systemd dpkg-dev make wget
   script:
-    - if [ -d ./resources/deb/ ]; then make DISTDIR=./dist/package-deb/ package-deb; fi
+    - |
+      if [ -d ./resources/deb/ ]; then
+        make package-deb
+        mv ./dist/ ./dist-package-deb/
+        dpkg -i ./dist-package-deb/hblock-*.deb
+        command hblock -v
+      fi
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/package-deb/"
+      - "./dist-package-deb/"
 
 package:rpm:
   stage: "package"
@@ -171,20 +183,26 @@ package:rpm:
     - cat /etc/os-release
     - >
       dnf install -y
-      make rpm-build rpmdevtools systemd
+      make rpm-build rpmdevtools systemd wget
   script:
-    - if [ -d ./resources/rpm/ ]; then make DISTDIR=./dist/package-rpm/ package-rpm; fi
+    - |
+      if [ -d ./resources/rpm/ ]; then
+        make package-rpm
+        mv ./dist/ ./dist-package-rpm/
+        rpm -Uhv ./dist-package-rpm/hblock-*.rpm
+        command hblock -v
+      fi
   artifacts:
     expire_in: "1 week"
     paths:
-      - "./dist/package-rpm/"
+      - "./dist-package-rpm/"
 
 pages:
   stage: "deploy"
   only:
     - "master"
   script:
-    - cp -r ./dist/build-ubuntu-latest/ ./public/
+    - mv ./dist-build-ubuntu-latest/ ./public/
   artifacts:
     paths:
       - "./public/"
