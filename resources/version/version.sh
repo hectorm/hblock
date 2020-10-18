@@ -8,7 +8,7 @@ set -eu
 export LC_ALL='C'
 
 SCRIPT_DIR="$(dirname "$(readlink -f "${0:?}")")"
-PROJECT_DIR="${SCRIPT_DIR:?}/../"
+PROJECT_DIR="${SCRIPT_DIR:?}/../../"
 
 # Check if a program exists.
 exists() {
