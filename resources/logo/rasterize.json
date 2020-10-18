@@ -1,0 +1,20 @@
+[
+  {
+    "src": "vectors/logo-a.svg",
+    "name": "logo-a",
+    "backgrounds": ["transparent", "#ffffff"],
+    "heights": [25, 50, 75, 100, 125, 175, 225, 275, 325, 375, 425]
+  },
+  {
+    "src": "vectors/logo-b.svg",
+    "name": "logo-b",
+    "backgrounds": ["transparent", "#ffffff"],
+    "heights": [36, 54, 72, 96, 114, 192, 288, 384, 480, 576, 672]
+  },
+  {
+    "src": "vectors/logo-shield.svg",
+    "name": "logo-shield",
+    "backgrounds": ["transparent", "#ffffff"],
+    "heights": [16, 24, 32, 48, 72, 96, 128, 152, 256, 384, 512]
+  }
+]

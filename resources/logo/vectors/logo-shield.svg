@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- This logo design was originally created by @Tobaloidee (https://github.com/Tobaloidee) -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+	width="512" height="512" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
+	<title>hBlock shield</title>
+	<!-- Original objects -->
+	<!--
+	<g id="shield" transform="translate(75, 85) scale(0.85)">
+		<path id="shield-shape" fill="#FFFFFF" stroke="#FD2727" stroke-width="125" d="
+			M 500 025
+			C 375 175, 375 200, 125 165
+			C 125 750, 250 800, 500 975
+			C 750 800, 875 750, 875 165
+			C 625 200, 625 175, 500 025 Z" />
+		<path id="shield-content" fill-opacity="0" stroke="#FD2727" stroke-width="125" d="
+			M 380 150
+			V 660 V 505
+			a 1 1 0 0 1 240 0
+			V 660 V 505" />
+	</g>
+	-->
+	<g id="shield">
+		<path id="shield-shape" fill="#FFFFFF" stroke="#FD2727" stroke-width="106.25" d="M 500,106.25 C 393.75,233.75 393.75,255 181.25,225.25 181.25,722.5 287.5,765 500,913.75 712.5,765 818.75,722.5 818.75,225.25 606.25,255 606.25,233.75 500,106.25 Z" />
+		<path id="shield-content" fill-opacity="0" stroke="#FD2727" stroke-width="106.25" d="M 398,212.5 V 646 514.25 a 102,102 0 0 1 204,0 V 646 514.25" />
+	</g>
+</svg>

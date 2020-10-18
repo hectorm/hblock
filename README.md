@@ -5,8 +5,8 @@
 ***
 
 <p align="center">
-  <a href="https://hblock.molinero.dev/">
-    <img src="https://hectorm.github.io/hblock/resources/logo/logotype.svg" width="320" height="100">
+  <a href="https://hblock.molinero.dev">
+    <img src="resources/logo/vectors/logo-a.svg" width="320" height="100">
   </a>
 </p>
 
