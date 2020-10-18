@@ -12,9 +12,9 @@ SYSTEMDUNITDIR := $(LIBDIR)/systemd/system
 SHELLCHECK := $(shell command -v shellcheck 2>/dev/null)
 SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
 
-DISTDIR := ./dist
-RESOURCESDIR := ./resources
-HBLOCK := ./hblock
+DISTDIR := $(CURDIR)/dist
+RESOURCESDIR := $(CURDIR)/resources
+HBLOCK := $(CURDIR)/hblock
 HBLOCK_VERSION := $(shell '$(RESOURCESDIR)'/version.sh get)
 
 HOSTS := $(DISTDIR)/hosts
@@ -173,29 +173,27 @@ uninstall:
 
 package-deb: $(DEB_PACKAGE)
 
-$(DEB_PACKAGE):
-	rm -rf ./debian/
-	cp -r '$(RESOURCESDIR)'/deb/ ./debian/
-	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' ./debian/changelog
-	sed -i "s|__PKG_DATE__|$$(LANG=C date -R)|g" ./debian/changelog
-	dpkg-buildpackage -us -uc
-	mkdir -p "$$(dirname '$@')"
-	mv ../hblock_'$(HBLOCK_VERSION)'_all.deb '$@'
-	rm -f ../hblock_'$(HBLOCK_VERSION)'.dsc ../hblock_'$(HBLOCK_VERSION)'.tar.gz
-	rm -f ../hblock_'$(HBLOCK_VERSION)'_*.buildinfo ../hblock_'$(HBLOCK_VERSION)'_*.changes
-	rm -rf ./debian/
+$(DEB_PACKAGE): | $(DISTDIR)
+	rm -rf '$(DISTDIR)'/debian/
+	cp -r '$(RESOURCESDIR)'/deb/ '$(DISTDIR)'/debian/
+	cp -r '$(RESOURCESDIR)'/systemd/hblock.service '$(DISTDIR)'/debian/
+	cp -r '$(RESOURCESDIR)'/systemd/hblock.timer '$(DISTDIR)'/debian/
+	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' '$(DISTDIR)'/debian/changelog
+	sed -i "s|__PKG_DATE__|$$(LC_ALL=C date -Ru)|g" '$(DISTDIR)'/debian/changelog
+	cd '$(DISTDIR)' && dpkg-buildpackage -us -uc
+	mv -f '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'_all.deb '$@'
+	rm -f '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'.dsc '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'.tar.gz
+	rm -f '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'_*.buildinfo '$(DISTDIR)'/../hblock_'$(HBLOCK_VERSION)'_*.changes
 
 package-rpm: $(RPM_PACKAGE)
 
-$(RPM_PACKAGE):
-	rm -rf ./rpmbuild/
-	cp -r '$(RESOURCESDIR)'/rpm/ ./rpmbuild/
-	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' ./rpmbuild/SPECS/hblock.spec
-	tar -czf ./rpmbuild/SOURCES/hblock-'$(HBLOCK_VERSION)'.tar.gz --exclude=./rpmbuild --exclude=./.git ./
-	rpmbuild -D "_topdir $$(pwd)/rpmbuild" -bb ./rpmbuild/SPECS/hblock.spec
-	mkdir -p "$$(dirname '$@')"
-	mv ./rpmbuild/RPMS/noarch/hblock-'$(HBLOCK_VERSION)'-*.noarch.rpm '$@'
-	rm -rf ./rpmbuild/
+$(RPM_PACKAGE): | $(DISTDIR)
+	rm -rf '$(DISTDIR)'/rpmbuild/
+	cp -r '$(RESOURCESDIR)'/rpm/ '$(DISTDIR)'/rpmbuild/
+	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' '$(DISTDIR)'/rpmbuild/SPECS/hblock.spec
+	tar -czf '$(DISTDIR)'/rpmbuild/SOURCES/hblock-'$(HBLOCK_VERSION)'.tar.gz --exclude-vcs --exclude='$(DISTDIR)' '$(CURDIR)'
+	rpmbuild -D "_topdir $$(readlink -f '$(DISTDIR)'/rpmbuild/)" -bb '$(DISTDIR)'/rpmbuild/SPECS/hblock.spec
+	mv -f '$(DISTDIR)'/rpmbuild/RPMS/noarch/hblock-'$(HBLOCK_VERSION)'-*.noarch.rpm '$@'
 
 ##################################################
 ## "clean" target
@@ -203,8 +201,6 @@ $(RPM_PACKAGE):
 .PHONY: clean
 
 clean:
-	rm -f $(addprefix ', $(addsuffix ', \
-		$(HOSTS) $(HOSTS_ALT_FORMATS) $(HOSTS_STATS) $(HOSTS_INDEX) \
-		$(DEB_PACKAGE) $(RPM_PACKAGE) \
-	))
+	rm -f $(addprefix ', $(addsuffix ', $(HOSTS) $(HOSTS_ALT_FORMATS) $(HOSTS_STATS) $(HOSTS_INDEX) $(DEB_PACKAGE) $(RPM_PACKAGE)))
+	rm -rf $(addprefix ', $(addsuffix ', $(DISTDIR)/debian/ $(DISTDIR)/rpmbuild/))
 	if [ -d '$(DISTDIR)' ] && [ -z "$$(ls -A '$(DISTDIR)')" ]; then rmdir '$(DISTDIR)'; fi

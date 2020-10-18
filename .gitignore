@@ -1,5 +1,4 @@
-/debian/
 /dist/
-/rpmbuild/
+
 node_modules/
 npm-debug.log*

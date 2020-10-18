@@ -155,7 +155,7 @@ package:deb:
     - cat /etc/os-release
     - >
       apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      build-essential debhelper dh-systemd
+      build-essential debhelper dh-systemd dpkg-dev make
   script:
     - if [ -d ./resources/deb/ ]; then make DISTDIR=./dist/package-deb/ package-deb; fi
   artifacts:
