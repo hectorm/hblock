@@ -4,7 +4,7 @@ Description=hBlock
 [Service]
 Type=oneshot
 TimeoutStartSec=300
-ExecStart=/bin/sh -c 'hblock'
+ExecStart=/usr/bin/env hblock
 PrivateTmp=yes
 ProtectHome=yes
 ProtectSystem=strict
