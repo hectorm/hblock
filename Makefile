@@ -135,7 +135,7 @@ uninstall:
 ##################################################
 ## "package-*" targets
 ##################################################
-.PHONY: package-deb package-rpm
+.PHONY: package-deb package-rpm package-npm
 
 package-deb: ./dist/hblock-$(VERSION).deb
 
@@ -162,6 +162,17 @@ package-rpm: ./dist/hblock-$(VERSION).rpm
 	tar -rf ./dist/rpmbuild/SOURCES/hblock-'$(VERSION)'.tar ./resources/systemd/hblock.*
 	rpmbuild -D "_topdir $$(readlink -f ./dist/rpmbuild/)" -bb ./dist/rpmbuild/SPECS/hblock.spec
 	mv -f ./dist/rpmbuild/RPMS/noarch/hblock-'$(VERSION)'-*.noarch.rpm '$@'
+
+package-npm: ./dist/hblock-$(VERSION).tgz
+
+./dist/hblock-$(VERSION).tgz: | ./dist/
+	rm -rf ./dist/npmbuild/; mkdir ./dist/npmbuild/
+	cp -a ./hblock ./dist/npmbuild/hblock
+	cp -a ./README.md ./dist/npmbuild/README.md
+	cp -a ./LICENSE.md ./dist/npmbuild/LICENSE.md
+	cp -a ./resources/npm/* ./dist/npmbuild/
+	sed -i 's|__PKG_VERSION__|$(VERSION)|g' ./dist/npmbuild/package.json
+	tar -czf '$@' -C ./dist/npmbuild/ ./
 
 ##################################################
 ## "clean" target

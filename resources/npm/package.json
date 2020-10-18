@@ -1,6 +1,6 @@
 {
   "name": "hblock",
-  "version": "2.1.7",
+  "version": "__PKG_VERSION__",
   "description": "Improve your security and privacy by blocking ads, tracking and malware domains",
   "keywords": [
     "ad-block",
@@ -40,9 +40,6 @@
   "files": [
     "/hblock"
   ],
-  "scripts": {
-    "version": "./resources/version/version.sh set && git add -A"
-  },
   "os": [
     "!win32"
   ],

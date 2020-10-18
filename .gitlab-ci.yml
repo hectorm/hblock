@@ -161,7 +161,7 @@ package:deb:
     - cat /etc/os-release
     - >
       apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      build-essential debhelper dh-systemd dpkg-dev make wget
+      ca-certificates curl build-essential debhelper dh-systemd dpkg-dev make
   script:
     - |
       if [ -d ./resources/deb/ ]; then
@@ -183,7 +183,7 @@ package:rpm:
     - cat /etc/os-release
     - >
       dnf install -y
-      make rpm-build rpmdevtools systemd wget
+      ca-certificates curl make rpm-build rpmdevtools systemd
   script:
     - |
       if [ -d ./resources/rpm/ ]; then
@@ -196,6 +196,28 @@ package:rpm:
     expire_in: "1 week"
     paths:
       - "./dist-package-rpm/"
+
+package:npm:
+  stage: "package"
+  image: "docker.io/node:current"
+  before_script:
+    - uname -a
+    - cat /etc/os-release
+    - >
+      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
+      ca-certificates curl make
+  script:
+    - |
+      if [ -d ./resources/npm/ ]; then
+        make package-npm
+        mv ./dist/ ./dist-package-npm/
+        npm install -g ./dist-package-npm/hblock-*.tgz
+        command hblock -v
+      fi
+  artifacts:
+    expire_in: "1 week"
+    paths:
+      - "./dist-package-npm/"
 
 pages:
   stage: "deploy"
