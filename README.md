@@ -45,9 +45,7 @@ the allowlist.
 
 ## Nightly builds
 
-Nightly builds of the hosts file are available here among other formats.
-
-https://hblock.molinero.dev
+Nightly builds of the hosts file among other formats are available [here](https://hblock.molinero.dev).
 
 ## Installation
 
