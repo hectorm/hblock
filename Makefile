@@ -175,9 +175,9 @@ package-deb: $(DEB_PACKAGE)
 
 $(DEB_PACKAGE): | $(DISTDIR)
 	rm -rf '$(DISTDIR)'/debian/
-	cp -r '$(RESOURCESDIR)'/deb/ '$(DISTDIR)'/debian/
-	cp -r '$(RESOURCESDIR)'/systemd/hblock.service '$(DISTDIR)'/debian/
-	cp -r '$(RESOURCESDIR)'/systemd/hblock.timer '$(DISTDIR)'/debian/
+	cp -a '$(RESOURCESDIR)'/deb/ '$(DISTDIR)'/debian/
+	cp -a '$(RESOURCESDIR)'/systemd/hblock.service '$(DISTDIR)'/debian/
+	cp -a '$(RESOURCESDIR)'/systemd/hblock.timer '$(DISTDIR)'/debian/
 	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' '$(DISTDIR)'/debian/changelog
 	sed -i "s|__PKG_DATE__|$$(LC_ALL=C date -Ru)|g" '$(DISTDIR)'/debian/changelog
 	cd '$(DISTDIR)' && dpkg-buildpackage -us -uc
@@ -189,7 +189,7 @@ package-rpm: $(RPM_PACKAGE)
 
 $(RPM_PACKAGE): | $(DISTDIR)
 	rm -rf '$(DISTDIR)'/rpmbuild/
-	cp -r '$(RESOURCESDIR)'/rpm/ '$(DISTDIR)'/rpmbuild/
+	cp -a '$(RESOURCESDIR)'/rpm/ '$(DISTDIR)'/rpmbuild/
 	sed -i 's|__PKG_VERSION__|$(HBLOCK_VERSION)|g' '$(DISTDIR)'/rpmbuild/SPECS/hblock.spec
 	tar -czf '$(DISTDIR)'/rpmbuild/SOURCES/hblock-'$(HBLOCK_VERSION)'.tar.gz --exclude-vcs --exclude='$(DISTDIR)' '$(CURDIR)'
 	rpmbuild -D "_topdir $$(readlink -f '$(DISTDIR)'/rpmbuild/)" -bb '$(DISTDIR)'/rpmbuild/SPECS/hblock.spec
