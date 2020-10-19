@@ -128,11 +128,13 @@ jobs:
     container:
       image: 'docker.io/busybox:latest'
     steps:
+      - name: 'Create "/etc/os-release" file'
+        run: | # BusyBox does not have the "/etc/os-release" file and the checkout action fails without it.
+          [ -e /etc/os-release ] || printf 'ID=busybox\n' > /etc/os-release
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        # Partial build, since Busybox does not have the necessary tools.
-        run: |
+        run: | # Partial build, since BusyBox does not have the necessary tools.
           mkdir ./dist/
           HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts
           ./resources/alt-formats/domains.txt.sh ./dist/hosts ./hblock > ./dist/hosts_domains.txt
