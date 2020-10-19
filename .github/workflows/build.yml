@@ -121,22 +121,3 @@ jobs:
       - name: 'Build project'
         run: |
           make clean all
-
-  build-busybox-latest:
-    name: 'Build on busybox:latest'
-    runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/busybox:latest'
-    steps:
-      - name: 'Create "/etc/os-release" file'
-        run: | # BusyBox does not have the "/etc/os-release" file and the checkout action fails without it.
-          [ -e /etc/os-release ] || printf 'ID=busybox\n' > /etc/os-release
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
-      - name: 'Build project'
-        run: | # Partial build, since BusyBox does not have the necessary tools.
-          mkdir ./dist/
-          HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts
-          ./resources/alt-formats/domains.txt.sh ./dist/hosts ./hblock > ./dist/hosts_domains.txt
-          ./resources/stats/suffix.sh ./dist/hosts_domains.txt none > ./dist/most_abused_tlds.txt
-          ./resources/templates/index.sh ./dist/ > ./dist/index.html
