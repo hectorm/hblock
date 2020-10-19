@@ -20,13 +20,13 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            ca-certificates curl build-essential debhelper dh-systemd dpkg-dev make
+            build-essential debhelper dh-systemd dpkg-dev make
       - name: 'Package project'
         run: |
           if [ -d ./resources/deb/ ]; then
             make clean package-deb
             mv ./dist/ ./dist-package-deb/
-            dpkg -i ./dist-package-deb/hblock-*.deb
+            apt install -y ./dist-package-deb/hblock-*.deb
             command hblock -v
           fi
 
@@ -41,13 +41,13 @@ jobs:
       - name: 'Install packages'
         run: |
           dnf install -y \
-            ca-certificates curl make rpm-build rpmdevtools systemd
+            make rpm-build rpmdevtools systemd
       - name: 'Package project'
         run: |
           if [ -d ./resources/rpm/ ]; then
             make clean package-rpm
             mv ./dist/ ./dist-package-rpm/
-            rpm -Uhv ./dist-package-rpm/hblock-*.rpm
+            dnf install -y ./dist-package-rpm/hblock-*.rpm
             command hblock -v
           fi
 
@@ -63,7 +63,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            ca-certificates curl make
+            make wget
       - name: 'Package project'
         run: |
           if [ -d ./resources/npm/ ]; then

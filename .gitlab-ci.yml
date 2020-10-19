@@ -148,13 +148,13 @@ package:deb:
     - |
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ca-certificates curl build-essential debhelper dh-systemd dpkg-dev make
+        build-essential debhelper dh-systemd dpkg-dev make
   script:
     - |
       if [ -d ./resources/deb/ ]; then
         make clean package-deb
         mv ./dist/ ./dist-package-deb/
-        dpkg -i ./dist-package-deb/hblock-*.deb
+        apt install -y ./dist-package-deb/hblock-*.deb
         command hblock -v
       fi
   artifacts:
@@ -167,13 +167,13 @@ package:rpm:
   before_script:
     - |
       dnf install -y \
-        ca-certificates curl make rpm-build rpmdevtools systemd
+        make rpm-build rpmdevtools systemd
   script:
     - |
       if [ -d ./resources/rpm/ ]; then
         make clean package-rpm
         mv ./dist/ ./dist-package-rpm/
-        rpm -Uhv ./dist-package-rpm/hblock-*.rpm
+        dnf install -y ./dist-package-rpm/hblock-*.rpm
         command hblock -v
       fi
   artifacts:
@@ -187,7 +187,7 @@ package:npm:
     - |
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ca-certificates curl make
+        make wget
   script:
     - |
       if [ -d ./resources/npm/ ]; then
