@@ -75,10 +75,10 @@ jobs:
           make clean all
 
   build-opensuse-latest:
-    name: 'Build on opensuse:latest'
+    name: 'Build on opensuse/tumbleweed:latest'
     runs-on: 'ubuntu-latest'
     container:
-      image: 'docker.io/opensuse:latest'
+      image: 'docker.io/opensuse/tumbleweed:latest'
     steps:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
