@@ -121,3 +121,17 @@ jobs:
       - name: 'Build project'
         run: |
           make clean all
+
+  build-macos-latest:
+    name: 'Build on macos:latest'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: |
+          brew install \
+            curl libidn2 make zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: |
+          make clean all
