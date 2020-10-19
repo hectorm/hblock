@@ -1,0 +1,22 @@
+name: 'Lint project'
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+
+  lint:
+    name: 'Lint project'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/koalaman/shellcheck-alpine:stable'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: 'apk add --no-cache make'
+      - name: 'Lint project'
+        run: 'make lint'
