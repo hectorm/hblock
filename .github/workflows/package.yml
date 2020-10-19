@@ -63,7 +63,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            make tar wget
+            gzip make tar wget
       - name: 'Package project'
         run: |
           if [ -d ./resources/npm/ ]; then
