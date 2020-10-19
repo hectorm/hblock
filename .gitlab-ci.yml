@@ -11,220 +11,200 @@ lint:
   stage: 'lint'
   image: 'docker.io/koalaman/shellcheck-alpine:stable'
   before_script:
-    - 'apk add --no-cache make'
+    - |
+      apk add --no-cache make
+      shellcheck --version
   script:
-    - 'make lint'
+    - |
+      make clean lint
 
 build:ubuntu:latest:
   stage: 'build'
   image: 'docker.io/ubuntu:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      ca-certificates curl file gawk grep idn2 make sed zip
+    - |
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates curl file gawk grep idn2 make sed zip
   script:
-    - 'make all'
-    - 'mv ./dist/ ./dist-build-ubuntu-latest/'
+    - |
+      make clean all
+      mv ./dist/ ./dist-build-ubuntu-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-build-ubuntu-latest/'
+    paths: ['./dist-build-ubuntu-latest/']
 
 build:debian:latest:
   stage: 'build'
   image: 'docker.io/debian:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      ca-certificates curl file gawk grep idn2 make sed zip
+    - |
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates curl file gawk grep idn2 make sed zip
   script:
-    - 'make all'
-    - 'mv ./dist/ ./dist-build-debian-latest/'
+    - |
+      make clean all
+      mv ./dist/ ./dist-build-debian-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-build-debian-latest/'
+    paths: ['./dist-build-debian-latest/']
 
 build:fedora:latest:
   stage: 'build'
   image: 'docker.io/fedora:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      dnf install -y
-      ca-certificates curl file gawk grep libidn2 make sed zip
+    - |
+      dnf install -y \
+        ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - 'make all'
-    - 'mv ./dist/ ./dist-build-fedora-latest/'
+    - |
+      make clean all
+      mv ./dist/ ./dist-build-fedora-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - ./dist-build-fedora-latest/
+    paths: ['./dist-build-fedora-latest/']
 
 build:centos:latest:
   stage: 'build'
   image: 'docker.io/centos:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      dnf install -y
-      ca-certificates curl file gawk grep libidn2 make sed zip
+    - |
+      dnf install -y \
+        ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - 'make all'
-    - 'mv ./dist/ ./dist-build-centos-latest/'
+    - |
+      make clean all
+      mv ./dist/ ./dist-build-centos-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-build-centos-latest/'
+    paths: ['./dist-build-centos-latest/']
 
 build:opensuse:latest:
   stage: 'build'
   image: 'docker.io/opensuse/tumbleweed:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      zypper install -y
-      ca-certificates curl file gawk grep libidn2-tools make sed zip
+    - |
+      zypper install -y \
+        ca-certificates curl file gawk grep libidn2-tools make sed zip
   script:
-    - 'make all'
-    - 'mv ./dist/ ./dist-build-opensuse-latest/'
+    - |
+      make clean all
+      mv ./dist/ ./dist-build-opensuse-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-build-opensuse-latest/'
+    paths: ['./dist-build-opensuse-latest/']
 
 build:archlinux:latest:
   stage: 'build'
   image: 'docker.io/archlinux:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      pacman -Sy --noconfirm --needed
-      ca-certificates curl file gawk grep libidn2 make sed zip
+    - |
+      pacman -Sy --noconfirm --needed \
+        ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - 'make all'
-    - 'mv ./dist/ ./dist-build-archlinux-latest/'
+    - |
+      make clean all
+      mv ./dist/ ./dist-build-archlinux-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-build-archlinux-latest/'
+    paths: ['./dist-build-archlinux-latest/']
 
 build:alpine:latest:
   stage: 'build'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      apk add --no-cache
-      ca-certificates curl file gawk grep libidn2 make sed zip
+    - |
+      apk add --no-cache \
+        ca-certificates curl file gawk grep libidn2 make sed zip
   script:
-    - 'make all'
-    - 'mv ./dist/ ./dist-build-alpine-latest/'
+    - |
+      make clean all
+      mv ./dist/ ./dist-build-alpine-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-build-alpine-latest/'
+    paths: ['./dist-build-alpine-latest/']
 
 build:busybox:latest:
   stage: 'build'
   image: 'docker.io/busybox:latest'
-  before_script:
-    - 'uname -a'
-    - 'busybox | head -1 || true'
   script:
     # Partial build, since Busybox does not have the necessary tools.
-    - 'mkdir ./dist/'
-    - "HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts"
-    - './resources/alt-formats/domains.txt.sh ./dist/hosts ./hblock > ./dist/hosts_domains.txt'
-    - './resources/stats/suffix.sh ./dist/hosts_domains.txt none > ./dist/most_abused_tlds.txt'
-    - './resources/templates/index.sh ./dist/ > ./dist/index.html'
-    - 'mv ./dist/ ./dist-build-busybox-latest/'
+    - |
+      mkdir ./dist/
+      HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts
+      ./resources/alt-formats/domains.txt.sh ./dist/hosts ./hblock > ./dist/hosts_domains.txt
+      ./resources/stats/suffix.sh ./dist/hosts_domains.txt none > ./dist/most_abused_tlds.txt
+      ./resources/templates/index.sh ./dist/ > ./dist/index.html
+      mv ./dist/ ./dist-build-busybox-latest/
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-build-busybox-latest/'
+    paths: ['./dist-build-busybox-latest/']
 
 package:deb:
   stage: 'package'
   image: 'docker.io/ubuntu:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      ca-certificates curl build-essential debhelper dh-systemd dpkg-dev make
+    - |
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates curl build-essential debhelper dh-systemd dpkg-dev make
   script:
     - |
       if [ -d ./resources/deb/ ]; then
-        make package-deb
+        make clean package-deb
         mv ./dist/ ./dist-package-deb/
         dpkg -i ./dist-package-deb/hblock-*.deb
         command hblock -v
       fi
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-package-deb/'
+    paths: ['./dist-package-deb/']
 
 package:rpm:
   stage: 'package'
   image: 'docker.io/fedora:latest'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      dnf install -y
-      ca-certificates curl make rpm-build rpmdevtools systemd
+    - |
+      dnf install -y \
+        ca-certificates curl make rpm-build rpmdevtools systemd
   script:
     - |
       if [ -d ./resources/rpm/ ]; then
-        make package-rpm
+        make clean package-rpm
         mv ./dist/ ./dist-package-rpm/
         rpm -Uhv ./dist-package-rpm/hblock-*.rpm
         command hblock -v
       fi
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-package-rpm/'
+    paths: ['./dist-package-rpm/']
 
 package:npm:
   stage: 'package'
   image: 'docker.io/node:current'
   before_script:
-    - 'uname -a'
-    - 'cat /etc/os-release'
-    - >
-      apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      ca-certificates curl make
+    - |
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates curl make
   script:
     - |
       if [ -d ./resources/npm/ ]; then
-        make package-npm
+        make clean package-npm
         mv ./dist/ ./dist-package-npm/
         npm install -g ./dist-package-npm/hblock-*.tgz
         command hblock -v
       fi
   artifacts:
     expire_in: '1 week'
-    paths:
-      - './dist-package-npm/'
+    paths: ['./dist-package-npm/']
 
 pages:
   stage: 'deploy'
-  only:
-    - 'master'
+  only: ['master']
   script:
-    - 'mv ./dist-build-ubuntu-latest/ ./public/'
+    - |
+      mv ./dist-build-ubuntu-latest/ ./public/
   artifacts:
-    paths:
-      - './public/'
+    paths: ['./public/']

@@ -17,8 +17,11 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Install packages'
-        run: 'apk add --no-cache make'
+        run: |
+          apk add --no-cache make
       - name: 'Print ShellCheck version'
-        run: 'shellcheck --version'
+        run: |
+          shellcheck --version
       - name: 'Lint project'
-        run: 'make lint'
+        run: |
+          make clean lint
