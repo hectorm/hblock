@@ -1,0 +1,74 @@
+name: 'Package'
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+
+  package-deb:
+    name: 'Create deb package'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/ubuntu:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates curl build-essential debhelper dh-systemd dpkg-dev make
+      - name: 'Package project'
+        run: |
+          if [ -d ./resources/deb/ ]; then
+            make clean package-deb
+            mv ./dist/ ./dist-package-deb/
+            dpkg -i ./dist-package-deb/hblock-*.deb
+            command hblock -v
+          fi
+
+  package-rpm:
+    name: 'Create RPM package'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/fedora:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          dnf install -y \
+            ca-certificates curl make rpm-build rpmdevtools systemd
+      - name: 'Package project'
+        run: |
+          if [ -d ./resources/rpm/ ]; then
+            make clean package-rpm
+            mv ./dist/ ./dist-package-rpm/
+            rpm -Uhv ./dist-package-rpm/hblock-*.rpm
+            command hblock -v
+          fi
+
+  package-npm:
+    name: 'Create NPM package'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/node:current'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates curl make
+      - name: 'Package project'
+        run: |
+          if [ -d ./resources/npm/ ]; then
+            make clean package-npm
+            mv ./dist/ ./dist-package-npm/
+            npm install -g ./dist-package-npm/hblock-*.tgz
+            command hblock -v
+          fi

@@ -1,4 +1,4 @@
-name: 'Lint project'
+name: 'Lint'
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
 
   lint:
-    name: 'Lint project'
+    name: 'Lint'
     runs-on: 'ubuntu-latest'
     container:
       image: 'docker.io/koalaman/shellcheck-alpine:stable'

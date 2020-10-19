@@ -1,0 +1,140 @@
+name: 'Build'
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+
+  build-ubuntu-latest:
+    name: 'Build on ubuntu:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/ubuntu:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates curl file gawk grep idn2 make sed zip
+      - name: 'Build project'
+        run: |
+          make clean all
+
+  build-debian-latest:
+    name: 'Build on debian:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/debian:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates curl file gawk grep idn2 make sed zip
+      - name: 'Build project'
+        run: |
+          make clean all
+
+  build-fedora-latest:
+    name: 'Build on fedora:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/fedora:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          dnf install -y \
+            ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Build project'
+        run: |
+          make clean all
+
+  build-centos-latest:
+    name: 'Build on centos:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/centos:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          dnf install -y \
+            ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Build project'
+        run: |
+          make clean all
+
+  build-opensuse-latest:
+    name: 'Build on opensuse:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/opensuse:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          zypper install -y \
+            ca-certificates curl file gawk grep libidn2-tools make sed zip
+      - name: 'Build project'
+        run: |
+          make clean all
+
+  build-archlinux-latest:
+    name: 'Build on archlinux:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          pacman -Sy --noconfirm --needed \
+            ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Build project'
+        run: |
+          make clean all
+
+  build-alpine-latest:
+    name: 'Build on alpine:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Install packages'
+        run: |
+          apk add --no-cache \
+            ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Build project'
+        run: |
+          make clean all
+
+  build-busybox-latest:
+    name: 'Build on busybox:latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/busybox:latest'
+    steps:
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        # Partial build, since Busybox does not have the necessary tools.
+        run: |
+          mkdir ./dist/
+          HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts
+          ./resources/alt-formats/domains.txt.sh ./dist/hosts ./hblock > ./dist/hosts_domains.txt
+          ./resources/stats/suffix.sh ./dist/hosts_domains.txt none > ./dist/most_abused_tlds.txt
+          ./resources/templates/index.sh ./dist/ > ./dist/index.html
