@@ -129,8 +129,7 @@ build:busybox:latest:
   stage: 'build'
   image: 'docker.io/busybox:latest'
   script:
-    # Partial build, since Busybox does not have the necessary tools.
-    - |
+    - | # Partial build, since Busybox does not have the necessary tools.
       mkdir ./dist/
       HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts
       ./resources/alt-formats/domains.txt.sh ./dist/hosts ./hblock > ./dist/hosts_domains.txt
