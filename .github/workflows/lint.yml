@@ -14,11 +14,11 @@ jobs:
     container:
       image: 'docker.io/koalaman/shellcheck-alpine:stable'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
-          apk add --no-cache make
+          apk add --no-cache gzip make tar
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Print ShellCheck version'
         run: |
           shellcheck --version
