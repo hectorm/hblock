@@ -24,7 +24,7 @@ build:ubuntu:latest:
   before_script:
     - |
       apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y \
         ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - |
@@ -40,7 +40,7 @@ build:debian:latest:
   before_script:
     - |
       apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y \
         ca-certificates curl file gawk grep idn2 make sed zip
   script:
     - |
@@ -146,7 +146,7 @@ package:deb:
   before_script:
     - |
       apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y \
         build-essential debhelper dh-systemd dpkg-dev make
   script:
     - |
@@ -185,7 +185,7 @@ package:npm:
   before_script:
     - |
       apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y \
         make wget
   script:
     - |

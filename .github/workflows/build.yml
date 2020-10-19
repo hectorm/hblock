@@ -17,7 +17,7 @@ jobs:
       - name: 'Install packages'
         run: |
           apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y \
             ca-certificates curl file gawk grep idn2 make sed zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
@@ -34,7 +34,7 @@ jobs:
       - name: 'Install packages'
         run: |
           apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y \
             ca-certificates curl file gawk grep idn2 make sed zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
