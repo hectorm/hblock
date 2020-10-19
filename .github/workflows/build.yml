@@ -14,13 +14,13 @@ jobs:
     container:
       image: 'docker.io/ubuntu:latest'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             ca-certificates curl file gawk grep idn2 make sed zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Build project'
         run: |
           make clean all
@@ -31,13 +31,13 @@ jobs:
     container:
       image: 'docker.io/debian:latest'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             ca-certificates curl file gawk grep idn2 make sed zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Build project'
         run: |
           make clean all
@@ -48,12 +48,12 @@ jobs:
     container:
       image: 'docker.io/fedora:latest'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
           dnf install -y \
             ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Build project'
         run: |
           make clean all
@@ -64,12 +64,12 @@ jobs:
     container:
       image: 'docker.io/centos:latest'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
           dnf install -y \
             ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Build project'
         run: |
           make clean all
@@ -80,12 +80,12 @@ jobs:
     container:
       image: 'docker.io/opensuse/tumbleweed:latest'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
           zypper install -y \
             ca-certificates curl file gawk grep libidn2-tools make sed zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Build project'
         run: |
           make clean all
@@ -96,12 +96,12 @@ jobs:
     container:
       image: 'docker.io/archlinux:latest'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
           pacman -Sy --noconfirm --needed \
             ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Build project'
         run: |
           make clean all
@@ -112,12 +112,12 @@ jobs:
     container:
       image: 'docker.io/alpine:latest'
     steps:
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Install packages'
         run: |
           apk add --no-cache \
             ca-certificates curl file gawk grep libidn2 make sed zip
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Build project'
         run: |
           make clean all
