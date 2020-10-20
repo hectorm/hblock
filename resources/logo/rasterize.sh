@@ -7,7 +7,7 @@
 set -eu
 export LC_ALL='C'
 
-SCRIPT_DIR="$(dirname "$(readlink -f "${0:?}")")"
+SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 TARGET_DIR="${SCRIPT_DIR:?}/bitmaps/"
 
 main() {
