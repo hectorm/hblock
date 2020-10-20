@@ -12,7 +12,7 @@ main() {
 	#hblock="${2:-hblock}"
 	resourcesDir="${3:-./resources}"
 
-	zip="$(printf -- '%s\n' "${TMPDIR:-/tmp}"/hblock.${$-}.zip)"
+	zip="$(printf -- '%s\n' "${TMPDIR:-/tmp}"/hblock.${$}.zip)"
 	trap 'rm -f ${zip:?}; trap - EXIT; exit 0' EXIT TERM INT HUP
 
 	(cd "${resourcesDir:?}"/alt-formats/windows/ && zip -qrl "${zip:?}" ./)
