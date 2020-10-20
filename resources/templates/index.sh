@@ -359,7 +359,7 @@ main() {
 
 			<title>Index of /hBlock</title>
 			<meta name="description" content="Improve your security and privacy by blocking ads, tracking and malware domains">
-			<meta name="author" content="Héctor Molinero Fernández <hector@molinero.dev>">
+			<meta name="author" content="H&#233;ctor Molinero Fern&#225;ndez <hector@molinero.dev>">
 			<meta name="license" content="MIT, https://opensource.org/licenses/MIT">
 			<link rel="canonical" href="https://hblock.molinero.dev/">
 
