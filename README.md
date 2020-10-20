@@ -59,7 +59,7 @@ curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.7/hbl
   && sudo chmod 755 /usr/local/bin/hblock
 ```
 
-**Note:** you can use [this systemd timer](resources/systemd/README.md) to regularly update the hosts file for new additions.
+**Note:** you can use [this systemd timer](resources/systemd/) to regularly update the hosts file for new additions.
 
 ### Arch Linux
 
