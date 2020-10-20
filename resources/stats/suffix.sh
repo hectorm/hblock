@@ -93,8 +93,8 @@ main() {
 			if grep -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.match"; then
 				count="$(awk '{s+=$1}END{print(s)}' "${blocklistFile:?}.match")"
 				stats="$(printf -- '%s\t%s\n%s' "${count:?}" "${regex:?}" "${stats?}")"
-				(grep -v -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-					&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}") || true
+				{ grep -v -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+					&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"; } || true
 			fi
 		done < "${blocklistFile:?}.suffixes"
 
