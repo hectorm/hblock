@@ -454,8 +454,7 @@ main() {
 		printInfo 'Downloading lists'
 
 		# Read the sources file ignoring lines that start with "#" or are empty.
-		_IFS="${IFS?}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-		sed -e '/^#/d;/^$/d' -- "${sourcesFile:?}" | while read -r url || [ -n "${url?}" ]; do
+		sed -e '/^#/d;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
 			printList "${url:?}"
 			if ! fetchUrl "${url:?}" >> "${blocklistFile:?}"; then
 				if [ "${continue:?}" = 'true' ]; then
@@ -466,7 +465,6 @@ main() {
 				fi
 			fi
 		done
-		IFS="${_IFS?}"
 
 		printInfo 'Parsing lists'
 
@@ -550,13 +548,11 @@ main() {
 		# If the regex option is active, each entry is treated as a regex.
 		if [ "${regex:?}" = 'true' ]; then
 			# Read the allowlist file ignoring lines that start with "#" or are empty.
-			_IFS="${IFS?}"; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-			sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" | while read -r regex || [ -n "${regex?}" ]; do
+			sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" | while IFS= read -r regex || [ -n "${regex?}" ]; do
 				sed -e "/${regex:?}/d" \
 					-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 					&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 			done
-			IFS="${_IFS?}"
 		else
 			sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" | sort | uniq > "${blocklistFile:?}.aux.1"
 			comm -23 -- "${blocklistFile:?}" "${blocklistFile:?}.aux.1" > "${blocklistFile:?}.aux.2" \

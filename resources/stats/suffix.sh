@@ -89,7 +89,7 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}.suffixes"
 
 		# Count blocklist matches for each suffix.
-		while read -r regex; do
+		while IFS= read -r regex || [ -n "${regex?}" ]; do
 			if grep -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.match"; then
 				count="$(awk '{s+=$1}END{print(s)}' "${blocklistFile:?}.match")"
 				stats="$(printf -- '%s\t%s\n%s' "${count:?}" "${regex:?}" "${stats?}")"
