@@ -22,7 +22,7 @@ createTempDir() {
 		# Since POSIX does not specify mktemp utility, use this as fallback.
 		# And wait a second as a horrible hack to avoid name collisions.
 		rnd="$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')"
-		dir="${TMPDIR:-/tmp}/tmp.${$}${rnd:?}"
+		dir="${TMPDIR:-/tmp}/tmp.${$-}${rnd:?}"
 		(umask 077 && mkdir -- "${dir:?}")
 		printf -- '%s' "${dir:?}"
 	fi
@@ -117,4 +117,4 @@ main() {
 	printf -- '%s\n%s\n' "${header:?}" "${stats?}"
 }
 
-main "${@}"
+main "${@-}"

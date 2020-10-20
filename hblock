@@ -93,31 +93,31 @@ optParse() {
 		case "${1?}" in
 			# Short options that accept an argument need a "*" in their pattern because they can be
 			# found in the "-A<value>" form.
-			'-O'*|'--output') optArgStr "${@}"; outputFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-H'*|'--header') optArgStr "${@}"; headerFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-F'*|'--footer') optArgStr "${@}"; footerFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-S'*|'--sources') optArgStr "${@}"; sourcesFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-A'*|'--allowlist') optArgStr "${@}"; allowlistFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-D'*|'--denylist') optArgStr "${@}"; denylistFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-R'*|'--redirection') optArgStr "${@}"; redirection="${optArg?}"; shift "${optShift:?}" ;;
-			'-W'*|'--wrap') optArgStr "${@}"; wrap="${optArg?}"; shift "${optShift:?}" ;;
-			'-T'*|'--template') optArgStr "${@}"; template="${optArg?}"; shift "${optShift:?}" ;;
-			'-C'*|'--comment') optArgStr "${@}"; comment="${optArg?}"; shift "${optShift:?}" ;;
-			'-l' |'--lenient'|'--no-lenient') optArgBool "${@}"; lenient="${optArg:?}" ;;
-			'-r' |'--regex'|'--no-regex') optArgBool "${@}"; regex="${optArg:?}" ;;
-			'-c' |'--continue'|'--no-continue') optArgBool "${@}"; continue="${optArg:?}" ;;
-			'-q' |'--quiet'|'--no-quiet') optArgBool "${@}"; quiet="${optArg:?}" ;;
-			'-x'*|'--color') optArgStr "${@}"; color="${optArg?}"; shift "${optShift:?}" ;;
+			'-O'*|'--output') optArgStr "${@-}"; outputFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-H'*|'--header') optArgStr "${@-}"; headerFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-F'*|'--footer') optArgStr "${@-}"; footerFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-S'*|'--sources') optArgStr "${@-}"; sourcesFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-A'*|'--allowlist') optArgStr "${@-}"; allowlistFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-D'*|'--denylist') optArgStr "${@-}"; denylistFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-R'*|'--redirection') optArgStr "${@-}"; redirection="${optArg?}"; shift "${optShift:?}" ;;
+			'-W'*|'--wrap') optArgStr "${@-}"; wrap="${optArg?}"; shift "${optShift:?}" ;;
+			'-T'*|'--template') optArgStr "${@-}"; template="${optArg?}"; shift "${optShift:?}" ;;
+			'-C'*|'--comment') optArgStr "${@-}"; comment="${optArg?}"; shift "${optShift:?}" ;;
+			'-l' |'--lenient'|'--no-lenient') optArgBool "${@-}"; lenient="${optArg:?}" ;;
+			'-r' |'--regex'|'--no-regex') optArgBool "${@-}"; regex="${optArg:?}" ;;
+			'-c' |'--continue'|'--no-continue') optArgBool "${@-}"; continue="${optArg:?}" ;;
+			'-q' |'--quiet'|'--no-quiet') optArgBool "${@-}"; quiet="${optArg:?}" ;;
+			'-x'*|'--color') optArgStr "${@-}"; color="${optArg?}"; shift "${optShift:?}" ;;
 			'-v' |'--version') showVersion ;;
 			'-h' |'--help') showHelp ;;
 			# If "--" is found, the remaining positional arguments are saved and the parsing ends.
-			--) shift; posArgs="${posArgs-} ${*}"; break ;;
+			--) shift; posArgs="${posArgs-} ${*-}"; break ;;
 			# If a long option in the form "--opt=value" is found, it is split into "--opt" and "value".
-			--*=*) optSplitEquals "${@}"; shift; set -- "${optName:?}" "${optArg?}" "${@}"; continue ;;
+			--*=*) optSplitEquals "${@-}"; shift; set -- "${optName:?}" "${optArg?}" "${@-}"; continue ;;
 			# If an option did not match any pattern, an error is thrown.
 			-?|--*) optDie "Illegal option ${1:?}" ;;
 			# If multiple short options in the form "-AB" are found, they are split into "-A" and "-B".
-			-?*) optSplitShort "${@}"; shift; set -- "${optAName:?}" "${optBName:?}" "${@}"; continue ;;
+			-?*) optSplitShort "${@-}"; shift; set -- "${optAName:?}" "${optBName:?}" "${@-}"; continue ;;
 			# If a positional argument is found, it is saved.
 			*) posArgs="${posArgs-} ${1?}" ;;
 		esac
@@ -140,7 +140,7 @@ optArgBool() {
 	else optArg='false'; fi
 }
 optDie() {
-	printf -- '%s\n' "${@}" "Try '${0:?} --help' for more information" >&2
+	printf -- '%s\n' "${@-}" "Try '${0:?} --help' for more information" >&2
 	exit 2
 }
 
@@ -259,22 +259,22 @@ quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&
 # Pretty print methods.
 printInfo() {
 	if [ "${quiet-}" != 'true' ]; then
-		if [ "${color-}" != 'true' ]; then printf -- '[INFO] %s\n' "${@}"
-		else printf -- '\033[0m[\033[1;32mINFO\033[0m] %s\n' "${@}"; fi
+		if [ "${color-}" != 'true' ]; then printf -- '[INFO] %s\n' "${@-}"
+		else printf -- '\033[0m[\033[1;32mINFO\033[0m] %s\n' "${@-}"; fi
 	fi
 }
 printWarn() {
-	if [ "${color-}" != 'true' ]; then printf -- '[WARN] %s\n' "${@}" >&2
-	else printf -- '\033[0m[\033[1;33mWARN\033[0m] %s\n' "${@}"; fi
+	if [ "${color-}" != 'true' ]; then printf -- '[WARN] %s\n' "${@-}" >&2
+	else printf -- '\033[0m[\033[1;33mWARN\033[0m] %s\n' "${@-}"; fi
 }
 printError() {
-	if [ "${color-}" != 'true' ]; then printf -- '[ERROR] %s\n' "${@}" >&2
-	else printf -- '\033[0m[\033[1;31mERROR\033[0m] %s\n' "${@}"; fi
+	if [ "${color-}" != 'true' ]; then printf -- '[ERROR] %s\n' "${@-}" >&2
+	else printf -- '\033[0m[\033[1;31mERROR\033[0m] %s\n' "${@-}"; fi
 }
 printList() {
 	if [ "${quiet-}" != 'true' ]; then
-		if [ "${color-}" != 'true' ]; then printf -- ' * %s\n' "${@}"
-		else printf -- '\033[0m \033[1;36m*\033[0m %s\n' "${@}"; fi
+		if [ "${color-}" != 'true' ]; then printf -- ' * %s\n' "${@-}"
+		else printf -- '\033[0m \033[1;36m*\033[0m %s\n' "${@-}"; fi
 	fi
 }
 
@@ -285,7 +285,7 @@ createTempDir() {
 		# Since POSIX does not specify mktemp utility, use this as fallback.
 		# And wait a second as a horrible hack to avoid name collisions.
 		rnd="$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')"
-		dir="${TMPDIR:-/tmp}/tmp.${$}${rnd:?}"
+		dir="${TMPDIR:-/tmp}/tmp.${$-}${rnd:?}"
 		(umask 077 && mkdir -- "${dir:?}")
 		printf -- '%s' "${dir:?}"
 	fi
@@ -370,7 +370,7 @@ main() {
 
 	# Parse command line options.
 	# shellcheck disable=SC2086
-	{ optParse "${@}"; set -- ${posArgs-}; }
+	{ optParse "${@-}"; set -- ${posArgs-}; }
 
 	if [ "${color:?}" = 'auto' ]; then
 		# Check color support, but honor ${NO_COLOR} variable (https://no-color.org).
@@ -640,4 +640,4 @@ main() {
 	printInfo "${blocklistCount:?} blocked domains!"
 }
 
-main "${@}"
+main "${@-}"

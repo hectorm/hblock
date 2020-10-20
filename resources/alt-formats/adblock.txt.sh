@@ -20,4 +20,4 @@ main() {
 	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -qO-
 }
 
-main "${@}"
+main "${@-}"
