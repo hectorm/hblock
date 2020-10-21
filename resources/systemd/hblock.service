@@ -3,7 +3,6 @@ Description=hBlock
 
 [Service]
 Type=oneshot
-TimeoutStartSec=300
 ExecStart=/usr/bin/env hblock
 PrivateTmp=yes
 ProtectHome=yes
