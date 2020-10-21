@@ -13,3 +13,22 @@ curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.
   && sudo systemctl enable hblock.timer \
   && sudo systemctl start hblock.timer
 ```
+
+# Modify default options with environment variables
+
+To change the default options instead of modifying the original service you can override its properties.
+
+For example, to have multiple domains on the same line and enable regular expressions in the allowlist, create the file `/etc/systemd/system/hblock.service.d/override.conf` with the following content:
+
+```
+[Service]
+Environment=HBLOCK_WRAP=20
+Environment=HBLOCK_REGEX=true
+```
+
+Then reload the systemd configuration and start the service:
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl start hblock.service
+```
