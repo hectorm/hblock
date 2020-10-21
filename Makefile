@@ -72,11 +72,7 @@ index: ./dist/index.html
 
 lint:
 	'$(SHELLCHECK)' ./hblock
-	'$(SHELLCHECK)' ./resources/alt-formats/*.sh
-	'$(SHELLCHECK)' ./resources/logo/rasterize.sh
-	'$(SHELLCHECK)' ./resources/stats/suffix.sh
-	'$(SHELLCHECK)' ./resources/templates/index.sh
-	'$(SHELLCHECK)' ./resources/version/version.sh
+	find ./ -type f -name '*.sh' | xargs '$(SHELLCHECK)'
 
 ##################################################
 ## "install" target
