@@ -6,10 +6,11 @@ SHELL := /bin/sh
 FLAGS := ${.MAKEFLAGS:C/\-J ([0-9]+,?)+//W}
 
 all: .DEFAULT
+
 .DEFAULT:
-	@which gmake >/dev/null 2>&1 || \
-		(printf '%s\n' \
+	@command -v gmake >/dev/null 2>&1 || \
+		{ printf '%s\n' \
 			"GMake is required to build hBlock." \
-			"Install it and try again." \
-		&& exit 1)
+			"Install it and try again." >&2 \
+		&& exit 1; }
 	@gmake ${.FLAGS} ${.TARGETS}
