@@ -66,14 +66,6 @@ index: ./dist/index.html
 	./resources/templates/index.sh "$$(dirname '$@')" > '$@'
 
 ##################################################
-## "logo" target
-##################################################
-.PHONY: logo
-
-logo:
-	./resources/logo/rasterize.sh
-
-##################################################
 ## "lint" target
 ##################################################
 .PHONY: lint
