@@ -16,7 +16,7 @@ curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.
 
 # Modify default options with environment variables
 
-To change the default options instead of modifying the original service you can override its properties.
+To change the default options instead of modifying the original service it is possible to override its properties.
 
 For example, to have multiple domains on the same line and enable regular expressions in the allowlist, create the file `/etc/systemd/system/hblock.service.d/override.conf` with the following content:
 
