@@ -8,16 +8,35 @@ set -eu
 export LC_ALL='C'
 
 main() {
-	hosts="${1:-/etc/hosts}"
-	hblock="${2:-hblock}"
-	#resourcesDir="${3:-./resources}"
+	source="${1:?}"
+	target="${2:?}"
+	hblock="${3:-hblock}"
 
+	export HBLOCK_HEADER_FILE='builtin'
 	export HBLOCK_HEADER=''
-	export HBLOCK_SOURCES="file://${hosts:?}"
+
+	export HBLOCK_FOOTER_FILE='builtin'
+	export HBLOCK_FOOTER=''
+
+	export HBLOCK_SOURCES_FILE='builtin'
+	export HBLOCK_SOURCES="file://${source:?}"
+
+	export HBLOCK_ALLOWLIST_FILE='builtin'
+	export HBLOCK_ALLOWLIST=''
+
+	export HBLOCK_DENYLIST_FILE='builtin'
+	export HBLOCK_DENYLIST='hblock-check.molinero.dev'
+
+	export HBLOCK_REDIRECTION=''
+	export HBLOCK_WRAP='1'
 	export HBLOCK_TEMPLATE='||\1^'
 	export HBLOCK_COMMENT='!'
 
-	${hblock:?} -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -qO-
+	export HBLOCK_LENIENT='false'
+	export HBLOCK_REGEX='false'
+	export HBLOCK_CONTINUE='false'
+
+	"${hblock:?}" -qO "${target:?}"
 }
 
 main "${@-}"

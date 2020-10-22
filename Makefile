@@ -40,7 +40,7 @@ build: ./dist/hosts $(ALT_FORMATS_OUT)
 	HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O './dist/hosts'
 
 ./dist/hosts_%: ./resources/alt-formats/%.sh ./dist/hosts
-	'$<' './dist/hosts' ./hblock ./resources/ > '$@'
+	'$<' './dist/hosts' '$@' ./hblock
 
 ##################################################
 ## "stats" target
