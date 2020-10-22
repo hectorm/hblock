@@ -156,8 +156,7 @@ package-npm: ./dist/hblock-$(VERSION).tgz
 ./dist/hblock-$(VERSION).tgz: | ./dist/
 	rm -rf ./dist/npmbuild/; mkdir ./dist/npmbuild/
 	cp -a ./hblock ./dist/npmbuild/hblock
-	cp -a ./README.md ./dist/npmbuild/README.md
-	cp -a ./LICENSE.md ./dist/npmbuild/LICENSE.md
+	cp -a ./*.md ./dist/npmbuild/
 	cp -a ./resources/npm/* ./dist/npmbuild/
 	sed -i 's|__PKG_VERSION__|$(VERSION)|g' ./dist/npmbuild/package.json
 	tar -czf '$@' -C ./dist/npmbuild/ ./
