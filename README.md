@@ -30,7 +30,7 @@ prevents your system from connecting to them.
 
 hBlock is available in various package managers. Please check the [PACKAGES.md](./PACKAGES.md) file for an up-to-date list.
 
-The latest available version can also be installed manually by running the following command:
+The latest available version can also be installed manually by running the following commands:
 
 ```sh
 curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.7/hblock' \
