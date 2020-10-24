@@ -37,8 +37,8 @@
   "bin": {
     "hblock": "./hblock"
   },
-  "files": [
-    "/hblock"
+  "man": [
+    "./hblock.1"
   ],
   "os": [
     "!win32"

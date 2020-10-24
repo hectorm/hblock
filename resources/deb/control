@@ -12,7 +12,6 @@ Package: hblock
 Architecture: all
 Depends: curl | wget, ${misc:Depends}
 Description: Improve your security and privacy by blocking ads, tracking and malware domains
- This POSIX-compliant shell script, designed for Unix-like systems, gets a list
- of domains that serve ads, tracking scripts and malware from multiple sources
- and creates a hosts file (alternative formats are also supported) that prevents
- your system from connecting to them.
+ This POSIX-compliant shell script gets a list of domains that serve ads,
+ tracking scripts and malware from multiple sources and creates a hosts file,
+ among other formats, that prevents your system from connecting to them.

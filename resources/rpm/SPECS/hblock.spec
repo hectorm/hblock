@@ -5,38 +5,37 @@ Name: %{name}
 Version: %{version}
 Release: 1
 Summary: Improve your security and privacy by blocking ads, tracking and malware domains
-Packager: Héctor Molinero Fernández <hector@molinero.dev>
+
 License: MIT
 URL: https://github.com/hectorm/hblock
-Source0: %{name}-%{version}.tar
+Source0: %{name}.tar
+
 BuildArch: noarch
 BuildRequires: make systemd
 Requires: (curl or wget)
-
 %{?systemd_requires}
 
 %description
-This POSIX-compliant shell script, designed for Unix-like systems, gets a list
-of domains that serve ads, tracking scripts and malware from multiple sources
-and creates a hosts file (alternative formats are also supported) that prevents
-your system from connecting to them.
+This POSIX-compliant shell script gets a list of domains that serve ads,
+tracking scripts and malware from multiple sources and creates a hosts file,
+among other formats, that prevents your system from connecting to them.
 
 %prep
 %setup -c
 
 %install
-make DESTDIR="%{buildroot}" PREFIX="%{buildroot}%{_prefix}" SYSTEMDUNITDIR="%{buildroot}%{_unitdir}" install
-
-%clean
-rm -rf "%{buildroot}"
+%make_install PREFIX="%{?buildroot}%{_prefix}" BINDIR="%{?buildroot}%{_bindir}" MANDIR="%{?buildroot}%{_mandir}" SYSTEMDUNITDIR="%{?buildroot}%{_unitdir}"
 
 %post
-%systemd_post hblock.timer
+%systemd_post %{name}.timer
 
 %preun
-%systemd_preun hblock.timer
+%systemd_preun %{name}.timer
 
 %files
-%{_prefix}/bin/hblock
-%{_unitdir}/hblock.timer
-%{_unitdir}/hblock.service
+%{_bindir}/%{name}
+%{_unitdir}/%{name}.timer
+%{_unitdir}/%{name}.service
+%{_mandir}/man1/%{name}.1*
+%license LICENSE.md
+%doc README.md
