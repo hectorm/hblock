@@ -43,14 +43,15 @@ sha256Checksum() {
 
 # Escape string for use in HTML.
 escapeHTML() {
-	printf -- '%s' "${1?}" | awk -v RS="" '{
+	printf -- '%s' "${1?}" | awk -v RS='' '{
 		gsub(/&/,"\\&#38;");
 		gsub(/</,"\\&#60;");
 		gsub(/>/,"\\&#62;");
 		gsub(/"/,"\\&#34;");
 		gsub(/'\''/,"\\&#39;");
 		gsub(/\n/,"\\&#10;");
-	print}'
+		print($0)
+	}'
 }
 
 # RFC 3986 compliant URL encoding method.
@@ -63,7 +64,7 @@ encodeURI() {
 			4[1-9a-f]|5[0-9a]|\
 			6[1-9a-f]|7[0-9a]|\
 			2d|5f|2e|7e\
-			) printf '%b' "\\$(printf '%o' "0x${h:?}")" ;;
+			) printf '%b' '\0'"$(printf '%o' "0x${h:?}")" ;;
 			*) printf '%%%s' "${h:?}"
 		esac
 	done
@@ -73,14 +74,14 @@ encodeURI() {
 # Calculate digest for Content-Security-Policy.
 cspDigest() {
 	hex="$(printf -- '%s' "${1?}" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')"
-	b64="$(for h in ${hex?}; do printf '%b' "\\$(printf '%o' "0x${h:?}")"; done | base64Encode)"
+	b64="$(for h in ${hex?}; do printf '%b' '\0'"$(printf '%o' "0x${h:?}")"; done | base64Encode)"
 	printf 'sha256-%s' "${b64?}"
 }
 
 # Get file size (or space if it is not a file).
 getFileSize() {
 	if [ -f "${1:?}" ]; then
-		wc -c < "${1:?}" | awk '{printf "%0.2f kB", $1 / 1000}'
+		wc -c < "${1:?}" | awk '{printf("%0.2f kB",$1/1000)}'
 	else
 		printf ' '
 	fi

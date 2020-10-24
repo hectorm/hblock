@@ -49,7 +49,7 @@ setVersion() {
 	quotedVersion="$(quoteSubst "${version:?}")"
 
 	sed -i \
-		-e "s|^\(# Version:[[:blank:]]*\).\{1,\}$|\1${quotedVersion:?}|g" \
+		-e 's|^\(# Version:[[:blank:]]*\).\{1,\}$|\1'"${quotedVersion:?}"'|g' \
 		"${PROJECT_DIR:?}"/hblock
 
 	hblockScriptChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)"
@@ -59,8 +59,8 @@ setVersion() {
 		> "${PROJECT_DIR:?}"/SHA256SUMS
 
 	sed -i \
-		-e "s|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1${quotedVersion:?}\3|g" \
-		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.*\)$|\1${hblockScriptChecksum:?}\2|g" \
+		-e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${quotedVersion:?}"'\3|g' \
+		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.*\)$|\1'"${hblockScriptChecksum:?}"'\2|g' \
 		"${PROJECT_DIR:?}"/README.md
 
 	hblockServiceChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.service)"
@@ -72,9 +72,9 @@ setVersion() {
 		> "${PROJECT_DIR:?}"/resources/systemd/SHA256SUMS
 
 	sed -i \
-		-e "s|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1${quotedVersion:?}\3|g" \
-		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.service.*\)$|\1${hblockServiceChecksum:?}\2|g" \
-		-e "s|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.timer.*\)$|\1${hblockTimerChecksum:?}\2|g" \
+		-e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${quotedVersion:?}"'\3|g' \
+		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.service.*\)$|\1'"${hblockServiceChecksum:?}"'\2|g' \
+		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.timer.*\)$|\1'"${hblockTimerChecksum:?}"'\2|g' \
 		"${PROJECT_DIR:?}"/resources/systemd/README.md
 }
 
