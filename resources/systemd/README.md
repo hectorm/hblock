@@ -1,6 +1,7 @@
 # Install systemd service and timer units
 
-The following commands will schedule a daily update of the hosts file. See [this article](https://wiki.archlinux.org/index.php/systemd/Timers) for more information about systemd timers.
+The following commands will schedule a daily update of the hosts file. See [this article](https://wiki.archlinux.org/index.php/systemd/Timers) for
+more information about systemd timers.
 
 ```sh
 curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.7/resources/systemd/hblock.{service,timer}' \
@@ -18,7 +19,8 @@ curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/hectorm/hblock/v2.1.
 
 To change the default options instead of modifying the original service it is possible to override its properties.
 
-For example, to have multiple domains on the same line and enable regular expressions in the allowlist, create the file `/etc/systemd/system/hblock.service.d/override.conf` with the following content:
+For example, to have multiple domains on the same line and enable regular expressions in the allowlist, create the file
+`/etc/systemd/system/hblock.service.d/override.conf` with the following content:
 
 ```
 [Service]

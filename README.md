@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://hblock.molinero.dev">
-    <img src="resources/logo/vectors/logo-a.svg" width="320" height="100">
+    <img src="./resources/logo/vectors/logo-a.svg" width="320" height="100">
   </a>
 </p>
 
@@ -22,9 +22,9 @@
 
 ## What is this for?
 
-This POSIX-compliant shell script, designed for Unix-like systems, gets a list of domains that serve ads, tracking scripts and malware from
-[multiple sources](./SOURCES.md) and creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)) (alternative formats are also supported) that
-prevents your system from connecting to them.
+This POSIX-compliant shell script gets a list of domains that serve ads, tracking scripts and malware from [multiple sources](./SOURCES.md) and
+creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)), [among other formats](./resources/alt-formats/), that prevents your system from
+connecting to them.
 
 ## Installation
 
@@ -44,10 +44,11 @@ Additionally, a [systemd timer](resources/systemd/) can be set to regularly upda
 
 ## Usage
 
-The default behavior of hBlock can be adjusted with multiple options. Use the `--help` option or check the [USAGE.md](./USAGE.md) file for the full list.
+The default behavior of hBlock can be adjusted with multiple options. Use the `--help` option or check the [hblock.1.md](./hblock.1.md) file for the
+full list.
 
 [![asciicast](https://asciinema.org/a/GmZOda836hfjonpy299PnFcJl.svg)](https://asciinema.org/a/GmZOda836hfjonpy299PnFcJl)
 
 ## Nightly builds
 
-Nightly builds of the hosts file among other formats can be found [on the hBlock website](https://hblock.molinero.dev).
+Nightly builds of the hosts file, among other formats, can be found [on the hBlock website](https://hblock.molinero.dev).

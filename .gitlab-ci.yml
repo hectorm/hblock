@@ -131,7 +131,7 @@ build:busybox:latest:
   script:
     - | # Partial build, since Busybox does not have the necessary tools.
       mkdir ./dist/
-      HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O ./dist/hosts
+      HOSTNAME='' ./hblock -H builtin -F builtin -S builtin -A builtin -D builtin -O ./dist/hosts
       ./resources/alt-formats/domains.txt.sh ./dist/hosts ./dist/hosts_domains.txt ./hblock
       ./resources/stats/suffix.sh ./dist/hosts_domains.txt none > ./dist/most_abused_tlds.txt
       ./resources/templates/index.sh ./dist/ > ./dist/index.html

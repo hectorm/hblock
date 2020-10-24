@@ -9,6 +9,8 @@ BINDIR := $(PREFIX)/bin
 LIBDIR := $(PREFIX)/lib
 SYSTEMDUNITDIR := $(LIBDIR)/systemd/system
 
+HELP2MAN := $(shell command -v help2man 2>/dev/null)
+PANDOC := $(shell command -v pandoc 2>/dev/null)
 SHELLCHECK := $(shell command -v shellcheck 2>/dev/null)
 SYSTEMCTL := $(shell command -v systemctl 2>/dev/null)
 
@@ -37,10 +39,10 @@ build: ./dist/hosts $(ALT_FORMATS_OUT)
 	mkdir -p ./dist/
 
 ./dist/hosts: | ./dist/
-	HOSTNAME='' ./hblock -H 'builtin' -F 'builtin' -S 'builtin' -A 'builtin' -D 'builtin' -O './dist/hosts'
+	HOSTNAME='' ./hblock -H builtin -F builtin -S builtin -A builtin -D builtin -O ./dist/hosts
 
 ./dist/hosts_%: ./resources/alt-formats/%.sh ./dist/hosts
-	'$<' './dist/hosts' '$@' ./hblock
+	'$<' ./dist/hosts '$@' ./hblock
 
 ##################################################
 ## "stats" target
@@ -64,6 +66,19 @@ index: ./dist/index.html
 
 %/index.html: $(filter-out index %/index.html,$(MAKECMDGOALS))
 	./resources/templates/index.sh "$$(dirname '$@')" > '$@'
+
+##################################################
+## "man" target
+##################################################
+.PHONY: man
+
+man: ./hblock.1 ./hblock.1.md
+
+./hblock.1:
+	'$(HELP2MAN)' --locale='en_US.UTF-8' --no-info --output='$@' ./hblock
+
+./hblock.1.md: ./hblock.1
+	'$(PANDOC)' --from='man' --to='gfm' --output='$@' ./hblock.1
 
 ##################################################
 ## "lint" target

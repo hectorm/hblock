@@ -230,8 +230,8 @@ main() {
 		}
 
 		.title {
-			font-weight: 700;
 			font-size: 22px;
+			font-weight: 700;
 		}
 
 		.table {
@@ -250,7 +250,7 @@ main() {
 		}
 
 		.row:first-child {
-			font-weight: bold;
+			font-weight: 700;
 		}
 
 		a.row {
@@ -298,7 +298,7 @@ main() {
 			.cell::before {
 				display: inline-block;
 				margin-right: 5px;
-				font-weight: bold;
+				font-weight: 700;
 			}
 
 			.cell:nth-child(1)::before {
@@ -370,7 +370,7 @@ main() {
 			<meta property="og:description" content="Improve your security and privacy by blocking ads, tracking and malware domains">
 			<meta property="og:type" content="website">
 			<meta property="og:url" content="https://hblock.molinero.dev/">
-			<meta property="og:image" content="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/bitmap/favicon-512x512.png">
+			<meta property="og:image" content="https://raw.githubusercontent.com/hectorm/hblock/master/resources/logo/bitmaps/logo-shield-ffffff-h512.png">
 
 			<style>${css?}</style>
 		</head>
@@ -378,14 +378,17 @@ main() {
 		<body>
 			<div class="container">
 				<div class="section">
-					<a title="hBlock project page" href="https://github.com/hectorm/hblock">
-						<img src="${logo?}" width="160" height="50" alt="hBlock">
-					</a>
 					<p>
-						hBlock is a POSIX-compliant shell script, designed for Unix-like systems, that gets a list of domains that serve ads, tracking
-						 scripts and malware from <a title="hBlock sources" href="https://github.com/hectorm/hblock#sources">multiple sources</a>
-						 and creates a <a title="hosts file definition" href="https://en.wikipedia.org/wiki/Hosts_(file)">hosts file</a>
-						 (alternative formats are also supported) that prevents your system from connecting to them.
+						<a title="hBlock project page" href="https://github.com/hectorm/hblock">
+							<img src="${logo?}" width="160" height="50" alt="hBlock">
+						</a>
+					</p>
+					<p>
+						This POSIX-compliant shell script gets a list of domains that serve ads, tracking scripts and malware from
+						 <a title="Sources" href="https://github.com/hectorm/hblock/blob/master/SOURCES.md">multiple sources</a> and creates a
+						 <a title="Hosts file definition" href="https://en.wikipedia.org/wiki/Hosts_(file)">hosts file</a>,
+						 <a title="Alternative formats" href="https://github.com/hectorm/hblock/tree/master/resources/alt-formats/">among other formats</a>,
+						 that prevents your system from connecting to them.
 					</p>
 					<p>
 						On this website you can download the latest build of the default blocklist and you can generate your own by following the
