@@ -385,7 +385,7 @@ main() {
 						</a>
 					</p>
 					<p>
-						This POSIX-compliant shell script gets a list of domains that serve ads, tracking scripts and malware from
+						hBlock is a POSIX-compliant shell script that gets a list of domains that serve ads, tracking scripts and malware from
 						 <a title="Sources" href="https://github.com/hectorm/hblock/blob/master/SOURCES.md">multiple sources</a> and creates a
 						 <a title="Hosts file definition" href="https://en.wikipedia.org/wiki/Hosts_(file)">hosts file</a>,
 						 <a title="Alternative formats" href="https://github.com/hectorm/hblock/tree/master/resources/alt-formats/">among other formats</a>,

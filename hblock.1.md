@@ -11,10 +11,10 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-This POSIX-compliant shell script gets a list of domains that serve ads,
-tracking scripts and malware from multiple sources and creates a hosts
-file, among other formats, that prevents your system from connecting to
-them.
+hBlock is a POSIX-compliant shell script that gets a list of domains
+that serve ads, tracking scripts and malware from multiple sources and
+creates a hosts file, among other formats, that prevents your system
+from connecting to them.
 
 OPTIONS
 =======

@@ -22,9 +22,9 @@
 
 ## What is this for?
 
-This POSIX-compliant shell script gets a list of domains that serve ads, tracking scripts and malware from [multiple sources](./SOURCES.md) and
-creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)), [among other formats](./resources/alt-formats/), that prevents your system from
-connecting to them.
+hBlock is a POSIX-compliant shell script that gets a list of domains that serve ads, tracking scripts and malware from [multiple sources](./SOURCES.md)
+and creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)), [among other formats](./resources/alt-formats/), that prevents your system
+from connecting to them.
 
 ## Installation
 
