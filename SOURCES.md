@@ -6,6 +6,7 @@
 | AdBlock NoCoin List                     | [Link][homepage-adblock-nocoin-list]                  | MIT                                                               | [Link][source-adblock-nocoin-list]                | [Link][mirror-adblock-nocoin-list]                |
 | AdGuard - Simplified                    | [Link][homepage-adguard-simplified]                   | GPL-3.0-only                                                      | [Link][source-adguard-simplified]                 | [Link][mirror-adguard-simplified]                 |
 | AntiPopads                              | [Link][homepage-antipopads]                           | WTFPL                                                             | [Link][source-antipopads]                         | [Link][mirror-antipopads]                         |
+| DigitalSide Threat-Intel                | [Link][homepage-digitalside-threat-intel]             | MIT                                                               | [Link][source-digitalside-threat-intel]           | [Link][mirror-digitalside-threat-intel]           |
 | disconnect.me - Ad                      | [Link][homepage-disconnect.me-ad]                     | GPL-3.0-only                                                      | [Link][source-disconnect.me-ad]                   | [Link][mirror-disconnect.me-ad]                   |
 | disconnect.me - Malvertising            | [Link][homepage-disconnect.me-malvertising]           | GPL-3.0-only                                                      | [Link][source-disconnect.me-malvertising]         | [Link][mirror-disconnect.me-malvertising]         |
 | disconnect.me - Malware                 | [Link][homepage-disconnect.me-malware]                | GPL-3.0-only                                                      | [Link][source-disconnect.me-malware]              | [Link][mirror-disconnect.me-malware]              |
@@ -53,6 +54,10 @@
 [homepage-antipopads]: https://github.com/Yhonay/antipopads
 [source-antipopads]: https://raw.githubusercontent.com/Yhonay/antipopads/master/hosts
 [mirror-antipopads]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
+
+[homepage-digitalside-threat-intel]: https://osint.digitalside.it
+[source-digitalside-threat-intel]: https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt
+[mirror-digitalside-threat-intel]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
 
 [homepage-disconnect.me-ad]: https://disconnect.me
 [source-disconnect.me-ad]: https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
