@@ -37,7 +37,6 @@
 | uBlock - Privacy                        | [Link][homepage-ublock-privacy]                       | GPL-3.0-only                                                      | [Link][source-ublock-privacy]                     | [Link][mirror-ublock-privacy]                     |
 | URLhaus                                 | [Link][homepage-urlhaus]                              | CC0-1.0                                                           | [Link][source-urlhaus]                            | [Link][mirror-urlhaus]                            |
 | winhelp2002.mvps.org                    | [Link][homepage-winhelp2002.mvps.org]                 | CC-BY-NC-SA-4.0                                                   | [Link][source-winhelp2002.mvps.org]               | [Link][mirror-winhelp2002.mvps.org]               |
-| ZeroDot1 - CoinBlockerLists             | [Link][homepage-zerodot1-coinblockerlists-browser]    | AGPL-3.0                                                          | [Link][source-zerodot1-coinblockerlists-browser]  | [Link][mirror-zerodot1-coinblockerlists-browser]  |
 
 [homepage-adaway.org]: https://adaway.org
 [source-adaway.org]: https://adaway.org/hosts.txt
@@ -185,7 +184,3 @@
 [homepage-winhelp2002.mvps.org]: https://winhelp2002.mvps.org
 [source-winhelp2002.mvps.org]: https://winhelp2002.mvps.org/hosts.txt
 [mirror-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
-
-[homepage-zerodot1-coinblockerlists-browser]: https://zerodot1.gitlab.io/CoinBlockerListsWeb/
-[source-zerodot1-coinblockerlists-browser]: https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
-[mirror-zerodot1-coinblockerlists-browser]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/zerodot1-coinblockerlists-browser/list.txt
