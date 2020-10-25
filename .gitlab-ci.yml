@@ -25,7 +25,7 @@ build:ubuntu:latest:
     - |
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        ca-certificates curl file gawk grep gzip idn2 make sed tar zip
+        ca-certificates curl file findutils gawk grep gzip idn2 make sed tar zip
   script:
     - |
       make clean all
@@ -41,7 +41,7 @@ build:debian:latest:
     - |
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        ca-certificates curl file gawk grep gzip idn2 make sed tar zip
+        ca-certificates curl file findutils gawk grep gzip idn2 make sed tar zip
   script:
     - |
       make clean all
@@ -56,7 +56,7 @@ build:fedora:latest:
   before_script:
     - |
       dnf install -y \
-        ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+        ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
   script:
     - |
       make clean all
@@ -71,7 +71,7 @@ build:centos:latest:
   before_script:
     - |
       dnf install -y \
-        ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+        ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
   script:
     - |
       make clean all
@@ -86,7 +86,7 @@ build:opensuse:latest:
   before_script:
     - |
       zypper install -y \
-        ca-certificates curl file gawk grep gzip libidn2-tools make sed tar zip
+        ca-certificates curl file findutils gawk grep gzip libidn2-tools make sed tar zip
   script:
     - |
       make clean all
@@ -101,7 +101,7 @@ build:archlinux:latest:
   before_script:
     - |
       pacman -Sy --noconfirm --needed \
-        ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+        ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
   script:
     - |
       make clean all
@@ -116,7 +116,7 @@ build:alpine:latest:
   before_script:
     - |
       apk add --no-cache \
-        ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+        ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
   script:
     - |
       make clean all

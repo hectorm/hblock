@@ -18,7 +18,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            ca-certificates curl file gawk grep gzip idn2 make sed tar zip
+            ca-certificates curl file findutils gawk grep gzip idn2 make sed tar zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -35,7 +35,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            ca-certificates curl file gawk grep gzip idn2 make sed tar zip
+            ca-certificates curl file findutils gawk grep gzip idn2 make sed tar zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -51,7 +51,7 @@ jobs:
       - name: 'Install packages'
         run: |
           dnf install -y \
-            ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -67,7 +67,7 @@ jobs:
       - name: 'Install packages'
         run: |
           dnf install -y \
-            ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -83,7 +83,7 @@ jobs:
       - name: 'Install packages'
         run: |
           zypper install -y \
-            ca-certificates curl file gawk grep gzip libidn2-tools make sed tar zip
+            ca-certificates curl file findutils gawk grep gzip libidn2-tools make sed tar zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -99,7 +99,7 @@ jobs:
       - name: 'Install packages'
         run: |
           pacman -Sy --noconfirm --needed \
-            ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -115,7 +115,7 @@ jobs:
       - name: 'Install packages'
         run: |
           apk add --no-cache \
-            ca-certificates curl file gawk grep gzip libidn2 make sed tar zip
+            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
