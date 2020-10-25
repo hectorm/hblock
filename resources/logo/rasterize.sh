@@ -17,17 +17,20 @@ main() {
 	vectors="$(cat "${SCRIPT_DIR:?}/rasterize.json")"
 	vectorTotal="$(jq -nr --argjson d "${vectors:?}" '$d|length-1')"
 
-	for vectorIndex in $(seq 0 "${vectorTotal:?}"); do
+	vectorIndex='0'
+	while [ "${vectorIndex:?}" -le "${vectorTotal:?}" ]; do
 		vector="$(jq -nr --argjson d "${vectors:?}" --arg i "${vectorIndex:?}" '$d[$i|tonumber]')"
 		src="$(jq -nr --argjson d "${vector:?}" '$d.src')"
 		name="$(jq -nr --argjson d "${vector:?}" '$d.name')"
 		heightTotal="$(jq -nr --argjson d "${vector:?}" '$d.heights|length-1')"
 		backgroundTotal="$(jq -nr --argjson d "${vector:?}" '$d.backgrounds|length-1')"
 
-		for backgroundIndex in $(seq 0 "${backgroundTotal:?}"); do
+		backgroundIndex='0'
+		while [ "${backgroundIndex:?}" -le "${backgroundTotal:?}" ]; do
 			background="$(jq -nr --argjson d "${vector:?}" --arg i "${backgroundIndex:?}" '$d.backgrounds[$i|tonumber]')"
 
-			for heightIndex in $(seq 0 "${heightTotal:?}"); do
+			heightIndex='0'
+			while [ "${heightIndex:?}" -le "${heightTotal:?}" ]; do
 				height="$(jq -nr --argjson d "${vector:?}" --arg i "${heightIndex:?}" '$d.heights[$i|tonumber]')"
 
 				inkscapeOpts="--export-filename=${TARGET_DIR:?}/${name:?}-${background#'#'}-h${height:?}.png"
@@ -39,8 +42,14 @@ main() {
 
 				# shellcheck disable=SC2086
 				inkscape ${inkscapeOpts:?} "${SCRIPT_DIR:?}/${src:?}"
+
+				heightIndex="$((heightIndex+1))"
 			done
+
+			backgroundIndex="$((backgroundIndex+1))"
 		done
+
+		vectorIndex="$((vectorIndex+1))"
 	done
 }
 
