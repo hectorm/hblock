@@ -1,0 +1,17 @@
+# Generated with:  https://github.com/hectorm/hblock
+# Blocked domains: 2
+
+# BEGIN HEADER
+TEST HEADER - LINE 1
+TEST HEADER - LINE 2
+# END HEADER
+
+# BEGIN BLOCKLIST
+0.0.0.0 example.com
+0.0.0.0 example.net
+# END BLOCKLIST
+
+# BEGIN FOOTER
+TEST FOOTER - LINE 1
+TEST FOOTER - LINE 2
+# END FOOTER

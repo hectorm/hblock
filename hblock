@@ -141,14 +141,14 @@ optArgBool() {
 	else optArg='false'; fi
 }
 optDie() {
-	printf -- '%s\n' "${@-}" "Try '${0:?} --help' for more information" >&2
+	printf -- '%s\n' "${@-}" "Try 'hblock --help' for more information" >&2
 	exit 2
 }
 
 # Show help and quit.
 showHelp() {
 	printf -- '%s\n' "$(sed -e 's/\\n/\n/g' <<-EOF
-		Usage: ${0:?} [OPTION]...
+		Usage: hblock [OPTION]...
 
 		hBlock is a POSIX-compliant shell script that gets a list of domains that serve
 		ads, tracking scripts and malware from multiple sources and creates a hosts

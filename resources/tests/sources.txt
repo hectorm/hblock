@@ -1,0 +1,40 @@
+# Single entries
+single-entry-000.com
+single-entry-000.com
+single-entry-001.com
+SINGLE-ENTRY-001.COM
+    single-entry-002.com	
+	single-entry-003.com    
+single-entry-004
+single-entry-005.corp
+single-entry-006.domain
+single-entry-007.example
+single-entry-008.home
+single-entry-009.host
+single-entry-010.invalid
+single-entry-011.lan
+single-entry-012.local
+single-entry-013.localdomain
+single-entry-014.localhost
+single-entry-015.test
+single-entry-016.com single-entry-016.com
+
+# Entries with prefix
+0.0.0.0 entry-with-prefix-000.com
+0.0.0.0	entry-with-prefix-001.com
+    0.0.0.0	entry-with-prefix-002.com   
+	0.0.0.0 entry-with-prefix-003.com	
+127.0.0.1 entry-with-prefix-004.com
+::  entry-with-prefix-005.com
+::1 entry-with-prefix-006.com
+255.255.255.255 entry-with-prefix-007.com
+ffff:fff:ff:f::ffff:ffff:ffff entry-with-prefix-008.com
+not-an-ip entry-with-prefix-009.com
+
+# Entries with comments
+entry-with-comment-000.com# Dummy comment
+entry-with-comment-001.com # Dummy comment
+entry-with-comment-002.com  # Dummy comment
+entry-with-comment-003.com	# Dummy comment
+0.0.0.0 entry-with-comment-004.com # Dummy comment
+#0.0.0.0 entry-with-comment-005.com

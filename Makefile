@@ -24,6 +24,7 @@ VERSION := $(shell ./resources/version/version.sh get)
 .PHONY: all
 
 all:
+	$(MAKE) test
 	$(MAKE) build stats
 	$(MAKE) index
 
@@ -88,8 +89,15 @@ man: ./hblock.1 ./hblock.1.md
 .PHONY: lint
 
 lint:
-	'$(SHELLCHECK)' ./hblock
-	find ./ -type f -name '*.sh' | xargs '$(SHELLCHECK)'
+	find ./ -type f '(' -name 'hblock' -or -name '*.sh' ')' | xargs '$(SHELLCHECK)'
+
+##################################################
+## "test" target
+##################################################
+.PHONY: test
+
+test:
+	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 /bin/sh
 
 ##################################################
 ## "install" target
