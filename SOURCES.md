@@ -29,6 +29,7 @@
 | mitchellkrogza - Badd-Boyz-Hosts        | [Link][homepage-mitchellkrogza-badd-boyz-hosts]       | MIT                                                               | [Link][source-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-mitchellkrogza-badd-boyz-hosts]     |
 | pgl.yoyo.org                            | [Link][homepage-pgl.yoyo.org]                         | [MCRAE][license-pgl.yoyo.org]                                     | [Link][source-pgl.yoyo.org]                       | [Link][mirror-pgl.yoyo.org]                       |
 | Phishing Army                           | [Link][homepage-phishing.army]                        | CC-BY-NC-4.0                                                      | [Link][source-phishing.army]                      | [Link][mirror-phishing.army]                      |
+| socram8888 - Not on my shift!           | [Link][homepage-socram8888-notonmyshift]              | ISC                                                               | [Link][source-socram8888-notonmyshift]            | [Link][mirror-socram8888-notonmyshift]            |
 | someonewhocares.org                     | [Link][homepage-someonewhocares.org]                  | ["non-commercial with attribution"][license-someonewhocares.org]  | [Link][source-someonewhocares.org]                | [Link][mirror-someonewhocares.org]                |
 | spam404.com                             | [Link][homepage-spam404.com]                          | CC-BY-SA-4.0                                                      | [Link][source-spam404.com]                        | [Link][mirror-spam404.com]                        |
 | StevenBlack                             | [Link][homepage-stevenblack]                          | MIT                                                               | [Link][source-stevenblack]                        | [Link][mirror-stevenblack]                        |
@@ -152,6 +153,10 @@
 [homepage-phishing.army]: https://phishing.army
 [source-phishing.army]: https://phishing.army/download/phishing_army_blocklist.txt
 [mirror-phishing.army]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
+
+[homepage-socram8888-notonmyshift]: https://orca.pet/notonmyshift/
+[source-socram8888-notonmyshift]: https://orca.pet/notonmyshift/hosts.txt
+[mirror-socram8888-notonmyshift]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/socram8888-notonmyshift/list.txt
 
 [homepage-someonewhocares.org]: https://someonewhocares.org/hosts/
 [license-someonewhocares.org]: https://someonewhocares.org/hosts/
