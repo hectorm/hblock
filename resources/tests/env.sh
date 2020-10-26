@@ -9,7 +9,9 @@ export LC_ALL='C'
 
 SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 
-export TEST_SHELL='/bin/sh'
+if [ -z "${HBLOCK_TEST_SHELL+x}" ]; then
+	export HBLOCK_TEST_SHELL='/bin/sh'
+fi
 
 export HBLOCK_OUTPUT_FILE='/dev/null'
 

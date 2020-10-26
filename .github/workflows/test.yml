@@ -1,0 +1,100 @@
+name: 'Lint'
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+
+  test-bash-latest:
+    name: 'Test on latest Bash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/bash:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Print shell version'
+        run: 'bash --version'
+      - name: 'Test project'
+        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v bash)"'
+
+  test-dash-latest:
+    name: 'Test on latest Dash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/debian:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+      - name: 'Install packages (2nd stage)'
+        run: 'apt-get update && apt-get install -y dash'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Print shell version'
+        run: 'dpkg -s dash'
+      - name: 'Test project'
+        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v dash)"'
+
+  test-ksh-latest:
+    name: 'Test on latest ksh'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/debian:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+      - name: 'Install packages (2nd stage)'
+        run: 'apt-get update && apt-get install -y ksh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Print shell version'
+        run: 'dpkg -s ksh'
+      - name: 'Test project'
+        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v ksh)"'
+
+  test-mksh-latest:
+    name: 'Test on latest mksh'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/debian:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+      - name: 'Install packages (2nd stage)'
+        run: 'apt-get update && apt-get install -y mksh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Print shell version'
+        run: 'dpkg -s mksh'
+      - name: 'Test project'
+        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v mksh)"'
+
+  test-busybox-latest:
+    name: 'Test on latest BusyBox'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/debian:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+      - name: 'Install packages (2nd stage)'
+        run: 'apt-get update && apt-get install -y busybox'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Print shell version'
+        run: 'dpkg -s busybox'
+      - name: 'Test project'
+        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v busybox) sh"'
+
+  test-macos-latest:
+    name: 'Test on latest macOS'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make zip'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Print shell version'
+        run: 'bash --version'
+      - name: 'Test project'
+        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v bash)"'

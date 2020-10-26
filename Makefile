@@ -24,7 +24,6 @@ VERSION := $(shell ./resources/version/version.sh get)
 .PHONY: all
 
 all:
-	$(MAKE) test
 	$(MAKE) build stats
 	$(MAKE) index
 

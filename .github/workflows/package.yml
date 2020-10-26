@@ -12,23 +12,20 @@ jobs:
     name: 'Create deb package'
     runs-on: 'ubuntu-latest'
     container:
-      image: 'docker.io/ubuntu:latest'
+      image: 'docker.io/debian:latest'
     steps:
+      - name: 'Install packages'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+      - name: 'Install packages (2nd stage)'
+        run: 'apt-get update && apt-get install -y build-essential debhelper dh-systemd dpkg-dev'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Install packages'
-        run: |
-          apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            build-essential debhelper dh-systemd dpkg-dev make
       - name: 'Package project'
         run: |
-          if [ -d ./resources/deb/ ]; then
-            make clean package-deb
-            mv ./dist/ ./dist-package-deb/
-            apt install -y ./dist-package-deb/hblock-*.deb
-            command hblock -v
-          fi
+          make clean package-deb
+          mv ./dist/ ./dist-package-deb/
+          apt install -y ./dist-package-deb/hblock-*.deb
+          command hblock -v
 
   package-rpm:
     name: 'Create RPM package'
@@ -36,39 +33,32 @@ jobs:
     container:
       image: 'docker.io/fedora:latest'
     steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+      - name: 'Install packages (2nd stage)'
+        run: 'dnf install -y rpm-build rpmdevtools systemd'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Install packages'
-        run: |
-          dnf install -y \
-            make rpm-build rpmdevtools systemd
       - name: 'Package project'
         run: |
-          if [ -d ./resources/rpm/ ]; then
-            make clean package-rpm
-            mv ./dist/ ./dist-package-rpm/
-            dnf install -y ./dist-package-rpm/hblock-*.rpm
-            command hblock -v
-          fi
+          make clean package-rpm
+          mv ./dist/ ./dist-package-rpm/
+          dnf install -y ./dist-package-rpm/hblock-*.rpm
+          command hblock -v
 
   package-npm:
     name: 'Create NPM package'
     runs-on: 'ubuntu-latest'
     container:
-      image: 'docker.io/node:current'
+      image: 'docker.io/node:current-alpine'
     steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Install packages'
-        run: |
-          apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            gzip make tar wget
       - name: 'Package project'
         run: |
-          if [ -d ./resources/npm/ ]; then
-            make clean package-npm
-            mv ./dist/ ./dist-package-npm/
-            npm install -g ./dist-package-npm/hblock-*.tgz
-            command hblock -v
-          fi
+          make clean package-npm
+          mv ./dist/ ./dist-package-npm/
+          npm install -g ./dist-package-npm/hblock-*.tgz
+          command hblock -v

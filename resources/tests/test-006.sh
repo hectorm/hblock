@@ -31,13 +31,13 @@ main() {
 	)"
 
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-006.out)"
-	obtained="$("${TEST_SHELL:?}" "${hblock:?}" -qO- --regex 2>&1 ||:)"
+	obtained="$(${HBLOCK_TEST_SHELL:?} "${hblock:?}" -qO- --regex 2>&1 ||:)"
 
 	if [ "${obtained?}" = "${expected?}" ]; then
-		printf -- 'Test 006 - OK\n'
+		printf -- 'Test 006 - %s - OK\n' "${HBLOCK_TEST_SHELL:?}"
 		exit 0
 	else
-		printf -- 'Test 006 - FAIL\n' >&2
+		printf -- 'Test 006 - %s - FAIL\n' "${HBLOCK_TEST_SHELL:?}" >&2
 		printf -- 'Expected:\n\n%s\n\n' "${expected?}" >&2
 		printf -- 'Obtained:\n\n%s\n\n' "${obtained?}" >&2
 		exit 1

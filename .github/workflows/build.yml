@@ -8,130 +8,97 @@ on:
 
 jobs:
 
-  build-ubuntu-latest:
-    name: 'Build on ubuntu:latest'
-    runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/ubuntu:latest'
-    steps:
-      - name: 'Install packages'
-        run: |
-          apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            ca-certificates curl file findutils gawk grep gzip idn2 make sed tar zip
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
-      - name: 'Build project'
-        run: |
-          make clean all
-
   build-debian-latest:
-    name: 'Build on debian:latest'
+    name: 'Build on latest Debian'
     runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/debian:latest'
+    container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: |
-          apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            ca-certificates curl file findutils gawk grep gzip idn2 make sed tar zip
+        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: |
-          make clean all
+        run: 'make clean all'
+
+  build-ubuntu-latest:
+    name: 'Build on latest Ubuntu'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/ubuntu:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make clean all'
 
   build-fedora-latest:
-    name: 'Build on fedora:latest'
+    name: 'Build on latest Fedora'
     runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/fedora:latest'
+    container: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
-        run: |
-          dnf install -y \
-            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
+        run: 'dnf install -y ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: |
-          make clean all
+        run: 'make clean all'
 
   build-centos-latest:
-    name: 'Build on centos:latest'
+    name: 'Build on latest CentOS'
     runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/centos:latest'
+    container: 'docker.io/centos:latest'
     steps:
       - name: 'Install packages'
-        run: |
-          dnf install -y \
-            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
+        run: 'dnf install -y ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: |
-          make clean all
+        run: 'make clean all'
 
   build-opensuse-latest:
-    name: 'Build on opensuse/tumbleweed:latest'
+    name: 'Build on latest openSUSE'
     runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/opensuse/tumbleweed:latest'
+    container: 'docker.io/opensuse/tumbleweed:latest'
     steps:
       - name: 'Install packages'
-        run: |
-          zypper install -y \
-            ca-certificates curl file findutils gawk grep gzip libidn2-tools make sed tar zip
+        run: 'zypper install -y ca-certificates curl file findutils grep gzip libidn2-tools make mawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: |
-          make clean all
+        run: 'make clean all'
 
   build-archlinux-latest:
-    name: 'Build on archlinux:latest'
+    name: 'Build on latest Arch Linux'
     runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/archlinux:latest'
+    container: 'docker.io/archlinux:latest'
     steps:
       - name: 'Install packages'
-        run: |
-          pacman -Sy --noconfirm --needed \
-            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
+        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file findutils grep gzip libidn2 make nawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: |
-          make clean all
+        run: 'make clean all'
 
   build-alpine-latest:
-    name: 'Build on alpine:latest'
+    name: 'Build on latest Alpine'
     runs-on: 'ubuntu-latest'
-    container:
-      image: 'docker.io/alpine:latest'
+    container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: |
-          apk add --no-cache \
-            ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip
+        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: |
-          make clean all
+        run: 'make clean all'
 
   build-macos-latest:
-    name: 'Build on macos:latest'
+    name: 'Build on latest macOS'
     runs-on: 'macos-latest'
     steps:
       - name: 'Install packages'
-        run: |
-          brew install \
-            curl libidn2 make zip
+        run: 'brew install curl libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: |
-          make clean all
+        run: 'make clean all'

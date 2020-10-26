@@ -8,20 +8,17 @@ on:
 
 jobs:
 
-  lint:
-    name: 'Lint'
+  lint-shellcheck-stable:
+    name: 'Lint with stable ShellCheck'
     runs-on: 'ubuntu-latest'
     container:
       image: 'docker.io/koalaman/shellcheck-alpine:stable'
     steps:
       - name: 'Install packages'
-        run: |
-          apk add --no-cache gzip make tar
+        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Print ShellCheck version'
-        run: |
-          shellcheck --version
+        run: 'shellcheck --version'
       - name: 'Lint project'
-        run: |
-          make clean lint
+        run: 'make clean lint'

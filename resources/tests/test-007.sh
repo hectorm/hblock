@@ -16,13 +16,13 @@ main() {
 	. "${SCRIPT_DIR:?}"/env.sh
 
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-007.out)"
-	obtained="$("${TEST_SHELL:?}" "${hblock:?}" -O- -H/dev/null -F /dev/null --sources /dev/null --allowlist=/dev/null -rcqI 2>&1 ||:)"
+	obtained="$(${HBLOCK_TEST_SHELL:?} "${hblock:?}" -O- -H/dev/null -F /dev/null --sources /dev/null --allowlist=/dev/null -rcqI 2>&1 ||:)"
 
 	if [ "${obtained?}" = "${expected?}" ]; then
-		printf -- 'Test 007 - OK\n'
+		printf -- 'Test 007 - %s - OK\n' "${HBLOCK_TEST_SHELL:?}"
 		exit 0
 	else
-		printf -- 'Test 007 - FAIL\n' >&2
+		printf -- 'Test 007 - %s - FAIL\n' "${HBLOCK_TEST_SHELL:?}" >&2
 		printf -- 'Expected:\n\n%s\n\n' "${expected?}" >&2
 		printf -- 'Obtained:\n\n%s\n\n' "${obtained?}" >&2
 		exit 1
