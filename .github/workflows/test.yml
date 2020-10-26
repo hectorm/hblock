@@ -28,7 +28,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y dash'
       - name: 'Checkout project'
@@ -44,7 +44,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y ksh'
       - name: 'Checkout project'
@@ -60,7 +60,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y mksh'
       - name: 'Checkout project'
@@ -76,7 +76,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y busybox'
       - name: 'Checkout project'
