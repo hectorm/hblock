@@ -50,7 +50,7 @@ jobs:
     container: 'docker.io/centos:latest'
     steps:
       - name: 'Install packages'
-        run: 'dnf install -y ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+        run: 'dnf install -y ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
