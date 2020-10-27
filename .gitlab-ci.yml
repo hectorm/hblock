@@ -24,7 +24,7 @@ test-bash-latest:
     - 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
     - 'bash --version'
   script:
-    - 'make clean test HBLOCK_TEST_SHELL="$(command -v bash)"'
+    - 'make clean test TEST_SHELL="$(command -v bash)"'
 
 test-dash-latest:
   stage: 'test'
@@ -35,7 +35,7 @@ test-dash-latest:
     - 'apt-get install -y dash'
     - 'dpkg -s dash'
   script:
-    - 'make clean test HBLOCK_TEST_SHELL="$(command -v dash)"'
+    - 'make clean test TEST_SHELL="$(command -v dash)"'
 
 test-ksh-latest:
   stage: 'test'
@@ -46,7 +46,7 @@ test-ksh-latest:
     - 'apt-get install -y ksh'
     - 'dpkg -s ksh'
   script:
-    - 'make clean test HBLOCK_TEST_SHELL="$(command -v ksh)"'
+    - 'make clean test TEST_SHELL="$(command -v ksh)"'
 
 test-mksh-latest:
   stage: 'test'
@@ -57,7 +57,7 @@ test-mksh-latest:
     - 'apt-get install -y mksh'
     - 'dpkg -s mksh'
   script:
-    - 'make clean test HBLOCK_TEST_SHELL="$(command -v mksh)"'
+    - 'make clean test TEST_SHELL="$(command -v mksh)"'
 
 test-busybox-latest:
   stage: 'test'
@@ -68,7 +68,7 @@ test-busybox-latest:
     - 'apt-get install -y busybox'
     - 'dpkg -s busybox'
   script:
-    - 'make clean test HBLOCK_TEST_SHELL="$(command -v busybox) sh"'
+    - 'make clean test TEST_SHELL="$(command -v busybox) sh"'
 
 build-debian-latest:
   stage: 'build'

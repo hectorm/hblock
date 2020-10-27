@@ -9,35 +9,26 @@ export LC_ALL='C'
 
 SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 
-if [ -z "${HBLOCK_TEST_SHELL+x}" ]; then
-	export HBLOCK_TEST_SHELL='/bin/sh'
-fi
-
+export HOSTNAME='hblock'
 export HBLOCK_OUTPUT_FILE='/dev/null'
-
 export HBLOCK_HEADER_FILE='builtin'
-export HBLOCK_HEADER=''
-
 export HBLOCK_FOOTER_FILE='builtin'
-export HBLOCK_FOOTER=''
-
 export HBLOCK_SOURCES_FILE='builtin'
 export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/sources.txt"
-
 export HBLOCK_ALLOWLIST_FILE='builtin'
-export HBLOCK_ALLOWLIST=''
-
 export HBLOCK_DENYLIST_FILE='builtin'
-export HBLOCK_DENYLIST=''
 
-export HBLOCK_REDIRECTION='0.0.0.0'
-export HBLOCK_WRAP='1'
-export HBLOCK_TEMPLATE='\2 \1'
-export HBLOCK_COMMENT='#'
+runInTestShell() {
+	${TEST_SHELL:-/bin/sh} -- "${@-}" 2>&1 ||:
+}
 
-export HBLOCK_LENIENT='false'
-export HBLOCK_REGEX='false'
-export HBLOCK_CONTINUE='false'
-
-export HBLOCK_QUIET='false'
-export HBLOCK_COLOR='false'
+assertEquals() {
+	actual="${1?}"; expected="${2?}"
+	if [ "${actual?}" != "${expected?}" ]; then
+		printf -- '\nError, values are not equal\n\n' >&2
+		printf -- '[Actual]:\n\n%s\n\n' "${actual?}" >&2
+		printf -- '[Expected]:\n\n%s\n\n' "${expected?}" >&2
+		return 1
+	fi
+	return 0
+}

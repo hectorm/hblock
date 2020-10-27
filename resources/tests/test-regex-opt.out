@@ -1,0 +1,21 @@
+# Generated with:  https://github.com/hectorm/hblock
+# Blocked domains: 4
+
+# BEGIN HEADER
+127.0.0.1       localhost hblock
+255.255.255.255 broadcasthost
+::1             localhost hblock
+::1             ip6-localhost ip6-loopback
+fe00::0         ip6-localnet
+ff00::0         ip6-mcastprefix
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+ff02::3         ip6-allhosts
+# END HEADER
+
+# BEGIN BLOCKLIST
+0.0.0.0 entry-with-prefix-004.com
+0.0.0.0 entry-with-prefix-005.com
+0.0.0.0 entry-with-prefix-006.com
+0.0.0.0 hblock-check.molinero.dev
+# END BLOCKLIST

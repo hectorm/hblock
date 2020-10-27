@@ -20,7 +20,7 @@ jobs:
       - name: 'Print shell version'
         run: 'bash --version'
       - name: 'Test project'
-        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v bash)"'
+        run: 'make clean test TEST_SHELL="$(command -v bash)"'
 
   test-dash-latest:
     name: 'Test on latest Dash'
@@ -36,7 +36,7 @@ jobs:
       - name: 'Print shell version'
         run: 'dpkg -s dash'
       - name: 'Test project'
-        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v dash)"'
+        run: 'make clean test TEST_SHELL="$(command -v dash)"'
 
   test-ksh-latest:
     name: 'Test on latest ksh'
@@ -52,7 +52,7 @@ jobs:
       - name: 'Print shell version'
         run: 'dpkg -s ksh'
       - name: 'Test project'
-        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v ksh)"'
+        run: 'make clean test TEST_SHELL="$(command -v ksh)"'
 
   test-mksh-latest:
     name: 'Test on latest mksh'
@@ -68,7 +68,7 @@ jobs:
       - name: 'Print shell version'
         run: 'dpkg -s mksh'
       - name: 'Test project'
-        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v mksh)"'
+        run: 'make clean test TEST_SHELL="$(command -v mksh)"'
 
   test-busybox-latest:
     name: 'Test on latest BusyBox'
@@ -84,7 +84,7 @@ jobs:
       - name: 'Print shell version'
         run: 'dpkg -s busybox'
       - name: 'Test project'
-        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v busybox) sh"'
+        run: 'make clean test TEST_SHELL="$(command -v busybox) sh"'
 
   test-macos-latest:
     name: 'Test on latest macOS'
@@ -97,4 +97,4 @@ jobs:
       - name: 'Print shell version'
         run: 'bash --version'
       - name: 'Test project'
-        run: 'make clean test HBLOCK_TEST_SHELL="$(command -v bash)"'
+        run: 'make clean test TEST_SHELL="$(command -v bash)"'
