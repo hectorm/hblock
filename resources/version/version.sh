@@ -81,5 +81,5 @@ setVersion() {
 if [ "${1:?}" = 'get' ]; then
 	getVersion
 elif [ "${1:?}" = 'set' ]; then
-	setVersion "${2-$(getVersion)}"
+	setVersion "${2-"$(getVersion)"}"
 fi

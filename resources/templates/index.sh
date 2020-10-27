@@ -16,7 +16,7 @@ exists() {
 }
 
 # Check whether a string ends with the characters of a specified string.
-endsWith() { [ "${1%${2?}}" != "${1?}" ]; }
+endsWith() { [ "${1%"${2?}"}" != "${1?}" ]; }
 
 # Base16 encode.
 base16Encode() {

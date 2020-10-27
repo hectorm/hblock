@@ -10,7 +10,7 @@ export LC_ALL='C'
 
 # Built-in header.
 if [ -z "${HBLOCK_HEADER+x}" ]; then
-	HOSTNAME="${HOSTNAME-$(uname -n)}"
+	HOSTNAME="${HOSTNAME-"$(uname -n)"}"
 	HBLOCK_HEADER="$(cat <<-EOF
 		127.0.0.1       localhost ${HOSTNAME?}
 		255.255.255.255 broadcasthost
@@ -126,10 +126,10 @@ optParse() {
 	done
 }
 optSplitShort() {
-	optAName="${1%${1#??}}"; optBName="-${1#??}"
+	optAName="${1%"${1#??}"}"; optBName="-${1#??}"
 }
 optSplitEquals() {
-	optName="${1%=${1#--*=}}"; optArg="${1#--*=}"
+	optName="${1%="${1#--*=}"}"; optArg="${1#--*=}"
 }
 optArgStr() {
 	if [ -n "${1#??}" ] && [ "${1#--}" = "${1:?}" ]; then optArg="${1#??}"; optShift='0';
