@@ -193,7 +193,7 @@ showHelp() {
 		        Redirection for all entries in the blocklist.\\n
 		         - Environment variable: HBLOCK_REDIRECTION\\n
 		         - Default value: ${redirectionDefault?}\\n
-		 -W, --WRAP <NUMBER>\\n
+		 -W, --wrap <NUMBER>\\n
 		        Break blocklist lines after this number of entries.\\n
 		         - Environment variable: HBLOCK_WRAP\\n
 		         - Default value: ${wrapDefault?}\\n

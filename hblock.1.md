@@ -90,7 +90,7 @@ OPTIONS
 >
 > \- Default value: 0.0.0.0
 
-**-W**, **--WRAP** &lt;NUMBER&gt;
+**-W**, **--wrap** &lt;NUMBER&gt;
 
 > Break blocklist lines after this number of entries.
 >
