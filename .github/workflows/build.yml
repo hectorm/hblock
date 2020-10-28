@@ -14,7 +14,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -26,7 +26,7 @@ jobs:
     container: 'docker.io/ubuntu:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -38,7 +38,7 @@ jobs:
     container: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
-        run: 'dnf install -y ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+        run: 'dnf install -y ca-certificates curl file libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -50,7 +50,7 @@ jobs:
     container: 'docker.io/centos:latest'
     steps:
       - name: 'Install packages'
-        run: 'dnf install -y ca-certificates curl file findutils gawk grep gzip libidn2 make sed tar zip'
+        run: 'dnf install -y ca-certificates curl file libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -62,7 +62,7 @@ jobs:
     container: 'docker.io/opensuse/tumbleweed:latest'
     steps:
       - name: 'Install packages'
-        run: 'zypper install -y ca-certificates curl file findutils grep gzip libidn2-tools make mawk sed tar zip'
+        run: 'zypper install -y ca-certificates curl file libidn2-tools make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -74,7 +74,7 @@ jobs:
     container: 'docker.io/archlinux:latest'
     steps:
       - name: 'Install packages'
-        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file findutils grep gzip libidn2 make nawk sed tar zip'
+        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
@@ -86,7 +86,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'

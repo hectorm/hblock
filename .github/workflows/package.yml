@@ -15,7 +15,7 @@ jobs:
       image: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y build-essential debhelper dh-systemd dpkg-dev'
       - name: 'Checkout project'
@@ -34,7 +34,7 @@ jobs:
       image: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
-        run: 'dnf install -y ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+        run: 'dnf install -y ca-certificates curl file libidn2 make zip'
       - name: 'Install packages (2nd stage)'
         run: 'dnf install -y rpm-build rpmdevtools systemd'
       - name: 'Checkout project'
@@ -53,7 +53,7 @@ jobs:
       image: 'docker.io/node:current-alpine'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Package project'

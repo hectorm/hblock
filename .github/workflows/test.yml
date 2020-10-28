@@ -14,7 +14,7 @@ jobs:
     container: 'docker.io/bash:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Print shell version'
@@ -28,7 +28,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y dash'
       - name: 'Checkout project'
@@ -44,7 +44,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y ksh'
       - name: 'Checkout project'
@@ -60,7 +60,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y mksh'
       - name: 'Checkout project'
@@ -76,7 +76,7 @@ jobs:
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file findutils grep gzip idn2 make mawk sed tar zip'
+        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
       - name: 'Install packages (2nd stage)'
         run: 'apt-get update && apt-get install -y busybox'
       - name: 'Checkout project'

@@ -15,7 +15,7 @@ jobs:
       image: 'docker.io/koalaman/shellcheck-alpine:stable'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file findutils grep gzip libidn2 make mawk sed tar zip'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make zip'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Print ShellCheck version'
