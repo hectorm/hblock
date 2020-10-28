@@ -462,24 +462,24 @@ main() {
 
 		printList 'Removing carriage return'
 		tr -d '\r' \
-			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 
 		printList 'Transforming to lowercase'
 		awk '{print(tolower($0))}' \
-			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 
 		printList 'Removing comments'
 		sed -e 's/#.*//' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 
 		printList 'Trimming spaces'
 		sed -e 's/^[[:blank:]]*//' \
 			-e 's/[[:blank:]]*$//' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 
 		printList 'Matching hosts lines'
 		if [ "${lenient:?}" = 'true' ]; then
@@ -495,8 +495,8 @@ main() {
 		fi
 		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
 		sed -ne '/^\('"${ipRegex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'$/p' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 
 		printList 'Removing reserved TLDs'
 		sed -e '/\.corp$/d' \
@@ -510,13 +510,13 @@ main() {
 			-e '/\.localdomain$/d' \
 			-e '/\.localhost$/d' \
 			-e '/\.test$/d' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 
 		printList 'Removing destination IPs'
 		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 	fi
 
 	# If the denylist file is not empty, it is appended to the blocklist file.
@@ -529,28 +529,26 @@ main() {
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Sorting entries'
 
-		sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+		sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 	fi
 
 	# If the allowlist file is not empty, the entries on it are removed from the blocklist file.
 	if [ -s "${allowlistFile:?}" ]; then
 		printInfo 'Applying allowlist'
 
-		# If the regex option is active, each entry is treated as a regex.
+		# Entries are treated as regexes depending on whether the regex option is enabled.
+		sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" >> "${blocklistFile:?}.pat"
 		if [ "${regex:?}" = 'true' ]; then
-			# Read the allowlist file ignoring lines that start with "#" or are empty.
-			sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" | while IFS= read -r regex || [ -n "${regex?}" ]; do
-				sed -e "/${regex:?}/d" \
-					-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-					&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
-			done
+			grep -vf "${blocklistFile:?}.pat" \
+				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		else
-			sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" | sort | uniq > "${blocklistFile:?}.aux.1"
-			comm -23 -- "${blocklistFile:?}" "${blocklistFile:?}.aux.1" > "${blocklistFile:?}.aux.2" \
-				&& mv -f -- "${blocklistFile:?}.aux.2" "${blocklistFile:?}" \
-				&& rm -f -- "${blocklistFile:?}.aux.1"
+			grep -Fxvf "${blocklistFile:?}.pat" \
+				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		fi
+		rm -f "${blocklistFile:?}.pat"
 	fi
 
 	# Count blocked domains.
@@ -562,13 +560,13 @@ main() {
 
 		if [ "${wrap:?}" -gt '1' ]; then
 			awk -v FS=' ' -v RS='\n' -v W="${wrap:?}" '{ORS=(NR%W?FS:RS)}1;END{if(NR%W){printf(RS)}}' \
-				< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-				&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+				< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		fi
 
 		awk -v T="${template?}" -v R="${redirection?}" '{E=T;D=$0;gsub("%D",D,E);gsub("%R",R,E);print(E)}' \
-			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
-			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
+			< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 	fi
 
 	# Create an auxiliary output file.
