@@ -147,89 +147,74 @@ optDie() {
 
 # Show help and quit.
 showHelp() {
-	printf -- '%s\n' "$(sed -e 's/\\n/\n/g' <<-EOF
+	printf -- '%s\n' "$(sed -e 's/%NL/\n/g' <<-EOF
 		Usage: hblock [OPTION]...
 
 		hBlock is a POSIX-compliant shell script that gets a list of domains that serve
 		ads, tracking scripts and malware from multiple sources and creates a hosts
 		file, among other formats, that prevents your system from connecting to them.
 
-		Options:\\n
-		 -O, --output <FILE>\\n
-		        Output file location.\\n
-		         - Environment variable: HBLOCK_OUTPUT_FILE\\n
-		         - Default value: ${outputFileDefault?}\\n
-		 -H, --header <FILE>\\n
-		        File to be included at the beginning of the output file.\\n
+		Options:%NL
+		 -O, --output <FILE>, \${HBLOCK_OUTPUT_FILE}%NL
+		        Output file location.%NL
+		        (default: ${outputFileDefault?})%NL
+		 -H, --header <FILE>, \${HBLOCK_HEADER_FILE}%NL
+		        File to be included at the beginning of the output file.%NL
 		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.\\n
-		         - Environment variable: HBLOCK_HEADER_FILE\\n
-		         - Default value: ${headerFileDefault?}\\n
-		 -F, --footer <FILE>\\n
-		        File to be included at the end of the output file.\\n
+		        value is used instead.%NL
+		        (default: ${headerFileDefault?})%NL
+		 -F, --footer <FILE>, \${HBLOCK_FOOTER_FILE}%NL
+		        File to be included at the end of the output file.%NL
 		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.\\n
-		         - Environment variable: HBLOCK_FOOTER_FILE\\n
-		         - Default value: ${footerFileDefault?}\\n
-		 -S, --sources <FILE>\\n
-		        File with line separated URLs used to generate the blocklist.\\n
+		        value is used instead.%NL
+		        (default: ${footerFileDefault?})%NL
+		 -S, --sources <FILE>, \${HBLOCK_SOURCES_FILE}%NL
+		        File with line separated URLs used to generate the blocklist.%NL
 		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.\\n
-		         - Environment variable: HBLOCK_SOURCES_FILE\\n
-		         - Default value: ${sourcesFileDefault?}\\n
-		 -A, --allowlist <FILE>\\n
-		        File with line separated entries to be removed from the blocklist.\\n
+		        value is used instead.%NL
+		        (default: ${sourcesFileDefault?})%NL
+		 -A, --allowlist <FILE>, \${HBLOCK_ALLOWLIST_FILE}%NL
+		        File with line separated entries to be removed from the blocklist.%NL
 		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.\\n
-		         - Environment variable: HBLOCK_ALLOWLIST_FILE\\n
-		         - Default value: ${allowlistFile?}\\n
-		 -D, --denylist <FILE>\\n
-		        File with line separated entries to be added to the blocklist.\\n
+		        value is used instead.%NL
+		        (default: ${allowlistFile?})%NL
+		 -D, --denylist <FILE>, \${HBLOCK_DENYLIST_FILE}%NL
+		        File with line separated entries to be added to the blocklist.%NL
 		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.\\n
-		         - Environment variable: HBLOCK_DENYLIST_FILE\\n
-		         - Default value: ${denylistFile?}\\n
-		 -R, --redirection <REDIRECTION>\\n
-		        Redirection for all entries in the blocklist.\\n
-		         - Environment variable: HBLOCK_REDIRECTION\\n
-		         - Default value: ${redirectionDefault?}\\n
-		 -W, --wrap <NUMBER>\\n
-		        Break blocklist lines after this number of entries.\\n
-		         - Environment variable: HBLOCK_WRAP\\n
-		         - Default value: ${wrapDefault?}\\n
-		 -T, --template <TEMPLATE>\\n
-		        Template applied to each entry.\\n
-		         - Variables: %D = <DOMAIN>, %R = <REDIRECTION>\\n
-		         - Environment variable: HBLOCK_TEMPLATE\\n
-		         - Default value: ${templateDefault?}\\n
-		 -C, --comment <COMMENT>\\n
-		        Character used for comments.\\n
-		         - Environment variable: HBLOCK_COMMENT\\n
-		         - Default value: ${commentDefault?}\\n
-		 -l, --[no-]lenient\\n
+		        value is used instead.%NL
+		        (default: ${denylistFile?})%NL
+		 -R, --redirection <REDIRECTION>, \${HBLOCK_REDIRECTION}%NL
+		        Redirection for all entries in the blocklist.%NL
+		        (default: ${redirectionDefault?})%NL
+		 -W, --wrap <NUMBER>, \${HBLOCK_WRAP}%NL
+		        Break blocklist lines after this number of entries.%NL
+		        (default: ${wrapDefault?})%NL
+		 -T, --template <TEMPLATE>, \${HBLOCK_TEMPLATE}%NL
+		        Template applied to each entry.%NL
+		        %D = <DOMAIN>, %R = <REDIRECTION>%NL
+		        (default: ${templateDefault?})%NL
+		 -C, --comment <COMMENT>, \${HBLOCK_COMMENT}%NL
+		        Character used for comments.%NL
+		        (default: ${commentDefault?})%NL
+		 -l, --[no-]lenient, \${HBLOCK_LENIENT}%NL
 		        Match all entries from sources regardless of their IP, instead
-		        of 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.\\n
-		         - Environment variable: HBLOCK_LENIENT\\n
-		         - Default value: ${lenientDefault?}\\n
-		 -r, --[no-]regex\\n
-		        Use POSIX BREs in the allowlist instead of fixed strings.\\n
-		         - Environment variable: HBLOCK_REGEX\\n
-		         - Default value: ${regexDefault?}\\n
-		 -c, --[no-]continue\\n
-		        Do not abort if a download error occurs.\\n
-		         - Environment variable: HBLOCK_CONTINUE\\n
-		         - Default value: ${continueDefault?}\\n
-		 -q, --[no-]quiet\\n
-		        Suppress non-error messages.\\n
-		         - Environment variable: HBLOCK_QUIET\\n
-		         - Default value: ${quietDefault?}\\n
-		 -x, --color <auto|true|false>\\n
-		        Colorize the output.\\n
-		         - Environment variable: HBLOCK_COLOR\\n
-		         - Default value: ${colorDefault?}\\n
-		 -v, --version\\n
-		        Show version number and quit.\\n
-		 -h, --help\\n
+		        of 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.%NL
+		        (default: ${lenientDefault?})%NL
+		 -r, --[no-]regex, \${HBLOCK_REGEX}%NL
+		        Use POSIX BREs in the allowlist instead of fixed strings.%NL
+		        (default: ${regexDefault?})%NL
+		 -c, --[no-]continue, \${HBLOCK_CONTINUE}%NL
+		        Do not abort if a download error occurs.%NL
+		        (default: ${continueDefault?})%NL
+		 -q, --[no-]quiet, \${HBLOCK_QUIET}%NL
+		        Suppress non-error messages.%NL
+		        (default: ${quietDefault?})%NL
+		 -x, --color <auto|true|false>, \${HBLOCK_COLOR}%NL
+		        Colorize the output.%NL
+		        (default: ${colorDefault?})%NL
+		 -v, --version%NL
+		        Show version number and quit.%NL
+		 -h, --help%NL
 		        Show this help and quit.
 
 		Report bugs to: <https://github.com/hectorm/hblock/issues>

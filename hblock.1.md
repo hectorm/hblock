@@ -19,143 +19,113 @@ from connecting to them.
 OPTIONS
 =======
 
-**-O**, **--output** &lt;FILE&gt;
+**-O**, **--output** &lt;FILE&gt;, ${HBLOCK\_OUTPUT\_FILE}
 
 > Output file location.
 >
-> \- Environment variable: HBLOCK\_OUTPUT\_FILE
->
-> \- Default value: */etc/hosts*
+> (default: */etc/hosts*)
 
-**-H**, **--header** &lt;FILE&gt;
+**-H**, **--header** &lt;FILE&gt;, ${HBLOCK\_HEADER\_FILE}
 
 > File to be included at the beginning of the output file.
 >
 > If the default file does not exist or equals "builtin" the built-in
 > value is used instead.
 >
-> \- Environment variable: HBLOCK\_HEADER\_FILE
->
-> \- Default value: */etc/hblock/header*
+> (default: */etc/hblock/header*)
 
-**-F**, **--footer** &lt;FILE&gt;
+**-F**, **--footer** &lt;FILE&gt;, ${HBLOCK\_FOOTER\_FILE}
 
 > File to be included at the end of the output file.
 >
 > If the default file does not exist or equals "builtin" the built-in
 > value is used instead.
 >
-> \- Environment variable: HBLOCK\_FOOTER\_FILE
->
-> \- Default value: */etc/hblock/footer*
+> (default: */etc/hblock/footer*)
 
-**-S**, **--sources** &lt;FILE&gt;
+**-S**, **--sources** &lt;FILE&gt;, ${HBLOCK\_SOURCES\_FILE}
 
 > File with line separated URLs used to generate the blocklist.
 >
 > If the default file does not exist or equals "builtin" the built-in
 > value is used instead.
 >
-> \- Environment variable: HBLOCK\_SOURCES\_FILE
->
-> \- Default value: */etc/hblock/sources.list*
+> (default: */etc/hblock/sources.list*)
 
-**-A**, **--allowlist** &lt;FILE&gt;
+**-A**, **--allowlist** &lt;FILE&gt;, ${HBLOCK\_ALLOWLIST\_FILE}
 
 > File with line separated entries to be removed from the blocklist.
 >
 > If the default file does not exist or equals "builtin" the built-in
 > value is used instead.
 >
-> \- Environment variable: HBLOCK\_ALLOWLIST\_FILE
->
-> \- Default value: */etc/hblock/allow.list*
+> (default: */etc/hblock/allow.list*)
 
-**-D**, **--denylist** &lt;FILE&gt;
+**-D**, **--denylist** &lt;FILE&gt;, ${HBLOCK\_DENYLIST\_FILE}
 
 > File with line separated entries to be added to the blocklist.
 >
 > If the default file does not exist or equals "builtin" the built-in
 > value is used instead.
 >
-> \- Environment variable: HBLOCK\_DENYLIST\_FILE
->
-> \- Default value: */etc/hblock/deny.list*
+> (default: */etc/hblock/deny.list*)
 
-**-R**, **--redirection** &lt;REDIRECTION&gt;
+**-R**, **--redirection** &lt;REDIRECTION&gt;, ${HBLOCK\_REDIRECTION}
 
 > Redirection for all entries in the blocklist.
 >
-> \- Environment variable: HBLOCK\_REDIRECTION
->
-> \- Default value: 0.0.0.0
+> (default: 0.0.0.0)
 
-**-W**, **--wrap** &lt;NUMBER&gt;
+**-W**, **--wrap** &lt;NUMBER&gt;, ${HBLOCK\_WRAP}
 
 > Break blocklist lines after this number of entries.
 >
-> \- Environment variable: HBLOCK\_WRAP
->
-> \- Default value: 1
+> (default: 1)
 
-**-T**, **--template** &lt;TEMPLATE&gt;
+**-T**, **--template** &lt;TEMPLATE&gt;, ${HBLOCK\_TEMPLATE}
 
 > Template applied to each entry.
 >
-> \- Variables: %D = &lt;DOMAIN&gt;, %R = &lt;REDIRECTION&gt;
+> %D = &lt;DOMAIN&gt;, %R = &lt;REDIRECTION&gt;
 >
-> \- Environment variable: HBLOCK\_TEMPLATE
->
-> \- Default value: %R %D
+> (default: %R %D)
 
-**-C**, **--comment** &lt;COMMENT&gt;
+**-C**, **--comment** &lt;COMMENT&gt;, ${HBLOCK\_COMMENT}
 
 > Character used for comments.
 >
-> \- Environment variable: HBLOCK\_COMMENT
->
-> \- Default value: \#
+> (default: \#)
 
-**-l**, **--\[no-\]lenient**
+**-l**, **--\[no-\]lenient**, ${HBLOCK\_LENIENT}
 
 > Match all entries from sources regardless of their IP, instead of
 > 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.
 >
-> \- Environment variable: HBLOCK\_LENIENT
->
-> \- Default value: false
+> (default: false)
 
-**-r**, **--\[no-\]regex**
+**-r**, **--\[no-\]regex**, ${HBLOCK\_REGEX}
 
 > Use POSIX BREs in the allowlist instead of fixed strings.
 >
-> \- Environment variable: HBLOCK\_REGEX
->
-> \- Default value: false
+> (default: false)
 
-**-c**, **--\[no-\]continue**
+**-c**, **--\[no-\]continue**, ${HBLOCK\_CONTINUE}
 
 > Do not abort if a download error occurs.
 >
-> \- Environment variable: HBLOCK\_CONTINUE
->
-> \- Default value: false
+> (default: false)
 
-**-q**, **--\[no-\]quiet**
+**-q**, **--\[no-\]quiet**, ${HBLOCK\_QUIET}
 
 > Suppress non-error messages.
 >
-> \- Environment variable: HBLOCK\_QUIET
->
-> \- Default value: false
+> (default: false)
 
-**-x**, **--color** &lt;auto\|true\|false&gt;
+**-x**, **--color** &lt;auto\|true\|false&gt;, ${HBLOCK\_COLOR}
 
 > Colorize the output.
 >
-> \- Environment variable: HBLOCK\_COLOR
->
-> \- Default value: auto
+> (default: auto)
 
 **-v**, **--version**
 
