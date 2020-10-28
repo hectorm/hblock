@@ -18,14 +18,14 @@ main() {
 	export HBLOCK_TEMPLATE='\2 \1'
 
 	printf 'Test: "-T" short option\n'
-	actual="$(runInTestShell "${hblock:?}" -qO- -T '\2\t\t\1')"
+	actual="$(runInTestShell "${hblock:?}" -qO- -T '\2	\1')"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-template-opt.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
 	printf 'Test: "--template" long option\n'
-	actual="$(runInTestShell "${hblock:?}" -qO- --template='\2\t\t\1')"
+	actual="$(runInTestShell "${hblock:?}" -qO- --template='\2	\1')"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-template-opt.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
