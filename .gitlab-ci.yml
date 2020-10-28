@@ -124,7 +124,7 @@ build-opensuse-latest:
   stage: 'build'
   image: 'docker.io/opensuse/tumbleweed:latest'
   before_script:
-    - 'zypper install -y ca-certificates curl file libidn2-tools make zip'
+    - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar zip'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-opensuse-latest/'
