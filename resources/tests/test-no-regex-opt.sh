@@ -18,6 +18,7 @@ main() {
 	export HBLOCK_ALLOWLIST="$(cat <<-'EOF'
 		.*-00[0-3]\.com$
 		^entry-with-comment-
+		single-entry-000.com
 	EOF
 	)"
 
