@@ -35,7 +35,7 @@ main() {
 
 	export HBLOCK_REDIRECTION=''
 	export HBLOCK_WRAP='1'
-	export HBLOCK_TEMPLATE='\1 CNAME .'
+	export HBLOCK_TEMPLATE='%D CNAME .'
 	export HBLOCK_COMMENT=';'
 
 	export HBLOCK_LENIENT='false'

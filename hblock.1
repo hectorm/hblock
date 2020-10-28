@@ -92,13 +92,13 @@ Break blocklist lines after this number of entries.
 .HP
 \fB\-T\fR, \fB\-\-template\fR <TEMPLATE>
 .IP
-POSIX BREs replacement applied to each entry.
+Template applied to each entry.
 .IP
-Capturing group backreferences: \e1 = <DOMAIN>, \e2 = <REDIRECTION>
+\- Variables: %D = <DOMAIN>, %R = <REDIRECTION>
 .IP
 \- Environment variable: HBLOCK_TEMPLATE
 .IP
-\- Default value: \e2 \e1
+\- Default value: %R %D
 .HP
 \fB\-C\fR, \fB\-\-comment\fR <COMMENT>
 .IP

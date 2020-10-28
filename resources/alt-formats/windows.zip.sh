@@ -32,7 +32,7 @@ main() {
 
 	export HBLOCK_REDIRECTION='0.0.0.0'
 	export HBLOCK_WRAP='1'
-	export HBLOCK_TEMPLATE='\2 \1'
+	export HBLOCK_TEMPLATE='%R %D'
 	export HBLOCK_COMMENT='#'
 
 	export HBLOCK_LENIENT='false'

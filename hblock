@@ -198,8 +198,8 @@ showHelp() {
 		         - Environment variable: HBLOCK_WRAP\\n
 		         - Default value: ${wrapDefault?}\\n
 		 -T, --template <TEMPLATE>\\n
-		        POSIX BREs replacement applied to each entry.\\n
-		        Capturing group backreferences: \\1 = <DOMAIN>, \\2 = <REDIRECTION>\\n
+		        Template applied to each entry.\\n
+		         - Variables: %D = <DOMAIN>, %R = <REDIRECTION>\\n
 		         - Environment variable: HBLOCK_TEMPLATE\\n
 		         - Default value: ${templateDefault?}\\n
 		 -C, --comment <COMMENT>\\n
@@ -347,8 +347,8 @@ main() {
 	wrapDefault="${HBLOCK_WRAP-1}"
 	wrap="${wrapDefault?}"
 
-	# POSIX BREs replacement applied to each entry.
-	templateDefault="${HBLOCK_TEMPLATE-\2 \1}"
+	# Template applied to each entry.
+	templateDefault="${HBLOCK_TEMPLATE-%R %D}"
 	template="${templateDefault?}"
 
 	# Character used for comments.
@@ -581,9 +581,8 @@ main() {
 				&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 		fi
 
-		sed -e 's/$/\t'"$(quoteSubst "${redirection?}")"'/' \
-			-e 's/^\(.*\)\t\(.*\)$/'"${template?}"'/' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
+		awk -v T="${template?}" -v R="${redirection?}" '{E=T;D=$0;gsub("%D",D,E);gsub("%R",R,E);print(E)}' \
+			< "${blocklistFile:?}" > "${blocklistFile:?}.aux.1" \
 			&& mv -f -- "${blocklistFile:?}.aux.1" "${blocklistFile:?}"
 	fi
 

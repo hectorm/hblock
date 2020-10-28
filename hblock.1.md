@@ -100,14 +100,13 @@ OPTIONS
 
 **-T**, **--template** &lt;TEMPLATE&gt;
 
-> POSIX BREs replacement applied to each entry.
+> Template applied to each entry.
 >
-> Capturing group backreferences: \\1 = &lt;DOMAIN&gt;, \\2 =
-> &lt;REDIRECTION&gt;
+> \- Variables: %D = &lt;DOMAIN&gt;, %R = &lt;REDIRECTION&gt;
 >
 > \- Environment variable: HBLOCK\_TEMPLATE
 >
-> \- Default value: \\2 \\1
+> \- Default value: %R %D
 
 **-C**, **--comment** &lt;COMMENT&gt;
 

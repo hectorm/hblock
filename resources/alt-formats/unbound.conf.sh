@@ -12,8 +12,6 @@ main() {
 	target="${2:?}"
 	hblock="${3:-hblock}"
 
-	ENL="$(printf '\\\nx')"; ENL="${ENL%x}"
-
 	export HBLOCK_HEADER_FILE='builtin'
 	export HBLOCK_HEADER=''
 
@@ -31,7 +29,7 @@ main() {
 
 	export HBLOCK_REDIRECTION='0.0.0.0'
 	export HBLOCK_WRAP='1'
-	export HBLOCK_TEMPLATE='local-zone: "\1" redirect'"${ENL:?}"'local-data: "\1 A \2"'
+	export HBLOCK_TEMPLATE='local-zone: "%D" redirect\nlocal-data: "%D A %R"'
 	export HBLOCK_COMMENT='#'
 
 	export HBLOCK_LENIENT='false'

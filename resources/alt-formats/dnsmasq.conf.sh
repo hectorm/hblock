@@ -29,7 +29,7 @@ main() {
 
 	export HBLOCK_REDIRECTION='0.0.0.0'
 	export HBLOCK_WRAP='1'
-	export HBLOCK_TEMPLATE='address=\/\1\/\2'
+	export HBLOCK_TEMPLATE='address=/%D/%R'
 	export HBLOCK_COMMENT='#'
 
 	export HBLOCK_LENIENT='false'
