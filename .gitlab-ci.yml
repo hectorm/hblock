@@ -59,16 +59,16 @@ test-mksh-latest:
   script:
     - 'make clean test TEST_SHELL="$(command -v mksh)"'
 
-test-busybox-latest:
+test-openwrt-ash-latest:
   stage: 'test'
-  image: 'docker.io/debian:latest'
+  image: 'docker.io/openwrtorg/rootfs:latest'
   before_script:
-    - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make zip'
-    - 'apt-get install -y busybox'
-    - 'dpkg -s busybox'
+    - 'mkdir -p /var/lock/'
+    - 'opkg update'
+    - 'opkg install ca-certificates curl file idn2 make'
+    - 'opkg info busybox'
   script:
-    - 'make clean test TEST_SHELL="$(command -v busybox) sh"'
+    - 'make clean test TEST_SHELL="$(command -v busybox) ash"'
 
 build-debian-latest:
   stage: 'build'

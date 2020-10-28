@@ -70,21 +70,21 @@ jobs:
       - name: 'Test project'
         run: 'make clean test TEST_SHELL="$(command -v mksh)"'
 
-  test-busybox-latest:
-    name: 'Test on latest BusyBox'
+  test-openwrt-ash-latest:
+    name: 'Test on latest OpenWrt ash'
     runs-on: 'ubuntu-latest'
-    container: 'docker.io/debian:latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
     steps:
+      - name: 'Apply workarounds'
+        run: 'printf "ID=alpine\n" > /etc/_os-release; mkdir -p /var/lock/'
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make zip'
-      - name: 'Install packages (2nd stage)'
-        run: 'apt-get update && apt-get install -y busybox'
+        run: 'opkg update && opkg install ca-certificates curl file idn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Print shell version'
-        run: 'dpkg -s busybox'
+        run: 'opkg info busybox'
       - name: 'Test project'
-        run: 'make clean test TEST_SHELL="$(command -v busybox) sh"'
+        run: 'make clean test TEST_SHELL="$(command -v busybox) ash"'
 
   test-macos-latest:
     name: 'Test on latest macOS'
