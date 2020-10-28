@@ -18,8 +18,8 @@ export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/sources.txt"
 export HBLOCK_ALLOWLIST_FILE='builtin'
 export HBLOCK_DENYLIST_FILE='builtin'
 
-runInTestShell() {
-	${TEST_SHELL:-/bin/sh} -- "${@-}" 2>&1 ||:
+hBlockInTestShell() {
+	${TEST_SHELL:-/bin/sh} -- "${HBLOCK_SCRIPT:-hblock}" "${@-}" 2>&1 ||:
 }
 
 assertEquals() {

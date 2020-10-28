@@ -13,10 +13,8 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	hblock="${1:-hblock}"
-
 	printf 'Test: double dash argument\n'
-	actual="$(runInTestShell "${hblock:?}" -qO- -- -v)"
+	actual="$(hBlockInTestShell -qO- -- -v)"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-double-dash-arg.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

@@ -13,8 +13,6 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	hblock="${1:-hblock}"
-
 	export HBLOCK_REGEX='false'
 	# shellcheck disable=SC2155
 	export HBLOCK_ALLOWLIST="$(cat <<-'EOF'
@@ -24,14 +22,14 @@ main() {
 	)"
 
 	printf 'Test: "-r" short option\n'
-	actual="$(runInTestShell "${hblock:?}" -qO- -r)"
+	actual="$(hBlockInTestShell -qO- -r)"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-regex-opt.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
 	printf 'Test: "--regex" long option\n'
-	actual="$(runInTestShell "${hblock:?}" -qO- --regex)"
+	actual="$(hBlockInTestShell -qO- --regex)"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-regex-opt.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

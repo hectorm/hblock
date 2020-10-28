@@ -13,19 +13,17 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	hblock="${1:-hblock}"
-
 	export HBLOCK_WRAP='1'
 
 	printf 'Test: "-W" short option\n'
-	actual="$(runInTestShell "${hblock:?}" -qO- -W '5')"
+	actual="$(hBlockInTestShell -qO- -W '5')"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-wrap-opt.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
 	printf 'Test: "--wrap" long option\n'
-	actual="$(runInTestShell "${hblock:?}" -qO- --wrap='5')"
+	actual="$(hBlockInTestShell -qO- --wrap='5')"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-wrap-opt.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

@@ -13,10 +13,8 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	hblock="${1:-hblock}"
-
 	printf 'Test: default options\n'
-	actual="$(runInTestShell "${hblock:?}" -qO-)"
+	actual="$(hBlockInTestShell -qO-)"
 	expected="$(cat -- "${SCRIPT_DIR:?}"/test-default-opts.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

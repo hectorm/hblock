@@ -96,7 +96,7 @@ lint:
 .PHONY: test
 
 test:
-	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 env -i TEST_SHELL='$(TEST_SHELL)'
+	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 env -i TEST_SHELL='$(TEST_SHELL)' HBLOCK_SCRIPT='./hblock'
 
 ##################################################
 ## "install" target
