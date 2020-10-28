@@ -622,6 +622,9 @@ main() {
 		fi
 	fi
 
+	# Remove the auxiliary output file.
+	rm -f "${outputFileAux:?}"
+
 	printInfo "${blocklistCount:?} blocked domains!"
 }
 
