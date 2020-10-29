@@ -558,13 +558,33 @@ main() {
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Applying format template'
 
+		# The number of domains per line is equal to the value of the wrap option.
 		if [ "${wrap:?}" -gt '1' ]; then
 			awk -v FS=' ' -v RS='\n' -v W="${wrap:?}" '{ORS=(NR%W?FS:RS)}1;END{if(NR%W){printf(RS)}}' \
 				< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
 				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		fi
 
-		awk -v T="${template?}" -v R="${redirection?}" '{E=T;D=$0;gsub("%D",D,E);gsub("%R",R,E);print(E)}' \
+		# The following awk script replaces in the template the variables starting with a % sign with their value.
+		# Using something like '{E=T;D=$0;gsub("%D",D,E);gsub("%R",R,E);print(E)}' would be much simpler,
+		# but I have found that in nawk it performs very poorly.
+		awkTemplateScript="$(cat <<-'EOF'
+			{
+				m=0; split(T, c, "")
+				for (i=1; i<=length(T); i++) {
+					if (m==1) {
+						m=0; if (c[i]=="D") printf($0)
+						else if (c[i]=="R") printf(R)
+						else printf("%"c[i])
+					}
+					else if (c[i]=="%") { m=1 }
+					else { printf(c[i]); m=0 }
+				}
+				printf("\n")
+			}
+		EOF
+		)"
+		awk -v T="${template?}" -v R="${redirection?}" "${awkTemplateScript:?}" \
 			< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 	fi
