@@ -244,10 +244,6 @@ exists() {
 	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
-# Escape strings in sed (https://stackoverflow.com/a/29613573).
-quoteRe() { printf -- '%s' "${1?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
-quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
-
 # Pretty print methods.
 printInfo() {
 	if [ "${quiet-}" != 'true' ]; then
