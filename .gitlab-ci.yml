@@ -156,6 +156,19 @@ build-alpine-latest:
     expire_in: '1 day'
     paths: ['./dist-build-alpine-latest/']
 
+build-openwrt-latest:
+  stage: 'build'
+  image: 'docker.io/openwrtorg/rootfs:latest'
+  before_script:
+    - 'opkg update'
+    - 'opkg install ca-certificates curl file idn2 make'
+  script:
+    - 'make clean all'
+    - 'mv ./dist/ ./dist-build-openwrt-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-openwrt-latest/']
+
 package-deb:
   stage: 'package'
   image: 'docker.io/debian:latest'

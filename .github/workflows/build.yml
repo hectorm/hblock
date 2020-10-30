@@ -92,6 +92,20 @@ jobs:
       - name: 'Build project'
         run: 'make clean all'
 
+  build-openwrt-latest:
+    name: 'Build on latest OpenWrt'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
+    steps:
+      - name: 'Apply workarounds'
+        run: 'printf "ID=alpine\n" > /etc/_os-release; mkdir -p /var/lock/'
+      - name: 'Install packages'
+        run: 'opkg update && opkg install ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make clean all'
+
   build-macos-latest:
     name: 'Build on latest macOS'
     runs-on: 'macos-latest'
