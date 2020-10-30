@@ -160,6 +160,7 @@ build-openwrt-latest:
   stage: 'build'
   image: 'docker.io/openwrtorg/rootfs:latest'
   before_script:
+    - 'mkdir -p /var/lock/'
     - 'opkg update'
     - 'opkg install ca-certificates curl file grep idn2 make'
   script:
