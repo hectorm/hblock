@@ -35,7 +35,7 @@ main() {
 		# Remove the read-only attribute from the hosts file.
 		$hostsItem.Attributes -= "ReadOnly"
 
-		@"
+		@'
 		# BEGIN HEADER
 		127.0.0.1       localhost
 		255.255.255.255 broadcasthost
@@ -56,7 +56,7 @@ main() {
 	# shellcheck disable=SC2155
 	export HBLOCK_FOOTER="$(cat <<-'EOF'
 		# END BLOCKLIST
-		"@ | Set-Content "$hosts"
+		'@ | Set-Content "$hosts"
 
 		# Add the read-only attribute to the hosts file.
 		$hostsItem.Attributes += "ReadOnly"
