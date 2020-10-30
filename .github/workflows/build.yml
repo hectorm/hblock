@@ -96,6 +96,8 @@ jobs:
     name: 'Build on latest macOS'
     runs-on: 'macos-latest'
     steps:
+      - name: 'Use dash as sh'
+        run: 'ln -sf /bin/dash /var/select/sh'
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
       - name: 'Checkout project'
