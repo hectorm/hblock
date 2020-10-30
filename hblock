@@ -589,30 +589,32 @@ main() {
 	C="${comment?}"
 
 	# Append banner to the output file.
-	[ -z "${C?}" ] || cat <<-EOF >> "${outputFileAux:?}"
-		${C?} Generated with:  https://github.com/hectorm/hblock
-		${C?} Blocked domains: ${blocklistCount:?}
-	EOF
+	if [ -n "${C?}" ]; then
+		cat <<-EOF >> "${outputFileAux:?}"
+			${C?} Generated with:  https://github.com/hectorm/hblock
+			${C?} Blocked domains: ${blocklistCount:?}
+		EOF
+	fi
 
 	# If the header file is not empty, it is appended to the output file.
 	if [ -s "${headerFile:?}" ]; then
 		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN HEADER" >> "${outputFileAux:?}"
-		cat -- "${headerFile:?}" >> "${outputFileAux:?}"
-		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} END HEADER" >> "${outputFileAux:?}"
+		awk 1 < "${headerFile:?}" >> "${outputFileAux:?}"
+		[ -z "${C?}" ] || printf -- '%s\n' "${C?} END HEADER" >> "${outputFileAux:?}"
 	fi
 
 	# If the blocklist file is not empty, it is appended to the output file.
 	if [ -s "${blocklistFile:?}" ]; then
 		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN BLOCKLIST" >> "${outputFileAux:?}"
-		cat -- "${blocklistFile:?}" >> "${outputFileAux:?}"
+		awk 1 < "${blocklistFile:?}" >> "${outputFileAux:?}"
 		[ -z "${C?}" ] || printf -- '%s\n' "${C?} END BLOCKLIST" >> "${outputFileAux:?}"
 	fi
 
 	# If the footer file is not empty, it is appended to the output file.
 	if [ -s "${footerFile:?}" ]; then
 		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN FOOTER" >> "${outputFileAux:?}"
-		cat -- "${footerFile:?}" >> "${outputFileAux:?}"
-		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} END FOOTER" >> "${outputFileAux:?}"
+		awk 1 < "${footerFile:?}" >> "${outputFileAux:?}"
+		[ -z "${C?}" ] || printf -- '%s\n' "${C?} END FOOTER" >> "${outputFileAux:?}"
 	fi
 
 	# Print to stdout if the output file is "-".
