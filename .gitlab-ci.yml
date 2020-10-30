@@ -12,7 +12,7 @@ lint-shellcheck-stable:
   stage: 'lint'
   image: 'docker.io/koalaman/shellcheck-alpine:stable'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make zip'
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
     - 'shellcheck --version'
   script:
     - 'make clean lint'
@@ -21,7 +21,7 @@ test-bash-latest:
   stage: 'test'
   image: 'docker.io/bash:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make zip'
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
     - 'bash --version'
   script:
     - 'make clean test TEST_SHELL="$(command -v bash)"'
@@ -31,7 +31,7 @@ test-dash-latest:
   image: 'docker.io/debian:latest'
   before_script:
     - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make zip'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
     - 'apt-get install -y dash'
     - 'dpkg -s dash'
   script:
@@ -42,7 +42,7 @@ test-ksh-latest:
   image: 'docker.io/debian:latest'
   before_script:
     - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make zip'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
     - 'apt-get install -y ksh'
     - 'dpkg -s ksh'
   script:
@@ -53,7 +53,7 @@ test-mksh-latest:
   image: 'docker.io/debian:latest'
   before_script:
     - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make zip'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
     - 'apt-get install -y mksh'
     - 'dpkg -s mksh'
   script:
@@ -75,7 +75,7 @@ build-debian-latest:
   image: 'docker.io/debian:latest'
   before_script:
     - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make zip'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-debian-latest/'
@@ -88,7 +88,7 @@ build-ubuntu-latest:
   image: 'docker.io/ubuntu:latest'
   before_script:
     - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make zip'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-ubuntu-latest/'
@@ -100,7 +100,7 @@ build-fedora-latest:
   stage: 'build'
   image: 'docker.io/fedora:latest'
   before_script:
-    - 'dnf install -y ca-certificates curl file libidn2 make zip'
+    - 'dnf install -y ca-certificates curl file libidn2 make'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-fedora-latest/'
@@ -112,7 +112,7 @@ build-centos-latest:
   stage: 'build'
   image: 'docker.io/centos:latest'
   before_script:
-    - 'dnf install -y ca-certificates curl file libidn2 make zip'
+    - 'dnf install -y ca-certificates curl file libidn2 make'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-centos-latest/'
@@ -124,7 +124,7 @@ build-opensuse-latest:
   stage: 'build'
   image: 'docker.io/opensuse/tumbleweed:latest'
   before_script:
-    - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar zip'
+    - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-opensuse-latest/'
@@ -136,7 +136,7 @@ build-archlinux-latest:
   stage: 'build'
   image: 'docker.io/archlinux:latest'
   before_script:
-    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make zip'
+    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-archlinux-latest/'
@@ -148,7 +148,7 @@ build-alpine-latest:
   stage: 'build'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make zip'
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
   script:
     - 'make clean all'
     - 'mv ./dist/ ./dist-build-alpine-latest/'
@@ -161,7 +161,7 @@ package-deb:
   image: 'docker.io/debian:latest'
   before_script:
     - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make zip'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
     - 'apt-get install -y build-essential debhelper dh-systemd dpkg-dev'
   script:
     - 'make clean package-deb'
@@ -176,7 +176,7 @@ package-rpm:
   stage: 'package'
   image: 'docker.io/fedora:latest'
   before_script:
-    - 'dnf install -y ca-certificates curl file libidn2 make zip'
+    - 'dnf install -y ca-certificates curl file libidn2 make'
     - 'dnf install -y rpm-build rpmdevtools systemd'
   script:
     - 'make clean package-rpm'
@@ -191,7 +191,7 @@ package-npm:
   stage: 'package'
   image: 'docker.io/node:current-alpine'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make zip'
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
   script:
     - 'make clean package-npm'
     - 'mv ./dist/ ./dist-package-npm/'
