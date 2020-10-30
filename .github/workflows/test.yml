@@ -86,8 +86,8 @@ jobs:
       - name: 'Test project'
         run: 'make clean test TEST_SHELL="$(command -v busybox) ash"'
 
-  test-macos-latest:
-    name: 'Test on latest macOS'
+  test-macos-bash-latest:
+    name: 'Test on latest macOS Bash'
     runs-on: 'macos-latest'
     steps:
       - name: 'Install packages'
