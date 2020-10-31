@@ -55,8 +55,8 @@ main() {
 	domainsFile="${1:?}"
 	publicSuffixList="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
 
-	if [ ! -f "${domainsFile:?}" ] || [ ! -r "${domainsFile:?}" ]; then
-		printf -- '%s\n' "Cannot read file: '${domainsFile:?}'" >&2
+	if [ ! -e "${domainsFile:?}" ]; then
+		printf -- '%s\n' "No such file: '${domainsFile:?}'" >&2
 		exit 1
 	fi
 
