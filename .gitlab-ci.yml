@@ -15,60 +15,138 @@ lint-shellcheck-stable:
     - 'apk add --no-cache ca-certificates curl file libidn2 make'
     - 'shellcheck --version'
   script:
-    - 'make clean lint'
+    - 'make lint'
 
-test-bash-latest:
+test-debian-latest:
   stage: 'test'
-  image: 'docker.io/bash:latest'
+  image: 'docker.io/debian:latest'
+  before_script:
+    - 'apt-get update'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
+  script:
+    - 'make test'
+
+test-ubuntu-latest:
+  stage: 'test'
+  image: 'docker.io/ubuntu:latest'
+  before_script:
+    - 'apt-get update'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
+  script:
+    - 'make test'
+
+test-fedora-latest:
+  stage: 'test'
+  image: 'docker.io/fedora:latest'
+  before_script:
+    - 'dnf install -y ca-certificates curl file libidn2 make'
+  script:
+    - 'make test'
+
+test-centos-latest:
+  stage: 'test'
+  image: 'docker.io/centos:latest'
+  before_script:
+    - 'dnf install -y ca-certificates curl file libidn2 make'
+  script:
+    - 'make test'
+
+test-opensuse-latest:
+  stage: 'test'
+  image: 'docker.io/opensuse/leap:latest'
+  before_script:
+    - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
+  script:
+    - 'make test'
+
+test-archlinux-latest:
+  stage: 'test'
+  image: 'docker.io/archlinux:latest'
+  before_script:
+    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+  script:
+    - 'make test'
+
+test-alpine-edge-bash:
+  stage: 'test'
+  image: 'docker.io/alpine:edge'
   before_script:
     - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'bash --version'
+    - 'apk add --no-cache bash'
+    - 'apk info --no-cache bash'
   script:
-    - 'make clean test TEST_SHELL="$(command -v bash)"'
+    - 'make test TEST_SHELL="$(command -v bash)"'
 
-test-dash-latest:
+test-alpine-edge-zsh:
   stage: 'test'
-  image: 'docker.io/debian:latest'
+  image: 'docker.io/alpine:edge'
   before_script:
-    - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make'
-    - 'apt-get install -y dash'
-    - 'dpkg -s dash'
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache zsh'
+    - 'apk info --no-cache zsh'
   script:
-    - 'make clean test TEST_SHELL="$(command -v dash)"'
+    - 'make test TEST_SHELL="$(command -v zsh)"'
 
-test-ksh-latest:
+test-alpine-edge-dash:
   stage: 'test'
-  image: 'docker.io/debian:latest'
+  image: 'docker.io/alpine:edge'
   before_script:
-    - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make'
-    - 'apt-get install -y ksh'
-    - 'dpkg -s ksh'
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache dash'
+    - 'apk info --no-cache dash'
   script:
-    - 'make clean test TEST_SHELL="$(command -v ksh)"'
+    - 'make test TEST_SHELL="$(command -v dash)"'
 
-test-mksh-latest:
+test-alpine-edge-mksh:
   stage: 'test'
-  image: 'docker.io/debian:latest'
+  image: 'docker.io/alpine:edge'
   before_script:
-    - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make'
-    - 'apt-get install -y mksh'
-    - 'dpkg -s mksh'
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache mksh'
+    - 'apk info --no-cache mksh'
   script:
-    - 'make clean test TEST_SHELL="$(command -v mksh)"'
+    - 'make test TEST_SHELL="$(command -v mksh)"'
 
-test-openwrt-ash-latest:
+test-alpine-edge-oksh:
+  stage: 'test'
+  image: 'docker.io/alpine:edge'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing oksh'
+    - 'apk info --no-cache oksh'
+  script:
+    - 'make test TEST_SHELL="$(command -v oksh)"'
+
+test-alpine-edge-yash:
+  stage: 'test'
+  image: 'docker.io/alpine:edge'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache yash'
+    - 'apk info --no-cache yash'
+  script:
+    - 'make test TEST_SHELL="$(command -v yash)"'
+
+test-alpine-edge-busybox-ash:
+  stage: 'test'
+  image: 'docker.io/alpine:edge'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache busybox'
+    - 'apk info --no-cache busybox'
+  script:
+    - 'make test TEST_SHELL="$(command -v busybox) ash"'
+
+test-openwrt-latest-busybox-ash:
   stage: 'test'
   image: 'docker.io/openwrtorg/rootfs:latest'
   before_script:
-    - 'mkdir -p /var/lock/'
-    - 'opkg update'
+    - 'mkdir -p /var/lock/; opkg update'
     - 'opkg install ca-certificates curl file idn2 make'
+    - 'opkg install busybox'
     - 'opkg info busybox'
   script:
-    - 'make clean test TEST_SHELL="$(command -v busybox) ash"'
+    - 'make test TEST_SHELL="$(command -v busybox) ash"'
 
 build-debian-latest:
   stage: 'build'
@@ -77,98 +155,11 @@ build-debian-latest:
     - 'apt-get update'
     - 'apt-get install -y ca-certificates curl file idn2 make'
   script:
-    - 'make clean all'
+    - 'make build stats index'
     - 'mv ./dist/ ./dist-build-debian-latest/'
   artifacts:
     expire_in: '1 day'
     paths: ['./dist-build-debian-latest/']
-
-build-ubuntu-latest:
-  stage: 'build'
-  image: 'docker.io/ubuntu:latest'
-  before_script:
-    - 'apt-get update'
-    - 'apt-get install -y ca-certificates curl file idn2 make'
-  script:
-    - 'make clean all'
-    - 'mv ./dist/ ./dist-build-ubuntu-latest/'
-  artifacts:
-    expire_in: '1 day'
-    paths: ['./dist-build-ubuntu-latest/']
-
-build-fedora-latest:
-  stage: 'build'
-  image: 'docker.io/fedora:latest'
-  before_script:
-    - 'dnf install -y ca-certificates curl file libidn2 make'
-  script:
-    - 'make clean all'
-    - 'mv ./dist/ ./dist-build-fedora-latest/'
-  artifacts:
-    expire_in: '1 day'
-    paths: ['./dist-build-fedora-latest/']
-
-build-centos-latest:
-  stage: 'build'
-  image: 'docker.io/centos:latest'
-  before_script:
-    - 'dnf install -y ca-certificates curl file libidn2 make'
-  script:
-    - 'make clean all'
-    - 'mv ./dist/ ./dist-build-centos-latest/'
-  artifacts:
-    expire_in: '1 day'
-    paths: ['./dist-build-centos-latest/']
-
-build-opensuse-latest:
-  stage: 'build'
-  image: 'docker.io/opensuse/tumbleweed:latest'
-  before_script:
-    - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
-  script:
-    - 'make clean all'
-    - 'mv ./dist/ ./dist-build-opensuse-latest/'
-  artifacts:
-    expire_in: '1 day'
-    paths: ['./dist-build-opensuse-latest/']
-
-build-archlinux-latest:
-  stage: 'build'
-  image: 'docker.io/archlinux:latest'
-  before_script:
-    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
-  script:
-    - 'make clean all'
-    - 'mv ./dist/ ./dist-build-archlinux-latest/'
-  artifacts:
-    expire_in: '1 day'
-    paths: ['./dist-build-archlinux-latest/']
-
-build-alpine-latest:
-  stage: 'build'
-  image: 'docker.io/alpine:latest'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file grep libidn2 make'
-  script:
-    - 'make clean all'
-    - 'mv ./dist/ ./dist-build-alpine-latest/'
-  artifacts:
-    expire_in: '1 day'
-    paths: ['./dist-build-alpine-latest/']
-
-build-openwrt-latest:
-  stage: 'build'
-  image: 'docker.io/openwrtorg/rootfs:latest'
-  before_script:
-    - 'mkdir -p /var/lock/'
-    - 'opkg update'
-    - 'opkg install ca-certificates curl file grep idn2 make'
-  script:
-    - 'make clean all'
-    - 'mv ./dist/ ./dist-build-openwrt-latest/'
-  artifacts:
-    expire_in: '1 day'
-    paths: ['./dist-build-openwrt-latest/']
 
 package-deb:
   stage: 'package'
@@ -178,7 +169,7 @@ package-deb:
     - 'apt-get install -y ca-certificates curl file idn2 make'
     - 'apt-get install -y build-essential debhelper dh-systemd dpkg-dev'
   script:
-    - 'make clean package-deb'
+    - 'make package-deb'
     - 'mv ./dist/ ./dist-package-deb/'
     - 'apt install -y ./dist-package-deb/hblock-*.deb'
     - 'command hblock -v'
@@ -193,7 +184,7 @@ package-rpm:
     - 'dnf install -y ca-certificates curl file libidn2 make'
     - 'dnf install -y rpm-build rpmdevtools systemd'
   script:
-    - 'make clean package-rpm'
+    - 'make package-rpm'
     - 'mv ./dist/ ./dist-package-rpm/'
     - 'dnf install -y ./dist-package-rpm/hblock-*.rpm'
     - 'command hblock -v'
@@ -207,7 +198,7 @@ package-npm:
   before_script:
     - 'apk add --no-cache ca-certificates curl file libidn2 make'
   script:
-    - 'make clean package-npm'
+    - 'make package-npm'
     - 'mv ./dist/ ./dist-package-npm/'
     - 'npm install -g ./dist-package-npm/hblock-*.tgz'
     - 'command hblock -v'

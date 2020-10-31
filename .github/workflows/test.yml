@@ -8,93 +8,221 @@ on:
 
 jobs:
 
-  test-bash-latest:
-    name: 'Test on latest Bash'
-    runs-on: 'ubuntu-latest'
-    container: 'docker.io/bash:latest'
-    steps:
-      - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
-      - name: 'Print shell version'
-        run: 'bash --version'
-      - name: 'Test project'
-        run: 'make clean test TEST_SHELL="$(command -v bash)"'
-
-  test-dash-latest:
-    name: 'Test on latest Dash'
+  test-debian-latest:
+    name: 'Test on Debian'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/debian:latest'
     steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make'
-      - name: 'Install packages (2nd stage)'
-        run: 'apt-get update && apt-get install -y dash'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Print shell version'
-        run: 'dpkg -s dash'
       - name: 'Test project'
-        run: 'make clean test TEST_SHELL="$(command -v dash)"'
+        run: 'make test'
 
-  test-ksh-latest:
-    name: 'Test on latest ksh'
+  test-ubuntu-latest:
+    name: 'Test on Ubuntu'
     runs-on: 'ubuntu-latest'
-    container: 'docker.io/debian:latest'
+    container: 'docker.io/ubuntu:latest'
+    steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test'
+
+  test-fedora-latest:
+    name: 'Test on Fedora'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make'
-      - name: 'Install packages (2nd stage)'
-        run: 'apt-get update && apt-get install -y ksh'
+        run: 'dnf install -y ca-certificates curl file libidn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Print shell version'
-        run: 'dpkg -s ksh'
       - name: 'Test project'
-        run: 'make clean test TEST_SHELL="$(command -v ksh)"'
+        run: 'make test'
 
-  test-mksh-latest:
-    name: 'Test on latest mksh'
+  test-centos-latest:
+    name: 'Test on CentOS'
     runs-on: 'ubuntu-latest'
-    container: 'docker.io/debian:latest'
+    container: 'docker.io/centos:latest'
     steps:
       - name: 'Install packages'
-        run: 'apt-get update && apt-get install -y ca-certificates curl file idn2 make'
-      - name: 'Install packages (2nd stage)'
-        run: 'apt-get update && apt-get install -y mksh'
+        run: 'dnf install -y ca-certificates curl file libidn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Print shell version'
-        run: 'dpkg -s mksh'
       - name: 'Test project'
-        run: 'make clean test TEST_SHELL="$(command -v mksh)"'
+        run: 'make test'
 
-  test-openwrt-ash-latest:
-    name: 'Test on latest OpenWrt ash'
+  test-opensuse-latest:
+    name: 'Test on openSUSE'
     runs-on: 'ubuntu-latest'
-    container: 'docker.io/openwrtorg/rootfs:latest'
+    container: 'docker.io/opensuse/leap:latest'
     steps:
-      - name: 'Apply workarounds'
-        run: 'printf "ID=alpine\n" > /etc/_os-release; mkdir -p /var/lock/'
       - name: 'Install packages'
-        run: 'opkg update && opkg install ca-certificates curl file idn2 make'
+        run: 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Print shell version'
-        run: 'opkg info busybox'
       - name: 'Test project'
-        run: 'make clean test TEST_SHELL="$(command -v busybox) ash"'
+        run: 'make test'
 
-  test-macos-bash-latest:
-    name: 'Test on latest macOS Bash'
+  test-archlinux-latest:
+    name: 'Test on Arch Linux'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test'
+
+  test-macos-latest:
+    name: 'Test on macOS'
     runs-on: 'macos-latest'
     steps:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
-      - name: 'Print shell version'
-        run: 'bash --version'
       - name: 'Test project'
-        run: 'make clean test TEST_SHELL="$(command -v bash)"'
+        run: 'make test'
+
+  test-alpine-edge-bash:
+    name: 'Test on Alpine Edge bash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache bash'
+      - name: 'Print bash version'
+        run: 'apk info --no-cache bash'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v bash)"'
+
+  test-alpine-edge-zsh:
+    name: 'Test on Alpine Edge zsh'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache zsh'
+      - name: 'Print zsh version'
+        run: 'apk info --no-cache zsh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v zsh)"'
+
+  test-alpine-edge-dash:
+    name: 'Test on Alpine Edge dash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache dash'
+      - name: 'Print dash version'
+        run: 'apk info --no-cache dash'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v dash)"'
+
+  test-alpine-edge-mksh:
+    name: 'Test on Alpine Edge mksh'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache mksh'
+      - name: 'Print mksh version'
+        run: 'apk info --no-cache mksh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v mksh)"'
+
+  test-alpine-edge-oksh:
+    name: 'Test on Alpine Edge oksh'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing oksh'
+      - name: 'Print oksh version'
+        run: 'apk info --no-cache oksh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v oksh)"'
+
+  test-alpine-edge-yash:
+    name: 'Test on Alpine Edge yash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache yash'
+      - name: 'Print yash version'
+        run: 'apk info --no-cache yash'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v yash)"'
+
+  test-alpine-edge-busybox-ash:
+    name: 'Test on Alpine Edge BusyBox ash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache busybox'
+      - name: 'Print BusyBox version'
+        run: 'apk info --no-cache busybox'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v busybox) ash"'
+
+  test-openwrt-latest-busybox-ash:
+    name: 'Test on OpenWrt BusyBox ash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
+    steps:
+      - name: 'Apply workarounds for GitHub Actions runner'
+        run: 'printf "ID=alpine\n" > /etc/_os-release'
+      - name: 'Update package index'
+        run: 'mkdir -p /var/lock/; opkg update'
+      - name: 'Install packages'
+        run: 'opkg install ca-certificates curl file idn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'opkg install busybox'
+      - name: 'Print BusyBox version'
+        run: 'opkg info busybox'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make test TEST_SHELL="$(command -v busybox) ash"'

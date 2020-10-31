@@ -9,16 +9,16 @@ on:
 jobs:
 
   lint-shellcheck-stable:
-    name: 'Lint with stable ShellCheck'
+    name: 'Lint with ShellCheck'
     runs-on: 'ubuntu-latest'
     container:
       image: 'docker.io/koalaman/shellcheck-alpine:stable'
     steps:
       - name: 'Install packages'
         run: 'apk add --no-cache ca-certificates curl file libidn2 make'
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
       - name: 'Print ShellCheck version'
         run: 'shellcheck --version'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
       - name: 'Lint project'
-        run: 'make clean lint'
+        run: 'make lint'

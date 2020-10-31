@@ -23,9 +23,7 @@ VERSION := $(shell ./resources/version/version.sh get)
 ##################################################
 .PHONY: all
 
-all:
-	$(MAKE) build stats
-	$(MAKE) index
+all: test build stats index
 
 ##################################################
 ## "build" target
@@ -37,10 +35,8 @@ ALT_FORMATS_OUT := $(ALT_FORMATS_SH:./resources/alt-formats/%.sh=./dist/hosts_%)
 
 build: ./dist/hosts $(ALT_FORMATS_OUT)
 
-./dist/:
+./dist/hosts:
 	mkdir -p ./dist/
-
-./dist/hosts: | ./dist/
 	HOSTNAME='' ./hblock -H builtin -F builtin -S builtin -A builtin -D builtin -O ./dist/hosts
 
 ./dist/hosts_%: ./resources/alt-formats/%.sh ./dist/hosts
@@ -66,8 +62,8 @@ stats: ./dist/most_abused_tlds.txt ./dist/most_abused_suffixes.txt
 
 index: ./dist/index.html
 
-%/index.html: $(filter-out index %/index.html,$(MAKECMDGOALS))
-	./resources/templates/index.sh "$$(dirname '$@')" > '$@'
+./dist/index.html: ./dist/hosts $(ALT_FORMATS_OUT) ./dist/most_abused_tlds.txt ./dist/most_abused_suffixes.txt
+	./resources/templates/index.sh ./dist/ > '$@'
 
 ##################################################
 ## "man" target
@@ -96,7 +92,8 @@ lint:
 .PHONY: test
 
 test:
-	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 env -i TEST_SHELL='$(TEST_SHELL)' HBLOCK_SCRIPT='./hblock'
+	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 env -i \
+		PATH='/usr/sbin:/usr/bin:/sbin:/bin' TEST_SHELL='$(TEST_SHELL)' HBLOCK_SCRIPT='./hblock'
 
 ##################################################
 ## "install" target
@@ -158,8 +155,8 @@ uninstall:
 
 package-deb: ./dist/hblock-$(VERSION).deb
 
-./dist/hblock-$(VERSION).deb: | ./dist/
-	rm -rf ./dist/debbuild/; mkdir ./dist/debbuild/
+./dist/hblock-$(VERSION).deb:
+	rm -rf ./dist/debbuild/; mkdir -p ./dist/debbuild/
 	cp -a ./hblock ./dist/debbuild/
 	cp -a ./hblock.1 ./dist/debbuild/
 	cp -a ./resources/deb/ ./dist/debbuild/debian/
@@ -174,8 +171,8 @@ package-deb: ./dist/hblock-$(VERSION).deb
 
 package-rpm: ./dist/hblock-$(VERSION).rpm
 
-./dist/hblock-$(VERSION).rpm: | ./dist/
-	rm -rf ./dist/rpmbuild/; mkdir ./dist/rpmbuild/
+./dist/hblock-$(VERSION).rpm:
+	rm -rf ./dist/rpmbuild/; mkdir -p ./dist/rpmbuild/
 	cp -a ./resources/rpm/* ./dist/rpmbuild/
 	tar -cf ./dist/rpmbuild/SOURCES/hblock.tar ./hblock
 	tar -rf ./dist/rpmbuild/SOURCES/hblock.tar ./hblock.1
@@ -190,8 +187,8 @@ package-rpm: ./dist/hblock-$(VERSION).rpm
 
 package-npm: ./dist/hblock-$(VERSION).tgz
 
-./dist/hblock-$(VERSION).tgz: | ./dist/
-	rm -rf ./dist/npmbuild/; mkdir ./dist/npmbuild/
+./dist/hblock-$(VERSION).tgz:
+	rm -rf ./dist/npmbuild/; mkdir -p ./dist/npmbuild/
 	cp -a ./hblock ./dist/npmbuild/
 	cp -a ./hblock.1 ./dist/npmbuild/
 	cp -a ./LICENSE.md ./dist/npmbuild/
