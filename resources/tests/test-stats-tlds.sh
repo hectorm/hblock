@@ -13,18 +13,9 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	export HBLOCK_REDIRECTION='0.0.0.0'
-
-	printf 'Test: "-R" short option\n'
-	actual="$(hBlockInTestShell -qO- -R '::1')"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-redirection-opt.out)"
-	if ! assertEquals "${actual?}" "${expected?}"; then
-		exit 1
-	fi
-
-	printf 'Test: "--redirection" long option\n'
-	actual="$(hBlockInTestShell -qO- --redirection='::1')"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-redirection-opt.out)"
+	printf -- 'Test - Stats: TLDs\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../stats/stats.sh" "${SCRIPT_DIR:?}/domains.txt" no-psl)"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi

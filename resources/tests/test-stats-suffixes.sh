@@ -13,9 +13,9 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	printf 'Test: invalid short option\n'
-	actual="$(hBlockInTestShell -qO- -i 'VALUE')"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-invalid-short-opt.out)"
+	printf -- 'Test - Stats: Suffixes\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../stats/stats.sh" "${SCRIPT_DIR:?}/domains.txt" "file://${SCRIPT_DIR:?}/psl.txt")"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi

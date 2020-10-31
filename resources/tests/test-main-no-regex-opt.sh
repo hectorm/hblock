@@ -22,9 +22,9 @@ main() {
 	EOF
 	)"
 
-	printf 'Test: "--no-regex" long option\n'
-	actual="$(hBlockInTestShell -qO- --no-regex)"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-no-regex-opt.out)"
+	printf -- 'Test - Main: "--no-regex" long option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --no-regex)"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi

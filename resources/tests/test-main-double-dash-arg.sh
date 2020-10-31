@@ -13,9 +13,9 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	printf 'Test: double dash argument\n'
-	actual="$(hBlockInTestShell -qO- -- -v)"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-double-dash-arg.out)"
+	printf -- 'Test - Main: Double dash argument\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -- -v)"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi

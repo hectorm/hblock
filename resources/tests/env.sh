@@ -9,6 +9,7 @@ export LC_ALL='C'
 
 SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 
+# Set base environment.
 export HOSTNAME='hblock'
 export HBLOCK_OUTPUT_FILE='/dev/null'
 export HBLOCK_HEADER_FILE='builtin'
@@ -18,8 +19,8 @@ export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/sources.txt"
 export HBLOCK_ALLOWLIST_FILE='builtin'
 export HBLOCK_DENYLIST_FILE='builtin'
 
-hBlockInTestShell() {
-	${TEST_SHELL:-/bin/sh} -- "${HBLOCK_SCRIPT:-hblock}" "${@-}" 2>&1 ||:
+runInTestShell() {
+	${TEST_SHELL:-/bin/sh} -- "${@-}" 2>&1 ||:
 }
 
 assertEquals() {

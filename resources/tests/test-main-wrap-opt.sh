@@ -13,11 +13,18 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	export HBLOCK_LENIENT='true'
+	export HBLOCK_WRAP='1'
 
-	printf 'Test: "--no-lenient" long option\n'
-	actual="$(hBlockInTestShell -qO- --no-lenient)"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-no-lenient-opt.out)"
+	printf -- 'Test - Main: "-W" short option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -W '5')"
+	expected="$(cat -- "${0%.sh}".out)"
+	if ! assertEquals "${actual?}" "${expected?}"; then
+		exit 1
+	fi
+
+	printf -- 'Test - Main: "--wrap" long option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --wrap='5')"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi

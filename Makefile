@@ -50,10 +50,10 @@ build: ./dist/hosts $(ALT_FORMATS_OUT)
 stats: ./dist/most_abused_tlds.txt ./dist/most_abused_suffixes.txt
 
 ./dist/most_abused_tlds.txt: ./dist/hosts_domains.txt
-	./resources/stats/suffix.sh ./dist/hosts_domains.txt none > '$@'
+	./resources/stats/stats.sh ./dist/hosts_domains.txt no-psl > '$@'
 
 ./dist/most_abused_suffixes.txt: ./dist/hosts_domains.txt
-	./resources/stats/suffix.sh ./dist/hosts_domains.txt > '$@'
+	./resources/stats/stats.sh ./dist/hosts_domains.txt > '$@'
 
 ##################################################
 ## "index" target
@@ -63,7 +63,7 @@ stats: ./dist/most_abused_tlds.txt ./dist/most_abused_suffixes.txt
 index: ./dist/index.html
 
 ./dist/index.html: ./dist/hosts $(ALT_FORMATS_OUT) ./dist/most_abused_tlds.txt ./dist/most_abused_suffixes.txt
-	./resources/templates/index.sh ./dist/ > '$@'
+	./resources/index/index.sh ./dist/ > '$@'
 
 ##################################################
 ## "man" target
@@ -93,7 +93,7 @@ lint:
 
 test:
 	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 env -i \
-		PATH='/usr/sbin:/usr/bin:/sbin:/bin' TEST_SHELL='$(TEST_SHELL)' HBLOCK_SCRIPT='./hblock'
+		PATH='/usr/sbin:/usr/bin:/sbin:/bin' TEST_SHELL='$(TEST_SHELL)'
 
 ##################################################
 ## "install" target

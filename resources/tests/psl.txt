@@ -1,0 +1,15 @@
+// Public suffix list sample file
+
+com
+info
+org
+net
+
+arpa
+home.arpa
+
+jp
+東京.jp
+
+香港
+網絡.香港

@@ -73,7 +73,7 @@ main() {
 		| sort | uniq -c > "${blocklistFile:?}.aux" \
 		&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 
-	if [ "${publicSuffixList:?}" != 'none' ]; then
+	if [ "${publicSuffixList:?}" != 'no-psl' ]; then
 		# Download public suffix list.
 		fetchUrl "${publicSuffixList:?}" > "${blocklistFile:?}.suffixes"
 

@@ -13,9 +13,9 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	printf 'Test: default options\n'
-	actual="$(hBlockInTestShell -qO-)"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-default-opts.out)"
+	printf -- 'Test - Main: Invalid long option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --invalid='VALUE')"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi

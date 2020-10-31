@@ -13,9 +13,18 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	printf 'Test: invalid long option\n'
-	actual="$(hBlockInTestShell -qO- --invalid='VALUE')"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-invalid-long-opt.out)"
+	export HBLOCK_LENIENT='false'
+
+	printf -- 'Test - Main: "-l" short option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -l)"
+	expected="$(cat -- "${0%.sh}".out)"
+	if ! assertEquals "${actual?}" "${expected?}"; then
+		exit 1
+	fi
+
+	printf -- 'Test - Main: "--lenient" long option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --lenient)"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi

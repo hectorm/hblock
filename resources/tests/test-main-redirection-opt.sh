@@ -13,18 +13,18 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	export HBLOCK_TEMPLATE='%R %D'
+	export HBLOCK_REDIRECTION='0.0.0.0'
 
-	printf 'Test: "-T" short option\n'
-	actual="$(hBlockInTestShell -qO- -T '%D\n\t└─ %R')"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-template-opt.out)"
+	printf -- 'Test - Main: "-R" short option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -R '::1')"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf 'Test: "--template" long option\n'
-	actual="$(hBlockInTestShell -qO- --template='%D\n\t└─ %R')"
-	expected="$(cat -- "${SCRIPT_DIR:?}"/test-template-opt.out)"
+	printf -- 'Test - Main: "--redirection" long option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --redirection='::1')"
+	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
