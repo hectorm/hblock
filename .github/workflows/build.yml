@@ -113,7 +113,7 @@ jobs:
       - name: 'Use dash as sh'
         run: 'sudo ln -sf /bin/dash /var/select/sh'
       - name: 'Install packages'
-        run: 'brew install curl grep libidn2 make'
+        run: 'brew install curl gawk grep libidn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
