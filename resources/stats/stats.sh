@@ -46,8 +46,8 @@ punycodeEncode() {
 	if exists idn2; then idnCmd='idn2'
 	elif exists idn; then idnCmd='idn'
 	else exit 1; fi
-	for LC_ALL in 'C.UTF-8' 'en_US.UTF-8' "${LC_CTYPE-}" "${LANG-}"; do
-		if "${idnCmd:?}" 'λ' >/dev/null 2>&1; then "${idnCmd:?}"; break; fi
+	for l in 'C.UTF-8' 'en_US.UTF-8' "${LC_CTYPE-}" "${LANG-}"; do
+		if LC_ALL="${l?}" "${idnCmd:?}" 'λ' >/dev/null 2>&1; then LC_ALL="${l?}" "${idnCmd:?}"; break; fi
 	done
 }
 
