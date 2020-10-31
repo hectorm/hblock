@@ -116,7 +116,7 @@ main() {
 	fi
 
 	# Remove the domains file.
-	rm -f "${domainsFileTmp:?}"
+	rm -f -- "${domainsFileTmp:?}"
 
 	# Sort stats by the number of matches.
 	stats="$(printf -- '%s' "${stats?}" | sort -k1,1nr -k2,2 | awk '{print(NR"\t"$0)}')"
