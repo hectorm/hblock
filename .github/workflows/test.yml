@@ -42,7 +42,7 @@ jobs:
     container: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
-        run: 'dnf install -y ca-certificates curl findutils file libidn2 make'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
@@ -54,7 +54,7 @@ jobs:
     container: 'docker.io/centos:latest'
     steps:
       - name: 'Install packages'
-        run: 'dnf install -y ca-certificates curl findutils file libidn2 make'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'

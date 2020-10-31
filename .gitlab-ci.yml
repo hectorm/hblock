@@ -39,7 +39,7 @@ test-fedora-latest:
   stage: 'test'
   image: 'docker.io/fedora:latest'
   before_script:
-    - 'dnf install -y ca-certificates curl findutils file libidn2 make'
+    - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
     - 'make test'
 
@@ -47,7 +47,7 @@ test-centos-latest:
   stage: 'test'
   image: 'docker.io/centos:latest'
   before_script:
-    - 'dnf install -y ca-certificates curl findutils file libidn2 make'
+    - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
     - 'make test'
 

@@ -34,7 +34,7 @@ jobs:
       image: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
-        run: 'dnf install -y ca-certificates curl findutils file libidn2 make'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
       - name: 'Install packages (2nd stage)'
         run: 'dnf install -y rpm-build rpmdevtools systemd'
       - name: 'Checkout project'
