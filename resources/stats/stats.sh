@@ -43,8 +43,8 @@ fetchUrl() {
 
 # Convert an IDN to punycode.
 punycodeEncode() {
-	if exists idn2; then LC_ALL='en_US.UTF-8' idn2
-	elif exists idn; then LC_ALL='en_US.UTF-8' idn
+	if exists idn2; then LC_ALL='C.UTF-8' idn2
+	elif exists idn; then LC_ALL='C.UTF-8' idn
 	else exit 1; fi
 }
 
@@ -94,7 +94,8 @@ main() {
 				count="$(awk '{s+=$1}END{print(s)}' "${blocklistFile:?}.match")"
 				stats="$(printf -- '%s\t%s\n%s' "${count:?}" "${regex:?}" "${stats?}")"
 				{ grep -v -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-					&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"; } || true
+					&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}";
+				} || { :> "${blocklistFile:?}"; }
 			fi
 		done < "${blocklistFile:?}.suffixes"
 
