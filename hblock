@@ -548,7 +548,7 @@ main() {
 	fi
 
 	# Count blocked domains.
-	blocklistCount="$(wc -l < "${blocklistFile:?}" | tr -d ' ')"
+	blocklistCount="$(wc -l < "${blocklistFile:?}" | awk '{print($1)}')"
 
 	# If the blocklist file is not empty, the format template is applied.
 	if [ -s "${blocklistFile:?}" ]; then
