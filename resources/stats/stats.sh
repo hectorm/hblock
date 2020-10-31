@@ -43,17 +43,20 @@ fetchUrl() {
 
 # Convert an IDN to punycode.
 punycodeEncode() {
-	if exists idn2; then LC_ALL='C.UTF-8' idn2
-	elif exists idn; then LC_ALL='C.UTF-8' idn
+	if exists idn2; then idnCmd='idn2'
+	elif exists idn; then idnCmd='idn'
 	else exit 1; fi
+	for LC_ALL in 'C.UTF-8' 'en_US.UTF-8' "${LC_CTYPE-}" "${LANG-}"; do
+		if "${idnCmd:?}" 'λ' >/dev/null 2>&1; then "${idnCmd:?}"; break; fi
+	done
 }
 
 main() {
-	file="${1:?}"
+	domainsFile="${1:?}"
 	publicSuffixList="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
 
-	if [ ! -f "${file:?}" ] || [ ! -r "${file:?}" ]; then
-		printf -- '%s\n' "Cannot read file: '${file:?}'" >&2
+	if [ ! -f "${domainsFile:?}" ] || [ ! -r "${domainsFile:?}" ]; then
+		printf -- '%s\n' "Cannot read file: '${domainsFile:?}'" >&2
 		exit 1
 	fi
 
@@ -64,57 +67,61 @@ main() {
 	tmpWorkDir="$(createTempDir)"
 	trap 'rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit 0' EXIT TERM INT HUP
 
-	# Copy blocklist file.
-	blocklistFile="${tmpWorkDir:?}/block.list"
-	cp -f -- "${file:?}" "${blocklistFile:?}"
+	# Copy domains file.
+	domainsFileTmp="${tmpWorkDir:?}/domains.list"
+	cp -f -- "${domainsFile:?}" "${domainsFileTmp:?}"
 
-	# Compact blocklist content (remove lowest level domain and count ocurrences).
-	sed -e 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' -- "${blocklistFile:?}" \
-		| sort | uniq -c > "${blocklistFile:?}.aux" \
-		&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+	# Compact domains file content (remove lowest level domain and count ocurrences).
+	sed -e 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' -- "${domainsFileTmp:?}" \
+		| sort | uniq -c > "${domainsFileTmp:?}.aux" \
+		&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}"
 
 	if [ "${publicSuffixList:?}" != 'no-psl' ]; then
 		# Download public suffix list.
-		fetchUrl "${publicSuffixList:?}" > "${blocklistFile:?}.suffixes"
+		fetchUrl "${publicSuffixList:?}" > "${domainsFileTmp:?}.suffixes"
 
 		# Transform suffix list (punycode encode and sort by length in descending order).
-		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "${blocklistFile:?}.suffixes" \
+		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "${domainsFileTmp:?}.suffixes" \
 			| punycodeEncode | awk '{print(length($0)":."$0)}' \
-			| sort -nr | cut -d: -f2 > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}.suffixes"
+			| sort -nr | cut -d: -f2 > "${domainsFileTmp:?}.aux" \
+			&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}.suffixes"
 
 		# Create regex pattern for each suffix.
 		sed -e 's/\./\\./g;s/$/$/g' \
-			-- "${blocklistFile:?}.suffixes" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}.suffixes"
+			-- "${domainsFileTmp:?}.suffixes" > "${domainsFileTmp:?}.aux" \
+			&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}.suffixes"
 
-		# Count blocklist matches for each suffix.
+		# Count domains matches for each suffix.
 		while IFS= read -r regex || [ -n "${regex?}" ]; do
-			if grep -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.match"; then
-				count="$(awk '{s+=$1}END{print(s)}' "${blocklistFile:?}.match")"
+			if grep -- "${regex:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.match"; then
+				count="$(awk '{s+=$1}END{print(s)}' "${domainsFileTmp:?}.match")"
 				stats="$(printf -- '%s\t%s\n%s' "${count:?}" "${regex:?}" "${stats?}")"
-				{ grep -v -- "${regex:?}" "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-					&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}";
-				} || { :> "${blocklistFile:?}"; }
+				{ grep -v -- "${regex:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.aux" \
+					&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}";
+				} || { :> "${domainsFileTmp:?}"; }
 			fi
-		done < "${blocklistFile:?}.suffixes"
+		done < "${domainsFileTmp:?}.suffixes"
 
 		# Undo regex pattern.
 		stats="$(printf -- '%s' "${stats?}" | sed 's/\\\././g;s/\$$//g')"
 	fi
 
-	# If the blocklist file is not empty, use TLD as suffix.
-	if [ -s "${blocklistFile:?}" ]; then
-		tldStats="$(sed -e 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' -- "${blocklistFile:?}" |
+	# If the domains file is not empty, use TLD as suffix.
+	if [ -s "${domainsFileTmp:?}" ]; then
+		tldStats="$(sed -e 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' -- "${domainsFileTmp:?}" |
 			awk '{arr[$2]+=$1;}END{for (i in arr) print(arr[i]"\t"i)}'
 		)"
 
 		stats="$(printf -- '%s\n%s' "${tldStats?}" "${stats?}")"
 	fi
 
+	# Remove the domains file.
+	rm -f "${domainsFileTmp:?}"
+
 	# Sort stats by the number of matches.
 	stats="$(printf -- '%s' "${stats?}" | sort -k1,1nr -k2,2 | awk '{print(NR"\t"$0)}')"
 
+	# Print stats.
 	printf -- '%s\n%s\n' "${header:?}" "${stats?}"
 }
 
