@@ -544,7 +544,7 @@ main() {
 				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
 				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		fi
-		rm -f "${blocklistFile:?}.pat"
+		rm -f -- "${blocklistFile:?}.pat"
 	fi
 
 	# Count blocked domains.
