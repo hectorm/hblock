@@ -562,17 +562,18 @@ main() {
 		fi
 
 		# The following awk script replaces in the template the variables starting with a % sign with their value.
-		# Using something like '{E=T;D=$0;gsub("%D",D,E);gsub("%R",R,E);print(E)}' would be much simpler,
-		# but I have found that in nawk it performs very poorly.
+		# Using the "gsub" method would be much simpler, but I have found that in some awk versions it performs very poorly.
 		awkTemplateScript="$(cat <<-'EOF'
-			BEGIN { split(T, c, ""); l=length(T); o="" } {
-				for (i=1; i<=l; i++) {
-					if (c[i]=="%") {
-						i++; if (c[i]=="D") o=o $0
-						else if (c[i]=="R") o=o R
-						else if (c[i]=="%") o=o "%%"
-					} else { o=o c[i] }
-				}; print(o); o=""
+			BEGIN { split(T, A, ""); L = length(T); O = "" }
+			{
+				for (i = 1; i <= L; i++) {
+					if (A[i] == "%") {
+						i++; if (A[i] == "D") O = O $0
+						else if (A[i] == "R") O = O R
+						else if (A[i] == "%") O = O "%%"
+					} else { O = O A[i] }
+				}
+				printf("%s\n", O); O = ""
 			}
 		EOF
 		)"

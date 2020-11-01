@@ -43,15 +43,18 @@ sha256Checksum() {
 
 # Escape string for use in HTML.
 escapeHTML() {
-	printf -- '%s' "${1?}" | awk -v RS='' '{
-		gsub(/&/,"\\&#38;");
-		gsub(/</,"\\&#60;");
-		gsub(/>/,"\\&#62;");
-		gsub(/"/,"\\&#34;");
-		gsub(/'\''/,"\\&#39;");
-		gsub(/\n/,"\\&#10;");
-		print($0)
-	}'
+	printf -- '%s' "${1?}" | awk -v RS='' "$(cat <<-'EOF'
+		{
+			gsub(/&/, "\\&#38;")
+			gsub(/</, "\\&#60;")
+			gsub(/>/, "\\&#62;")
+			gsub(/"/, "\\&#34;")
+			gsub(/'/, "\\&#39;")
+			gsub(/\n/, "\\&#10;")
+			printf("%s\n", $0)
+		}
+	EOF
+	)"
 }
 
 # RFC 3986 compliant URL encoding method.
