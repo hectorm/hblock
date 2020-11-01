@@ -60,8 +60,6 @@ main() {
 
 		# Add the read-only attribute to the hosts file.
 		$hostsItem.Attributes += "ReadOnly"
-
-		Read-Host -Prompt "Execution finished, press Enter to exit"
 	EOF
 	)"
 
