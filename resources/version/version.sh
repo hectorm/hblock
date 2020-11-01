@@ -18,10 +18,6 @@ exists() {
 	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
-# Escape strings in sed (https://stackoverflow.com/a/29613573).
-quoteRe() { printf -- '%s' "${1?}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
-quoteSubst() { printf -- '%s' "${1?}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
-
 # Base16 encode.
 base16Encode() {
 	if exists hexdump; then hexdump -ve '/1 "%02x"'
@@ -46,11 +42,11 @@ getVersion() {
 # Update hBlock version.
 setVersion() {
 	version="${1:?}"
-	quotedVersion="$(quoteSubst "${version:?}")"
 
-	sed -i \
-		-e 's|^\(# Version:[[:blank:]]*\).\{1,\}$|\1'"${quotedVersion:?}"'|g' \
-		"${PROJECT_DIR:?}"/hblock
+	sed -e 's|^\(# Version:[[:blank:]]*\).\{1,\}$|\1'"${version:?}"'|g' \
+		-- "${PROJECT_DIR:?}"/hblock > "${PROJECT_DIR:?}"/.hblock.tmp \
+		&& cat -- "${PROJECT_DIR:?}"/.hblock.tmp > "${PROJECT_DIR:?}"/hblock \
+		&& rm -f -- "${PROJECT_DIR:?}"/.hblock.tmp
 
 	hblockScriptChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)"
 
@@ -58,10 +54,11 @@ setVersion() {
 		"${hblockScriptChecksum:?}" "hblock" \
 		> "${PROJECT_DIR:?}"/SHA256SUMS
 
-	sed -i \
-		-e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${quotedVersion:?}"'\3|g' \
+	sed -e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${version:?}"'\3|g' \
 		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.*\)$|\1'"${hblockScriptChecksum:?}"'\2|g' \
-		"${PROJECT_DIR:?}"/README.md
+		-- "${PROJECT_DIR:?}"/README.md > "${PROJECT_DIR:?}"/.README.md.tmp \
+		&& cat -- "${PROJECT_DIR:?}"/.README.md.tmp > "${PROJECT_DIR:?}"/README.md \
+		&& rm -f -- "${PROJECT_DIR:?}"/.README.md.tmp
 
 	hblockServiceChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.service)"
 	hblockTimerChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.timer)"
@@ -71,11 +68,12 @@ setVersion() {
 		"${hblockTimerChecksum:?}"   "hblock.timer" \
 		> "${PROJECT_DIR:?}"/resources/systemd/SHA256SUMS
 
-	sed -i \
-		-e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${quotedVersion:?}"'\3|g' \
+	sed -e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${version:?}"'\3|g' \
 		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.service.*\)$|\1'"${hblockServiceChecksum:?}"'\2|g' \
 		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.timer.*\)$|\1'"${hblockTimerChecksum:?}"'\2|g' \
-		"${PROJECT_DIR:?}"/resources/systemd/README.md
+		-- "${PROJECT_DIR:?}"/resources/systemd/README.md > "${PROJECT_DIR:?}"/resources/systemd/.README.md.tmp \
+		&& cat -- "${PROJECT_DIR:?}"/resources/systemd/.README.md.tmp > "${PROJECT_DIR:?}"/resources/systemd/README.md \
+		&& rm -f -- "${PROJECT_DIR:?}"/resources/systemd/.README.md.tmp
 }
 
 if [ "${1:?}" = 'get' ]; then
