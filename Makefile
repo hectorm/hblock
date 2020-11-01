@@ -93,7 +93,8 @@ lint:
 
 test:
 	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 env -i \
-		PATH='/usr/sbin:/usr/bin:/sbin:/bin' TEST_SHELL='$(TEST_SHELL)'
+		PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
+		TEST_SHELL='$(TEST_SHELL)'
 
 ##################################################
 ## "install" target
