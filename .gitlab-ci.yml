@@ -161,6 +161,92 @@ build-debian-latest:
     expire_in: '1 day'
     paths: ['./dist-build-debian-latest/']
 
+build-ubuntu-latest:
+  stage: 'build'
+  image: 'docker.io/ubuntu:latest'
+  before_script:
+    - 'apt-get update'
+    - 'apt-get install -y ca-certificates curl file idn2 make'
+  script:
+    - 'make build stats index'
+    - 'mv ./dist/ ./dist-build-ubuntu-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-ubuntu-latest/']
+
+build-fedora-latest:
+  stage: 'build'
+  image: 'docker.io/fedora:latest'
+  before_script:
+    - 'dnf install -y ca-certificates curl findutils file idn2 make'
+  script:
+    - 'make build stats index'
+    - 'mv ./dist/ ./dist-build-fedora-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-fedora-latest/']
+
+build-centos-latest:
+  stage: 'build'
+  image: 'docker.io/centos:latest'
+  before_script:
+    - 'dnf install -y ca-certificates curl findutils file idn2 make'
+  script:
+    - 'make build stats index'
+    - 'mv ./dist/ ./dist-build-centos-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-centos-latest/']
+
+build-opensuse-latest:
+  stage: 'build'
+  image: 'docker.io/opensuse/tumbleweed:latest'
+  before_script:
+    - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
+  script:
+    - 'make build stats index'
+    - 'mv ./dist/ ./dist-build-opensuse-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-opensuse-latest/']
+
+build-archlinux-latest:
+  stage: 'build'
+  image: 'docker.io/archlinux:latest'
+  before_script:
+    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+  script:
+    - 'make build stats index'
+    - 'mv ./dist/ ./dist-build-archlinux-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-archlinux-latest/']
+
+build-alpine-latest:
+  stage: 'build'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+  script:
+    - 'make build stats index'
+    - 'mv ./dist/ ./dist-build-alpine-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-alpine-latest/']
+
+build-openwrt-latest:
+  stage: 'build'
+  image: 'docker.io/openwrtorg/rootfs:latest'
+  before_script:
+    - 'mkdir -p /var/lock/; opkg update'
+    - 'opkg install ca-certificates curl file idn2 make'
+  script:
+    - 'make build stats index'
+    - 'mv ./dist/ ./dist-build-openwrt-latest/'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-build-openwrt-latest/']
+
 package-deb:
   stage: 'package'
   image: 'docker.io/debian:latest'

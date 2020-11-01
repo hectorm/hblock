@@ -21,3 +21,106 @@ jobs:
         uses: 'actions/checkout@main'
       - name: 'Build project'
         run: 'make build stats index'
+
+  build-ubuntu-latest:
+    name: 'Build on Ubuntu'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/ubuntu:latest'
+    steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
+
+  build-fedora-latest:
+    name: 'Build on Fedora'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/fedora:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
+
+  build-centos-latest:
+    name: 'Build on CentOS'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/centos:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
+
+  build-opensuse-latest:
+    name: 'Build on openSUSE'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/opensuse/tumbleweed:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
+
+  build-archlinux-latest:
+    name: 'Build on Arch Linux'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
+
+  build-alpine-latest:
+    name: 'Build on Alpine'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
+
+  build-openwrt-latest:
+    name: 'Build on OpenWrt'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
+    steps:
+      - name: 'Apply workarounds for GitHub Actions runner'
+        run: 'printf "ID=alpine\n" > /etc/_os-release'
+      - name: 'Update package index'
+        run: 'mkdir -p /var/lock/; opkg update'
+      - name: 'Install packages'
+        run: 'opkg install ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
+
+  build-macos-latest:
+    name: 'Build on macOS'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Use dash as sh'
+        run: 'sudo ln -sf /bin/dash /var/select/sh'
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make build stats index'
