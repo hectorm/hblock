@@ -1,7 +1,7 @@
 NAME
 ====
 
-hBlock - manual page for hBlock 2.1.7
+hBlock - manual page for hBlock 3.0.0
 
 SYNOPSIS
 ========
