@@ -84,17 +84,6 @@ jobs:
       - name: 'Test project'
         run: 'make test'
 
-  test-macos-latest:
-    name: 'Test on macOS'
-    runs-on: 'macos-latest'
-    steps:
-      - name: 'Install packages'
-        run: 'brew install curl libidn2 make'
-      - name: 'Checkout project'
-        uses: 'actions/checkout@main'
-      - name: 'Test project'
-        run: 'make test'
-
   test-alpine-edge-bash:
     name: 'Test on Alpine Edge bash'
     runs-on: 'ubuntu-latest'
@@ -226,3 +215,36 @@ jobs:
         uses: 'actions/checkout@main'
       - name: 'Build project'
         run: 'make test TEST_SHELL="$(command -v busybox) ash"'
+
+  test-macos-latest-bash:
+    name: 'Test on macOS bash'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v bash)"'
+
+  test-macos-latest-zsh:
+    name: 'Test on macOS zsh'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v zsh)"'
+
+  test-macos-latest-dash:
+    name: 'Test on macOS dash'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test TEST_SHELL="$(command -v dash)"'
