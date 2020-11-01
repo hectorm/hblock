@@ -99,9 +99,11 @@ main() {
 		done < "${domainsFileTmp:?}.suffixes"
 
 		# Transform back regexes into fixed strings.
-		sed -e 's/\\\././g;s/\$$//g' \
-			-- "${domainsFileTmp:?}.stats" > "${domainsFileTmp:?}.stats.aux" \
-			&& mv -f -- "${domainsFileTmp:?}.stats.aux" "${domainsFileTmp:?}.stats"
+		if [ -s "${domainsFileTmp:?}.stats" ]; then
+			sed -e 's/\\\././g;s/\$$//g' \
+				-- "${domainsFileTmp:?}.stats" > "${domainsFileTmp:?}.stats.aux" \
+				&& mv -f -- "${domainsFileTmp:?}.stats.aux" "${domainsFileTmp:?}.stats"
+		fi
 
 		# If the domains file is not empty, use TLD as suffix.
 		if [ -s "${domainsFileTmp:?}" ]; then
