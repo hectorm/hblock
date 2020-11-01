@@ -60,9 +60,6 @@ main() {
 		exit 1
 	fi
 
-	header="$(printf -- '%s\t%s\t%s\n' 'Top' 'Hosts' 'Suffix')"
-	stats=''
-
 	# Create a temporary work directory.
 	tmpWorkDir="$(createTempDir)"
 	trap 'rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit 0' EXIT TERM INT HUP
@@ -71,58 +68,83 @@ main() {
 	domainsFileTmp="${tmpWorkDir:?}/domains.list"
 	cp -f -- "${domainsFile:?}" "${domainsFileTmp:?}"
 
-	# Compact domains file content (remove lowest level domain and count ocurrences).
-	sed -e 's/^.\{1,\}[[:blank:]][^.]\{1,\}//' -- "${domainsFileTmp:?}" \
-		| sort | uniq -c > "${domainsFileTmp:?}.aux" \
-		&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}"
-
-	if [ "${publicSuffixList:?}" != 'no-psl' ]; then
+	if [ "${publicSuffixList:?}" = 'no-psl' ]; then
+		# Remove until the last part of the domain and count occurrences.
+		sed -ne 's/^.*\(\.[^.]\{1,\}\)$/\1/p' -- "${domainsFileTmp:?}" \
+			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' >> "${domainsFileTmp:?}.stats"
+	else
 		# Download public suffix list.
 		fetchUrl "${publicSuffixList:?}" > "${domainsFileTmp:?}.suffixes"
 
-		# Transform suffix list (punycode encode and sort by length in descending order).
+		# Punycode encode suffix list, sort suffixes by length in descending order and transform each one into regexes.
 		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "${domainsFileTmp:?}.suffixes" \
-			| punycodeEncode | awk '{print(length($0)":."$0)}' \
-			| sort -nr | cut -d: -f2 > "${domainsFileTmp:?}.aux" \
-			&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}.suffixes"
+			| punycodeEncode | awk '{printf("%s\t.%s\n",length($0),$0)}' | sort -nr | cut -f2 \
+			| sed -e 's/\./\\./g;s/$/$/g' > "${domainsFileTmp:?}.suffixes.aux" \
+			&& mv -f -- "${domainsFileTmp:?}.suffixes.aux" "${domainsFileTmp:?}.suffixes"
 
-		# Create regex pattern for each suffix.
-		sed -e 's/\./\\./g;s/$/$/g' \
-			-- "${domainsFileTmp:?}.suffixes" > "${domainsFileTmp:?}.aux" \
-			&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}.suffixes"
+		# Remove the last part of the domain and count occurrences.
+		sed -e 's/^[^.]\{1,\}//' -- "${domainsFileTmp:?}" \
+			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' > "${domainsFileTmp:?}.aux" \
+			&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}"
 
-		# Count domains matches for each suffix.
-		while IFS= read -r regex || [ -n "${regex?}" ]; do
-			if grep -- "${regex:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.match"; then
-				count="$(awk '{s+=$1}END{print(s)}' "${domainsFileTmp:?}.match")"
-				stats="$(printf -- '%s\t%s\n%s' "${count:?}" "${regex:?}" "${stats?}")"
-				{ grep -v -- "${regex:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.aux" \
+		# Count occurrences for each suffix.
+		while IFS= read -r suffix || [ -n "${suffix?}" ]; do
+			if grep -- "${suffix:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.match"; then
+				count="$(awk '{N+=$1}END{print(N)}' < "${domainsFileTmp:?}.match")"
+				printf -- '%s\t%s\n' "${count:?}" "${suffix:?}" >> "${domainsFileTmp:?}.stats"
+				{ grep -v -- "${suffix:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.aux" \
 					&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}";
 				} || { :> "${domainsFileTmp:?}"; }
 			fi
 		done < "${domainsFileTmp:?}.suffixes"
 
-		# Undo regex pattern.
-		stats="$(printf -- '%s' "${stats?}" | sed 's/\\\././g;s/\$$//g')"
+		# Transform back regexes into fixed strings.
+		sed -e 's/\\\././g;s/\$$//g' \
+			-- "${domainsFileTmp:?}.stats" > "${domainsFileTmp:?}.stats.aux" \
+			&& mv -f -- "${domainsFileTmp:?}.stats.aux" "${domainsFileTmp:?}.stats"
+
+		# If the domains file is not empty, use TLD as suffix.
+		if [ -s "${domainsFileTmp:?}" ]; then
+			# Remove until the last part of the domain and count occurrences.
+			sed -ne 's/^\([0-9]\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/p' -- "${domainsFileTmp:?}" \
+				| awk '{A[$2]+=$1}END{for(i in A)printf("%s\t%s\n",A[i],i)}' >> "${domainsFileTmp:?}.stats"
+		fi
 	fi
 
-	# If the domains file is not empty, use TLD as suffix.
-	if [ -s "${domainsFileTmp:?}" ]; then
-		tldStats="$(sed -e 's/^\(.\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/g' -- "${domainsFileTmp:?}" |
-			awk '{arr[$2]+=$1;}END{for (i in arr) print(arr[i]"\t"i)}'
-		)"
-
-		stats="$(printf -- '%s\n%s' "${tldStats?}" "${stats?}")"
-	fi
-
-	# Remove the domains file.
-	rm -f -- "${domainsFileTmp:?}"
-
-	# Sort stats by the number of matches.
-	stats="$(printf -- '%s' "${stats?}" | sort -k1,1nr -k2,2 | awk '{print(NR"\t"$0)}')"
-
-	# Print stats.
-	printf -- '%s\n%s\n' "${header:?}" "${stats?}"
+	# Sort suffixes by the number of occurrences in descending order and then alphabetically in ascending order.
+	# Using the "-k" option of the sort command would be much simpler, but I have found in the wild some BusyBox
+	# builds that do not include this option (e.g. OpenWrt).
+	awkSortScript="$(cat <<-'EOF'
+		function qsort(A, left, right) {
+			if (left >= right) return
+			swap(A, left, left+int((right-left+1)*rand()))
+			last = left
+			for (i = left+1; i <= right; i++) {
+				if (compare(A, i, left)) swap(A, ++last, i)
+			}
+			swap(A, left, last)
+			qsort(A, left, last-1)
+			qsort(A, last+1, right)
+		}
+		function swap(A, i, j) {
+			t1 = A[i,1]; A[i,1] = A[j,1]; A[j,1] = t1
+			t2 = A[i,2]; A[i,2] = A[j,2]; A[j,2] = t2
+		}
+		function compare(A, a, b) {
+			if (int(A[a,1]) > int(A[b,1])) return 1
+			if (int(A[a,1]) < int(A[b,1])) return 0
+			if (A[a,2] < A[b,2]) return 1
+			if (A[a,2] > A[b,2]) return 0
+		}
+		{ split($0, r); A[NR,1] = r[1]; A[NR,2] = r[2] }
+		END {
+			qsort(A, 1, NR)
+			printf("%s\t%s\t%s\n", "Top", "Hosts", "Suffix")
+			for (i = 1; i <= NR; i++) printf("%s\t%s\t%s\n", i, A[i,1], A[i,2])
+		}
+	EOF
+	)"
+	awk "${awkSortScript:?}" < "${domainsFileTmp:?}.stats"
 }
 
 main "${@-}"
