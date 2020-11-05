@@ -33,9 +33,9 @@ main() {
 	export HBLOCK_DENYLIST_FILE='builtin'
 	export HBLOCK_DENYLIST='hblock-check.molinero.dev'
 
-	export HBLOCK_REDIRECTION=''
+	export HBLOCK_REDIRECTION='.'
 	export HBLOCK_WRAP='1'
-	export HBLOCK_TEMPLATE='%D CNAME .'
+	export HBLOCK_TEMPLATE='%D CNAME %R'
 	export HBLOCK_COMMENT=';'
 
 	export HBLOCK_LENIENT='false'
