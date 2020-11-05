@@ -5,6 +5,8 @@ on:
     branches: ['*']
   pull_request:
     branches: ['*']
+  schedule:
+    - cron: '42 02 * * *'
 
 jobs:
 
