@@ -26,7 +26,7 @@ jobs:
         uses: 'actions/checkout@main'
       - name: 'Package project'
         run: |
-          make clean package-deb
+          make package-deb
           mv ./dist/ ./dist-package-deb/
           apt install -y ./dist-package-deb/packages/hblock-*.deb
           command hblock -v
@@ -45,9 +45,29 @@ jobs:
         uses: 'actions/checkout@main'
       - name: 'Package project'
         run: |
-          make clean package-rpm
+          make package-rpm
           mv ./dist/ ./dist-package-rpm/
           dnf install -y ./dist-package-rpm/packages/hblock-*.rpm
+          command hblock -v
+
+  package-pkgbuild:
+    name: 'Create PKGBUILD package'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'pacman -Sy --noconfirm --needed base-devel m4 rsync sudo'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Package project'
+        run: |
+          mkdir ./dist/; chgrp nobody ./dist/; chmod 775 ./dist/
+          sudo -u nobody make package-pkgbuild
+          mv ./dist/ ./dist-package-pkgbuild/
+          pacman -U --noconfirm ./dist-package-pkgbuild/packages/hblock-*.pkg.tar.*
           command hblock -v
 
   package-npm:
@@ -64,7 +84,7 @@ jobs:
         uses: 'actions/checkout@main'
       - name: 'Package project'
         run: |
-          make clean package-npm
+          make package-npm
           mv ./dist/ ./dist-package-npm/
           npm install -g ./dist-package-npm/packages/hblock-*.tgz
           command hblock -v

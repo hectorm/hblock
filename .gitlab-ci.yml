@@ -335,6 +335,24 @@ package-rpm:
     expire_in: '1 day'
     paths: ['./dist-package-rpm/']
 
+package-pkgbuild:
+  stage: 'package'
+  needs:
+    - 'build-archlinux-latest'
+  image: 'docker.io/archlinux:latest'
+  before_script:
+    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+    - 'pacman -Sy --noconfirm --needed base-devel m4 rsync sudo'
+  script:
+    - 'mkdir ./dist/; chgrp nobody ./dist/; chmod 775 ./dist/'
+    - 'sudo -u nobody make package-pkgbuild'
+    - 'mv ./dist/ ./dist-package-pkgbuild/'
+    - 'pacman -U --noconfirm ./dist-package-pkgbuild/packages/hblock-*.pkg.tar.*'
+    - 'command hblock -v'
+  artifacts:
+    expire_in: '1 day'
+    paths: ['./dist-package-pkgbuild/']
+
 package-npm:
   stage: 'package'
   needs:

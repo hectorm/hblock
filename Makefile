@@ -177,6 +177,11 @@ package-rpm: ./dist/packages/hblock-$(VERSION).rpm
 ./dist/packages/hblock-$(VERSION).rpm:
 	PKG_VERSION='$(VERSION)' ./resources/packaging/rpm.sh '$@'
 
+package-pkgbuild: ./dist/packages/hblock-$(VERSION).pkg.tar.zst
+
+./dist/packages/hblock-$(VERSION).pkg.tar.zst:
+	PKG_VERSION='$(VERSION)' ./resources/packaging/pkgbuild.sh '$@'
+
 package-npm: ./dist/packages/hblock-$(VERSION).tgz
 
 ./dist/packages/hblock-$(VERSION).tgz:
