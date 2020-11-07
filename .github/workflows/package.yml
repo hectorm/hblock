@@ -71,7 +71,7 @@ jobs:
           command hblock -v
 
   package-npm:
-    name: 'Create NPM package'
+    name: 'Create npm package'
     runs-on: 'ubuntu-latest'
     container:
       image: 'docker.io/node:current-alpine'
