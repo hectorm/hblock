@@ -11,7 +11,7 @@ Vcs-Git: https://github.com/hectorm/hblock.git
 Package: hblock
 Architecture: all
 Depends: curl | wget, ${misc:Depends}
-Description: Improve your security and privacy by blocking ads, tracking and malware domains
+Description: An adblocker that creates a hosts file from automatically downloaded sources
  hBlock is a POSIX-compliant shell script that gets a list of domains that serve
  ads, tracking scripts and malware from multiple sources and creates a hosts
  file, among other formats, that prevents your system from connecting to them.

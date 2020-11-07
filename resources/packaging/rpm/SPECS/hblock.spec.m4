@@ -5,7 +5,7 @@ m4_changequote([[, ]])m4_dnl
 Name: %{name}
 Version: %{version}
 Release: 1
-Summary: Improve your security and privacy by blocking ads, tracking and malware domains
+Summary: An adblocker that creates a hosts file from automatically downloaded sources
 
 License: MIT
 URL: https://github.com/hectorm/hblock
