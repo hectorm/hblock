@@ -23,7 +23,7 @@ ads, tracking scripts and malware from multiple sources and creates a hosts
 file, among other formats, that prevents your system from connecting to them.
 
 %prep
-%setup -c
+%autosetup
 
 %install
 %make_install prefix="%{_prefix}" bindir="%{_bindir}" mandir="%{_mandir}" unitdir="%{_unitdir}"
