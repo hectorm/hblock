@@ -182,6 +182,11 @@ package-pkgbuild: ./dist/packages/hblock-$(VERSION).pkg.tar.zst
 ./dist/packages/hblock-$(VERSION).pkg.tar.zst:
 	PKG_VERSION='$(VERSION)' ./resources/packaging/pkgbuild.sh '$@'
 
+package-apkbuild: ./dist/packages/hblock-$(VERSION).apk
+
+./dist/packages/hblock-$(VERSION).apk:
+	PKG_VERSION='$(VERSION)' ./resources/packaging/apkbuild.sh '$@'
+
 package-npm: ./dist/packages/hblock-$(VERSION).tgz
 
 ./dist/packages/hblock-$(VERSION).tgz:

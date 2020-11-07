@@ -64,10 +64,35 @@ jobs:
         uses: 'actions/checkout@main'
       - name: 'Package project'
         run: |
-          mkdir ./dist/; chgrp nobody ./dist/; chmod 775 ./dist/
+          mkdir ./dist/; chown nobody ./dist/
           sudo -u nobody make package-pkgbuild
           mv ./dist/ ./dist-package-pkgbuild/
           pacman -U --noconfirm ./dist-package-pkgbuild/packages/hblock-*.pkg.tar.*
+          command hblock -v
+
+  package-apkbuild:
+    name: 'Create APKBUILD package'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache alpine-sdk m4 rsync sudo'
+      - name: 'Create unprivileged user and setup abuild'
+        run: |
+          adduser -D -G abuild build
+          printf "\n%s\n" "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          sudo -u build abuild-keygen -a -i -n
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Package project'
+        run: |
+          mkdir ./dist/; chown build ./dist/
+          sudo -u build make package-apkbuild
+          mv ./dist/ ./dist-package-apkbuild/
+          apk add --allow-untrusted ./dist-package-apkbuild/packages/hblock-*.apk
           command hblock -v
 
   package-npm:
