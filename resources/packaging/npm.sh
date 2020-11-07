@@ -11,7 +11,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 PROJECT_DIR="${SCRIPT_DIR:?}/../../"
 
 main() {
-	target="$(readlink -m -- "${1:?}")"
+	target="${1:?}"
 	assetsDir="${SCRIPT_DIR:?}/npm/"
 	buildDir="$(mktemp -d)"
 
@@ -34,6 +34,9 @@ main() {
 
 	# Build the package.
 	npm pack
+
+	# Change to the previous working directory.
+	cd -- "${OLDPWD:?}"
 
 	# Copy the package to the target file.
 	mkdir -p -- "$(dirname -- "${target:?}")"
