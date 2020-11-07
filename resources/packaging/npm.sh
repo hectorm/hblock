@@ -11,7 +11,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 PROJECT_DIR="${SCRIPT_DIR:?}/../../"
 
 main() {
-	target="${1:?}"
+	target="$(readlink -m -- "${1:?}")"
 	assetsDir="${SCRIPT_DIR:?}/npm/"
 	buildDir="$(mktemp -d)"
 
@@ -21,21 +21,23 @@ main() {
 	# Copy the assets directory to the build directory.
 	rsync -a -- "${assetsDir:?}"/ "${buildDir:?}"/
 
+	# Copy the project files to the build directory.
+	rsync -a --exclude='.git/' --exclude='dist/' -- "${PROJECT_DIR:?}"/ "${buildDir:?}"/
+
+	# Change the working directory to the build directory.
+	cd -- "${buildDir:?}"
+
 	# Execute the templates.
 	find -- "${buildDir:?}" -type f -name '*.m4' \
 		-exec sh -euc 'm4 --prefix-builtins -- "${1:?}" > "${1%.m4}"' _ '{}' ';' \
 		-exec rm -f -- '{}' ';'
 
-	# Copy the project files.
-	rsync -a --exclude='.git/' --exclude='dist/' -- "${PROJECT_DIR:?}"/ "${buildDir:?}"/
-
-	# Remove the previous package.
-	rm -f -- "${target:?}"
-
 	# Build the package.
+	npm pack
+
+	# Copy the package to the target file.
 	mkdir -p -- "$(dirname -- "${target:?}")"
-	(cd -- "${buildDir:?}" && npm pack)
-	mv -f -- "${buildDir:?}"/hblock-*.tgz "${target:?}"
+	mv -f -- "${buildDir:?}"/hblock*.tgz "${target:?}"
 
 	# Cleanup.
 	rm -rf -- "${buildDir:?}"

@@ -11,7 +11,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 PROJECT_DIR="${SCRIPT_DIR:?}/../../"
 
 main() {
-	target="${1:?}"
+	target="$(readlink -m -- "${1:?}")"
 	assetsDir="${SCRIPT_DIR:?}/deb/"
 	buildDir="$(mktemp -d)"
 
@@ -21,30 +21,32 @@ main() {
 	# Copy the assets directory to the build directory.
 	rsync -a -- "${assetsDir:?}"/ "${buildDir:?}"/
 
+	# Copy the project files to the build directory.
+	rsync -a --exclude='.git/' --exclude='dist/' -- "${PROJECT_DIR:?}"/ "${buildDir:?}"/
+	cp -a -- "${buildDir:?}"/resources/systemd/hblock.* "${buildDir:?}"/debian/
+
+	# Change the working directory to the build directory.
+	cd -- "${buildDir:?}"
+
 	# Execute the templates.
 	find -- "${buildDir:?}" -type f -name '*.m4' \
 		-exec sh -euc 'm4 --prefix-builtins -- "${1:?}" > "${1%.m4}"' _ '{}' ';' \
 		-exec rm -f -- '{}' ';'
 
-	# Copy the project files.
-	rsync -a --exclude='.git/' --exclude='dist/' -- "${PROJECT_DIR:?}"/ "${buildDir:?}"/
-	cp -a -- "${buildDir:?}"/resources/systemd/hblock.* "${buildDir:?}"/debian/
-
-	# Remove the previous package.
-	rm -f -- "${target:?}"
-
 	# Build the package.
+	dpkg-buildpackage -us -uc
+
+	# Copy the package to the target file.
 	mkdir -p -- "$(dirname -- "${target:?}")"
-	(cd -- "${buildDir:?}" && dpkg-buildpackage -us -uc)
-	mv -f -- "${buildDir:?}"/../hblock_*_all.deb "${target:?}"
+	mv -f -- "${buildDir:?}"/../hblock*.deb "${target:?}"
 
 	# Cleanup.
 	rm -rf -- \
 		"${buildDir:?}" \
-		"${buildDir:?}"/../hblock_*.buildinfo \
-		"${buildDir:?}"/../hblock_*.changes \
-		"${buildDir:?}"/../hblock_*.dsc \
-		"${buildDir:?}"/../hblock_*.tar.*
+		"${buildDir:?}"/../hblock*.buildinfo \
+		"${buildDir:?}"/../hblock*.changes \
+		"${buildDir:?}"/../hblock*.dsc \
+		"${buildDir:?}"/../hblock*.tar.*
 }
 
 main "${@-}"

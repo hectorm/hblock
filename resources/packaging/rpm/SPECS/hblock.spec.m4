@@ -9,7 +9,7 @@ Summary: Improve your security and privacy by blocking ads, tracking and malware
 
 License: MIT
 URL: https://github.com/hectorm/hblock
-Source0: %{name}.tar
+Source0: %{name}-%{version}.tar.gz
 
 BuildArch: noarch
 BuildRequires: make

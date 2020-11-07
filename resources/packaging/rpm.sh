@@ -11,7 +11,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 PROJECT_DIR="${SCRIPT_DIR:?}/../../"
 
 main() {
-	target="${1:?}"
+	target="$(readlink -m -- "${1:?}")"
 	assetsDir="${SCRIPT_DIR:?}/rpm/"
 	buildDir="$(mktemp -d)"
 
@@ -21,22 +21,24 @@ main() {
 	# Copy the assets directory to the build directory.
 	rsync -a -- "${assetsDir:?}"/ "${buildDir:?}"/
 
+	# Copy the project files to the build directory.
+	rsync -a --exclude='.git/' --exclude='dist/' -- "${PROJECT_DIR:?}"/ "${buildDir:?}"/SOURCES/hblock-"${PKG_VERSION:?}"/
+	tar -czf "${buildDir:?}"/SOURCES/hblock-"${PKG_VERSION:?}".tar.gz -C "${buildDir:?}"/SOURCES/ --remove-files ./hblock-"${PKG_VERSION:?}"/
+
+	# Change the working directory to the build directory.
+	cd -- "${buildDir:?}"
+
 	# Execute the templates.
 	find -- "${buildDir:?}" -type f -name '*.m4' \
 		-exec sh -euc 'm4 --prefix-builtins -- "${1:?}" > "${1%.m4}"' _ '{}' ';' \
 		-exec rm -f -- '{}' ';'
 
-	# Pack the project files.
-	rsync -a --exclude='.git/' --exclude='dist/' -- "${PROJECT_DIR:?}"/ "${buildDir:?}"/SOURCES/hblock/
-	tar --create --remove-files --file "${buildDir:?}"/SOURCES/hblock.tar --directory "${buildDir:?}"/SOURCES/hblock/ ./
-
-	# Remove the previous package.
-	rm -f -- "${target:?}"
-
 	# Build the package.
-	mkdir -p -- "$(dirname -- "${target:?}")"
 	rpmbuild -D "_topdir $(readlink -f -- "${buildDir:?}")" -bb "${buildDir:?}"/SPECS/hblock.spec
-	mv -f -- "${buildDir:?}"/RPMS/noarch/hblock-*.noarch.rpm "${target:?}"
+
+	# Copy the package to the target file.
+	mkdir -p -- "$(dirname -- "${target:?}")"
+	mv -f -- "${buildDir:?}"/RPMS/*/hblock*.rpm "${target:?}"
 
 	# Cleanup.
 	rm -rf -- "${buildDir:?}"
