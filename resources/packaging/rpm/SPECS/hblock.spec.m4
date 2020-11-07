@@ -1,5 +1,6 @@
+m4_changequote([[, ]])m4_dnl
 %define name hblock
-%define version __PKG_VERSION__
+%define version m4_esyscmd(printf -- '%s' "${PKG_VERSION?}")
 
 Name: %{name}
 Version: %{version}
@@ -11,9 +12,10 @@ URL: https://github.com/hectorm/hblock
 Source0: %{name}.tar
 
 BuildArch: noarch
-BuildRequires: make systemd
+BuildRequires: make
+BuildRequires: idn2
+BuildRequires: systemd
 Requires: (curl or wget)
-%{?systemd_requires}
 
 %description
 hBlock is a POSIX-compliant shell script that gets a list of domains that serve
@@ -24,7 +26,7 @@ file, among other formats, that prevents your system from connecting to them.
 %setup -c
 
 %install
-%make_install PREFIX="%{?buildroot}%{_prefix}" BINDIR="%{?buildroot}%{_bindir}" MANDIR="%{?buildroot}%{_mandir}" SYSTEMDUNITDIR="%{?buildroot}%{_unitdir}"
+%make_install prefix="%{_prefix}" bindir="%{_bindir}" mandir="%{_mandir}" unitdir="%{_unitdir}"
 
 %post
 %systemd_post %{name}.timer

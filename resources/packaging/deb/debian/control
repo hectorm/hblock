@@ -2,7 +2,7 @@ Source: hblock
 Section: utils
 Priority: optional
 Maintainer: Héctor Molinero Fernández <hector@molinero.dev>
-Build-Depends: debhelper (>=9), dh-systemd (>=1.5)
+Build-Depends: debhelper (>=9), dh-systemd (>=1.5), idn2
 Standards-Version: 4.0.0
 Homepage: https://github.com/hectorm/hblock
 Vcs-Browser: https://github.com/hectorm/hblock

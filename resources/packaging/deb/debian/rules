@@ -1,0 +1,7 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with=systemd
+
+override_dh_auto_install:
+	'$(MAKE)' DESTDIR="$$(pwd)/debian/hblock" prefix="/usr" install

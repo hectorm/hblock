@@ -1,5 +1,0 @@
-hblock (__PKG_VERSION__) unstable; urgency=medium
-
-  * __PKG_VERSION__ release.
-
- -- Héctor Molinero Fernández <hector@molinero.dev>  __PKG_DATE__

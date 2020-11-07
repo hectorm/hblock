@@ -185,7 +185,7 @@ build-debian-latest:
     - 'apt-get update'
     - 'apt-get install -y ca-certificates curl file idn2 make'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-debian-latest/'
   artifacts:
     expire_in: '1 day'
@@ -200,7 +200,7 @@ build-ubuntu-latest:
     - 'apt-get update'
     - 'apt-get install -y ca-certificates curl file idn2 make'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-ubuntu-latest/'
   artifacts:
     expire_in: '1 day'
@@ -214,7 +214,7 @@ build-fedora-latest:
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-fedora-latest/'
   artifacts:
     expire_in: '1 day'
@@ -228,7 +228,7 @@ build-centos-latest:
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-centos-latest/'
   artifacts:
     expire_in: '1 day'
@@ -242,7 +242,7 @@ build-opensuse-latest:
   before_script:
     - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-opensuse-latest/'
   artifacts:
     expire_in: '1 day'
@@ -256,7 +256,7 @@ build-archlinux-latest:
   before_script:
     - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-archlinux-latest/'
   artifacts:
     expire_in: '1 day'
@@ -276,7 +276,7 @@ build-alpine-latest:
   before_script:
     - 'apk add --no-cache ca-certificates curl file libidn2 make'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-alpine-latest/'
   artifacts:
     expire_in: '1 day'
@@ -291,7 +291,7 @@ build-openwrt-latest:
     - 'mkdir -p /var/lock/; opkg update'
     - 'opkg install ca-certificates curl file idn2 make'
   script:
-    - 'make build stats index'
+    - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-openwrt-latest/'
   artifacts:
     expire_in: '1 day'
@@ -306,11 +306,11 @@ package-deb:
   before_script:
     - 'apt-get update'
     - 'apt-get install -y ca-certificates curl file idn2 make'
-    - 'apt-get install -y build-essential debhelper dh-systemd dpkg-dev'
+    - 'apt-get install -y build-essential debhelper dh-systemd dpkg-dev m4 rsync'
   script:
     - 'make package-deb'
     - 'mv ./dist/ ./dist-package-deb/'
-    - 'apt install -y ./dist-package-deb/hblock-*.deb'
+    - 'apt install -y ./dist-package-deb/packages/hblock-*.deb'
     - 'command hblock -v'
   artifacts:
     expire_in: '1 day'
@@ -324,12 +324,12 @@ package-rpm:
     - 'build-opensuse-latest'
   image: 'docker.io/fedora:latest'
   before_script:
-    - 'dnf install -y ca-certificates curl file libidn2 make'
-    - 'dnf install -y rpm-build rpmdevtools systemd'
+    - 'dnf install -y ca-certificates curl findutils file idn2 make'
+    - 'dnf install -y m4 rpm-build rpmdevtools rsync systemd'
   script:
     - 'make package-rpm'
     - 'mv ./dist/ ./dist-package-rpm/'
-    - 'dnf install -y ./dist-package-rpm/hblock-*.rpm'
+    - 'dnf install -y ./dist-package-rpm/packages/hblock-*.rpm'
     - 'command hblock -v'
   artifacts:
     expire_in: '1 day'
@@ -342,10 +342,11 @@ package-npm:
   image: 'docker.io/node:current-alpine'
   before_script:
     - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache m4 rsync'
   script:
     - 'make package-npm'
     - 'mv ./dist/ ./dist-package-npm/'
-    - 'npm install -g ./dist-package-npm/hblock-*.tgz'
+    - 'npm install -g ./dist-package-npm/packages/hblock-*.tgz'
     - 'command hblock -v'
   artifacts:
     expire_in: '1 day'

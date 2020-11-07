@@ -1,6 +1,7 @@
+m4_changequote([[, ]])m4_dnl
 {
   "name": "hblock",
-  "version": "__PKG_VERSION__",
+  "version": "m4_esyscmd(printf -- '%s' "${PKG_VERSION?}")",
   "description": "Improve your security and privacy by blocking ads, tracking and malware domains",
   "keywords": [
     "ad-block",
@@ -34,6 +35,10 @@
   "bugs": {
     "url": "https://github.com/hectorm/hblock/issues"
   },
+  "files": [
+    "hblock",
+    "hblock.1"
+  ],
   "bin": {
     "hblock": "./hblock"
   },

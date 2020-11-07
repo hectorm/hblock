@@ -22,7 +22,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-ubuntu-latest:
     name: 'Build on Ubuntu'
@@ -36,7 +36,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-fedora-latest:
     name: 'Build on Fedora'
@@ -48,7 +48,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-centos-latest:
     name: 'Build on CentOS'
@@ -60,7 +60,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-opensuse-latest:
     name: 'Build on openSUSE'
@@ -72,7 +72,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-archlinux-latest:
     name: 'Build on Arch Linux'
@@ -84,7 +84,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-alpine-latest:
     name: 'Build on Alpine'
@@ -96,7 +96,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-openwrt-latest:
     name: 'Build on OpenWrt'
@@ -112,7 +112,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
 
   build-macos-latest:
     name: 'Build on macOS'
@@ -125,4 +125,4 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make build stats index'
+        run: 'make hosts stats index'
