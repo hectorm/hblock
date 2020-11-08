@@ -34,46 +34,56 @@ sha256Checksum() {
 	else exit 1; fi
 }
 
-# Print hBlock version.
+# Calculate the SHA256 checksum for all files in a directory.
+sha256ChecksumRecursive() {
+	for p in "${1:?}"/*; do
+		if [ -d "${p:?}" ] && [ ! -L "${p:?}" ] && [ -n "${p##*.git*}" ]; then
+			sha256ChecksumRecursive "${p:?}"
+		elif [ -f "${p:?}" ] && [ -n "${p##*SHA256SUMS*}" ]; then
+			sha256Checksum < "${p:?}" | awk -v p="${p:?}" '{printf("%s  %s\n",$1,p)}'
+		fi
+	done
+}
+
+# Get hBlock version.
 getVersion() {
 	"${PROJECT_DIR:?}"/hblock -v | awk 'NR==1{print($2)}'
 }
 
-# Update hBlock version.
+# Set hBlock version.
 setVersion() {
 	version="${1:?}"
 
+	# Update script version.
 	sed -e 's|^\(# Version:[[:blank:]]*\).\{1,\}$|\1'"${version:?}"'|g' \
 		-- "${PROJECT_DIR:?}"/hblock > "${PROJECT_DIR:?}"/.hblock.tmp \
 		&& cat -- "${PROJECT_DIR:?}"/.hblock.tmp > "${PROJECT_DIR:?}"/hblock \
 		&& rm -f -- "${PROJECT_DIR:?}"/.hblock.tmp
 
+	# Update script checksum in "./README.md".
 	hblockScriptChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/hblock)"
-
-	printf '%s  %s\n' \
-		"${hblockScriptChecksum:?}" "hblock" \
-		> "${PROJECT_DIR:?}"/SHA256SUMS
-
 	sed -e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${version:?}"'\3|g' \
 		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.*\)$|\1'"${hblockScriptChecksum:?}"'\2|g' \
 		-- "${PROJECT_DIR:?}"/README.md > "${PROJECT_DIR:?}"/.README.md.tmp \
 		&& cat -- "${PROJECT_DIR:?}"/.README.md.tmp > "${PROJECT_DIR:?}"/README.md \
 		&& rm -f -- "${PROJECT_DIR:?}"/.README.md.tmp
 
+	# Update service and timer checksums in "./resources/systemd/README.md".
 	hblockServiceChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.service)"
 	hblockTimerChecksum="$(sha256Checksum < "${PROJECT_DIR:?}"/resources/systemd/hblock.timer)"
-
-	printf '%s  %s\n' \
-		"${hblockServiceChecksum:?}" "hblock.service" \
-		"${hblockTimerChecksum:?}"   "hblock.timer" \
-		> "${PROJECT_DIR:?}"/resources/systemd/SHA256SUMS
-
 	sed -e 's|^\(.*/hblock/v\)[0-9]\{1,\}\(\.[0-9]\{1,\}\)*\(/.*\)$|\1'"${version:?}"'\3|g' \
 		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.service.*\)$|\1'"${hblockServiceChecksum:?}"'\2|g' \
 		-e 's|^\(.*\)[0-9a-f]\{64\}\(  /tmp/hblock.timer.*\)$|\1'"${hblockTimerChecksum:?}"'\2|g' \
 		-- "${PROJECT_DIR:?}"/resources/systemd/README.md > "${PROJECT_DIR:?}"/resources/systemd/.README.md.tmp \
 		&& cat -- "${PROJECT_DIR:?}"/resources/systemd/.README.md.tmp > "${PROJECT_DIR:?}"/resources/systemd/README.md \
 		&& rm -f -- "${PROJECT_DIR:?}"/resources/systemd/.README.md.tmp
+
+	# Regenerate documentation files.
+	rm -f "${PROJECT_DIR:?}"/hblock.1 "${PROJECT_DIR:?}"/hblock.1.md
+	make -C "${PROJECT_DIR:?}" man
+
+	# Recalculate checksums.
+	(cd "${PROJECT_DIR:?}" && sha256ChecksumRecursive . > ./SHA256SUMS)
 }
 
 if [ "${1:?}" = 'get' ]; then
