@@ -33,8 +33,8 @@ hBlock is available in various package managers. Please check the [PACKAGES.md](
 The latest available version can also be installed manually by running the following commands:
 
 ```sh
-curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v3.0.0/hblock' \
-  && echo '04141ff81f546169f418c6416fc774709c340ea40d79995e6e41cf2cf9efc458  /tmp/hblock' | shasum -c \
+curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v3.0.1/hblock' \
+  && echo '8fa1ecde0ae9fe082cf875100eda25abc66e3a5b32ffb2448f61d44c05f050eb  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
   && sudo chown root:root /usr/local/bin/hblock \
   && sudo chmod 755 /usr/local/bin/hblock
