@@ -8,6 +8,14 @@
 set -eu
 export LC_ALL='C'
 
+: "${ETCDIR=/etc}"
+
+# Source environment file if exists.
+# shellcheck disable=SC1090
+if [ -f "${ETCDIR?}/hblock/environment" ]; then
+	set -a; . "${ETCDIR?}/hblock/environment"; set +a
+fi
+
 # Built-in header.
 if [ -z "${HBLOCK_HEADER+x}" ]; then
 	HOSTNAME="${HOSTNAME-"$(uname -n)"}"
@@ -297,27 +305,27 @@ fetchUrl() {
 
 main() {
 	# Output file location.
-	outputFileDefault="${HBLOCK_OUTPUT_FILE-/etc/hosts}"
+	outputFileDefault="${HBLOCK_OUTPUT_FILE-"${ETCDIR?}/hosts"}"
 	outputFile="${outputFileDefault?}"
 
 	# File to be included at the beginning of the output file.
-	headerFileDefault="${HBLOCK_HEADER_FILE-/etc/hblock/header}"
+	headerFileDefault="${HBLOCK_HEADER_FILE-"${ETCDIR?}/hblock/header"}"
 	headerFile="${headerFileDefault?}"
 
 	# File to be included at the end of the output file.
-	footerFileDefault="${HBLOCK_FOOTER_FILE-/etc/hblock/footer}"
+	footerFileDefault="${HBLOCK_FOOTER_FILE-"${ETCDIR?}/hblock/footer"}"
 	footerFile="${footerFileDefault?}"
 
 	# File with line separated URLs used to generate the blocklist.
-	sourcesFileDefault="${HBLOCK_SOURCES_FILE-/etc/hblock/sources.list}"
+	sourcesFileDefault="${HBLOCK_SOURCES_FILE-"${ETCDIR?}/hblock/sources.list"}"
 	sourcesFile="${sourcesFileDefault?}"
 
 	# File with line separated entries to be removed from the blocklist.
-	allowlistFileDefault="${HBLOCK_ALLOWLIST_FILE-/etc/hblock/allow.list}"
+	allowlistFileDefault="${HBLOCK_ALLOWLIST_FILE-"${ETCDIR?}/hblock/allow.list"}"
 	allowlistFile="${allowlistFileDefault?}"
 
 	# File with line separated entries to be added to the blocklist.
-	denylistFileDefault="${HBLOCK_DENYLIST_FILE-/etc/hblock/deny.list}"
+	denylistFileDefault="${HBLOCK_DENYLIST_FILE-"${ETCDIR?}/hblock/deny.list"}"
 	denylistFile="${denylistFileDefault?}"
 
 	# Redirection for all entries in the blocklist.
