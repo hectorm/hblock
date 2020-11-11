@@ -8,13 +8,8 @@
 set -eu
 export LC_ALL='C'
 
-: "${ETCDIR=/etc}"
-
-# Source environment file if exists.
-# shellcheck disable=SC1090
-if [ -f "${ETCDIR?}/hblock/environment" ]; then
-	set -a; . "${ETCDIR?}/hblock/environment"; set +a
-fi
+: "${ETCDIR="/etc"}"
+: "${XDG_CONFIG_HOME="${HOME-}/.config"}"
 
 # Built-in header.
 if [ -z "${HBLOCK_HEADER+x}" ]; then
@@ -167,28 +162,28 @@ showHelp() {
 		 -O, --output <FILE|->, \${HBLOCK_OUTPUT_FILE}%NL
 		        Output file location.%NL
 		        If equals "-", it is printed to stdout.%NL
-		        (default: ${outputFileDefault?})%NL
+		        (default: ${outputFile?})%NL
 		 -H, --header <FILE|builtin|none|->, \${HBLOCK_HEADER_FILE}%NL
 		        File to be included at the beginning of the output file.%NL
 		        If equals "builtin" or the default file does not exist, the built-in
 		        value is used.%NL
 		        If equals "none", an empty value is used.%NL
 		        If equals "-", the stdin content is used.%NL
-		        (default: ${headerFileDefault?})%NL
+		        (default: ${headerFile?})%NL
 		 -F, --footer <FILE|builtin|none|->, \${HBLOCK_FOOTER_FILE}%NL
 		        File to be included at the end of the output file.%NL
 		        If equals "builtin" or the default file does not exist, the built-in
 		        value is used.%NL
 		        If equals "none", an empty value is used.%NL
 		        If equals "-", the stdin content is used.%NL
-		        (default: ${footerFileDefault?})%NL
+		        (default: ${footerFile?})%NL
 		 -S, --sources <FILE|builtin|none|->, \${HBLOCK_SOURCES_FILE}%NL
 		        File with line separated URLs used to generate the blocklist.%NL
 		        If equals "builtin" or the default file does not exist, the built-in
 		        value is used.%NL
 		        If equals "none", an empty value is used.%NL
 		        If equals "-", the stdin content is used.%NL
-		        (default: ${sourcesFileDefault?})%NL
+		        (default: ${sourcesFile?})%NL
 		 -A, --allowlist <FILE|builtin|none|->, \${HBLOCK_ALLOWLIST_FILE}%NL
 		        File with line separated entries to be removed from the blocklist.%NL
 		        If equals "builtin" or the default file does not exist, the built-in
@@ -205,33 +200,33 @@ showHelp() {
 		        (default: ${denylistFile?})%NL
 		 -R, --redirection <REDIRECTION>, \${HBLOCK_REDIRECTION}%NL
 		        Redirection for all entries in the blocklist.%NL
-		        (default: ${redirectionDefault?})%NL
+		        (default: ${redirection?})%NL
 		 -W, --wrap <NUMBER>, \${HBLOCK_WRAP}%NL
 		        Break blocklist lines after this number of entries.%NL
-		        (default: ${wrapDefault?})%NL
+		        (default: ${wrap?})%NL
 		 -T, --template <TEMPLATE>, \${HBLOCK_TEMPLATE}%NL
 		        Template applied to each entry.%NL
 		        %D = <DOMAIN>, %R = <REDIRECTION>%NL
-		        (default: ${templateDefault?})%NL
+		        (default: ${template?})%NL
 		 -C, --comment <COMMENT>, \${HBLOCK_COMMENT}%NL
 		        Character used for comments.%NL
-		        (default: ${commentDefault?})%NL
+		        (default: ${comment?})%NL
 		 -l, --[no-]lenient, \${HBLOCK_LENIENT}%NL
 		        Match all entries from sources regardless of their IP, instead
 		        of 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.%NL
-		        (default: ${lenientDefault?})%NL
+		        (default: ${lenient?})%NL
 		 -r, --[no-]regex, \${HBLOCK_REGEX}%NL
 		        Use POSIX BREs in the allowlist instead of fixed strings.%NL
-		        (default: ${regexDefault?})%NL
+		        (default: ${regex?})%NL
 		 -c, --[no-]continue, \${HBLOCK_CONTINUE}%NL
 		        Do not abort if a download error occurs.%NL
-		        (default: ${continueDefault?})%NL
+		        (default: ${continue?})%NL
 		 -q, --[no-]quiet, \${HBLOCK_QUIET}%NL
 		        Suppress non-error messages.%NL
-		        (default: ${quietDefault?})%NL
+		        (default: ${quiet?})%NL
 		 -x, --color <auto|true|false>, \${HBLOCK_COLOR}%NL
 		        Colorize the output.%NL
-		        (default: ${colorDefault?})%NL
+		        (default: ${color?})%NL
 		 -v, --version%NL
 		        Show version number and quit.%NL
 		 -h, --help%NL
@@ -316,65 +311,86 @@ fetchUrl() {
 }
 
 main() {
+	usrConfDir="${XDG_CONFIG_HOME?}/hblock"
+	sysConfDir="${ETCDIR?}/hblock"
+
+	# Source environment file if exists.
+	# shellcheck disable=SC1090
+	if [ -f "${usrConfDir:?}/environment" ]; then
+		set -a; . "${usrConfDir:?}/environment"; set +a
+	elif [ -f "${sysConfDir:?}/environment" ]; then
+		set -a; . "${sysConfDir:?}/environment"; set +a
+	fi
+
 	# Output file location.
-	outputFileDefault="${HBLOCK_OUTPUT_FILE-"${ETCDIR?}/hosts"}"
-	outputFile="${outputFileDefault?}"
+	outputFile="${HBLOCK_OUTPUT_FILE-"${ETCDIR?}/hosts"}"
 
 	# File to be included at the beginning of the output file.
-	headerFileDefault="${HBLOCK_HEADER_FILE-"${ETCDIR?}/hblock/header"}"
-	headerFile="${headerFileDefault?}"
+	headerFile="${HBLOCK_HEADER_FILE-"builtin"}"
+	if [ -f "${usrConfDir:?}/header" ]; then
+		headerFile="${usrConfDir:?}/header"
+	elif [ -f "${sysConfDir:?}/header" ]; then
+		headerFile="${sysConfDir:?}/header"
+	fi
 
 	# File to be included at the end of the output file.
-	footerFileDefault="${HBLOCK_FOOTER_FILE-"${ETCDIR?}/hblock/footer"}"
-	footerFile="${footerFileDefault?}"
+	footerFile="${HBLOCK_FOOTER_FILE-"builtin"}"
+	if [ -f "${usrConfDir:?}/footer" ]; then
+		footerFile="${usrConfDir:?}/footer"
+	elif [ -f "${sysConfDir:?}/footer" ]; then
+		footerFile="${sysConfDir:?}/footer"
+	fi
 
 	# File with line separated URLs used to generate the blocklist.
-	sourcesFileDefault="${HBLOCK_SOURCES_FILE-"${ETCDIR?}/hblock/sources.list"}"
-	sourcesFile="${sourcesFileDefault?}"
+	sourcesFile="${HBLOCK_SOURCES_FILE-"builtin"}"
+	if [ -f "${usrConfDir:?}/sources.list" ]; then
+		sourcesFile="${usrConfDir:?}/sources.list"
+	elif [ -f "${sysConfDir:?}/sources.list" ]; then
+		sourcesFile="${sysConfDir:?}/sources.list"
+	fi
 
 	# File with line separated entries to be removed from the blocklist.
-	allowlistFileDefault="${HBLOCK_ALLOWLIST_FILE-"${ETCDIR?}/hblock/allow.list"}"
-	allowlistFile="${allowlistFileDefault?}"
+	allowlistFile="${HBLOCK_ALLOWLIST_FILE-"builtin"}"
+	if [ -f "${usrConfDir:?}/allow.list" ]; then
+		allowlistFile="${usrConfDir:?}/allow.list"
+	elif [ -f "${sysConfDir:?}/allow.list" ]; then
+		allowlistFile="${sysConfDir:?}/allow.list"
+	fi
 
 	# File with line separated entries to be added to the blocklist.
-	denylistFileDefault="${HBLOCK_DENYLIST_FILE-"${ETCDIR?}/hblock/deny.list"}"
-	denylistFile="${denylistFileDefault?}"
+	denylistFile="${HBLOCK_DENYLIST_FILE-"builtin"}"
+	if [ -f "${usrConfDir:?}/deny.list" ]; then
+		denylistFile="${usrConfDir:?}/deny.list"
+	elif [ -f "${sysConfDir:?}/deny.list" ]; then
+		denylistFile="${sysConfDir:?}/deny.list"
+	fi
 
 	# Redirection for all entries in the blocklist.
-	redirectionDefault="${HBLOCK_REDIRECTION-0.0.0.0}"
-	redirection="${redirectionDefault?}"
+	redirection="${HBLOCK_REDIRECTION-"0.0.0.0"}"
 
 	# Break blocklist lines after this number of entries.
-	wrapDefault="${HBLOCK_WRAP-1}"
-	wrap="${wrapDefault?}"
+	wrap="${HBLOCK_WRAP-"1"}"
 
 	# Template applied to each entry.
-	templateDefault="${HBLOCK_TEMPLATE-%R %D}"
-	template="${templateDefault?}"
+	template="${HBLOCK_TEMPLATE-"%R %D"}"
 
 	# Character used for comments.
-	commentDefault="${HBLOCK_COMMENT-#}"
-	comment="${commentDefault?}"
+	comment="${HBLOCK_COMMENT-"#"}"
 
 	# Match all entries from sources, regardless of their IP.
-	lenientDefault="${HBLOCK_LENIENT-false}"
-	lenient="${lenientDefault?}"
+	lenient="${HBLOCK_LENIENT-"false"}"
 
 	# Use POSIX BREs instead of fixed strings.
-	regexDefault="${HBLOCK_REGEX-false}"
-	regex="${regexDefault?}"
+	regex="${HBLOCK_REGEX-"false"}"
 
 	# Abort if a download error occurs.
-	continueDefault="${HBLOCK_CONTINUE-false}"
-	continue="${continueDefault?}"
+	continue="${HBLOCK_CONTINUE-"false"}"
 
 	# Colorize the output.
-	colorDefault="${HBLOCK_COLOR-auto}"
-	color="${colorDefault?}"
+	color="${HBLOCK_COLOR-"auto"}"
 
 	# Suppress non-error messages.
-	quietDefault="${HBLOCK_QUIET-false}"
-	quiet="${quietDefault?}"
+	quiet="${HBLOCK_QUIET-"false"}"
 
 	# Parse command line options.
 	# shellcheck disable=SC2086
@@ -401,18 +417,8 @@ main() {
 		'none') headerFile="${tmpWorkDir:?}/header"; :> "${headerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') headerFile="${tmpWorkDir:?}/header"; printf -- '%s' "${HBLOCK_HEADER?}" > "${headerFile:?}" ;;
-		*) # Check if the file does not exist.
-			if [ ! -e "${headerFile:?}" ]; then
-				# If it is the default path, use the built-in value.
-				if [ "${headerFile:?}" = "${headerFileDefault:?}" ]; then
-					headerFile="${tmpWorkDir:?}/header"
-					printf -- '%s' "${HBLOCK_HEADER?}" > "${headerFile:?}"
-				# Throw an error for everything else.
-				else
-					printError "No such file: ${headerFile:?}"
-					exit 1
-				fi
-			fi ;;
+		# If the file does not exist, throw an error.
+		*) [ -e "${headerFile:?}" ] || { printError "No such file: ${headerFile:?}"; exit 1; } ;;
 	esac
 
 	# Check the footer file.
@@ -423,18 +429,8 @@ main() {
 		'none') footerFile="${tmpWorkDir:?}/footer"; :> "${footerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') footerFile="${tmpWorkDir:?}/footer"; printf -- '%s' "${HBLOCK_FOOTER?}" > "${footerFile:?}" ;;
-		*) # Check if the file does not exist.
-			if [ ! -e "${footerFile:?}" ]; then
-				# If it is the default path, use the built-in value.
-				if [ "${footerFile:?}" = "${footerFileDefault:?}" ]; then
-					footerFile="${tmpWorkDir:?}/footer"
-					printf -- '%s' "${HBLOCK_FOOTER?}" > "${footerFile:?}"
-				# Throw an error for everything else.
-				else
-					printError "No such file: ${footerFile:?}"
-					exit 1
-				fi
-			fi ;;
+		# If the file does not exist, throw an error.
+		*) [ -e "${footerFile:?}" ] || { printError "No such file: ${footerFile:?}"; exit 1; } ;;
 	esac
 
 	# Check the sources file.
@@ -445,18 +441,8 @@ main() {
 		'none') sourcesFile="${tmpWorkDir:?}/sources.list"; :> "${sourcesFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') sourcesFile="${tmpWorkDir:?}/sources.list"; printf -- '%s' "${HBLOCK_SOURCES?}" > "${sourcesFile:?}" ;;
-		*) # Check if the file does not exist.
-			if [ ! -e "${sourcesFile:?}" ]; then
-				# If it is the default path, use the built-in value.
-				if [ "${sourcesFile:?}" = "${sourcesFileDefault:?}" ]; then
-					sourcesFile="${tmpWorkDir:?}/sources.list"
-					printf -- '%s' "${HBLOCK_SOURCES?}" > "${sourcesFile:?}"
-				# Throw an error for everything else.
-				else
-					printError "No such file: ${sourcesFile:?}"
-					exit 1
-				fi
-			fi ;;
+		# If the file does not exist, throw an error.
+		*) [ -e "${sourcesFile:?}" ] || { printError "No such file: ${sourcesFile:?}"; exit 1; } ;;
 	esac
 
 	# Check the allowlist file.
@@ -467,18 +453,8 @@ main() {
 		'none') allowlistFile="${tmpWorkDir:?}/allow.list"; :> "${allowlistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') allowlistFile="${tmpWorkDir:?}/allow.list"; printf -- '%s' "${HBLOCK_ALLOWLIST?}" > "${allowlistFile:?}" ;;
-		*) # Check if the file does not exist.
-			if [ ! -e "${allowlistFile:?}" ]; then
-				# If it is the default path, use the built-in value.
-				if [ "${allowlistFile:?}" = "${allowlistFileDefault:?}" ]; then
-					allowlistFile="${tmpWorkDir:?}/allow.list"
-					printf -- '%s' "${HBLOCK_ALLOWLIST?}" > "${allowlistFile:?}"
-				# Throw an error for everything else.
-				else
-					printError "No such file: ${allowlistFile:?}"
-					exit 1
-				fi
-			fi ;;
+		# If the file does not exist, throw an error.
+		*) [ -e "${allowlistFile:?}" ] || { printError "No such file: ${allowlistFile:?}"; exit 1; } ;;
 	esac
 
 	# Check the denylist file.
@@ -489,18 +465,8 @@ main() {
 		'none') denylistFile="${tmpWorkDir:?}/deny.list"; :> "${denylistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') denylistFile="${tmpWorkDir:?}/deny.list"; printf -- '%s' "${HBLOCK_DENYLIST?}" > "${denylistFile:?}" ;;
-		*) # Check if the file does not exist.
-			if [ ! -e "${denylistFile:?}" ]; then
-				# If it is the default path, use the built-in value.
-				if [ "${denylistFile:?}" = "${denylistFileDefault:?}" ]; then
-					denylistFile="${tmpWorkDir:?}/deny.list"
-					printf -- '%s' "${HBLOCK_DENYLIST?}" > "${denylistFile:?}"
-				# Throw an error for everything else.
-				else
-					printError "No such file: ${denylistFile:?}"
-					exit 1
-				fi
-			fi ;;
+		# If the file does not exist, throw an error.
+		*) [ -e "${denylistFile:?}" ] || { printError "No such file: ${denylistFile:?}"; exit 1; } ;;
 	esac
 
 	# Create an empty blocklist file.
