@@ -582,63 +582,53 @@ main() {
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 	fi
 
-	# Create an auxiliary output file.
-	outputFileAux="${tmpWorkDir:?}/output"
-	:> "${outputFileAux:?}"
+	printOutputFile() {
+		# Define "C" variable for convenience.
+		C="${comment?}"
 
-	# Define "C" variable for convenience.
-	C="${comment?}"
-
-	# Append banner to the output file.
-	if [ -n "${C?}" ]; then
-		cat <<-EOF >> "${outputFileAux:?}"
-			${C?} Generated with:  https://github.com/hectorm/hblock
-			${C?} Blocked domains: ${blocklistCount:?}
-		EOF
-	fi
-
-	# If the header file is not empty, it is appended to the output file.
-	if [ -s "${headerFile:?}" ]; then
-		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN HEADER" >> "${outputFileAux:?}"
-		awk 1 < "${headerFile:?}" >> "${outputFileAux:?}"
-		[ -z "${C?}" ] || printf -- '%s\n' "${C?} END HEADER" >> "${outputFileAux:?}"
-	fi
-
-	# If the blocklist file is not empty, it is appended to the output file.
-	if [ -s "${blocklistFile:?}" ]; then
-		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN BLOCKLIST" >> "${outputFileAux:?}"
-		awk 1 < "${blocklistFile:?}" >> "${outputFileAux:?}"
-		[ -z "${C?}" ] || printf -- '%s\n' "${C?} END BLOCKLIST" >> "${outputFileAux:?}"
-	fi
-
-	# If the footer file is not empty, it is appended to the output file.
-	if [ -s "${footerFile:?}" ]; then
-		[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN FOOTER" >> "${outputFileAux:?}"
-		awk 1 < "${footerFile:?}" >> "${outputFileAux:?}"
-		[ -z "${C?}" ] || printf -- '%s\n' "${C?} END FOOTER" >> "${outputFileAux:?}"
-	fi
-
-	# Print to stdout if the output file is "-".
-	if [ "${outputFile:?}" = '-' ]; then
-		cat -- "${outputFileAux:?}"
-	else
-		printInfo 'Writing output file'
-
-		# Try writing the output file.
-		if touch -- "${outputFile:?}" >/dev/null 2>&1; then
-			cat -- "${outputFileAux:?}" > "${outputFile:?}"
-		# Try with sudo if the writing fails.
-		elif exists sudo && exists tee; then
-			# shellcheck disable=SC2024
-			sudo tee -- "${outputFile:?}" < "${outputFileAux:?}" >/dev/null
-		else
-			printError "Cannot write file: ${outputFile:?}"
-			exit 1
+		# Append banner to the output file.
+		if [ -n "${C?}" ]; then
+			cat <<-EOF
+				${C?} Generated with:  https://github.com/hectorm/hblock
+				${C?} Blocked domains: ${blocklistCount:?}
+			EOF
 		fi
-	fi
 
-	# Remove the auxiliary output file.
-	rm -f -- "${outputFileAux:?}"
+		# If the header file is not empty, it is appended to the output file.
+		if [ -s "${headerFile:?}" ]; then
+			[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN HEADER"
+			awk 1 < "${headerFile:?}"
+			[ -z "${C?}" ] || printf -- '%s\n' "${C?} END HEADER"
+		fi
+
+		# If the blocklist file is not empty, it is appended to the output file.
+		if [ -s "${blocklistFile:?}" ]; then
+			[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN BLOCKLIST"
+			awk 1 < "${blocklistFile:?}"
+			[ -z "${C?}" ] || printf -- '%s\n' "${C?} END BLOCKLIST"
+		fi
+
+		# If the footer file is not empty, it is appended to the output file.
+		if [ -s "${footerFile:?}" ]; then
+			[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN FOOTER"
+			awk 1 < "${footerFile:?}"
+			[ -z "${C?}" ] || printf -- '%s\n' "${C?} END FOOTER"
+		fi
+	}
+
+	# If the file value equals "-", print to stdout.
+	if [ "${outputFile:?}" = '-' ]; then
+		printOutputFile
+	# Try writing the file.
+	elif touch -- "${outputFile:?}" >/dev/null 2>&1; then
+		printOutputFile > "${outputFile:?}"
+	# If the writing fails, try with sudo.
+	elif exists sudo && exists tee; then
+		printOutputFile | sudo tee -- "${outputFile:?}" >/dev/null
+	else
+		printError "Cannot write file: ${outputFile:?}"
+		exit 1
+	fi
 
 	printInfo "${blocklistCount:?} blocked domains!"
 }
