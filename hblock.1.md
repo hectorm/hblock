@@ -19,54 +19,81 @@ from connecting to them.
 OPTIONS
 =======
 
-**-O**, **--output** &lt;FILE&gt;, ${HBLOCK\_OUTPUT\_FILE}
+**-O**, **--output** &lt;FILE\|-&gt;, ${HBLOCK\_OUTPUT\_FILE}
 
 > Output file location.
 >
+> If equals "-", it is printed to stdout.
+>
 > (default: */etc/hosts*)
 
-**-H**, **--header** &lt;FILE&gt;, ${HBLOCK\_HEADER\_FILE}
+**-H**, **--header** &lt;FILE\|builtin\|none\|-&gt;,
+${HBLOCK\_HEADER\_FILE}
 
 > File to be included at the beginning of the output file.
 >
-> If the default file does not exist or equals "builtin" the built-in
-> value is used instead.
+> If equals "builtin" or the default file does not exist, the built-in
+> value is used.
+>
+> If equals "none", an empty value is used.
+>
+> If equals "-", the stdin content is used.
 >
 > (default: */etc/hblock/header*)
 
-**-F**, **--footer** &lt;FILE&gt;, ${HBLOCK\_FOOTER\_FILE}
+**-F**, **--footer** &lt;FILE\|builtin\|none\|-&gt;,
+${HBLOCK\_FOOTER\_FILE}
 
 > File to be included at the end of the output file.
 >
-> If the default file does not exist or equals "builtin" the built-in
-> value is used instead.
+> If equals "builtin" or the default file does not exist, the built-in
+> value is used.
+>
+> If equals "none", an empty value is used.
+>
+> If equals "-", the stdin content is used.
 >
 > (default: */etc/hblock/footer*)
 
-**-S**, **--sources** &lt;FILE&gt;, ${HBLOCK\_SOURCES\_FILE}
+**-S**, **--sources** &lt;FILE\|builtin\|none\|-&gt;,
+${HBLOCK\_SOURCES\_FILE}
 
 > File with line separated URLs used to generate the blocklist.
 >
-> If the default file does not exist or equals "builtin" the built-in
-> value is used instead.
+> If equals "builtin" or the default file does not exist, the built-in
+> value is used.
+>
+> If equals "none", an empty value is used.
+>
+> If equals "-", the stdin content is used.
 >
 > (default: */etc/hblock/sources.list*)
 
-**-A**, **--allowlist** &lt;FILE&gt;, ${HBLOCK\_ALLOWLIST\_FILE}
+**-A**, **--allowlist** &lt;FILE\|builtin\|none\|-&gt;,
+${HBLOCK\_ALLOWLIST\_FILE}
 
 > File with line separated entries to be removed from the blocklist.
 >
-> If the default file does not exist or equals "builtin" the built-in
-> value is used instead.
+> If equals "builtin" or the default file does not exist, the built-in
+> value is used.
+>
+> If equals "none", an empty value is used.
+>
+> If equals "-", the stdin content is used.
 >
 > (default: */etc/hblock/allow.list*)
 
-**-D**, **--denylist** &lt;FILE&gt;, ${HBLOCK\_DENYLIST\_FILE}
+**-D**, **--denylist** &lt;FILE\|builtin\|none\|-&gt;,
+${HBLOCK\_DENYLIST\_FILE}
 
 > File with line separated entries to be added to the blocklist.
 >
-> If the default file does not exist or equals "builtin" the built-in
-> value is used instead.
+> If equals "builtin" or the default file does not exist, the built-in
+> value is used.
+>
+> If equals "none", an empty value is used.
+>
+> If equals "-", the stdin content is used.
 >
 > (default: */etc/hblock/deny.list*)
 

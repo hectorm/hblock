@@ -162,34 +162,46 @@ showHelp() {
 		ads, tracking scripts and malware from multiple sources and creates a hosts
 		file, among other formats, that prevents your system from connecting to them.
 
-		Options:%NL
-		 -O, --output <FILE>, \${HBLOCK_OUTPUT_FILE}%NL
+		Options:
+
+		 -O, --output <FILE|->, \${HBLOCK_OUTPUT_FILE}%NL
 		        Output file location.%NL
+		        If equals "-", it is printed to stdout.%NL
 		        (default: ${outputFileDefault?})%NL
-		 -H, --header <FILE>, \${HBLOCK_HEADER_FILE}%NL
+		 -H, --header <FILE|builtin|none|->, \${HBLOCK_HEADER_FILE}%NL
 		        File to be included at the beginning of the output file.%NL
-		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.%NL
+		        If equals "builtin" or the default file does not exist, the built-in
+		        value is used.%NL
+		        If equals "none", an empty value is used.%NL
+		        If equals "-", the stdin content is used.%NL
 		        (default: ${headerFileDefault?})%NL
-		 -F, --footer <FILE>, \${HBLOCK_FOOTER_FILE}%NL
+		 -F, --footer <FILE|builtin|none|->, \${HBLOCK_FOOTER_FILE}%NL
 		        File to be included at the end of the output file.%NL
-		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.%NL
+		        If equals "builtin" or the default file does not exist, the built-in
+		        value is used.%NL
+		        If equals "none", an empty value is used.%NL
+		        If equals "-", the stdin content is used.%NL
 		        (default: ${footerFileDefault?})%NL
-		 -S, --sources <FILE>, \${HBLOCK_SOURCES_FILE}%NL
+		 -S, --sources <FILE|builtin|none|->, \${HBLOCK_SOURCES_FILE}%NL
 		        File with line separated URLs used to generate the blocklist.%NL
-		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.%NL
+		        If equals "builtin" or the default file does not exist, the built-in
+		        value is used.%NL
+		        If equals "none", an empty value is used.%NL
+		        If equals "-", the stdin content is used.%NL
 		        (default: ${sourcesFileDefault?})%NL
-		 -A, --allowlist <FILE>, \${HBLOCK_ALLOWLIST_FILE}%NL
+		 -A, --allowlist <FILE|builtin|none|->, \${HBLOCK_ALLOWLIST_FILE}%NL
 		        File with line separated entries to be removed from the blocklist.%NL
-		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.%NL
+		        If equals "builtin" or the default file does not exist, the built-in
+		        value is used.%NL
+		        If equals "none", an empty value is used.%NL
+		        If equals "-", the stdin content is used.%NL
 		        (default: ${allowlistFile?})%NL
-		 -D, --denylist <FILE>, \${HBLOCK_DENYLIST_FILE}%NL
+		 -D, --denylist <FILE|builtin|none|->, \${HBLOCK_DENYLIST_FILE}%NL
 		        File with line separated entries to be added to the blocklist.%NL
-		        If the default file does not exist or equals "builtin" the built-in
-		        value is used instead.%NL
+		        If equals "builtin" or the default file does not exist, the built-in
+		        value is used.%NL
+		        If equals "none", an empty value is used.%NL
+		        If equals "-", the stdin content is used.%NL
 		        (default: ${denylistFile?})%NL
 		 -R, --redirection <REDIRECTION>, \${HBLOCK_REDIRECTION}%NL
 		        Redirection for all entries in the blocklist.%NL
@@ -381,73 +393,123 @@ main() {
 	tmpWorkDir="$(createTempDir)"
 	trap 'rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit 0' EXIT TERM INT HUP
 
-	# Check if the header file exists.
-	if [ ! -e "${headerFile:?}" ]; then
-		# If it is the default path or equals "builtin", use the built-in value instead.
-		if [ "${headerFile:?}" = "${headerFileDefault:?}" ] || [ "${headerFile:?}" = 'builtin' ]; then
-			headerFile="${tmpWorkDir:?}/header"
-			printf -- '%s' "${HBLOCK_HEADER?}" > "${headerFile:?}"
-		else
-			printError "No such file: ${headerFile:?}"
-			exit 1
-		fi
-	fi
+	# Check the header file.
+	case "${headerFile:?}" in
+		# If the file value equals "-", use stdin.
+		'-') headerFile="${tmpWorkDir:?}/header"; cat <&0 > "${headerFile:?}" ;;
+		# If the file value equals "none", use an empty file.
+		'none') headerFile="${tmpWorkDir:?}/header"; :> "${headerFile:?}" ;;
+		# If the file value equals "builtin", use the built-in value.
+		'builtin') headerFile="${tmpWorkDir:?}/header"; printf -- '%s' "${HBLOCK_HEADER?}" > "${headerFile:?}" ;;
+		*) # Check if the file does not exist.
+			if [ ! -e "${headerFile:?}" ]; then
+				# If it is the default path, use the built-in value.
+				if [ "${headerFile:?}" = "${headerFileDefault:?}" ]; then
+					headerFile="${tmpWorkDir:?}/header"
+					printf -- '%s' "${HBLOCK_HEADER?}" > "${headerFile:?}"
+				# Throw an error for everything else.
+				else
+					printError "No such file: ${headerFile:?}"
+					exit 1
+				fi
+			fi ;;
+	esac
 
-	# Check if the footer file exists.
-	if [ ! -e "${footerFile:?}" ]; then
-		# If it is the default path or equals "builtin", use the built-in value instead.
-		if [ "${footerFile:?}" = "${footerFileDefault:?}" ] || [ "${footerFile:?}" = 'builtin' ]; then
-			footerFile="${tmpWorkDir:?}/footer"
-			printf -- '%s' "${HBLOCK_FOOTER?}" > "${footerFile:?}"
-		else
-			printError "No such file: ${footerFile:?}"
-			exit 1
-		fi
-	fi
+	# Check the footer file.
+	case "${footerFile:?}" in
+		# If the file value equals "-", use stdin.
+		'-') footerFile="${tmpWorkDir:?}/footer"; cat <&0 > "${footerFile:?}" ;;
+		# If the file value equals "none", use an empty file.
+		'none') footerFile="${tmpWorkDir:?}/footer"; :> "${footerFile:?}" ;;
+		# If the file value equals "builtin", use the built-in value.
+		'builtin') footerFile="${tmpWorkDir:?}/footer"; printf -- '%s' "${HBLOCK_FOOTER?}" > "${footerFile:?}" ;;
+		*) # Check if the file does not exist.
+			if [ ! -e "${footerFile:?}" ]; then
+				# If it is the default path, use the built-in value.
+				if [ "${footerFile:?}" = "${footerFileDefault:?}" ]; then
+					footerFile="${tmpWorkDir:?}/footer"
+					printf -- '%s' "${HBLOCK_FOOTER?}" > "${footerFile:?}"
+				# Throw an error for everything else.
+				else
+					printError "No such file: ${footerFile:?}"
+					exit 1
+				fi
+			fi ;;
+	esac
 
-	# Check if the sources file exists.
-	if [ ! -e "${sourcesFile:?}" ]; then
-		# If it is the default path or equals "builtin", use the built-in value instead.
-		if [ "${sourcesFile:?}" = "${sourcesFileDefault:?}" ] || [ "${sourcesFile:?}" = 'builtin' ]; then
-			sourcesFile="${tmpWorkDir:?}/sources.list"
-			printf -- '%s' "${HBLOCK_SOURCES?}" > "${sourcesFile:?}"
-		else
-			printError "No such file: ${sourcesFile:?}"
-			exit 1
-		fi
-	fi
+	# Check the sources file.
+	case "${sourcesFile:?}" in
+		# If the file value equals "-", use stdin.
+		'-') sourcesFile="${tmpWorkDir:?}/sources.list"; cat <&0 > "${sourcesFile:?}" ;;
+		# If the file value equals "none", use an empty file.
+		'none') sourcesFile="${tmpWorkDir:?}/sources.list"; :> "${sourcesFile:?}" ;;
+		# If the file value equals "builtin", use the built-in value.
+		'builtin') sourcesFile="${tmpWorkDir:?}/sources.list"; printf -- '%s' "${HBLOCK_SOURCES?}" > "${sourcesFile:?}" ;;
+		*) # Check if the file does not exist.
+			if [ ! -e "${sourcesFile:?}" ]; then
+				# If it is the default path, use the built-in value.
+				if [ "${sourcesFile:?}" = "${sourcesFileDefault:?}" ]; then
+					sourcesFile="${tmpWorkDir:?}/sources.list"
+					printf -- '%s' "${HBLOCK_SOURCES?}" > "${sourcesFile:?}"
+				# Throw an error for everything else.
+				else
+					printError "No such file: ${sourcesFile:?}"
+					exit 1
+				fi
+			fi ;;
+	esac
 
-	# Check if the allowlist file exists.
-	if [ ! -e "${allowlistFile:?}" ]; then
-		# If it is the default path or equals "builtin", use the built-in value instead.
-		if [ "${allowlistFile:?}" = "${allowlistFileDefault:?}" ] || [ "${allowlistFile:?}" = 'builtin' ]; then
-			allowlistFile="${tmpWorkDir:?}/allow.list"
-			printf -- '%s' "${HBLOCK_ALLOWLIST?}" > "${allowlistFile:?}"
-		else
-			printError "No such file: ${allowlistFile:?}"
-			exit 1
-		fi
-	fi
+	# Check the allowlist file.
+	case "${allowlistFile:?}" in
+		# If the file value equals "-", use stdin.
+		'-') allowlistFile="${tmpWorkDir:?}/allow.list"; cat <&0 > "${allowlistFile:?}" ;;
+		# If the file value equals "none", use an empty file.
+		'none') allowlistFile="${tmpWorkDir:?}/allow.list"; :> "${allowlistFile:?}" ;;
+		# If the file value equals "builtin", use the built-in value.
+		'builtin') allowlistFile="${tmpWorkDir:?}/allow.list"; printf -- '%s' "${HBLOCK_ALLOWLIST?}" > "${allowlistFile:?}" ;;
+		*) # Check if the file does not exist.
+			if [ ! -e "${allowlistFile:?}" ]; then
+				# If it is the default path, use the built-in value.
+				if [ "${allowlistFile:?}" = "${allowlistFileDefault:?}" ]; then
+					allowlistFile="${tmpWorkDir:?}/allow.list"
+					printf -- '%s' "${HBLOCK_ALLOWLIST?}" > "${allowlistFile:?}"
+				# Throw an error for everything else.
+				else
+					printError "No such file: ${allowlistFile:?}"
+					exit 1
+				fi
+			fi ;;
+	esac
 
-	# Check if the denylist file exists.
-	if [ ! -e "${denylistFile:?}" ]; then
-		# If it is the default path or equals "builtin", use the built-in value instead.
-		if [ "${denylistFile:?}" = "${denylistFileDefault:?}" ] || [ "${denylistFile:?}" = 'builtin' ]; then
-			denylistFile="${tmpWorkDir:?}/deny.list"
-			printf -- '%s' "${HBLOCK_DENYLIST?}" > "${denylistFile:?}"
-		else
-			printError "No such file: ${denylistFile:?}"
-			exit 1
-		fi
-	fi
+	# Check the denylist file.
+	case "${denylistFile:?}" in
+		# If the file value equals "-", use stdin.
+		'-') denylistFile="${tmpWorkDir:?}/deny.list"; cat <&0 > "${denylistFile:?}" ;;
+		# If the file value equals "none", use an empty file.
+		'none') denylistFile="${tmpWorkDir:?}/deny.list"; :> "${denylistFile:?}" ;;
+		# If the file value equals "builtin", use the built-in value.
+		'builtin') denylistFile="${tmpWorkDir:?}/deny.list"; printf -- '%s' "${HBLOCK_DENYLIST?}" > "${denylistFile:?}" ;;
+		*) # Check if the file does not exist.
+			if [ ! -e "${denylistFile:?}" ]; then
+				# If it is the default path, use the built-in value.
+				if [ "${denylistFile:?}" = "${denylistFileDefault:?}" ]; then
+					denylistFile="${tmpWorkDir:?}/deny.list"
+					printf -- '%s' "${HBLOCK_DENYLIST?}" > "${denylistFile:?}"
+				# Throw an error for everything else.
+				else
+					printError "No such file: ${denylistFile:?}"
+					exit 1
+				fi
+			fi ;;
+	esac
 
 	# Create an empty blocklist file.
 	blocklistFile="${tmpWorkDir:?}/block.list"
 	:> "${blocklistFile:?}"
 
-	# If the sources file is not empty, each entry is downloaded and appended to the blocklist file.
+	# If the sources file is not empty, each source is downloaded and appended to the blocklist file.
 	if [ -s "${sourcesFile:?}" ]; then
-		printInfo 'Downloading lists'
+		printInfo 'Downloading sources'
 
 		# Read the sources file ignoring lines that start with "#" or are empty.
 		sed -e '/^#/d;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
@@ -461,8 +523,17 @@ main() {
 				fi
 			fi
 		done
+	fi
 
-		printInfo 'Parsing lists'
+	# If the denylist file is not empty, it is appended to the blocklist file.
+	if [ -s "${denylistFile:?}" ]; then
+		printInfo 'Applying denylist'
+		cat -- "${denylistFile:?}" >> "${blocklistFile:?}"
+	fi
+
+	# If the blocklist file is not empty, it is sanitized.
+	if [ -s "${blocklistFile:?}" ]; then
+		printInfo 'Sanitizing blocklist'
 
 		printList 'Removing carriage return'
 		tr -d '\r' \
@@ -521,18 +592,8 @@ main() {
 		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-	fi
 
-	# If the denylist file is not empty, it is appended to the blocklist file.
-	if [ -s "${denylistFile:?}" ]; then
-		printInfo 'Applying denylist'
-		sed -e '/^#/d;/^$/d' -- "${denylistFile:?}" >> "${blocklistFile:?}"
-	fi
-
-	# If the blocklist file is not empty, it is sorted.
-	if [ -s "${blocklistFile:?}" ]; then
-		printInfo 'Sorting entries'
-
+		printList 'Sorting entries'
 		sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux" \
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 	fi
@@ -633,6 +694,7 @@ main() {
 	# If the writing fails, try with sudo.
 	elif exists sudo && exists tee; then
 		printOutputFile | sudo tee -- "${outputFile:?}" >/dev/null
+	# Throw an error for everything else.
 	else
 		printError "Cannot write file: ${outputFile:?}"
 		exit 1

@@ -11,54 +11,76 @@ ads, tracking scripts and malware from multiple sources and creates a hosts
 file, among other formats, that prevents your system from connecting to them.
 .SH OPTIONS
 .HP
-\fB\-O\fR, \fB\-\-output\fR <FILE>, ${HBLOCK_OUTPUT_FILE}
+\fB\-O\fR, \fB\-\-output\fR <FILE|\->, ${HBLOCK_OUTPUT_FILE}
 .IP
 Output file location.
 .IP
+If equals "\-", it is printed to stdout.
+.IP
 (default: \fI\,/etc/hosts\/\fP)
 .HP
-\fB\-H\fR, \fB\-\-header\fR <FILE>, ${HBLOCK_HEADER_FILE}
+\fB\-H\fR, \fB\-\-header\fR <FILE|builtin|none|\->, ${HBLOCK_HEADER_FILE}
 .IP
 File to be included at the beginning of the output file.
 .IP
-If the default file does not exist or equals "builtin" the built\-in
-value is used instead.
+If equals "builtin" or the default file does not exist, the built\-in
+value is used.
+.IP
+If equals "none", an empty value is used.
+.IP
+If equals "\-", the stdin content is used.
 .IP
 (default: \fI\,/etc/hblock/header\/\fP)
 .HP
-\fB\-F\fR, \fB\-\-footer\fR <FILE>, ${HBLOCK_FOOTER_FILE}
+\fB\-F\fR, \fB\-\-footer\fR <FILE|builtin|none|\->, ${HBLOCK_FOOTER_FILE}
 .IP
 File to be included at the end of the output file.
 .IP
-If the default file does not exist or equals "builtin" the built\-in
-value is used instead.
+If equals "builtin" or the default file does not exist, the built\-in
+value is used.
+.IP
+If equals "none", an empty value is used.
+.IP
+If equals "\-", the stdin content is used.
 .IP
 (default: \fI\,/etc/hblock/footer\/\fP)
 .HP
-\fB\-S\fR, \fB\-\-sources\fR <FILE>, ${HBLOCK_SOURCES_FILE}
+\fB\-S\fR, \fB\-\-sources\fR <FILE|builtin|none|\->, ${HBLOCK_SOURCES_FILE}
 .IP
 File with line separated URLs used to generate the blocklist.
 .IP
-If the default file does not exist or equals "builtin" the built\-in
-value is used instead.
+If equals "builtin" or the default file does not exist, the built\-in
+value is used.
+.IP
+If equals "none", an empty value is used.
+.IP
+If equals "\-", the stdin content is used.
 .IP
 (default: \fI\,/etc/hblock/sources.list\/\fP)
 .HP
-\fB\-A\fR, \fB\-\-allowlist\fR <FILE>, ${HBLOCK_ALLOWLIST_FILE}
+\fB\-A\fR, \fB\-\-allowlist\fR <FILE|builtin|none|\->, ${HBLOCK_ALLOWLIST_FILE}
 .IP
 File with line separated entries to be removed from the blocklist.
 .IP
-If the default file does not exist or equals "builtin" the built\-in
-value is used instead.
+If equals "builtin" or the default file does not exist, the built\-in
+value is used.
+.IP
+If equals "none", an empty value is used.
+.IP
+If equals "\-", the stdin content is used.
 .IP
 (default: \fI\,/etc/hblock/allow.list\/\fP)
 .HP
-\fB\-D\fR, \fB\-\-denylist\fR <FILE>, ${HBLOCK_DENYLIST_FILE}
+\fB\-D\fR, \fB\-\-denylist\fR <FILE|builtin|none|\->, ${HBLOCK_DENYLIST_FILE}
 .IP
 File with line separated entries to be added to the blocklist.
 .IP
-If the default file does not exist or equals "builtin" the built\-in
-value is used instead.
+If equals "builtin" or the default file does not exist, the built\-in
+value is used.
+.IP
+If equals "none", an empty value is used.
+.IP
+If equals "\-", the stdin content is used.
 .IP
 (default: \fI\,/etc/hblock/deny.list\/\fP)
 .HP
