@@ -23,66 +23,91 @@ If equals "\-", it is printed to stdout.
 .IP
 File to be included at the beginning of the output file.
 .IP
-If equals "builtin" or the default file does not exist, the built\-in
-value is used.
+If equals "builtin", the built\-in value is used.
 .IP
 If equals "none", an empty value is used.
 .IP
 If equals "\-", the stdin content is used.
 .IP
-(default: \fI\,/etc/hblock/header\/\fP)
+If unspecified and any of the following files exists, its content is used.
+.IP
+${XDG_CONFIG_HOME}/hblock/header
+.IP
+\fI\,/etc/hblock/header\/\fP
+.IP
+(default: builtin)
 .HP
 \fB\-F\fR, \fB\-\-footer\fR <FILE|builtin|none|\->, ${HBLOCK_FOOTER_FILE}
 .IP
 File to be included at the end of the output file.
 .IP
-If equals "builtin" or the default file does not exist, the built\-in
-value is used.
+If equals "builtin", the built\-in value is used.
 .IP
 If equals "none", an empty value is used.
 .IP
 If equals "\-", the stdin content is used.
 .IP
-(default: \fI\,/etc/hblock/footer\/\fP)
+If unspecified and any of the following files exists, its content is used.
+.IP
+${XDG_CONFIG_HOME}/hblock/footer
+.IP
+\fI\,/etc/hblock/footer\/\fP
+.IP
+(default: builtin)
 .HP
 \fB\-S\fR, \fB\-\-sources\fR <FILE|builtin|none|\->, ${HBLOCK_SOURCES_FILE}
 .IP
 File with line separated URLs used to generate the blocklist.
 .IP
-If equals "builtin" or the default file does not exist, the built\-in
-value is used.
+If equals "builtin", the built\-in value is used.
 .IP
 If equals "none", an empty value is used.
 .IP
 If equals "\-", the stdin content is used.
 .IP
-(default: \fI\,/etc/hblock/sources.list\/\fP)
+If unspecified and any of the following files exists, its content is used.
+.IP
+${XDG_CONFIG_HOME}/hblock/sources.list
+.IP
+\fI\,/etc/hblock/sources.list\/\fP
+.IP
+(default: builtin)
 .HP
 \fB\-A\fR, \fB\-\-allowlist\fR <FILE|builtin|none|\->, ${HBLOCK_ALLOWLIST_FILE}
 .IP
 File with line separated entries to be removed from the blocklist.
 .IP
-If equals "builtin" or the default file does not exist, the built\-in
-value is used.
+If equals "builtin", the built\-in value is used.
 .IP
 If equals "none", an empty value is used.
 .IP
 If equals "\-", the stdin content is used.
 .IP
-(default: \fI\,/etc/hblock/allow.list\/\fP)
+If unspecified and any of the following files exists, its content is used.
+.IP
+${XDG_CONFIG_HOME}/hblock/allow.list
+.IP
+\fI\,/etc/hblock/allow.list\/\fP
+.IP
+(default: builtin)
 .HP
 \fB\-D\fR, \fB\-\-denylist\fR <FILE|builtin|none|\->, ${HBLOCK_DENYLIST_FILE}
 .IP
 File with line separated entries to be added to the blocklist.
 .IP
-If equals "builtin" or the default file does not exist, the built\-in
-value is used.
+If equals "builtin", the built\-in value is used.
 .IP
 If equals "none", an empty value is used.
 .IP
 If equals "\-", the stdin content is used.
 .IP
-(default: \fI\,/etc/hblock/deny.list\/\fP)
+If unspecified and any of the following files exists, its content is used.
+.IP
+${XDG_CONFIG_HOME}/hblock/deny.list
+.IP
+\fI\,/etc/hblock/deny.list\/\fP
+.IP
+(default: builtin)
 .HP
 \fB\-R\fR, \fB\-\-redirection\fR <REDIRECTION>, ${HBLOCK_REDIRECTION}
 .IP
@@ -112,8 +137,8 @@ Character used for comments.
 .HP
 \fB\-l\fR, \fB\-\-[no\-]lenient\fR, ${HBLOCK_LENIENT}
 .IP
-Match all entries from sources regardless of their IP, instead
-of 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.
+Match all entries from sources regardless of their IP, instead of
+0.0.0.0, 127.0.0.1, ::, ::1 or nothing.
 .IP
 (default: false)
 .HP

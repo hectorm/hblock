@@ -150,77 +150,87 @@ showHelp() {
 		Options:
 
 		 -O, --output <FILE|->, \${HBLOCK_OUTPUT_FILE}%NL
-		        Output file location.%NL
-		        If equals "-", it is printed to stdout.%NL
-		        (default: ${outputFile?})%NL
+		    Output file location.%NL
+		    If equals "-", it is printed to stdout.%NL
+		    (default: ${outputFile?})%NL
 		 -H, --header <FILE|builtin|none|->, \${HBLOCK_HEADER_FILE}%NL
-		        File to be included at the beginning of the output file.%NL
-		        If equals "builtin" or the default file does not exist, the built-in
-		        value is used.%NL
-		        If equals "none", an empty value is used.%NL
-		        If equals "-", the stdin content is used.%NL
-		        (default: ${headerFile?})%NL
+		    File to be included at the beginning of the output file.%NL
+		    If equals "builtin", the built-in value is used.%NL
+		    If equals "none", an empty value is used.%NL
+		    If equals "-", the stdin content is used.%NL
+		    If unspecified and any of the following files exists, its content is used.%NL
+		        \${XDG_CONFIG_HOME}/hblock/header%NL
+		        ${ETCDIR?}/hblock/header%NL
+		    (default: ${headerFile?})%NL
 		 -F, --footer <FILE|builtin|none|->, \${HBLOCK_FOOTER_FILE}%NL
-		        File to be included at the end of the output file.%NL
-		        If equals "builtin" or the default file does not exist, the built-in
-		        value is used.%NL
-		        If equals "none", an empty value is used.%NL
-		        If equals "-", the stdin content is used.%NL
-		        (default: ${footerFile?})%NL
+		    File to be included at the end of the output file.%NL
+		    If equals "builtin", the built-in value is used.%NL
+		    If equals "none", an empty value is used.%NL
+		    If equals "-", the stdin content is used.%NL
+		    If unspecified and any of the following files exists, its content is used.%NL
+		        \${XDG_CONFIG_HOME}/hblock/footer%NL
+		        ${ETCDIR?}/hblock/footer%NL
+		    (default: ${footerFile?})%NL
 		 -S, --sources <FILE|builtin|none|->, \${HBLOCK_SOURCES_FILE}%NL
-		        File with line separated URLs used to generate the blocklist.%NL
-		        If equals "builtin" or the default file does not exist, the built-in
-		        value is used.%NL
-		        If equals "none", an empty value is used.%NL
-		        If equals "-", the stdin content is used.%NL
-		        (default: ${sourcesFile?})%NL
+		    File with line separated URLs used to generate the blocklist.%NL
+		    If equals "builtin", the built-in value is used.%NL
+		    If equals "none", an empty value is used.%NL
+		    If equals "-", the stdin content is used.%NL
+		    If unspecified and any of the following files exists, its content is used.%NL
+		        \${XDG_CONFIG_HOME}/hblock/sources.list%NL
+		        ${ETCDIR?}/hblock/sources.list%NL
+		    (default: ${sourcesFile?})%NL
 		 -A, --allowlist <FILE|builtin|none|->, \${HBLOCK_ALLOWLIST_FILE}%NL
-		        File with line separated entries to be removed from the blocklist.%NL
-		        If equals "builtin" or the default file does not exist, the built-in
-		        value is used.%NL
-		        If equals "none", an empty value is used.%NL
-		        If equals "-", the stdin content is used.%NL
-		        (default: ${allowlistFile?})%NL
+		    File with line separated entries to be removed from the blocklist.%NL
+		    If equals "builtin", the built-in value is used.%NL
+		    If equals "none", an empty value is used.%NL
+		    If equals "-", the stdin content is used.%NL
+		    If unspecified and any of the following files exists, its content is used.%NL
+		        \${XDG_CONFIG_HOME}/hblock/allow.list%NL
+		        ${ETCDIR?}/hblock/allow.list%NL
+		    (default: ${allowlistFile?})%NL
 		 -D, --denylist <FILE|builtin|none|->, \${HBLOCK_DENYLIST_FILE}%NL
-		        File with line separated entries to be added to the blocklist.%NL
-		        If equals "builtin" or the default file does not exist, the built-in
-		        value is used.%NL
-		        If equals "none", an empty value is used.%NL
-		        If equals "-", the stdin content is used.%NL
-		        (default: ${denylistFile?})%NL
+		    File with line separated entries to be added to the blocklist.%NL
+		    If equals "builtin", the built-in value is used.%NL
+		    If equals "none", an empty value is used.%NL
+		    If equals "-", the stdin content is used.%NL
+		    If unspecified and any of the following files exists, its content is used.%NL
+		        \${XDG_CONFIG_HOME}/hblock/deny.list%NL
+		        ${ETCDIR?}/hblock/deny.list%NL
+		    (default: ${denylistFile?})%NL
 		 -R, --redirection <REDIRECTION>, \${HBLOCK_REDIRECTION}%NL
-		        Redirection for all entries in the blocklist.%NL
-		        (default: ${redirection?})%NL
+		    Redirection for all entries in the blocklist.%NL
+		    (default: ${redirection?})%NL
 		 -W, --wrap <NUMBER>, \${HBLOCK_WRAP}%NL
-		        Break blocklist lines after this number of entries.%NL
-		        (default: ${wrap?})%NL
+		    Break blocklist lines after this number of entries.%NL
+		    (default: ${wrap?})%NL
 		 -T, --template <TEMPLATE>, \${HBLOCK_TEMPLATE}%NL
-		        Template applied to each entry.%NL
-		        %D = <DOMAIN>, %R = <REDIRECTION>%NL
-		        (default: ${template?})%NL
+		    Template applied to each entry.%NL
+		    %D = <DOMAIN>, %R = <REDIRECTION>%NL
+		    (default: ${template?})%NL
 		 -C, --comment <COMMENT>, \${HBLOCK_COMMENT}%NL
-		        Character used for comments.%NL
-		        (default: ${comment?})%NL
+		    Character used for comments.%NL
+		    (default: ${comment?})%NL
 		 -l, --[no-]lenient, \${HBLOCK_LENIENT}%NL
-		        Match all entries from sources regardless of their IP, instead
-		        of 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.%NL
-		        (default: ${lenient?})%NL
+		    Match all entries from sources regardless of their IP, instead of
+		    0.0.0.0, 127.0.0.1, ::, ::1 or nothing.%NL
+		    (default: ${lenient?})%NL
 		 -r, --[no-]regex, \${HBLOCK_REGEX}%NL
-		        Use POSIX BREs in the allowlist instead of fixed strings.%NL
-		        (default: ${regex?})%NL
+		    Use POSIX BREs in the allowlist instead of fixed strings.%NL
+		    (default: ${regex?})%NL
 		 -c, --[no-]continue, \${HBLOCK_CONTINUE}%NL
-		        Do not abort if a download error occurs.%NL
-		        (default: ${continue?})%NL
+		    Do not abort if a download error occurs.%NL
+		    (default: ${continue?})%NL
 		 -q, --[no-]quiet, \${HBLOCK_QUIET}%NL
-		        Suppress non-error messages.%NL
-		        (default: ${quiet?})%NL
+		    Suppress non-error messages.%NL
+		    (default: ${quiet?})%NL
 		 -x, --color <auto|true|false>, \${HBLOCK_COLOR}%NL
-		        Colorize the output.%NL
-		        (default: ${color?})%NL
+		    Colorize the output.%NL
+		    (default: ${color?})%NL
 		 -v, --version%NL
-		        Show version number and quit.%NL
+		    Show version number and quit.%NL
 		 -h, --help%NL
-		        Show this help and quit.
+		    Show this help and quit.
 
 		Report bugs to: <https://github.com/hectorm/hblock/issues>
 	EOF

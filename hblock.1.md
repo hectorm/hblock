@@ -32,70 +32,100 @@ ${HBLOCK\_HEADER\_FILE}
 
 > File to be included at the beginning of the output file.
 >
-> If equals "builtin" or the default file does not exist, the built-in
-> value is used.
+> If equals "builtin", the built-in value is used.
 >
 > If equals "none", an empty value is used.
 >
 > If equals "-", the stdin content is used.
 >
-> (default: */etc/hblock/header*)
+> If unspecified and any of the following files exists, its content is
+> used.
+>
+> ${XDG\_CONFIG\_HOME}/hblock/header
+>
+> */etc/hblock/header*
+>
+> (default: builtin)
 
 **-F**, **--footer** &lt;FILE\|builtin\|none\|-&gt;,
 ${HBLOCK\_FOOTER\_FILE}
 
 > File to be included at the end of the output file.
 >
-> If equals "builtin" or the default file does not exist, the built-in
-> value is used.
+> If equals "builtin", the built-in value is used.
 >
 > If equals "none", an empty value is used.
 >
 > If equals "-", the stdin content is used.
 >
-> (default: */etc/hblock/footer*)
+> If unspecified and any of the following files exists, its content is
+> used.
+>
+> ${XDG\_CONFIG\_HOME}/hblock/footer
+>
+> */etc/hblock/footer*
+>
+> (default: builtin)
 
 **-S**, **--sources** &lt;FILE\|builtin\|none\|-&gt;,
 ${HBLOCK\_SOURCES\_FILE}
 
 > File with line separated URLs used to generate the blocklist.
 >
-> If equals "builtin" or the default file does not exist, the built-in
-> value is used.
+> If equals "builtin", the built-in value is used.
 >
 > If equals "none", an empty value is used.
 >
 > If equals "-", the stdin content is used.
 >
-> (default: */etc/hblock/sources.list*)
+> If unspecified and any of the following files exists, its content is
+> used.
+>
+> ${XDG\_CONFIG\_HOME}/hblock/sources.list
+>
+> */etc/hblock/sources.list*
+>
+> (default: builtin)
 
 **-A**, **--allowlist** &lt;FILE\|builtin\|none\|-&gt;,
 ${HBLOCK\_ALLOWLIST\_FILE}
 
 > File with line separated entries to be removed from the blocklist.
 >
-> If equals "builtin" or the default file does not exist, the built-in
-> value is used.
+> If equals "builtin", the built-in value is used.
 >
 > If equals "none", an empty value is used.
 >
 > If equals "-", the stdin content is used.
 >
-> (default: */etc/hblock/allow.list*)
+> If unspecified and any of the following files exists, its content is
+> used.
+>
+> ${XDG\_CONFIG\_HOME}/hblock/allow.list
+>
+> */etc/hblock/allow.list*
+>
+> (default: builtin)
 
 **-D**, **--denylist** &lt;FILE\|builtin\|none\|-&gt;,
 ${HBLOCK\_DENYLIST\_FILE}
 
 > File with line separated entries to be added to the blocklist.
 >
-> If equals "builtin" or the default file does not exist, the built-in
-> value is used.
+> If equals "builtin", the built-in value is used.
 >
 > If equals "none", an empty value is used.
 >
 > If equals "-", the stdin content is used.
 >
-> (default: */etc/hblock/deny.list*)
+> If unspecified and any of the following files exists, its content is
+> used.
+>
+> ${XDG\_CONFIG\_HOME}/hblock/deny.list
+>
+> */etc/hblock/deny.list*
+>
+> (default: builtin)
 
 **-R**, **--redirection** &lt;REDIRECTION&gt;, ${HBLOCK\_REDIRECTION}
 
