@@ -59,21 +59,21 @@ main() {
 	fi
 
 	printf -- 'Test - Main - Header: "HBLOCK_HEADER_FILE" environment variable\n'
-	actual="$(HBLOCK_HEADER_FILE="${SCRIPT_DIR:?}/header.txt" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_HEADER_FILE="${SCRIPT_DIR:?}/header.txt" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
 	printf -- 'Test - Main - Header: "HBLOCK_HEADER_FILE" environment variable with a non-existent file\n'
-	actual="$(HBLOCK_HEADER_FILE='/hblock/invalid.txt' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_HEADER_FILE='/hblock/invalid.txt' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}"-invalid.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
 	printf -- 'Test - Main - Header: "HBLOCK_HEADER" environment variable\n'
-	actual="$(HBLOCK_HEADER="$(cat -- "${SCRIPT_DIR:?}/header.txt")" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_HEADER="$(cat -- "${SCRIPT_DIR:?}/header.txt")" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

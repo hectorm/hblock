@@ -59,21 +59,21 @@ main() {
 	fi
 
 	printf -- 'Test - Main - Allowlist: "HBLOCK_ALLOWLIST_FILE" environment variable\n'
-	actual="$(HBLOCK_ALLOWLIST_FILE="${SCRIPT_DIR:?}/allowlist.txt" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_ALLOWLIST_FILE="${SCRIPT_DIR:?}/allowlist.txt" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
 	printf -- 'Test - Main - Allowlist: "HBLOCK_ALLOWLIST_FILE" environment variable with a non-existent file\n'
-	actual="$(HBLOCK_ALLOWLIST_FILE='/hblock/invalid.txt' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_ALLOWLIST_FILE='/hblock/invalid.txt' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}"-invalid.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
 	printf -- 'Test - Main - Allowlist: "HBLOCK_ALLOWLIST" environment variable\n'
-	actual="$(HBLOCK_ALLOWLIST="$(cat -- "${SCRIPT_DIR:?}/allowlist.txt")" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_ALLOWLIST="$(cat -- "${SCRIPT_DIR:?}/allowlist.txt")" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

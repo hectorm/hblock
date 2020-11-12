@@ -31,7 +31,7 @@ main() {
 	fi
 
 	printf -- 'Test - Main - Comment: "HBLOCK_COMMENT" environment variable\n'
-	actual="$(HBLOCK_COMMENT='# %' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_COMMENT='# %' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

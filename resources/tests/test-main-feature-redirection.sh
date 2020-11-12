@@ -31,7 +31,7 @@ main() {
 	fi
 
 	printf -- 'Test - Main - Redirection: "HBLOCK_REDIRECTION" environment variable\n'
-	actual="$(HBLOCK_REDIRECTION='::1' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_REDIRECTION='::1' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

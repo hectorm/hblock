@@ -31,7 +31,7 @@ main() {
 	fi
 
 	printf -- 'Test - Main - Template: "HBLOCK_TEMPLATE" environment variable\n'
-	actual="$(HBLOCK_TEMPLATE='%D\n\t└─ %R' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_TEMPLATE='%D\n\t└─ %R' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

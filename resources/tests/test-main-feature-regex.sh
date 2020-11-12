@@ -37,7 +37,7 @@ main() {
 	fi
 
 	printf -- 'Test - Main - Regex: "HBLOCK_REGEX" environment variable\n'
-	actual="$(HBLOCK_REGEX='true' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_REGEX='true' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

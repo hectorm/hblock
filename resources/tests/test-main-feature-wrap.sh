@@ -31,7 +31,7 @@ main() {
 	fi
 
 	printf -- 'Test - Main - Wrap: "HBLOCK_WRAP" environment variable\n'
-	actual="$(HBLOCK_WRAP='5' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	actual="$(set -a; HBLOCK_WRAP='5' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
