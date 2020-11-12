@@ -12,7 +12,6 @@ main() {
 	target="${2:?}"
 	hblock="${3:-hblock}"
 
-	export HBLOCK_HEADER_FILE='builtin'
 	# shellcheck disable=SC2155
 	export HBLOCK_HEADER="$(cat <<-'EOF'
 		$TTL 2h
@@ -20,17 +19,9 @@ main() {
 		  IN NS  localhost.
 	EOF
 	)"
-
-	export HBLOCK_FOOTER_FILE='builtin'
 	export HBLOCK_FOOTER=''
-
-	export HBLOCK_SOURCES_FILE='builtin'
 	export HBLOCK_SOURCES="file://${source:?}"
-
-	export HBLOCK_ALLOWLIST_FILE='builtin'
 	export HBLOCK_ALLOWLIST=''
-
-	export HBLOCK_DENYLIST_FILE='builtin'
 	export HBLOCK_DENYLIST='hblock-check.molinero.dev'
 
 	export HBLOCK_REDIRECTION='.'

@@ -12,84 +12,74 @@ export LC_ALL='C'
 : "${XDG_CONFIG_HOME="${HOME-}/.config"}"
 
 # Built-in header.
-if [ -z "${HBLOCK_HEADER+x}" ]; then
-	HOSTNAME="${HOSTNAME-"$(uname -n)"}"
-	HBLOCK_HEADER="$(cat <<-EOF
-		127.0.0.1       localhost ${HOSTNAME?}
-		255.255.255.255 broadcasthost
-		::1             localhost ${HOSTNAME?}
-		::1             ip6-localhost ip6-loopback
-		fe00::0         ip6-localnet
-		ff00::0         ip6-mcastprefix
-		ff02::1         ip6-allnodes
-		ff02::2         ip6-allrouters
-		ff02::3         ip6-allhosts
-	EOF
-	)"
-fi
+HOSTNAME="${HOSTNAME-"$(uname -n)"}"
+HBLOCK_HEADER_BUILTIN="$(cat <<-EOF
+	127.0.0.1       localhost ${HOSTNAME?}
+	255.255.255.255 broadcasthost
+	::1             localhost ${HOSTNAME?}
+	::1             ip6-localhost ip6-loopback
+	fe00::0         ip6-localnet
+	ff00::0         ip6-mcastprefix
+	ff02::1         ip6-allnodes
+	ff02::2         ip6-allrouters
+	ff02::3         ip6-allhosts
+EOF
+)"
 
 # Built-in footer.
-if [ -z "${HBLOCK_FOOTER+x}" ]; then
-	HBLOCK_FOOTER=''
-fi
+HBLOCK_FOOTER_BUILTIN=''
 
 # Built-in sources.
-if [ -z "${HBLOCK_SOURCES+x}" ]; then
-	HBLOCK_SOURCES="$(cat <<-'EOF'
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/gfrogeye-firstparty-trackers/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/socram8888-notonmyshift/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-abuse/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/urlhaus/list.txt
-		https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
-	EOF
-	)"
-fi
+HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/gfrogeye-firstparty-trackers/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/matomo.org-spammers/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/socram8888-notonmyshift/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/someonewhocares.org/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-abuse/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/urlhaus/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
+EOF
+)"
 
 # Built-in allowlist.
-if [ -z "${HBLOCK_ALLOWLIST+x}" ]; then
-	HBLOCK_ALLOWLIST=''
-fi
+HBLOCK_ALLOWLIST_BUILTIN=''
 
 # Built-in denylist.
-if [ -z "${HBLOCK_DENYLIST+x}" ]; then
-	HBLOCK_DENYLIST="$(cat <<-'EOF'
-		# Special domain that is used to check if hBlock is enabled.
-		hblock-check.molinero.dev
-	EOF
-	)"
-fi
+HBLOCK_DENYLIST_BUILTIN="$(cat <<-'EOF'
+	# Special domain that is used to check if hBlock is enabled.
+	hblock-check.molinero.dev
+EOF
+)"
 
 # Parse command line options.
 optParse() {
@@ -326,40 +316,60 @@ main() {
 	outputFile="${HBLOCK_OUTPUT_FILE-"${ETCDIR?}/hosts"}"
 
 	# File to be included at the beginning of the output file.
-	headerFile="${HBLOCK_HEADER_FILE-"builtin"}"
-	if [ -f "${usrConfDir:?}/header" ]; then
+	headerFile='builtin'
+	if [ -n "${HBLOCK_HEADER+x}" ]; then
+		HBLOCK_HEADER_BUILTIN="${HBLOCK_HEADER?}"
+	elif [ -n "${HBLOCK_HEADER_FILE+x}" ]; then
+		headerFile="${HBLOCK_HEADER_FILE?}"
+	elif [ -f "${usrConfDir:?}/header" ]; then
 		headerFile="${usrConfDir:?}/header"
 	elif [ -f "${sysConfDir:?}/header" ]; then
 		headerFile="${sysConfDir:?}/header"
 	fi
 
 	# File to be included at the end of the output file.
-	footerFile="${HBLOCK_FOOTER_FILE-"builtin"}"
-	if [ -f "${usrConfDir:?}/footer" ]; then
+	footerFile='builtin'
+	if [ -n "${HBLOCK_FOOTER+x}" ]; then
+		HBLOCK_FOOTER_BUILTIN="${HBLOCK_FOOTER?}"
+	elif [ -n "${HBLOCK_FOOTER_FILE+x}" ]; then
+		footerFile="${HBLOCK_FOOTER_FILE?}"
+	elif [ -f "${usrConfDir:?}/footer" ]; then
 		footerFile="${usrConfDir:?}/footer"
 	elif [ -f "${sysConfDir:?}/footer" ]; then
 		footerFile="${sysConfDir:?}/footer"
 	fi
 
 	# File with line separated URLs used to generate the blocklist.
-	sourcesFile="${HBLOCK_SOURCES_FILE-"builtin"}"
-	if [ -f "${usrConfDir:?}/sources.list" ]; then
+	sourcesFile='builtin'
+	if [ -n "${HBLOCK_SOURCES+x}" ]; then
+		HBLOCK_SOURCES_BUILTIN="${HBLOCK_SOURCES?}"
+	elif [ -n "${HBLOCK_SOURCES_FILE+x}" ]; then
+		sourcesFile="${HBLOCK_SOURCES_FILE?}"
+	elif [ -f "${usrConfDir:?}/sources.list" ]; then
 		sourcesFile="${usrConfDir:?}/sources.list"
 	elif [ -f "${sysConfDir:?}/sources.list" ]; then
 		sourcesFile="${sysConfDir:?}/sources.list"
 	fi
 
 	# File with line separated entries to be removed from the blocklist.
-	allowlistFile="${HBLOCK_ALLOWLIST_FILE-"builtin"}"
-	if [ -f "${usrConfDir:?}/allow.list" ]; then
+	allowlistFile='builtin'
+	if [ -n "${HBLOCK_ALLOWLIST+x}" ]; then
+		HBLOCK_ALLOWLIST_BUILTIN="${HBLOCK_ALLOWLIST?}"
+	elif [ -n "${HBLOCK_ALLOWLIST_FILE+x}" ]; then
+		allowlistFile="${HBLOCK_ALLOWLIST_FILE?}"
+	elif [ -f "${usrConfDir:?}/allow.list" ]; then
 		allowlistFile="${usrConfDir:?}/allow.list"
 	elif [ -f "${sysConfDir:?}/allow.list" ]; then
 		allowlistFile="${sysConfDir:?}/allow.list"
 	fi
 
 	# File with line separated entries to be added to the blocklist.
-	denylistFile="${HBLOCK_DENYLIST_FILE-"builtin"}"
-	if [ -f "${usrConfDir:?}/deny.list" ]; then
+	denylistFile='builtin'
+	if [ -n "${HBLOCK_DENYLIST+x}" ]; then
+		HBLOCK_DENYLIST_BUILTIN="${HBLOCK_DENYLIST?}"
+	elif [ -n "${HBLOCK_DENYLIST_FILE+x}" ]; then
+		denylistFile="${HBLOCK_DENYLIST_FILE?}"
+	elif [ -f "${usrConfDir:?}/deny.list" ]; then
 		denylistFile="${usrConfDir:?}/deny.list"
 	elif [ -f "${sysConfDir:?}/deny.list" ]; then
 		denylistFile="${sysConfDir:?}/deny.list"
@@ -416,7 +426,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') headerFile="${tmpWorkDir:?}/header"; :> "${headerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') headerFile="${tmpWorkDir:?}/header"; printf -- '%s' "${HBLOCK_HEADER?}" > "${headerFile:?}" ;;
+		'builtin') headerFile="${tmpWorkDir:?}/header"; printf -- '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${headerFile:?}" ] || { printError "No such file: ${headerFile:?}"; exit 1; } ;;
 	esac
@@ -428,7 +438,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') footerFile="${tmpWorkDir:?}/footer"; :> "${footerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') footerFile="${tmpWorkDir:?}/footer"; printf -- '%s' "${HBLOCK_FOOTER?}" > "${footerFile:?}" ;;
+		'builtin') footerFile="${tmpWorkDir:?}/footer"; printf -- '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${footerFile:?}" ] || { printError "No such file: ${footerFile:?}"; exit 1; } ;;
 	esac
@@ -440,7 +450,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') sourcesFile="${tmpWorkDir:?}/sources.list"; :> "${sourcesFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') sourcesFile="${tmpWorkDir:?}/sources.list"; printf -- '%s' "${HBLOCK_SOURCES?}" > "${sourcesFile:?}" ;;
+		'builtin') sourcesFile="${tmpWorkDir:?}/sources.list"; printf -- '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${sourcesFile:?}" ] || { printError "No such file: ${sourcesFile:?}"; exit 1; } ;;
 	esac
@@ -452,7 +462,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') allowlistFile="${tmpWorkDir:?}/allow.list"; :> "${allowlistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') allowlistFile="${tmpWorkDir:?}/allow.list"; printf -- '%s' "${HBLOCK_ALLOWLIST?}" > "${allowlistFile:?}" ;;
+		'builtin') allowlistFile="${tmpWorkDir:?}/allow.list"; printf -- '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${allowlistFile:?}" ] || { printError "No such file: ${allowlistFile:?}"; exit 1; } ;;
 	esac
@@ -464,7 +474,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') denylistFile="${tmpWorkDir:?}/deny.list"; :> "${denylistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') denylistFile="${tmpWorkDir:?}/deny.list"; printf -- '%s' "${HBLOCK_DENYLIST?}" > "${denylistFile:?}" ;;
+		'builtin') denylistFile="${tmpWorkDir:?}/deny.list"; printf -- '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${denylistFile:?}" ] || { printError "No such file: ${denylistFile:?}"; exit 1; } ;;
 	esac

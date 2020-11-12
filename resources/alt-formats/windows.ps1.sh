@@ -15,7 +15,6 @@ main() {
 	mkdir -p -- "${target:?}.tmp"
 	trap 'rm -rf -- "${target:?}.tmp"; trap - EXIT; exit 0' EXIT TERM INT HUP
 
-	export HBLOCK_HEADER_FILE='builtin'
 	# shellcheck disable=SC2155
 	export HBLOCK_HEADER="$(cat <<-'EOF'
 		#Requires -RunAsAdministrator
@@ -51,8 +50,6 @@ main() {
 		# BEGIN BLOCKLIST
 	EOF
 	)"
-
-	export HBLOCK_FOOTER_FILE='builtin'
 	# shellcheck disable=SC2155
 	export HBLOCK_FOOTER="$(cat <<-'EOF'
 		# END BLOCKLIST
@@ -62,14 +59,8 @@ main() {
 		$hostsItem.Attributes += "ReadOnly"
 	EOF
 	)"
-
-	export HBLOCK_SOURCES_FILE='builtin'
 	export HBLOCK_SOURCES="file://${source:?}"
-
-	export HBLOCK_ALLOWLIST_FILE='builtin'
 	export HBLOCK_ALLOWLIST=''
-
-	export HBLOCK_DENYLIST_FILE='builtin'
 	export HBLOCK_DENYLIST='hblock-check.molinero.dev'
 
 	export HBLOCK_REDIRECTION='0.0.0.0'
