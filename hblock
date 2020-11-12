@@ -268,11 +268,11 @@ printInfo() {
 }
 printWarn() {
 	if [ "${color-}" != 'true' ]; then printf -- '[WARN] %s\n' "${@-}" >&2
-	else printf -- '\033[0m[\033[1;33mWARN\033[0m] %s\n' "${@-}"; fi
+	else printf -- '\033[0m[\033[1;33mWARN\033[0m] %s\n' "${@-}" >&2; fi
 }
 printError() {
 	if [ "${color-}" != 'true' ]; then printf -- '[ERROR] %s\n' "${@-}" >&2
-	else printf -- '\033[0m[\033[1;31mERROR\033[0m] %s\n' "${@-}"; fi
+	else printf -- '\033[0m[\033[1;31mERROR\033[0m] %s\n' "${@-}" >&2; fi
 }
 printList() {
 	if [ "${quiet-}" != 'true' ]; then
