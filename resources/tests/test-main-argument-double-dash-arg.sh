@@ -13,8 +13,10 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	printf -- 'Test - Main: Default options\n'
-	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/sources.txt"
+
+	printf -- 'Test - Main - Argument: Double dash argument\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -- -v)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

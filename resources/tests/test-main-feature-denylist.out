@@ -1,0 +1,35 @@
+# Generated with:  https://github.com/hectorm/hblock
+# Blocked domains: 18
+
+# BEGIN HEADER
+127.0.0.1       localhost hblock
+255.255.255.255 broadcasthost
+::1             localhost hblock
+::1             ip6-localhost ip6-loopback
+fe00::0         ip6-localnet
+ff00::0         ip6-mcastprefix
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+ff02::3         ip6-allhosts
+# END HEADER
+
+# BEGIN BLOCKLIST
+0.0.0.0 denied-entry-000.com
+0.0.0.0 denied-entry-001.com
+0.0.0.0 entry-with-comment-000.com
+0.0.0.0 entry-with-comment-001.com
+0.0.0.0 entry-with-comment-002.com
+0.0.0.0 entry-with-comment-003.com
+0.0.0.0 entry-with-comment-004.com
+0.0.0.0 entry-with-prefix-000.com
+0.0.0.0 entry-with-prefix-001.com
+0.0.0.0 entry-with-prefix-002.com
+0.0.0.0 entry-with-prefix-003.com
+0.0.0.0 entry-with-prefix-004.com
+0.0.0.0 entry-with-prefix-005.com
+0.0.0.0 entry-with-prefix-006.com
+0.0.0.0 single-entry-000.com
+0.0.0.0 single-entry-001.com
+0.0.0.0 single-entry-002.com
+0.0.0.0 single-entry-003.com
+# END BLOCKLIST

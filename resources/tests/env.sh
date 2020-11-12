@@ -12,7 +12,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 # Set base environment.
 export HOSTNAME='hblock'
 export ETCDIR="${SCRIPT_DIR:?}/etc"
-export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/sources.txt"
+export XDG_CONFIG_HOME="${ETCDIR:?}"
 
 runInTestShell() {
 	${TEST_SHELL:-/bin/sh} -- "${@-}" 2>&1 ||:
