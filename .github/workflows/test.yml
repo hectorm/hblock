@@ -206,7 +206,7 @@ jobs:
       - name: 'Apply workarounds for GitHub Actions runner'
         run: 'printf "ID=alpine\n" > /etc/_os-release'
       - name: 'Update package index'
-        run: 'mkdir -p /var/lock/; opkg update'
+        run: 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
       - name: 'Install packages'
         run: 'opkg install ca-certificates curl file idn2 make'
       - name: 'Install packages (2nd stage)'

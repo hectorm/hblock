@@ -169,7 +169,7 @@ test-openwrt-latest-busybox-ash:
     - 'lint-shellcheck-stable'
   image: 'docker.io/openwrtorg/rootfs:latest'
   before_script:
-    - 'mkdir -p /var/lock/; opkg update'
+    - 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
     - 'opkg install ca-certificates curl file idn2 make'
     - 'opkg install busybox'
     - 'opkg info busybox'
@@ -288,7 +288,7 @@ build-openwrt-latest:
     - 'test-openwrt-latest-busybox-ash'
   image: 'docker.io/openwrtorg/rootfs:latest'
   before_script:
-    - 'mkdir -p /var/lock/; opkg update'
+    - 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
     - 'opkg install ca-certificates curl file idn2 make'
   script:
     - 'make hosts stats index'
