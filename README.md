@@ -47,7 +47,7 @@ Additionally, a [systemd timer](resources/systemd/) can be set to regularly upda
 The default behavior of hBlock can be adjusted with multiple options. Use the `--help` option or check the [hblock.1.md](./hblock.1.md) file for the
 full list.
 
-[![asciicast](https://asciinema.org/a/GmZOda836hfjonpy299PnFcJl.svg)](https://asciinema.org/a/GmZOda836hfjonpy299PnFcJl)
+[![asciicast](https://asciinema.org/a/b7C6FwnOXi7JUUz8sop4nR8TY.svg)](https://asciinema.org/a/b7C6FwnOXi7JUUz8sop4nR8TY)
 
 ## Nightly builds
 
