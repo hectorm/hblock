@@ -8,8 +8,12 @@
 set -eu
 export LC_ALL='C'
 
-: "${ETCDIR="/etc"}"
-: "${XDG_CONFIG_HOME="${HOME-}/.config"}"
+# Emulate ksh if the shell is zsh.
+if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
+
+# Define system and user configuration directories.
+if [ -z "${ETCDIR+x}" ]; then ETCDIR='/etc'; fi
+if [ -z "${XDG_CONFIG_HOME+x}" ]; then XDG_CONFIG_HOME="${HOME-}/.config"; fi
 
 # Built-in header.
 HOSTNAME="${HOSTNAME-"$(uname -n)"}"
@@ -434,7 +438,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') headerFile="${tmpWorkDir:?}/header"; cat <&0 > "${headerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') headerFile="${tmpWorkDir:?}/header"; :> "${headerFile:?}" ;;
+		'none') headerFile="${tmpWorkDir:?}/header"; true > "${headerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') headerFile="${tmpWorkDir:?}/header"; printf -- '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -446,7 +450,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') footerFile="${tmpWorkDir:?}/footer"; cat <&0 > "${footerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') footerFile="${tmpWorkDir:?}/footer"; :> "${footerFile:?}" ;;
+		'none') footerFile="${tmpWorkDir:?}/footer"; true > "${footerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') footerFile="${tmpWorkDir:?}/footer"; printf -- '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -458,7 +462,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') sourcesFile="${tmpWorkDir:?}/sources.list"; cat <&0 > "${sourcesFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') sourcesFile="${tmpWorkDir:?}/sources.list"; :> "${sourcesFile:?}" ;;
+		'none') sourcesFile="${tmpWorkDir:?}/sources.list"; true > "${sourcesFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') sourcesFile="${tmpWorkDir:?}/sources.list"; printf -- '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -470,7 +474,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') allowlistFile="${tmpWorkDir:?}/allow.list"; cat <&0 > "${allowlistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') allowlistFile="${tmpWorkDir:?}/allow.list"; :> "${allowlistFile:?}" ;;
+		'none') allowlistFile="${tmpWorkDir:?}/allow.list"; true > "${allowlistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') allowlistFile="${tmpWorkDir:?}/allow.list"; printf -- '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -482,7 +486,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') denylistFile="${tmpWorkDir:?}/deny.list"; cat <&0 > "${denylistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') denylistFile="${tmpWorkDir:?}/deny.list"; :> "${denylistFile:?}" ;;
+		'none') denylistFile="${tmpWorkDir:?}/deny.list"; true > "${denylistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') denylistFile="${tmpWorkDir:?}/deny.list"; printf -- '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -491,7 +495,7 @@ main() {
 
 	# Create an empty blocklist file.
 	blocklistFile="${tmpWorkDir:?}/block.list"
-	:> "${blocklistFile:?}"
+	true > "${blocklistFile:?}"
 
 	# If the sources file is not empty, each source is downloaded and appended to the blocklist file.
 	if [ -s "${sourcesFile:?}" ]; then

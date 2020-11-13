@@ -94,7 +94,7 @@ main() {
 				printf -- '%s\t%s\n' "${count:?}" "${suffix:?}" >> "${domainsFileTmp:?}.stats"
 				{ grep -v -- "${suffix:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.aux" \
 					&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}";
-				} || { :> "${domainsFileTmp:?}"; }
+				} || { true > "${domainsFileTmp:?}"; }
 			fi
 		done < "${domainsFileTmp:?}.suffixes"
 
