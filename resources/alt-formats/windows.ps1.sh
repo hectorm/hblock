@@ -31,8 +31,8 @@ main() {
 		Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\services\Dnscache' -Name 'Start' -Value 4
 		Get-WmiObject Win32_Service | Where { $_.name -eq 'Dnscache' -and $_.processID -ne 0 } | ForEach-Object { Stop-Process $_.processID -Force }
 
-		# Remove the read-only attribute from the hosts file.
-		$hostsItem.Attributes -= "ReadOnly"
+		# Set the "Normal" attribute to the hosts file.
+		$hostsItem.Attributes = "Normal"
 
 		@'
 		# BEGIN HEADER
@@ -55,8 +55,8 @@ main() {
 		# END BLOCKLIST
 		'@ | Set-Content "$hosts"
 
-		# Add the read-only attribute to the hosts file.
-		$hostsItem.Attributes += "ReadOnly"
+		# Set the "ReadOnly" attribute to the hosts file.
+		$hostsItem.Attributes = "ReadOnly"
 	EOF
 	)"
 	export HBLOCK_SOURCES="file://${source:?}"
