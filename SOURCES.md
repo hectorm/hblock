@@ -22,7 +22,6 @@
 | hostsVN                                 | MIT                                                               | [Link][homepage-hostsvn]                              | [Link][source-hostsvn]                            | [Link][mirror-hostsvn]                            |
 | KADhosts                                | CC-BY-SA-4.0                                                      | [Link][homepage-kadhosts]                             | [Link][source-kadhosts]                           | [Link][mirror-kadhosts]                           |
 | lightswitch05 - Ads & Tracking          | Apache-2.0                                                        | [Link][homepage-lightswitch05-ads-and-tracking]       | [Link][source-lightswitch05-ads-and-tracking]     | [Link][mirror-lightswitch05-ads-and-tracking]     |
-| malwaredomainlist.com                   | ["can be used for free by anyone"][license-malwaredomainlist.com] | [Link][homepage-malwaredomainlist.com]                | [Link][source-malwaredomainlist.com]              | [Link][mirror-malwaredomainlist.com]              |
 | malwaredomains.com - Immortal domains   | ["non-commercial"][license-malwaredomains.com-immortaldomains]    | [Link][homepage-malwaredomains.com-immortaldomains]   | [Link][source-malwaredomains.com-immortaldomains] | [Link][mirror-malwaredomains.com-immortaldomains] |
 | malwaredomains.com - Just domains       | ["non-commercial"][license-malwaredomains.com-justdomains]        | [Link][homepage-malwaredomains.com-justdomains]       | [Link][source-malwaredomains.com-justdomains]     | [Link][mirror-malwaredomains.com-justdomains]     |
 | matomo.org - Spammers                   | [Public domain][license-matomo.org-spammers]                      | [Link][homepage-matomo.org-spammers]                  | [Link][source-matomo.org-spammers]                | [Link][mirror-matomo.org-spammers]                |
@@ -120,11 +119,6 @@
 [homepage-lightswitch05-ads-and-tracking]: https://www.github.developerdan.com/hosts/
 [source-lightswitch05-ads-and-tracking]: https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt
 [mirror-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
-
-[homepage-malwaredomainlist.com]: https://www.malwaredomainlist.com
-[license-malwaredomainlist.com]: https://www.malwaredomainlist.com
-[source-malwaredomainlist.com]: https://www.malwaredomainlist.com/hostslist/hosts.txt
-[mirror-malwaredomainlist.com]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomainlist.com/list.txt
 
 [homepage-malwaredomains.com-immortaldomains]: https://www.malwaredomains.com
 [license-malwaredomains.com-immortaldomains]: http://www.malwaredomains.com/?page_id=1508
