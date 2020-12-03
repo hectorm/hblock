@@ -503,13 +503,14 @@ main() {
 		# Read the sources file ignoring lines that start with "#" or are empty.
 		sed -e '/^#/d;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
 			printList "${url:?}"
-			if ! fetchUrl "${url:?}" >> "${blocklistFile:?}"; then
-				if [ "${continue:?}" = 'true' ]; then
-					printWarn "Cannot obtain source: ${url:?}"
-				else
-					printError "Cannot obtain source: ${url:?}"
-					exit 1
-				fi
+			if fetchUrl "${url:?}" > "${blocklistFile:?}.aux"; then
+				cat -- "${blocklistFile:?}.aux" >> "${blocklistFile:?}" \
+					&& rm -f -- "${blocklistFile:?}.aux"
+			elif [ "${continue:?}" = 'true' ]; then
+				printWarn "Cannot obtain source: ${url:?}"
+			else
+				printError "Cannot obtain source: ${url:?}"
+				exit 1
 			fi
 		done
 	fi
