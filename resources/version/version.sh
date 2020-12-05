@@ -37,7 +37,7 @@ sha256Checksum() {
 # Calculate the SHA256 checksum for all files in a directory.
 sha256ChecksumRecursive() {
 	for p in "${1:?}"/*; do
-		if [ -d "${p:?}" ] && [ ! -L "${p:?}" ] && [ -n "${p##*.git*}" ]; then
+		if [ -d "${p:?}" ] && [ ! -L "${p:?}" ] && [ "${p:?}" != './.git' ] && [ "${p:?}" != './dist' ]; then
 			sha256ChecksumRecursive "${p:?}"
 		elif [ -f "${p:?}" ] && [ -n "${p##*SHA256SUMS*}" ]; then
 			sha256Checksum < "${p:?}" | awk -v p="${p:?}" '{printf("%s  %s\n",$1,p)}'
