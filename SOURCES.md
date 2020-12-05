@@ -7,10 +7,6 @@
 | AdGuard - Simplified                    | GPL-3.0-only                                                      | [Link][homepage-adguard-simplified]                   | [Link][source-adguard-simplified]                 | [Link][mirror-adguard-simplified]                 |
 | AntiPopads                              | WTFPL                                                             | [Link][homepage-antipopads]                           | [Link][source-antipopads]                         | [Link][mirror-antipopads]                         |
 | DigitalSide Threat-Intel                | MIT                                                               | [Link][homepage-digitalside-threat-intel]             | [Link][source-digitalside-threat-intel]           | [Link][mirror-digitalside-threat-intel]           |
-| disconnect.me - Ad                      | GPL-3.0-only                                                      | [Link][homepage-disconnect.me-ad]                     | [Link][source-disconnect.me-ad]                   | [Link][mirror-disconnect.me-ad]                   |
-| disconnect.me - Malvertising            | GPL-3.0-only                                                      | [Link][homepage-disconnect.me-malvertising]           | [Link][source-disconnect.me-malvertising]         | [Link][mirror-disconnect.me-malvertising]         |
-| disconnect.me - Malware                 | GPL-3.0-only                                                      | [Link][homepage-disconnect.me-malware]                | [Link][source-disconnect.me-malware]              | [Link][mirror-disconnect.me-malware]              |
-| disconnect.me - Tracking                | GPL-3.0-only                                                      | [Link][homepage-disconnect.me-tracking]               | [Link][source-disconnect.me-tracking]             | [Link][mirror-disconnect.me-tracking]             |
 | EasyList                                | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist]                             | [Link][source-easylist]                           | [Link][mirror-easylist]                           |
 | EasyPrivacy                             | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easyprivacy]                          | [Link][source-easyprivacy]                        | [Link][mirror-easyprivacy]                        |
 | ETH Phishing Detect                     | [DBAD][license-eth-phishing-detect]                               | [Link][homepage-eth-phishing-detect]                  | [Link][source-eth-phishing-detect]                | [Link][mirror-eth-phishing-detect]                |
@@ -58,22 +54,6 @@
 [homepage-digitalside-threat-intel]: https://osint.digitalside.it
 [source-digitalside-threat-intel]: https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt
 [mirror-digitalside-threat-intel]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
-
-[homepage-disconnect.me-ad]: https://disconnect.me
-[source-disconnect.me-ad]: https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-[mirror-disconnect.me-ad]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-ad/list.txt
-
-[homepage-disconnect.me-malvertising]: https://disconnect.me
-[source-disconnect.me-malvertising]: https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
-[mirror-disconnect.me-malvertising]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malvertising/list.txt
-
-[homepage-disconnect.me-malware]: https://disconnect.me
-[source-disconnect.me-malware]: https://s3.amazonaws.com/lists.disconnect.me/simple_malware.txt
-[mirror-disconnect.me-malware]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-malware/list.txt
-
-[homepage-disconnect.me-tracking]: https://disconnect.me
-[source-disconnect.me-tracking]: https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
-[mirror-disconnect.me-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/disconnect.me-tracking/list.txt
 
 [homepage-easylist]: https://easylist.to
 [source-easylist]: https://easylist.to/easylist/easylist.txt
