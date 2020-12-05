@@ -18,8 +18,6 @@
 | hostsVN                                 | MIT                                                               | [Link][homepage-hostsvn]                              | [Link][source-hostsvn]                            | [Link][mirror-hostsvn]                            |
 | KADhosts                                | CC-BY-SA-4.0                                                      | [Link][homepage-kadhosts]                             | [Link][source-kadhosts]                           | [Link][mirror-kadhosts]                           |
 | lightswitch05 - Ads & Tracking          | Apache-2.0                                                        | [Link][homepage-lightswitch05-ads-and-tracking]       | [Link][source-lightswitch05-ads-and-tracking]     | [Link][mirror-lightswitch05-ads-and-tracking]     |
-| malwaredomains.com - Immortal domains   | ["non-commercial"][license-malwaredomains.com-immortaldomains]    | [Link][homepage-malwaredomains.com-immortaldomains]   | [Link][source-malwaredomains.com-immortaldomains] | [Link][mirror-malwaredomains.com-immortaldomains] |
-| malwaredomains.com - Just domains       | ["non-commercial"][license-malwaredomains.com-justdomains]        | [Link][homepage-malwaredomains.com-justdomains]       | [Link][source-malwaredomains.com-justdomains]     | [Link][mirror-malwaredomains.com-justdomains]     |
 | matomo.org - Spammers                   | [Public domain][license-matomo.org-spammers]                      | [Link][homepage-matomo.org-spammers]                  | [Link][source-matomo.org-spammers]                | [Link][mirror-matomo.org-spammers]                |
 | mitchellkrogza - Badd-Boyz-Hosts        | MIT                                                               | [Link][homepage-mitchellkrogza-badd-boyz-hosts]       | [Link][source-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-mitchellkrogza-badd-boyz-hosts]     |
 | pgl.yoyo.org                            | [MCRAE][license-pgl.yoyo.org]                                     | [Link][homepage-pgl.yoyo.org]                         | [Link][source-pgl.yoyo.org]                       | [Link][mirror-pgl.yoyo.org]                       |
@@ -99,16 +97,6 @@
 [homepage-lightswitch05-ads-and-tracking]: https://www.github.developerdan.com/hosts/
 [source-lightswitch05-ads-and-tracking]: https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt
 [mirror-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
-
-[homepage-malwaredomains.com-immortaldomains]: https://www.malwaredomains.com
-[license-malwaredomains.com-immortaldomains]: http://www.malwaredomains.com/?page_id=1508
-[source-malwaredomains.com-immortaldomains]: https://mirror1.malwaredomains.com/files/immortal_domains.txt
-[mirror-malwaredomains.com-immortaldomains]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-immortaldomains/list.txt
-
-[homepage-malwaredomains.com-justdomains]: https://www.malwaredomains.com
-[license-malwaredomains.com-justdomains]: http://www.malwaredomains.com/?page_id=1508
-[source-malwaredomains.com-justdomains]: https://mirror1.malwaredomains.com/files/justdomains
-[mirror-malwaredomains.com-justdomains]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/malwaredomains.com-justdomains/list.txt
 
 [homepage-matomo.org-spammers]: https://github.com/matomo-org/referrer-spam-list
 [license-matomo.org-spammers]: https://github.com/matomo-org/referrer-spam-list#license
