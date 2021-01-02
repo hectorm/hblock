@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright © 2020 Héctor Molinero Fernández
+Copyright © 2021 Héctor Molinero Fernández
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
