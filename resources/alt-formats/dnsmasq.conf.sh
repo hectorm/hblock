@@ -18,9 +18,9 @@ main() {
 	export HBLOCK_ALLOWLIST=''
 	export HBLOCK_DENYLIST='hblock-check.molinero.dev'
 
-	export HBLOCK_REDIRECTION='0.0.0.0'
+	export HBLOCK_REDIRECTION=''
 	export HBLOCK_WRAP='1'
-	export HBLOCK_TEMPLATE='address=/%D/%R'
+	export HBLOCK_TEMPLATE='address=/%D/'
 	export HBLOCK_COMMENT='#'
 
 	export HBLOCK_LENIENT='false'
