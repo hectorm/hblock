@@ -13,7 +13,8 @@ main() {
 	hblock="${3:-hblock}"
 
 	mkdir -p -- "${target:?}.tmp"
-	trap 'rm -rf -- "${target:?}.tmp"; trap - EXIT; exit 0' EXIT TERM INT HUP
+	# shellcheck disable=SC2154
+	trap 'ret=$?; rm -rf -- "${target:?}.tmp"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
 	# shellcheck disable=SC2155
 	export HBLOCK_HEADER="$(cat <<-'EOF'

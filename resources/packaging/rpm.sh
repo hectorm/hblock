@@ -15,8 +15,8 @@ main() {
 	assetsDir="${SCRIPT_DIR:?}/rpm/"
 	buildDir="$(mktemp -d)"
 
-	# Create a trap to ensure that the build directory is removed.
-	trap 'rm -rf -- "${buildDir:?}"; trap - EXIT; exit 0' EXIT TERM INT HUP
+	# shellcheck disable=SC2154
+	trap 'ret=$?; rm -rf -- "${buildDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
 	# Copy the assets directory to the build directory.
 	rsync -a -- "${assetsDir:?}"/ "${buildDir:?}"/
