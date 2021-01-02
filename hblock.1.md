@@ -1,23 +1,19 @@
-NAME
-====
+# NAME
 
-hBlock - manual page for hBlock 3.1.1
+hBlock - manual page for hBlock 3.1.2
 
-SYNOPSIS
-========
+# SYNOPSIS
 
 **hblock** \[*OPTION*\]...
 
-DESCRIPTION
-===========
+# DESCRIPTION
 
 hBlock is a POSIX-compliant shell script that gets a list of domains
 that serve ads, tracking scripts and malware from multiple sources and
 creates a hosts file, among other formats, that prevents your system
 from connecting to them.
 
-OPTIONS
-=======
+# OPTIONS
 
 **-O**, **--output** &lt;FILE\|-&gt;, ${HBLOCK\_OUTPUT\_FILE}
 
@@ -192,8 +188,7 @@ ${HBLOCK\_DENYLIST\_FILE}
 
 > Show this help and quit.
 
-REPORTING BUGS
-==============
+# REPORTING BUGS
 
 Report bugs to: &lt;https://github.com/hectorm/hblock/issues&gt;
 
