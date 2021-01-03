@@ -4,4 +4,4 @@
 	dh $@ --with=systemd
 
 override_dh_auto_install:
-	'$(MAKE)' DESTDIR="$$(pwd)/debian/hblock" prefix="/usr" install
+	'$(MAKE)' DESTDIR="$$(pwd)/debian/hblock" prefix="/usr" SKIP_INSTALL_SERVICE=1 install
