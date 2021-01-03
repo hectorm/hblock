@@ -21,7 +21,7 @@ jobs:
       - name: 'Install packages'
         run: 'apt-get install -y ca-certificates curl file idn2 make'
       - name: 'Install packages (2nd stage)'
-        run: 'apt-get install -y build-essential debhelper dh-systemd dpkg-dev m4 rsync'
+        run: 'apt-get install -y build-essential debhelper dpkg-dev m4 rsync'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Package project'

@@ -306,7 +306,7 @@ package-deb:
   before_script:
     - 'apt-get update'
     - 'apt-get install -y ca-certificates curl file idn2 make'
-    - 'apt-get install -y build-essential debhelper dh-systemd dpkg-dev m4 rsync'
+    - 'apt-get install -y build-essential debhelper dpkg-dev m4 rsync'
   script:
     - 'make package-deb'
     - 'mv ./dist/ ./dist-package-deb/'
