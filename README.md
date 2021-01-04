@@ -36,7 +36,7 @@ The latest available version can also be installed manually by running the follo
 curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v3.1.2/hblock' \
   && echo '0f5a0f6219a346be5551760e6ec5245c56cae146c5fb05fdc752819e0e93b42f  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
-  && sudo chown root:root /usr/local/bin/hblock \
+  && sudo chown 0:0 /usr/local/bin/hblock \
   && sudo chmod 755 /usr/local/bin/hblock
 ```
 

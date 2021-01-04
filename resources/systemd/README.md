@@ -8,7 +8,7 @@ curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/hectorm/hblock/v3.1.
   && echo '08b736382cb9dfd39df1207a3e90b068f5325a41dc8254d83fde5d4540ba8b5b  /tmp/hblock.service' | shasum -c \
   && echo '87a7ba5067d4c565aca96659b0dce230471a6ba35fbce1d3e9d02b264da4dc38  /tmp/hblock.timer' | shasum -c \
   && sudo mv /tmp/hblock.{service,timer} /etc/systemd/system/ \
-  && sudo chown root:root /etc/systemd/system/hblock.{service,timer} \
+  && sudo chown 0:0 /etc/systemd/system/hblock.{service,timer} \
   && sudo chmod 644 /etc/systemd/system/hblock.{service,timer} \
   && sudo systemctl daemon-reload \
   && sudo systemctl enable hblock.timer \
