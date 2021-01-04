@@ -63,7 +63,7 @@ main() {
 	# Create a temporary work directory.
 	tmpWorkDir="$(createTempDir)"
 	# shellcheck disable=SC2154
-	trap 'ret=$?; rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+	trap 'ret="$?"; rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
 	# Copy domains file.
 	domainsFileTmp="${tmpWorkDir:?}/domains.list"

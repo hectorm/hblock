@@ -16,7 +16,7 @@ main() {
 	buildDir="$(mktemp -d)"
 
 	# shellcheck disable=SC2154
-	trap 'ret=$?; rm -rf -- "${buildDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+	trap 'ret="$?"; rm -rf -- "${buildDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
 	# Copy the assets directory to the build directory.
 	rsync -a -- "${assetsDir:?}"/ "${buildDir:?}"/
