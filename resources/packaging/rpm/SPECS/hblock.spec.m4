@@ -5,7 +5,7 @@ m4_changequote([[, ]])m4_dnl
 Name: %{name}
 Version: %{version}
 Release: 1
-Summary: An adblocker that creates a hosts file from automatically downloaded sources
+Summary: Adblocker that creates a hosts file from multiple sources
 
 License: MIT
 URL: https://github.com/hectorm/hblock

@@ -2,7 +2,7 @@ m4_changequote([[, ]])m4_dnl
 {
   "name": "hblock",
   "version": "m4_esyscmd(printf -- '%s' "${PKG_VERSION?}")",
-  "description": "An adblocker that creates a hosts file from automatically downloaded sources",
+  "description": "Adblocker that creates a hosts file from multiple sources",
   "keywords": [
     "ad-block",
     "ad-blocker",

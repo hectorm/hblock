@@ -2,7 +2,7 @@
 pkgname='hblock'
 pkgver='m4_esyscmd(printf -- '%s' "${PKG_VERSION?}")'
 pkgrel='1'
-pkgdesc='An adblocker that creates a hosts file from automatically downloaded sources'
+pkgdesc='Adblocker that creates a hosts file from multiple sources'
 arch=('any')
 url='https://github.com/hectorm/hblock'
 license=('MIT')
