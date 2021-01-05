@@ -6,6 +6,22 @@ A package for Arch Linux users is [available in the Arch User Repository (AUR)](
 
 Use your favorite [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers) to perform the installation.
 
+### DragonFlyBSD
+
+A package for DragonFlyBSD users is [available in DPorts](https://github.com/DragonFlyBSD/DPorts/tree/master/net/hblock/).
+
+```sh
+pkg install hblock
+```
+
+### FreeBSD
+
+A package for FreeBSD users is [available in FreshPorts](https://www.freshports.org/net/hblock/).
+
+```sh
+pkg install hblock
+```
+
 ### Gentoo
 
 A package for Gentoo users is [available in the `src_prepare` overlay](https://gitlab.com/src_prepare/src_prepare-overlay/-/tree/master/net-firewall/hblock/).
@@ -18,28 +34,20 @@ A package for Gentoo users is [available in the `src_prepare` overlay](https://g
    emerge --verbose net-firewall/hblock
    ```
 
-### FreeBSD
-
-A package for FreeBSD users is [available in FreshPorts](https://www.freshports.org/net/hblock/).
-
-```sh
-pkg install hblock
-```
-
-### DragonFlyBSD
-
-A package for DragonFlyBSD users is [available in DPorts](https://github.com/DragonFlyBSD/DPorts/tree/master/net/hblock/).
-
-```sh
-pkg install hblock
-```
-
 ### Haiku OS
 
 A package for Haiku OS users is [available in HaikuPorts](https://github.com/haikuports/haikuports/tree/master/net-firewall/hblock).
 
 ```sh
 pkgman install hblock
+```
+
+### macOS
+
+A package for macOS users is [available in Homebrew](https://formulae.brew.sh/formula/hblock).
+
+```sh
+brew install hblock
 ```
 
 ### Node.js
