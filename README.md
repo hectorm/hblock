@@ -52,3 +52,13 @@ full list.
 ## Nightly builds
 
 Nightly builds of the hosts file, among other formats, can be found [on the hBlock website](https://hblock.molinero.dev).
+
+## I found a false positive, what should I do?
+
+It's possible that sometimes one of the hBlock sources includes a domain that shouldn't be blocked, in those cases the best way to proceed is to
+temporarily add said domain to the allowlist and report the problem to the original blocklist author. This way it will also be automatically
+removed from hBlock within 24h.
+
+To find which blocklist is behind a false positive you can clone the [hMirror project](https://github.com/hectorm/hmirror) and search for that domain.
+Although please note that not all hMirror blocklists are used by default in hBlock, an updated list of the sources used can be found in the
+[SOURCES.md](./SOURCES.md) file.
