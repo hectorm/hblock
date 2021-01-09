@@ -34,17 +34,6 @@ sha256Checksum() {
 	else exit 1; fi
 }
 
-# Calculate the SHA256 checksum for all files in a directory.
-sha256ChecksumRecursive() {
-	for p in "${1:?}"/*; do
-		if [ -d "${p:?}" ] && [ ! -L "${p:?}" ] && [ "${p:?}" != './.git' ] && [ "${p:?}" != './dist' ]; then
-			sha256ChecksumRecursive "${p:?}"
-		elif [ -f "${p:?}" ] && [ -n "${p##*SHA256SUMS*}" ]; then
-			sha256Checksum < "${p:?}" | awk -v p="${p:?}" '{printf("%s  %s\n",$1,p)}'
-		fi
-	done
-}
-
 # Get hBlock version.
 getVersion() {
 	"${PROJECT_DIR:?}"/hblock -v | awk 'NR==1{print($2)}'
@@ -82,8 +71,8 @@ setVersion() {
 	rm -f "${PROJECT_DIR:?}"/hblock.1 "${PROJECT_DIR:?}"/hblock.1.md
 	make -C "${PROJECT_DIR:?}" man
 
-	# Recalculate checksums.
-	(cd "${PROJECT_DIR:?}" && sha256ChecksumRecursive . > ./SHA256SUMS)
+	# Regenerate checksum file.
+	printf -- '%s  %s\n' "${hblockScriptChecksum:?}" 'hblock' > "${PROJECT_DIR:?}"/hblock.sha256
 }
 
 if [ "${1:?}" = 'get' ]; then
