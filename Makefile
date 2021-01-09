@@ -102,12 +102,16 @@ lint:
 	find ./ -type f '(' -name 'hblock' -or -name '*.sh' ')' | xargs $(SHELLCHECK)
 
 ##################################################
-## "test" target
+## "test-*" targets
 ##################################################
-.PHONY: test
+.PHONY: test test-all test-main test-stats
 
-test:
-	find ./resources/tests/ -type f -name 'test-*.sh' | sort -n | xargs -n1 env -i \
+test: test-main
+
+test-all: test-main test-stats
+
+test-main test-stats:
+	find ./resources/tests/ -type f -name '$@-*.sh' | sort -n | xargs -n1 env -i \
 		PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' \
 		TEST_SHELL='$(TEST_SHELL)'
 

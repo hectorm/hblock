@@ -26,7 +26,7 @@ test-debian-latest:
     - 'apt-get update'
     - 'apt-get install -y ca-certificates curl file idn2 make'
   script:
-    - 'make test'
+    - 'make test-all'
 
 test-ubuntu-latest:
   stage: 'test'
@@ -37,7 +37,7 @@ test-ubuntu-latest:
     - 'apt-get update'
     - 'apt-get install -y ca-certificates curl file idn2 make'
   script:
-    - 'make test'
+    - 'make test-all'
 
 test-fedora-latest:
   stage: 'test'
@@ -47,7 +47,7 @@ test-fedora-latest:
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
-    - 'make test'
+    - 'make test-all'
 
 test-centos-latest:
   stage: 'test'
@@ -57,7 +57,7 @@ test-centos-latest:
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
-    - 'make test'
+    - 'make test-all'
 
 test-opensuse-latest:
   stage: 'test'
@@ -67,7 +67,7 @@ test-opensuse-latest:
   before_script:
     - 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
   script:
-    - 'make test'
+    - 'make test-all'
 
 test-archlinux-latest:
   stage: 'test'
@@ -77,7 +77,7 @@ test-archlinux-latest:
   before_script:
     - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
   script:
-    - 'make test'
+    - 'make test-all'
 
 test-alpine-edge-bash:
   stage: 'test'
@@ -89,7 +89,7 @@ test-alpine-edge-bash:
     - 'apk add --no-cache bash'
     - 'apk info --no-cache bash'
   script:
-    - 'make test TEST_SHELL="$(command -v bash)"'
+    - 'make test-all TEST_SHELL="$(command -v bash)"'
 
 test-alpine-edge-zsh:
   stage: 'test'
@@ -101,7 +101,7 @@ test-alpine-edge-zsh:
     - 'apk add --no-cache zsh'
     - 'apk info --no-cache zsh'
   script:
-    - 'make test TEST_SHELL="$(command -v zsh)"'
+    - 'make test-all TEST_SHELL="$(command -v zsh)"'
 
 test-alpine-edge-dash:
   stage: 'test'
@@ -113,7 +113,7 @@ test-alpine-edge-dash:
     - 'apk add --no-cache dash'
     - 'apk info --no-cache dash'
   script:
-    - 'make test TEST_SHELL="$(command -v dash)"'
+    - 'make test-all TEST_SHELL="$(command -v dash)"'
 
 test-alpine-edge-mksh:
   stage: 'test'
@@ -125,7 +125,7 @@ test-alpine-edge-mksh:
     - 'apk add --no-cache mksh'
     - 'apk info --no-cache mksh'
   script:
-    - 'make test TEST_SHELL="$(command -v mksh)"'
+    - 'make test-all TEST_SHELL="$(command -v mksh)"'
 
 test-alpine-edge-oksh:
   stage: 'test'
@@ -137,7 +137,7 @@ test-alpine-edge-oksh:
     - 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing oksh'
     - 'apk info --no-cache oksh'
   script:
-    - 'make test TEST_SHELL="$(command -v oksh)"'
+    - 'make test-all TEST_SHELL="$(command -v oksh)"'
 
 test-alpine-edge-yash:
   stage: 'test'
@@ -149,7 +149,7 @@ test-alpine-edge-yash:
     - 'apk add --no-cache yash'
     - 'apk info --no-cache yash'
   script:
-    - 'make test TEST_SHELL="$(command -v yash)"'
+    - 'make test-all TEST_SHELL="$(command -v yash)"'
 
 test-alpine-edge-busybox-ash:
   stage: 'test'
@@ -161,7 +161,7 @@ test-alpine-edge-busybox-ash:
     - 'apk add --no-cache busybox'
     - 'apk info --no-cache busybox'
   script:
-    - 'make test TEST_SHELL="$(command -v busybox) ash"'
+    - 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
 test-openwrt-latest-busybox-ash:
   stage: 'test'
@@ -174,7 +174,7 @@ test-openwrt-latest-busybox-ash:
     - 'opkg install busybox'
     - 'opkg info busybox'
   script:
-    - 'make test TEST_SHELL="$(command -v busybox) ash"'
+    - 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
 build-debian-latest:
   stage: 'build'

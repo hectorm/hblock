@@ -22,7 +22,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test'
+        run: 'make test-all'
 
   test-ubuntu-latest:
     name: 'Test on Ubuntu'
@@ -36,7 +36,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test'
+        run: 'make test-all'
 
   test-fedora-latest:
     name: 'Test on Fedora'
@@ -48,7 +48,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test'
+        run: 'make test-all'
 
   test-centos-latest:
     name: 'Test on CentOS'
@@ -60,7 +60,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test'
+        run: 'make test-all'
 
   test-opensuse-latest:
     name: 'Test on openSUSE'
@@ -72,7 +72,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test'
+        run: 'make test-all'
 
   test-archlinux-latest:
     name: 'Test on Arch Linux'
@@ -84,7 +84,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test'
+        run: 'make test-all'
 
   test-alpine-edge-bash:
     name: 'Test on Alpine Edge bash'
@@ -100,7 +100,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v bash)"'
+        run: 'make test-all TEST_SHELL="$(command -v bash)"'
 
   test-alpine-edge-zsh:
     name: 'Test on Alpine Edge zsh'
@@ -116,7 +116,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v zsh)"'
+        run: 'make test-all TEST_SHELL="$(command -v zsh)"'
 
   test-alpine-edge-dash:
     name: 'Test on Alpine Edge dash'
@@ -132,7 +132,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v dash)"'
+        run: 'make test-all TEST_SHELL="$(command -v dash)"'
 
   test-alpine-edge-mksh:
     name: 'Test on Alpine Edge mksh'
@@ -148,7 +148,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v mksh)"'
+        run: 'make test-all TEST_SHELL="$(command -v mksh)"'
 
   test-alpine-edge-oksh:
     name: 'Test on Alpine Edge oksh'
@@ -164,7 +164,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v oksh)"'
+        run: 'make test-all TEST_SHELL="$(command -v oksh)"'
 
   test-alpine-edge-yash:
     name: 'Test on Alpine Edge yash'
@@ -180,7 +180,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v yash)"'
+        run: 'make test-all TEST_SHELL="$(command -v yash)"'
 
   test-alpine-edge-busybox-ash:
     name: 'Test on Alpine Edge BusyBox ash'
@@ -196,7 +196,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v busybox) ash"'
+        run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
   test-openwrt-latest-busybox-ash:
     name: 'Test on OpenWrt BusyBox ash'
@@ -216,7 +216,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Build project'
-        run: 'make test TEST_SHELL="$(command -v busybox) ash"'
+        run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
   test-macos-latest-bash:
     name: 'Test on macOS bash'
@@ -227,7 +227,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v bash)"'
+        run: 'make test-all TEST_SHELL="$(command -v bash)"'
 
   test-macos-latest-zsh:
     name: 'Test on macOS zsh'
@@ -238,7 +238,7 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v zsh)"'
+        run: 'make test-all TEST_SHELL="$(command -v zsh)"'
 
   test-macos-latest-dash:
     name: 'Test on macOS dash'
@@ -249,4 +249,4 @@ jobs:
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
-        run: 'make test TEST_SHELL="$(command -v dash)"'
+        run: 'make test-all TEST_SHELL="$(command -v dash)"'

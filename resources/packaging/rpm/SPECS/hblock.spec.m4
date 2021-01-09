@@ -13,7 +13,6 @@ Source0: %{name}-%{version}.tar.gz
 
 BuildArch: noarch
 BuildRequires: make
-BuildRequires: idn2
 BuildRequires: systemd
 Requires: (curl or wget)
 

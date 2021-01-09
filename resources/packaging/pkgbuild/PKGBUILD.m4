@@ -7,7 +7,6 @@ arch=('any')
 url='https://github.com/hectorm/hblock'
 license=('MIT')
 depends=('curl')
-checkdepends=('libidn2')
 source=("${pkgname:?}-${pkgver:?}.tar.gz")
 sha256sums=('SKIP')
 

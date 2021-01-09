@@ -8,7 +8,6 @@ arch='noarch'
 license='MIT'
 depends='curl'
 makedepends='make'
-checkdepends='libidn2'
 subpackages="${pkgname:?}-doc"
 source="${pkgname:?}-${pkgver:?}.tar.gz"
 
