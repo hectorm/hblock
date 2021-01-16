@@ -53,6 +53,15 @@ full list.
 
 Nightly builds of the hosts file, among other formats, can be found [on the hBlock website](https://hblock.molinero.dev).
 
+## Temporarily disable hBlock
+
+Sometimes you may need to temporarily disable hBlock, a quick option is to generate a hosts file without any blocked domains by running the following
+command:
+
+```sh
+hblock -S none -D none
+```
+
 ## I found a false positive, what should I do?
 
 It's possible that sometimes one of the hBlock sources includes a domain that shouldn't be blocked, in those cases the best way to proceed is to
