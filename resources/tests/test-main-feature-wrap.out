@@ -1,5 +1,5 @@
 # Generated with:  https://github.com/hectorm/hblock
-# Blocked domains: 17
+# Blocked domains: 26
 
 # BEGIN HEADER
 127.0.0.1       localhost hblock
@@ -17,5 +17,7 @@ ff02::3         ip6-allhosts
 0.0.0.0 entry-with-comment-000.com entry-with-comment-001.com entry-with-comment-002.com entry-with-comment-003.com entry-with-comment-004.com
 0.0.0.0 entry-with-prefix-000.com entry-with-prefix-001.com entry-with-prefix-002.com entry-with-prefix-003.com entry-with-prefix-004.com
 0.0.0.0 entry-with-prefix-005.com entry-with-prefix-006.com hblock-check.molinero.dev single-entry-000.com single-entry-001.com
-0.0.0.0 single-entry-002.com single-entry-003.com 
+0.0.0.0 single-entry-002.com single-entry-003.com single-entry-017.com sub-000.single-entry-017.com sub-000.single-entry-018.com
+0.0.0.0 sub-000.sub-000.single-entry-017.com sub-000.sub-000.single-entry-018.com sub-000.sub-000.sub-000.single-entry-017.com sub-000.sub-000.sub-000.single-entry-019.com sub-001.single-entry-017.com
+0.0.0.0 sub-001.single-entry-018.com 
 # END BLOCKLIST

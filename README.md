@@ -34,7 +34,7 @@ The latest available version can also be installed manually by running the follo
 
 ```sh
 curl -o /tmp/hblock 'https://raw.githubusercontent.com/hectorm/hblock/v3.1.3/hblock' \
-  && echo '95dc0cd1c38ad97c1f929a7d18587a07b184b9357aad35d2c4d509ae0efb038b  /tmp/hblock' | shasum -c \
+  && echo '7e074fdbffd22fd7ad69aa21246840ef091089cfe62b37cb14de6fe8c700bda3  /tmp/hblock' | shasum -c \
   && sudo mv /tmp/hblock /usr/local/bin/hblock \
   && sudo chown 0:0 /usr/local/bin/hblock \
   && sudo chmod 755 /usr/local/bin/hblock

@@ -162,6 +162,14 @@ ${HBLOCK\_DENYLIST\_FILE}
 >
 > (default: false)
 
+**-f**, **--\[no-\]filter-subdomains**, ${HBLOCK\_FILTER\_SUBDOMAINS}
+
+> Do not include subdomains when the parent domain is also blocked.
+> Useful for reducing the blocklist size in cases such as when DNS
+> blocking makes these subdomains redundant.
+>
+> (default: false)
+
 **-c**, **--\[no-\]continue**, ${HBLOCK\_CONTINUE}
 
 > Do not abort if a download error occurs.

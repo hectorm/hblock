@@ -14,7 +14,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 
 main() {
 	printf -- 'Test - Stats: TLDs\n'
-	actual="$(runInTestShell "${SCRIPT_DIR:?}/../stats/stats.sh" "${SCRIPT_DIR:?}/domains.txt" no-psl)"
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../stats/stats.sh" "${SCRIPT_DIR:?}/test-domains-stats.txt" no-psl)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1

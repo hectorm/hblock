@@ -96,6 +96,7 @@ optParse() {
 			'-C'*|'--comment') optArgStr "${@-}"; comment="${optArg?}"; shift "${optShift:?}" ;;
 			'-l' |'--lenient'|'--no-lenient') optArgBool "${@-}"; lenient="${optArg:?}" ;;
 			'-r' |'--regex'|'--no-regex') optArgBool "${@-}"; regex="${optArg:?}" ;;
+			'-f' |'--filter-subdomains'|'--no-filter-subdomains') optArgBool "${@-}"; filterSubdomains="${optArg:?}" ;;
 			'-c' |'--continue'|'--no-continue') optArgBool "${@-}"; continue="${optArg:?}" ;;
 			'-q' |'--quiet'|'--no-quiet') optArgBool "${@-}"; quiet="${optArg:?}" ;;
 			'-x'*|'--color') optArgStr "${@-}"; color="${optArg?}"; shift "${optShift:?}" ;;
@@ -215,6 +216,11 @@ showHelp() {
 		 -r, --[no-]regex, \${HBLOCK_REGEX}%NL
 		    Use POSIX BREs in the allowlist instead of fixed strings.%NL
 		    (default: ${regex?})%NL
+		 -f, --[no-]filter-subdomains, \${HBLOCK_FILTER_SUBDOMAINS}%NL
+		    Do not include subdomains when the parent domain is also blocked.
+		    Useful for reducing the blocklist size in cases such as when DNS blocking
+		    makes these subdomains redundant.%NL
+		    (default: ${filterSubdomains?})%NL
 		 -c, --[no-]continue, \${HBLOCK_CONTINUE}%NL
 		    Do not abort if a download error occurs.%NL
 		    (default: ${continue?})%NL
@@ -400,6 +406,9 @@ main() {
 	# Use POSIX BREs instead of fixed strings.
 	regex="${HBLOCK_REGEX-"false"}"
 
+	# Do not include subdomains when the parent domain is also blocked.
+	filterSubdomains="${HBLOCK_FILTER_SUBDOMAINS-"false"}"
+
 	# Abort if a download error occurs.
 	continue="${HBLOCK_CONTINUE-"false"}"
 
@@ -577,6 +586,32 @@ main() {
 		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
 			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+
+		if [ "${filterSubdomains:?}" = 'true' ]; then
+			printList 'Removing redundant subdomains'
+			awkReverseScript="$(cat <<-'EOF'
+				BEGIN { FS = "." }
+				{
+					for (i = NF; i > 0; i--) {
+						printf("%s%s", $i, (i > 1 ? FS : RS))
+					}
+				}
+			EOF
+			)"
+			awkFilterScript="$(cat <<-'EOF'
+				BEGIN { p = "." }
+				{
+					if (index($0, p) != 1) {
+						print($0); p = $0"."
+					}
+				}
+			EOF
+			)"
+			awk "${awkReverseScript:?}" < "${blocklistFile:?}" \
+				| sort | awk "${awkFilterScript:?}" \
+				| awk "${awkReverseScript:?}" > "${blocklistFile:?}.aux" \
+				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+		fi
 
 		printList 'Sorting entries'
 		sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux" \

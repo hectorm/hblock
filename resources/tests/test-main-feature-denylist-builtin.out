@@ -1,5 +1,5 @@
 # Generated with:  https://github.com/hectorm/hblock
-# Blocked domains: 17
+# Blocked domains: 26
 
 # BEGIN HEADER
 127.0.0.1       localhost hblock
@@ -31,4 +31,13 @@ ff02::3         ip6-allhosts
 0.0.0.0 single-entry-001.com
 0.0.0.0 single-entry-002.com
 0.0.0.0 single-entry-003.com
+0.0.0.0 single-entry-017.com
+0.0.0.0 sub-000.single-entry-017.com
+0.0.0.0 sub-000.single-entry-018.com
+0.0.0.0 sub-000.sub-000.single-entry-017.com
+0.0.0.0 sub-000.sub-000.single-entry-018.com
+0.0.0.0 sub-000.sub-000.sub-000.single-entry-017.com
+0.0.0.0 sub-000.sub-000.sub-000.single-entry-019.com
+0.0.0.0 sub-001.single-entry-017.com
+0.0.0.0 sub-001.single-entry-018.com
 # END BLOCKLIST

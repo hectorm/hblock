@@ -13,7 +13,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/sources.txt"
+	export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/test-domains-source.txt"
 	export HBLOCK_DENYLIST_FILE=''
 
 	printf -- 'Test - Main - Denylist: "-D" short option\n'

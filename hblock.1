@@ -148,6 +148,14 @@ Use POSIX BREs in the allowlist instead of fixed strings.
 .IP
 (default: false)
 .HP
+\fB\-f\fR, \fB\-\-[no\-]filter\-subdomains\fR, ${HBLOCK_FILTER_SUBDOMAINS}
+.IP
+Do not include subdomains when the parent domain is also blocked.
+Useful for reducing the blocklist size in cases such as when DNS blocking
+makes these subdomains redundant.
+.IP
+(default: false)
+.HP
 \fB\-c\fR, \fB\-\-[no\-]continue\fR, ${HBLOCK_CONTINUE}
 .IP
 Do not abort if a download error occurs.

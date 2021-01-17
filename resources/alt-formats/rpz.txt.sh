@@ -31,6 +31,7 @@ main() {
 
 	export HBLOCK_LENIENT='false'
 	export HBLOCK_REGEX='false'
+	export HBLOCK_FILTER_SUBDOMAINS='false'
 	export HBLOCK_CONTINUE='false'
 
 	"${hblock:?}" -qO "${target:?}"

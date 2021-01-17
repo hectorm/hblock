@@ -14,33 +14,33 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 
 main() {
 	export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/test-domains-source.txt"
-	export HBLOCK_LENIENT='false'
+	export HBLOCK_FILTER_SUBDOMAINS='false'
 
-	printf -- 'Test - Main - Lenient: "-l" short option\n'
-	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -l)"
+	printf -- 'Test - Main - Filter subdomains: "-f" short option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -f)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Lenient: "--lenient" long option\n'
-	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --lenient)"
+	printf -- 'Test - Main - Filter subdomains: "--filter-subdomains" long option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --filter-subdomains)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Lenient: "HBLOCK_LENIENT" environment variable\n'
-	actual="$(set -a; HBLOCK_LENIENT='true' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	printf -- 'Test - Main - Filter subdomains: "HBLOCK_FILTER_SUBDOMAINS" environment variable\n'
+	actual="$(set -a; HBLOCK_FILTER_SUBDOMAINS='true' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	export HBLOCK_LENIENT='true'
+	export HBLOCK_FILTER_SUBDOMAINS='true'
 
-	printf -- 'Test - Main - Lenient: "--no-lenient" long option\n'
-	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --no-lenient)"
+	printf -- 'Test - Main - Filter subdomains: "--no-filter-subdomains" long option\n'
+	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --no-filter-subdomains)"
 	expected="$(cat -- "${0%.sh}"-false.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
