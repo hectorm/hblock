@@ -57,9 +57,9 @@ jobs:
       image: 'docker.io/archlinux:latest'
     steps:
       - name: 'Install packages'
-        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
       - name: 'Install packages (2nd stage)'
-        run: 'pacman -Sy --noconfirm --needed base-devel m4 rsync sudo'
+        run: 'pacman -Syu --noconfirm --needed base-devel m4 rsync sudo'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Package project'

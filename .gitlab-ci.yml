@@ -75,7 +75,7 @@ test-archlinux-latest:
     - 'lint-shellcheck-stable'
   image: 'docker.io/archlinux:latest'
   before_script:
-    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+    - 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
   script:
     - 'make test-all'
 
@@ -254,7 +254,7 @@ build-archlinux-latest:
     - 'test-archlinux-latest'
   image: 'docker.io/archlinux:latest'
   before_script:
-    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+    - 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
   script:
     - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-archlinux-latest/'
@@ -341,8 +341,8 @@ package-pkgbuild:
     - 'build-archlinux-latest'
   image: 'docker.io/archlinux:latest'
   before_script:
-    - 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
-    - 'pacman -Sy --noconfirm --needed base-devel m4 rsync sudo'
+    - 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
+    - 'pacman -Syu --noconfirm --needed base-devel m4 rsync sudo'
   script:
     - 'mkdir ./dist/; chown nobody ./dist/'
     - 'sudo -u nobody make package-pkgbuild'

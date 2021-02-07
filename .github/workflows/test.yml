@@ -80,7 +80,7 @@ jobs:
     container: 'docker.io/archlinux:latest'
     steps:
       - name: 'Install packages'
-        run: 'pacman -Sy --noconfirm --needed ca-certificates curl file libidn2 make'
+        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
       - name: 'Checkout project'
         uses: 'actions/checkout@main'
       - name: 'Test project'
