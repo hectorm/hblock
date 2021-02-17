@@ -20,9 +20,8 @@ createTempDir() {
 	if exists mktemp; then mktemp -d
 	else
 		# Since POSIX does not specify mktemp utility, use this as fallback.
-		# And wait a second as a horrible hack to avoid name collisions.
-		rnd="$(sleep 1; awk 'BEGIN{srand();printf("%08x",rand()*(2**31-1))}')"
-		dir="${TMPDIR:-/tmp}/tmp.${$}${rnd:?}"
+		rnd="$(:& awk -v S="${$}${!}" 'BEGIN{M=2**31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}')"
+		dir="${TMPDIR:-/tmp}/tmp.${rnd:?}"
 		(umask 077 && mkdir -- "${dir:?}")
 		printf -- '%s' "${dir:?}"
 	fi
