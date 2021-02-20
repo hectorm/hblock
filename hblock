@@ -284,13 +284,17 @@ printList() {
 	fi
 }
 
+# Print a pseudorandom string.
+rand() {
+	:& awk -v S="${!}" 'BEGIN{M=2**31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}'
+}
+
 # Create a temporary directory.
-createTempDir() {
+mktempDir() {
 	if exists mktemp; then mktemp -d
 	else
 		# Since POSIX does not specify mktemp utility, use this as fallback.
-		rnd="$(:& awk -v S="${!}" 'BEGIN{M=2**31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}')"
-		dir="${TMPDIR:-/tmp}/tmp.${rnd:?}"
+		dir="${TMPDIR:-/tmp}/tmp.$(rand)"
 		(umask 077 && mkdir -- "${dir:?}")
 		printf -- '%s' "${dir:?}"
 	fi
@@ -310,6 +314,46 @@ fetchUrl() {
 			exit 1
 		fi
 	fi
+}
+
+# Remove carriage return.
+removeCR() {
+	tr -d '\r'
+}
+
+# Convert to lower case.
+toLowercase() {
+	awk '{print(tolower($0))}'
+}
+
+# Transform hosts file entries to domain names.
+hostsToDomains() {
+	if [ "${1:?}" = 'true' ]; then
+		ipv4Regex='\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}'
+		ipv6Regex='\([0-9a-f]\{0,4\}:\)\{2,7\}[0-9a-f]\{0,4\}'
+	else
+		ipv4Regex='\(0\)\{0,1\}\(127\)\{0,1\}\(\.[0-9]\{1,3\}\)\{3\}'
+		ipv6Regex='\(0\{0,4\}:\)\{2,7\}0\{0,3\}[01]\{0,1\}'
+	fi
+	ipRegex='\('"${ipv4Regex:?}"'\)\{0,1\}\('"${ipv6Regex:?}"'\)\{0,1\}'
+	domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
+	hostRegex='^[[:blank:]]*\('"${ipRegex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'[[:blank:]]*\(#.*\)\{0,1\}$'
+	grep "${hostRegex:?}" | sed -e 's/[[:blank:]]*\(#.*\)\{0,1\}$//;s/^.*[[:blank:]]\{1,\}//'
+}
+
+# Remove reserved Top Level Domains.
+removeReservedTLDs() {
+	sed -e '/\.corp$/d' \
+		-e '/\.domain$/d' \
+		-e '/\.example$/d' \
+		-e '/\.home$/d' \
+		-e '/\.host$/d' \
+		-e '/\.invalid$/d' \
+		-e '/\.lan$/d' \
+		-e '/\.local$/d' \
+		-e '/\.localdomain$/d' \
+		-e '/\.localhost$/d' \
+		-e '/\.test$/d'
 }
 
 main() {
@@ -431,7 +475,7 @@ main() {
 	fi
 
 	# Create a temporary work directory.
-	tmpWorkDir="$(createTempDir)"
+	tmpWorkDir="$(mktempDir)"
 	# shellcheck disable=SC2154
 	trap 'ret="$?"; rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
@@ -507,7 +551,7 @@ main() {
 		sed -e '/^#/d;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
 			printList "${url:?}"
 			if fetchUrl "${url:?}" > "${blocklistFile:?}.aux"; then
-				cat -- "${blocklistFile:?}.aux" >> "${blocklistFile:?}" \
+				{ cat -- "${blocklistFile:?}.aux"; printf '\n'; } >> "${blocklistFile:?}" \
 					&& rm -f -- "${blocklistFile:?}.aux"
 			elif [ "${continue:?}" = 'true' ]; then
 				printWarn "Cannot obtain source: ${url:?}"
@@ -527,67 +571,31 @@ main() {
 	# If the blocklist file is not empty, it is sanitized.
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Sanitizing blocklist'
-
-		printList 'Removing carriage return'
-		tr -d '\r' \
-			< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+		removeCR < "${blocklistFile:?}" | toLowercase | hostsToDomains "${lenient:?}" | removeReservedTLDs > "${blocklistFile:?}.aux" \
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+	fi
 
-		printList 'Transforming to lowercase'
-		awk '{print(tolower($0))}' \
-			< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-
-		printList 'Removing comments'
-		sed -e 's/#.*//' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-
-		printList 'Trimming spaces'
-		sed -e 's/^[[:blank:]]*//' \
-			-e 's/[[:blank:]]*$//' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-
-		printList 'Matching hosts lines'
-		if [ "${lenient:?}" = 'true' ]; then
-			# This regex is not ideal as it matches technically invalid addresses, but it is POSIX-compliant.
-			ipv4Regex='\(\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}\)\{0,1\}'
-			ipv6Regex='\(\([0-9a-f]\{0,4\}:\)\{1,7\}[0-9a-f]\{0,4\}\)\{0,1\}'
-			ipRegex="${ipv4Regex:?}${ipv6Regex:?}"
+	# If the allowlist file is not empty, the entries on it are removed from the blocklist file.
+	if [ -s "${allowlistFile:?}" ]; then
+		printInfo 'Applying allowlist'
+		# Entries are treated as regexes depending on whether the regex option is enabled.
+		sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" >> "${blocklistFile:?}.pat"
+		if [ "${regex:?}" = 'true' ]; then
+			grep -vf "${blocklistFile:?}.pat" \
+				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		else
-			# This regex is not ideal as it matches technically invalid addresses, but it is POSIX-compliant.
-			ipv4Regex='\(0\.0\.0\.0\)\{0,1\}\(127\.0\.0\.1\)\{0,1\}'
-			ipv6Regex='\(::\)\{0,1\}\(::1\)\{0,1\}'
-			ipRegex="${ipv4Regex:?}${ipv6Regex:?}"
+			grep -Fxvf "${blocklistFile:?}.pat" \
+				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
+				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		fi
-		domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
-		sed -ne '/^\('"${ipRegex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'$/p' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+		rm -f -- "${blocklistFile:?}.pat"
+	fi
 
-		printList 'Removing reserved TLDs'
-		sed -e '/\.corp$/d' \
-			-e '/\.domain$/d' \
-			-e '/\.example$/d' \
-			-e '/\.home$/d' \
-			-e '/\.host$/d' \
-			-e '/\.invalid$/d' \
-			-e '/\.lan$/d' \
-			-e '/\.local$/d' \
-			-e '/\.localdomain$/d' \
-			-e '/\.localhost$/d' \
-			-e '/\.test$/d' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-
-		printList 'Removing destination IPs'
-		sed -e 's/^.\{1,\}[[:blank:]]\{1,\}//' \
-			-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-
+	# If the blocklist file is not empty, it is filtered and sorted.
+	if [ -s "${blocklistFile:?}" ]; then
 		if [ "${filterSubdomains:?}" = 'true' ]; then
-			printList 'Removing redundant subdomains'
+			printInfo 'Filtering redundant subdomains'
 			awkReverseScript="$(cat <<-'EOF'
 				BEGIN { FS = "." }
 				{
@@ -612,27 +620,9 @@ main() {
 				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		fi
 
-		printList 'Sorting entries'
-		sort -- "${blocklistFile:?}" | uniq | sed -e '/^$/d' > "${blocklistFile:?}.aux" \
+		printInfo 'Sorting blocklist'
+		sort < "${blocklistFile:?}" | uniq > "${blocklistFile:?}.aux" \
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-	fi
-
-	# If the allowlist file is not empty, the entries on it are removed from the blocklist file.
-	if [ -s "${allowlistFile:?}" ]; then
-		printInfo 'Applying allowlist'
-
-		# Entries are treated as regexes depending on whether the regex option is enabled.
-		sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" >> "${blocklistFile:?}.pat"
-		if [ "${regex:?}" = 'true' ]; then
-			grep -vf "${blocklistFile:?}.pat" \
-				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-		else
-			grep -Fxvf "${blocklistFile:?}.pat" \
-				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
-		fi
-		rm -f -- "${blocklistFile:?}.pat"
 	fi
 
 	# Count blocked domains.
@@ -641,14 +631,12 @@ main() {
 	# If the blocklist file is not empty, the format template is applied.
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Applying format template'
-
 		# The number of domains per line is equal to the value of the wrap option.
 		if [ "${wrap:?}" -gt '1' ]; then
 			awk -v FS=' ' -v RS='\n' -v W="${wrap:?}" '{ORS=(NR%W?FS:RS)}1;END{if(NR%W){printf(RS)}}' \
 				< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
 				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 		fi
-
 		# The following awk script replaces in the template the variables starting with a % sign with their value.
 		# Using the "gsub" method would be much simpler, but I have found that in some awk versions it performs very poorly.
 		awkTemplateScript="$(cat <<-'EOF'

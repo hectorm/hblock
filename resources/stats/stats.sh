@@ -15,13 +15,17 @@ exists() {
 	else which -- "${1:?}"; fi >/dev/null 2>&1
 }
 
+# Print a pseudorandom string.
+rand() {
+	:& awk -v S="${!}" 'BEGIN{M=2**31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}'
+}
+
 # Create a temporary directory.
-createTempDir() {
+mktempDir() {
 	if exists mktemp; then mktemp -d
 	else
 		# Since POSIX does not specify mktemp utility, use this as fallback.
-		rnd="$(:& awk -v S="${!}" 'BEGIN{M=2**31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}')"
-		dir="${TMPDIR:-/tmp}/tmp.${rnd:?}"
+		dir="${TMPDIR:-/tmp}/tmp.$(rand)"
 		(umask 077 && mkdir -- "${dir:?}")
 		printf -- '%s' "${dir:?}"
 	fi
@@ -61,7 +65,7 @@ main() {
 	fi
 
 	# Create a temporary work directory.
-	tmpWorkDir="$(createTempDir)"
+	tmpWorkDir="$(mktempDir)"
 	# shellcheck disable=SC2154
 	trap 'ret="$?"; rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
