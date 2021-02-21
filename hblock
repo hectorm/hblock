@@ -338,7 +338,9 @@ hostsToDomains() {
 	domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
 	ipv4HostRegex='^[[:blank:]]*\('"${ipv4Regex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'[[:blank:]]*\(#.*\)\{0,1\}$'
 	ipv6HostRegex='^[[:blank:]]*\('"${ipv6Regex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'[[:blank:]]*\(#.*\)\{0,1\}$'
-	grep -e "${ipv4HostRegex:?}" -e "${ipv6HostRegex:?}" | sed -e 's/[[:blank:]]*\(#.*\)\{0,1\}$//;s/^.*[[:blank:]]\{1,\}//'
+	removeCR | toLowercase \
+		| grep -e "${ipv4HostRegex:?}" -e "${ipv6HostRegex:?}" \
+		| sed -e 's/[[:blank:]]*\(#.*\)\{0,1\}$//;s/^.*[[:blank:]]\{1,\}//'
 }
 
 # Remove reserved Top Level Domains.
@@ -571,7 +573,7 @@ main() {
 	# If the blocklist file is not empty, it is sanitized.
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Sanitizing blocklist'
-		removeCR < "${blocklistFile:?}" | toLowercase | hostsToDomains "${lenient:?}" | removeReservedTLDs > "${blocklistFile:?}.aux" \
+		hostsToDomains "${lenient:?}" < "${blocklistFile:?}" | removeReservedTLDs > "${blocklistFile:?}.aux" \
 			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
 	fi
 
