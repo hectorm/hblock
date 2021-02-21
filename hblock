@@ -335,10 +335,10 @@ hostsToDomains() {
 		ipv4Regex='\(0\)\{0,1\}\(127\)\{0,1\}\(\.[0-9]\{1,3\}\)\{3\}'
 		ipv6Regex='\(0\{0,4\}:\)\{2,7\}0\{0,3\}[01]\{0,1\}'
 	fi
-	ipRegex='\('"${ipv4Regex:?}"'\)\{0,1\}\('"${ipv6Regex:?}"'\)\{0,1\}'
 	domainRegex='\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}'
-	hostRegex='^[[:blank:]]*\('"${ipRegex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'[[:blank:]]*\(#.*\)\{0,1\}$'
-	grep "${hostRegex:?}" | sed -e 's/[[:blank:]]*\(#.*\)\{0,1\}$//;s/^.*[[:blank:]]\{1,\}//'
+	ipv4HostRegex='^[[:blank:]]*\('"${ipv4Regex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'[[:blank:]]*\(#.*\)\{0,1\}$'
+	ipv6HostRegex='^[[:blank:]]*\('"${ipv6Regex:?}"'[[:blank:]]\{1,\}\)\{0,1\}'"${domainRegex:?}"'[[:blank:]]*\(#.*\)\{0,1\}$'
+	grep -e "${ipv4HostRegex:?}" -e "${ipv6HostRegex:?}" | sed -e 's/[[:blank:]]*\(#.*\)\{0,1\}$//;s/^.*[[:blank:]]\{1,\}//'
 }
 
 # Remove reserved Top Level Domains.
