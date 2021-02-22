@@ -549,8 +549,8 @@ main() {
 	if [ -s "${sourcesFile:?}" ]; then
 		printInfo 'Downloading sources'
 
-		# Read the sources file ignoring lines that start with "#" or are empty.
-		sed -e '/^#/d;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
+		# Read the sources file ignoring comments or empty lines.
+		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
 			printList "${url:?}"
 			if fetchUrl "${url:?}" > "${blocklistFile:?}.aux"; then
 				{ cat -- "${blocklistFile:?}.aux"; printf '\n'; } >> "${blocklistFile:?}" \
@@ -581,7 +581,7 @@ main() {
 	if [ -s "${allowlistFile:?}" ]; then
 		printInfo 'Applying allowlist'
 		# Entries are treated as regexes depending on whether the regex option is enabled.
-		sed -e '/^#/d;/^$/d' -- "${allowlistFile:?}" >> "${blocklistFile:?}.pat"
+		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${allowlistFile:?}" >> "${blocklistFile:?}.pat"
 		if [ "${regex:?}" = 'true' ]; then
 			grep -vf "${blocklistFile:?}.pat" \
 				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
