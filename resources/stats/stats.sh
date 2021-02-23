@@ -24,7 +24,6 @@ rand() {
 mktempDir() {
 	if exists mktemp; then mktemp -d
 	else
-		# Since POSIX does not specify mktemp utility, use this as fallback.
 		dir="${TMPDIR:-/tmp}/tmp.$(rand)"
 		(umask 077 && mkdir -- "${dir:?}")
 		printf -- '%s' "${dir:?}"
