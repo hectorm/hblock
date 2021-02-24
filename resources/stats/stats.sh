@@ -29,9 +29,9 @@ rand() {
 
 # Create a temporary file.
 mktempFile() {
-	file="${TMPDIR:-/tmp}/hblock.${$}.$(rand)"
-	(umask 077 && touch -- "${file:?}")
-	printf -- '%s' "${file:?}"
+	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
+	while file="${TMPDIR:-/tmp}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
+	(umask 077 && touch -- "${file:?}"); printf -- '%s' "${file:?}"
 }
 
 # Write stdin to a file.
