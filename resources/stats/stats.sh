@@ -37,7 +37,7 @@ mktempFile() {
 # Write stdin to a file.
 sponge() {
 	spongeFile="$(mktempFile)"; cat > "${spongeFile:?}"
-	cat "${spongeFile:?}" > "${1:?}"; rm -f -- "${spongeFile:?}"
+	cat -- "${spongeFile:?}" > "${1:?}"; rm -f -- "${spongeFile:?}"
 }
 
 # Print to stdout the contents of a URL.
