@@ -7,6 +7,9 @@
 set -eu
 export LC_ALL='C'
 
+# Emulate ksh if the shell is zsh.
+if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
+
 # Check if a program exists.
 exists() {
 	# shellcheck disable=SC2230
