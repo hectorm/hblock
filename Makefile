@@ -65,7 +65,7 @@ hosts: ./dist/hosts $(ALT_FORMATS_OUT)
 stats: ./dist/most_abused_tlds.txt ./dist/most_abused_suffixes.txt
 
 ./dist/most_abused_tlds.txt: ./dist/hosts_domains.txt
-	./resources/stats/stats.sh ./dist/hosts_domains.txt no-psl > '$@'
+	./resources/stats/stats.sh ./dist/hosts_domains.txt none > '$@'
 
 ./dist/most_abused_suffixes.txt: ./dist/hosts_domains.txt
 	./resources/stats/stats.sh ./dist/hosts_domains.txt > '$@'

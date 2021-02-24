@@ -10,6 +10,10 @@ export LC_ALL='C'
 # Emulate ksh if the shell is zsh.
 if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
 
+# Remove temporary files on exit.
+# shellcheck disable=SC2154
+trap 'ret="$?"; rm -f -- "${TMPDIR:-/tmp}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+
 # Check if a program exists.
 exists() {
 	# shellcheck disable=SC2230
@@ -23,14 +27,17 @@ rand() {
 	:& awk -v S="${!}" 'BEGIN{M=2**31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}'
 }
 
-# Create a temporary directory.
-mktempDir() {
-	if exists mktemp; then mktemp -d
-	else
-		dir="${TMPDIR:-/tmp}/tmp.$(rand)"
-		(umask 077 && mkdir -- "${dir:?}")
-		printf -- '%s' "${dir:?}"
-	fi
+# Create a temporary file.
+mktempFile() {
+	file="${TMPDIR:-/tmp}/hblock.${$}.$(rand)"
+	(umask 077 && touch -- "${file:?}")
+	printf -- '%s' "${file:?}"
+}
+
+# Write stdin to a file.
+sponge() {
+	spongeFile="$(mktempFile)"; cat > "${spongeFile:?}"
+	cat "${spongeFile:?}" > "${1:?}"; rm -f -- "${spongeFile:?}"
 }
 
 # Print to stdout the contents of a URL.
@@ -59,65 +66,61 @@ punycodeEncode() {
 
 main() {
 	domainsFile="${1:?}"
-	publicSuffixList="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
+	pslUrl="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
 
 	if [ ! -e "${domainsFile:?}" ]; then
 		printf -- '%s\n' "No such file: '${domainsFile:?}'" >&2
 		exit 1
 	fi
 
-	# Create a temporary work directory.
-	tmpWorkDir="$(mktempDir)"
-	# shellcheck disable=SC2154
-	trap 'ret="$?"; rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+	# Create stats file.
+	statsFile="$(mktempFile)"
 
-	# Copy domains file.
-	domainsFileTmp="${tmpWorkDir:?}/domains.list"
-	cp -f -- "${domainsFile:?}" "${domainsFileTmp:?}"
-
-	if [ "${publicSuffixList:?}" = 'no-psl' ]; then
+	if [ "${pslUrl:?}" = 'none' ]; then
 		# Remove until the last part of the domain and count occurrences.
-		sed -ne 's/^.*\(\.[^.]\{1,\}\)$/\1/p' -- "${domainsFileTmp:?}" \
-			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' >> "${domainsFileTmp:?}.stats"
+		sed -ne 's/^.*\(\.[^.]\{1,\}\)$/\1/p' -- "${domainsFile:?}" \
+			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' >> "${statsFile:?}"
 	else
 		# Download public suffix list.
-		fetchUrl "${publicSuffixList:?}" > "${domainsFileTmp:?}.suffixes"
+		pslFile="$(mktempFile)"
+		fetchUrl "${pslUrl:?}" > "${pslFile:?}"
 
 		# Punycode encode suffix list, sort suffixes by length in descending order and transform each one into regexes.
-		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "${domainsFileTmp:?}.suffixes" \
-			| punycodeEncode | awk '{printf("%s\t.%s\n",length($0),$0)}' | sort -nr | cut -f2 \
-			| sed -e 's/\./\\./g;s/$/$/g' > "${domainsFileTmp:?}.suffixes.aux" \
-			&& mv -f -- "${domainsFileTmp:?}.suffixes.aux" "${domainsFileTmp:?}.suffixes"
+		sed -e '/^\/\//d;/^!/d;/^$/d;s/^\*\.//g' -- "${pslFile:?}" \
+			| punycodeEncode | awk '{printf("%s\t.%s\n",length($0),$0)}' \
+			| sort -nr | cut -f2 | sed -e 's/\./\\./g;s/$/$/g' \
+			| sponge "${pslFile:?}"
 
 		# Remove the last part of the domain and count occurrences.
-		sed -e 's/^[^.]\{1,\}//' -- "${domainsFileTmp:?}" \
-			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' > "${domainsFileTmp:?}.aux" \
-			&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}"
+		workFile="$(mktempFile)"
+		sed -e 's/^[^.]\{1,\}//' -- "${domainsFile:?}" \
+			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' \
+			> "${workFile:?}"
 
 		# Count occurrences for each suffix.
+		matchFile="$(mktempFile)"
 		while IFS= read -r suffix || [ -n "${suffix?}" ]; do
-			if grep -- "${suffix:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.match"; then
-				count="$(awk '{N+=$1}END{print(N)}' < "${domainsFileTmp:?}.match")"
-				printf -- '%s\t%s\n' "${count:?}" "${suffix:?}" >> "${domainsFileTmp:?}.stats"
-				{ grep -v -- "${suffix:?}" "${domainsFileTmp:?}" > "${domainsFileTmp:?}.aux" \
-					&& mv -f -- "${domainsFileTmp:?}.aux" "${domainsFileTmp:?}";
-				} || { true > "${domainsFileTmp:?}"; }
+			if grep -- "${suffix:?}" "${workFile:?}" > "${matchFile:?}"; then
+				count="$(awk '{N+=$1}END{print(N)}' < "${matchFile:?}")"
+				printf -- '%s\t%s\n' "${count:?}" "${suffix:?}" >> "${statsFile:?}"
+				{ grep -v -- "${suffix:?}" "${workFile:?}" ||:; } | sponge "${workFile:?}"
 			fi
-		done < "${domainsFileTmp:?}.suffixes"
+		done < "${pslFile:?}"
+		rm -f -- "${matchFile:?}"
 
 		# Transform back regexes into fixed strings.
-		if [ -s "${domainsFileTmp:?}.stats" ]; then
-			sed -e 's/\\\././g;s/\$$//g' \
-				-- "${domainsFileTmp:?}.stats" > "${domainsFileTmp:?}.stats.aux" \
-				&& mv -f -- "${domainsFileTmp:?}.stats.aux" "${domainsFileTmp:?}.stats"
+		if [ -s "${statsFile:?}" ]; then
+			sed -e 's/\\\././g;s/\$$//g' -- "${statsFile:?}" | sponge "${statsFile:?}"
 		fi
 
 		# If the domains file is not empty, use TLD as suffix.
-		if [ -s "${domainsFileTmp:?}" ]; then
+		if [ -s "${workFile:?}" ]; then
 			# Remove until the last part of the domain and count occurrences.
-			sed -ne 's/^\([0-9]\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/p' -- "${domainsFileTmp:?}" \
-				| awk '{A[$2]+=$1}END{for(i in A)printf("%s\t%s\n",A[i],i)}' >> "${domainsFileTmp:?}.stats"
+			sed -ne 's/^\([0-9]\{1,\}[[:blank:]]\).*\(\.[^.]\{1,\}\)$/\1\2/p' -- "${workFile:?}" \
+				| awk '{A[$2]+=$1}END{for(i in A)printf("%s\t%s\n",A[i],i)}' >> "${statsFile:?}"
 		fi
+
+		rm -f -- "${workFile:?}"
 	fi
 
 	# Sort suffixes by the number of occurrences in descending order and then alphabetically in ascending order.
@@ -153,7 +156,7 @@ main() {
 		}
 	EOF
 	)"
-	awk "${awkSortScript:?}" < "${domainsFileTmp:?}.stats"
+	awk "${awkSortScript:?}" < "${statsFile:?}"
 }
 
 main "${@-}"

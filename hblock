@@ -15,6 +15,10 @@ if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
 if [ -z "${ETCDIR+x}" ]; then ETCDIR='/etc'; fi
 if [ -z "${XDG_CONFIG_HOME+x}" ]; then XDG_CONFIG_HOME="${HOME-}/.config"; fi
 
+# Remove temporary files on exit.
+# shellcheck disable=SC2154
+trap 'ret="$?"; rm -f -- "${TMPDIR:-/tmp}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+
 # Built-in header.
 HOSTNAME="${HOSTNAME-"$(uname -n)"}"
 HBLOCK_HEADER_BUILTIN="$(cat <<-EOF
@@ -289,14 +293,17 @@ rand() {
 	:& awk -v S="${!}" 'BEGIN{M=2**31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}'
 }
 
-# Create a temporary directory.
-mktempDir() {
-	if exists mktemp; then mktemp -d
-	else
-		dir="${TMPDIR:-/tmp}/tmp.$(rand)"
-		(umask 077 && mkdir -- "${dir:?}")
-		printf -- '%s' "${dir:?}"
-	fi
+# Create a temporary file.
+mktempFile() {
+	file="${TMPDIR:-/tmp}/hblock.${$}.$(rand)"
+	(umask 077 && touch -- "${file:?}")
+	printf -- '%s' "${file:?}"
+}
+
+# Write stdin to a file.
+sponge() {
+	spongeFile="$(mktempFile)"; cat > "${spongeFile:?}"
+	cat "${spongeFile:?}" > "${1:?}"; rm -f -- "${spongeFile:?}"
 }
 
 # Print to stdout the contents of a URL.
@@ -465,19 +472,14 @@ main() {
 		fi
 	fi
 
-	# Create a temporary work directory.
-	tmpWorkDir="$(mktempDir)"
-	# shellcheck disable=SC2154
-	trap 'ret="$?"; rm -rf -- "${tmpWorkDir:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
-
 	# Check the header file.
 	case "${headerFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') headerFile="${tmpWorkDir:?}/header"; cat <&0 > "${headerFile:?}" ;;
+		'-') headerFile="$(mktempFile)"; cat <&0 > "${headerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') headerFile="${tmpWorkDir:?}/header"; true > "${headerFile:?}" ;;
+		'none') headerFile="$(mktempFile)"; true > "${headerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') headerFile="${tmpWorkDir:?}/header"; printf -- '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
+		'builtin') headerFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${headerFile:?}" ] || { printError "No such file: ${headerFile:?}"; exit 1; } ;;
 	esac
@@ -485,11 +487,11 @@ main() {
 	# Check the footer file.
 	case "${footerFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') footerFile="${tmpWorkDir:?}/footer"; cat <&0 > "${footerFile:?}" ;;
+		'-') footerFile="$(mktempFile)"; cat <&0 > "${footerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') footerFile="${tmpWorkDir:?}/footer"; true > "${footerFile:?}" ;;
+		'none') footerFile="$(mktempFile)"; true > "${footerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') footerFile="${tmpWorkDir:?}/footer"; printf -- '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
+		'builtin') footerFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${footerFile:?}" ] || { printError "No such file: ${footerFile:?}"; exit 1; } ;;
 	esac
@@ -497,11 +499,11 @@ main() {
 	# Check the sources file.
 	case "${sourcesFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') sourcesFile="${tmpWorkDir:?}/sources.list"; cat <&0 > "${sourcesFile:?}" ;;
+		'-') sourcesFile="$(mktempFile)"; cat <&0 > "${sourcesFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') sourcesFile="${tmpWorkDir:?}/sources.list"; true > "${sourcesFile:?}" ;;
+		'none') sourcesFile="$(mktempFile)"; true > "${sourcesFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') sourcesFile="${tmpWorkDir:?}/sources.list"; printf -- '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
+		'builtin') sourcesFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${sourcesFile:?}" ] || { printError "No such file: ${sourcesFile:?}"; exit 1; } ;;
 	esac
@@ -509,11 +511,11 @@ main() {
 	# Check the allowlist file.
 	case "${allowlistFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') allowlistFile="${tmpWorkDir:?}/allow.list"; cat <&0 > "${allowlistFile:?}" ;;
+		'-') allowlistFile="$(mktempFile)"; cat <&0 > "${allowlistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') allowlistFile="${tmpWorkDir:?}/allow.list"; true > "${allowlistFile:?}" ;;
+		'none') allowlistFile="$(mktempFile)"; true > "${allowlistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') allowlistFile="${tmpWorkDir:?}/allow.list"; printf -- '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
+		'builtin') allowlistFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${allowlistFile:?}" ] || { printError "No such file: ${allowlistFile:?}"; exit 1; } ;;
 	esac
@@ -521,29 +523,28 @@ main() {
 	# Check the denylist file.
 	case "${denylistFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') denylistFile="${tmpWorkDir:?}/deny.list"; cat <&0 > "${denylistFile:?}" ;;
+		'-') denylistFile="$(mktempFile)"; cat <&0 > "${denylistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') denylistFile="${tmpWorkDir:?}/deny.list"; true > "${denylistFile:?}" ;;
+		'none') denylistFile="$(mktempFile)"; true > "${denylistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') denylistFile="${tmpWorkDir:?}/deny.list"; printf -- '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
+		'builtin') denylistFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${denylistFile:?}" ] || { printError "No such file: ${denylistFile:?}"; exit 1; } ;;
 	esac
 
 	# Create an empty blocklist file.
-	blocklistFile="${tmpWorkDir:?}/block.list"
-	true > "${blocklistFile:?}"
+	blocklistFile="$(mktempFile)"
 
 	# If the sources file is not empty, each source is downloaded and appended to the blocklist file.
 	if [ -s "${sourcesFile:?}" ]; then
 		printInfo 'Downloading sources'
 
 		# Read the sources file ignoring comments or empty lines.
+		sourceFile="$(mktempFile)"
 		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
 			printList "${url:?}"
-			if fetchUrl "${url:?}" > "${blocklistFile:?}.aux"; then
-				{ cat -- "${blocklistFile:?}.aux"; printf '\n'; } >> "${blocklistFile:?}" \
-					&& rm -f -- "${blocklistFile:?}.aux"
+			if fetchUrl "${url:?}" > "${sourceFile:?}"; then
+				{ cat -- "${sourceFile:?}"; printf '\n'; } >> "${blocklistFile:?}"
 			elif [ "${continue:?}" = 'true' ]; then
 				printWarn "Cannot obtain source: ${url:?}"
 			else
@@ -551,6 +552,7 @@ main() {
 				exit 1
 			fi
 		done
+		rm -f -- "${sourceFile:?}"
 	fi
 
 	# If the denylist file is not empty, it is appended to the blocklist file.
@@ -562,25 +564,21 @@ main() {
 	# If the blocklist file is not empty, it is sanitized.
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Sanitizing blocklist'
-		hostsToDomains "${lenient:?}" < "${blocklistFile:?}" | removeReservedTLDs > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+		hostsToDomains "${lenient:?}" < "${blocklistFile:?}" | removeReservedTLDs | sponge "${blocklistFile:?}"
 	fi
 
 	# If the allowlist file is not empty, the entries on it are removed from the blocklist file.
 	if [ -s "${allowlistFile:?}" ]; then
 		printInfo 'Applying allowlist'
+		allowlistPatternFile="$(mktempFile)"
 		# Entries are treated as regexes depending on whether the regex option is enabled.
-		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${allowlistFile:?}" >> "${blocklistFile:?}.pat"
+		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${allowlistFile:?}" >> "${allowlistPatternFile:?}"
 		if [ "${regex:?}" = 'true' ]; then
-			grep -vf "${blocklistFile:?}.pat" \
-				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+			grep -vf "${allowlistPatternFile:?}" -- "${blocklistFile:?}" | sponge "${blocklistFile:?}"
 		else
-			grep -Fxvf "${blocklistFile:?}.pat" \
-				-- "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+			grep -Fxvf "${allowlistPatternFile:?}" -- "${blocklistFile:?}" | sponge  "${blocklistFile:?}"
 		fi
-		rm -f -- "${blocklistFile:?}.pat"
+		rm -f -- "${allowlistPatternFile:?}"
 	fi
 
 	# If the blocklist file is not empty, it is filtered and sorted.
@@ -605,15 +603,13 @@ main() {
 				}
 			EOF
 			)"
-			awk "${awkReverseScript:?}" < "${blocklistFile:?}" \
-				| sort | awk "${awkFilterScript:?}" \
-				| awk "${awkReverseScript:?}" > "${blocklistFile:?}.aux" \
-				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+			awk "${awkReverseScript:?}" < "${blocklistFile:?}" | sort \
+				| awk "${awkFilterScript:?}" | awk "${awkReverseScript:?}" \
+				| sponge "${blocklistFile:?}"
 		fi
 
 		printInfo 'Sorting blocklist'
-		sort < "${blocklistFile:?}" | uniq > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+		sort < "${blocklistFile:?}" | uniq | sponge "${blocklistFile:?}"
 	fi
 
 	# Count blocked domains.
@@ -624,9 +620,9 @@ main() {
 		printInfo 'Applying format template'
 		# The number of domains per line is equal to the value of the wrap option.
 		if [ "${wrap:?}" -gt '1' ]; then
-			awk -v FS=' ' -v RS='\n' -v W="${wrap:?}" '{ORS=(NR%W?FS:RS)}1;END{if(NR%W){printf(RS)}}' \
-				< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-				&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+			awkWrapScript='{ORS=(NR%W?FS:RS)}1;END{if(NR%W){printf(RS)}}'
+			awk -v FS=' ' -v RS='\n' -v W="${wrap:?}" "${awkWrapScript:?}" < "${blocklistFile:?}" \
+				| sponge "${blocklistFile:?}"
 		fi
 		# The following awk script replaces in the template the variables starting with a % sign with their value.
 		# Using the "gsub" method would be much simpler, but I have found that in some awk versions it performs very poorly.
@@ -644,9 +640,8 @@ main() {
 			}
 		EOF
 		)"
-		awk -v T="${template?}" -v R="${redirection?}" "${awkTemplateScript:?}" \
-			< "${blocklistFile:?}" > "${blocklistFile:?}.aux" \
-			&& mv -f -- "${blocklistFile:?}.aux" "${blocklistFile:?}"
+		awk -v T="${template?}" -v R="${redirection?}" "${awkTemplateScript:?}" < "${blocklistFile:?}" \
+			| sponge "${blocklistFile:?}"
 	fi
 
 	printOutputFile() {
@@ -683,13 +678,13 @@ main() {
 		fi
 	}
 
-	# If the file value equals "-", print to stdout.
+	# If the file name equals "-", print to stdout.
 	if [ "${outputFile:?}" = '-' ]; then
 		printOutputFile
 	# Try writing the file.
 	elif touch -- "${outputFile:?}" >/dev/null 2>&1; then
 		printOutputFile > "${outputFile:?}"
-	# If the writing fails, try with sudo.
+	# If writing fails, try with sudo.
 	elif exists sudo && exists tee; then
 		printOutputFile | sudo tee -- "${outputFile:?}" >/dev/null
 	# Throw an error for everything else.
