@@ -323,7 +323,7 @@ fetchUrl() {
 }
 
 # Transform hosts file entries to domain names.
-hostsToDomains() {
+sanitizeBlocklist() {
 	leadingScript='s/^[[:blank:]]*//'
 	trailingScript='s/[[:blank:]]*\(#.*\)\{0,1\}$//'
 	if [ "${1:?}" = 'true' ]; then
@@ -336,7 +336,7 @@ hostsToDomains() {
 	domainRegex='^\([0-9a-z_-]\{1,63\}\.\)\{1,\}[a-z][0-9a-z_-]\{1,62\}$'
 	tr -d '\r' | sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/' \
 		| sed -e "${leadingScript:?};${ipv4Script:?};${ipv6Script:?};${trailingScript:?}" \
-		| grep -e "${domainRegex:?}"
+		| grep -e "${domainRegex:?}" ||:
 }
 
 # Remove reserved Top Level Domains.
@@ -564,7 +564,7 @@ main() {
 	# If the blocklist file is not empty, it is sanitized.
 	if [ -s "${blocklistFile:?}" ]; then
 		printInfo 'Sanitizing blocklist'
-		hostsToDomains "${lenient:?}" < "${blocklistFile:?}" | removeReservedTLDs | sponge "${blocklistFile:?}"
+		sanitizeBlocklist "${lenient:?}" < "${blocklistFile:?}" | removeReservedTLDs | sponge "${blocklistFile:?}"
 	fi
 
 	# If the allowlist file is not empty, the entries on it are removed from the blocklist file.
