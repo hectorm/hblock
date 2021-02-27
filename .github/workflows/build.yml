@@ -87,7 +87,7 @@ jobs:
         run: 'make hosts stats index'
 
   build-alpine-latest:
-    name: 'Build on Alpine'
+    name: 'Build on Alpine Linux'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:latest'
     steps:

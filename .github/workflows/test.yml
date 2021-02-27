@@ -86,8 +86,47 @@ jobs:
       - name: 'Test project'
         run: 'make test-all'
 
-  test-alpine-edge-bash:
-    name: 'Test on Alpine Edge bash'
+  test-alpine-latest:
+    name: 'Test on Alpine Linux'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-openwrt-latest:
+    name: 'Test on OpenWrt'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
+    steps:
+      - name: 'Apply workarounds for GitHub Actions runner'
+        run: 'printf "ID=alpine\n" > /etc/_os-release'
+      - name: 'Update package index'
+        run: 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
+      - name: 'Install packages'
+        run: 'opkg install ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make test-all'
+
+  test-macos-latest:
+    name: 'Test on macOS bash'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-edge-shell-bash:
+    name: 'Test on Alpine Linux Edge (bash)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:edge'
     steps:
@@ -102,8 +141,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v bash)"'
 
-  test-alpine-edge-zsh:
-    name: 'Test on Alpine Edge zsh'
+  test-alpine-edge-shell-zsh:
+    name: 'Test on Alpine Linux Edge (zsh)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:edge'
     steps:
@@ -118,8 +157,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v zsh)"'
 
-  test-alpine-edge-dash:
-    name: 'Test on Alpine Edge dash'
+  test-alpine-edge-shell-dash:
+    name: 'Test on Alpine Linux Edge (dash)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:edge'
     steps:
@@ -134,8 +173,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v dash)"'
 
-  test-alpine-edge-mksh:
-    name: 'Test on Alpine Edge mksh'
+  test-alpine-edge-shell-mksh:
+    name: 'Test on Alpine Linux Edge (mksh)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:edge'
     steps:
@@ -150,8 +189,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v mksh)"'
 
-  test-alpine-edge-oksh:
-    name: 'Test on Alpine Edge oksh'
+  test-alpine-edge-shell-oksh:
+    name: 'Test on Alpine Linux Edge (oksh)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:edge'
     steps:
@@ -166,8 +205,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v oksh)"'
 
-  test-alpine-edge-yash:
-    name: 'Test on Alpine Edge yash'
+  test-alpine-edge-shell-yash:
+    name: 'Test on Alpine Linux Edge (yash)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:edge'
     steps:
@@ -182,8 +221,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v yash)"'
 
-  test-alpine-edge-busybox-ash:
-    name: 'Test on Alpine Edge BusyBox ash'
+  test-alpine-edge-shell-busybox-ash:
+    name: 'Test on Alpine Linux Edge (BusyBox ash)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/alpine:edge'
     steps:
@@ -198,8 +237,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
-  test-openwrt-latest-busybox-ash:
-    name: 'Test on OpenWrt BusyBox ash'
+  test-openwrt-latest-shell-busybox-ash:
+    name: 'Test on OpenWrt (BusyBox ash)'
     runs-on: 'ubuntu-latest'
     container: 'docker.io/openwrtorg/rootfs:latest'
     steps:
@@ -218,8 +257,8 @@ jobs:
       - name: 'Build project'
         run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
-  test-macos-latest-bash:
-    name: 'Test on macOS bash'
+  test-macos-latest-shell-bash:
+    name: 'Test on macOS (bash)'
     runs-on: 'macos-latest'
     steps:
       - name: 'Install packages'
@@ -229,8 +268,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v bash)"'
 
-  test-macos-latest-zsh:
-    name: 'Test on macOS zsh'
+  test-macos-latest-shell-zsh:
+    name: 'Test on macOS (zsh)'
     runs-on: 'macos-latest'
     steps:
       - name: 'Install packages'
@@ -240,8 +279,8 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v zsh)"'
 
-  test-macos-latest-dash:
-    name: 'Test on macOS dash'
+  test-macos-latest-shell-dash:
+    name: 'Test on macOS (dash)'
     runs-on: 'macos-latest'
     steps:
       - name: 'Install packages'
@@ -250,3 +289,75 @@ jobs:
         uses: 'actions/checkout@main'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v dash)"'
+
+  test-alpine-edge-awk-gawk:
+    name: 'Test on Alpine Linux Edge (gawk)'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache gawk'
+      - name: 'Print gawk version'
+        run: 'apk info --no-cache gawk'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v gawk)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-edge-awk-mawk:
+    name: 'Test on Alpine Linux Edge (mawk)'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache mawk'
+      - name: 'Print mawk version'
+        run: 'apk info --no-cache mawk'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v mawk)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-edge-awk-busybox-awk:
+    name: 'Test on Alpine Linux Edge (BusyBox awk)'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:edge'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache busybox'
+      - name: 'Print busybox version'
+        run: 'apk info --no-cache busybox'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v busybox)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-archlinux-latest-awk-nawk:
+    name: 'Test on Arch Linux (nawk)'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'pacman -Syu --noconfirm --needed nawk'
+      - name: 'Print nawk version'
+        run: 'pacman -Qi nawk'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v nawk)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
