@@ -240,7 +240,7 @@ test-archlinux-latest-awk-nawk:
   stage: 'test'
   needs:
     - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
+  image: 'docker.io/archlinux:latest'
   before_script:
     - 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
     - 'pacman -Syu --noconfirm --needed nawk'
