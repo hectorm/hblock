@@ -352,7 +352,7 @@ build-alpine-latest:
 build-openwrt-latest:
   stage: 'build'
   needs:
-    - 'test-openwrt-latest-busybox-ash'
+    - 'test-openwrt-latest'
   image: 'docker.io/openwrtorg/rootfs:latest'
   before_script:
     - 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
