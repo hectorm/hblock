@@ -24,7 +24,7 @@ exists() {
 
 # Print a pseudorandom string.
 rand() {
-	:& awk -v S="${!}" 'BEGIN{M=2^31-1;printf("%08x%08x",srand()*0+rand()*M,srand(S)*0+rand()*M)}'
+	:& awk -v N="${!}" 'BEGIN{srand();printf("%08x%06x",rand()*2^31-1,N)}'
 }
 
 # Create a temporary file.
