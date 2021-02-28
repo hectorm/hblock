@@ -17,7 +17,7 @@ if [ -z "${XDG_CONFIG_HOME+x}" ]; then XDG_CONFIG_HOME="${HOME-}/.config"; fi
 
 # Remove temporary files on exit.
 # shellcheck disable=SC2154
-trap 'ret="$?"; rm -f -- "${TMPDIR:-/tmp}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+trap 'ret="$?"; rm -f -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
 # Built-in header.
 HOSTNAME="${HOSTNAME-"$(uname -n)"}"
@@ -296,7 +296,7 @@ rand() {
 # Create a temporary file.
 mktempFile() {
 	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
-	while file="${TMPDIR:-/tmp}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
+	while file="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
 	(umask 077 && touch -- "${file:?}"); printf -- '%s' "${file:?}"
 }
 

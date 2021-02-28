@@ -12,7 +12,7 @@ if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
 
 # Remove temporary files on exit.
 # shellcheck disable=SC2154
-trap 'ret="$?"; rm -f -- "${TMPDIR:-/tmp}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+trap 'ret="$?"; rm -f -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
 # Check if a program exists.
 exists() {
@@ -30,7 +30,7 @@ rand() {
 # Create a temporary file.
 mktempFile() {
 	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
-	while file="${TMPDIR:-/tmp}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
+	while file="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
 	(umask 077 && touch -- "${file:?}"); printf -- '%s' "${file:?}"
 }
 
