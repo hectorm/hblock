@@ -11,8 +11,8 @@ export LC_ALL='C'
 if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
 
 # Remove temporary files on exit.
-# shellcheck disable=SC2154
-trap 'ret="$?"; rm -f -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
+cleanup() { ret="$?"; rm -f -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"; }
+{ trap cleanup EXIT ||:; trap cleanup TERM ||:; trap cleanup INT ||:; trap cleanup HUP ||:; } 2>/dev/null
 
 # Check if a program exists.
 exists() {
