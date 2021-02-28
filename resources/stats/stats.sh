@@ -31,7 +31,7 @@ rand() {
 mktempFile() {
 	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
 	while file="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
-	(umask 077 && touch -- "${file:?}"); printf -- '%s' "${file:?}"
+	(umask 077 && touch -- "${file:?}"); printf '%s' "${file:?}"
 }
 
 # Write stdin to a file.
@@ -69,7 +69,7 @@ main() {
 	pslUrl="${2:-https://publicsuffix.org/list/public_suffix_list.dat}"
 
 	if [ ! -e "${domainsFile:?}" ]; then
-		printf -- '%s\n' "No such file: '${domainsFile:?}'" >&2
+		printf '%s\n' "No such file: '${domainsFile:?}'" >&2
 		exit 1
 	fi
 
@@ -102,7 +102,7 @@ main() {
 		while IFS= read -r suffix || [ -n "${suffix?}" ]; do
 			if grep -- "${suffix:?}" "${workFile:?}" > "${matchFile:?}"; then
 				count="$(awk '{N+=$1}END{print(N)}' < "${matchFile:?}")"
-				printf -- '%s\t%s\n' "${count:?}" "${suffix:?}" >> "${statsFile:?}"
+				printf '%s\t%s\n' "${count:?}" "${suffix:?}" >> "${statsFile:?}"
 				{ grep -v -- "${suffix:?}" "${workFile:?}" ||:; } | sponge "${workFile:?}"
 			fi
 		done < "${pslFile:?}"

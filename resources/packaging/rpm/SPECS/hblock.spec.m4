@@ -1,6 +1,6 @@
 m4_changequote([[, ]])m4_dnl
 %define name hblock
-%define version m4_esyscmd(printf -- '%s' "${PKG_VERSION?}")
+%define version m4_esyscmd(printf '%s' "${PKG_VERSION?}")
 
 Name: %{name}
 Version: %{version}

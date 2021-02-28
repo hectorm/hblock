@@ -22,21 +22,21 @@ main() {
 	EOF
 	)"
 
-	printf -- 'Test - Main - Regex: "-r" short option\n'
+	printf 'Test - Main - Regex: "-r" short option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -r)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Regex: "--regex" long option\n'
+	printf 'Test - Main - Regex: "--regex" long option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --regex)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Regex: "HBLOCK_REGEX" environment variable\n'
+	printf 'Test - Main - Regex: "HBLOCK_REGEX" environment variable\n'
 	actual="$(set -a; HBLOCK_REGEX='true' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
@@ -52,7 +52,7 @@ main() {
 	EOF
 	)"
 
-	printf -- 'Test - Main - Regex: "--no-regex" long option\n'
+	printf 'Test - Main - Regex: "--no-regex" long option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --no-regex)"
 	expected="$(cat -- "${0%.sh}"-false.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then

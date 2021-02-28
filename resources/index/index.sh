@@ -43,7 +43,7 @@ sha256Checksum() {
 
 # Escape string for use in HTML.
 escapeHTML() {
-	printf -- '%s' "${1?}" | awk -v RS='' "$(cat <<-'EOF'
+	printf '%s' "${1?}" | awk -v RS='' "$(cat <<-'EOF'
 		{
 			gsub(/&/, "\\&#38;")
 			gsub(/</, "\\&#60;")
@@ -60,7 +60,7 @@ escapeHTML() {
 # RFC 3986 compliant URL encoding method.
 encodeURI() {
 	_LC_COLLATE="${LC_COLLATE-}"; LC_COLLATE='C'
-	hex="$(printf -- '%s' "${1?}" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')"
+	hex="$(printf '%s' "${1?}" | base16Encode | sed 's|\(.\{2\}\)|\1 |g')"
 	for h in ${hex?}; do
 		case "${h:?}" in
 			3[0-9]|\
@@ -76,7 +76,7 @@ encodeURI() {
 
 # Calculate digest for Content-Security-Policy.
 cspDigest() {
-	hex="$(printf -- '%s' "${1?}" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')"
+	hex="$(printf '%s' "${1?}" | sha256Checksum | sed 's|\(.\{2\}\)|\1 |g')"
 	b64="$(for h in ${hex?}; do printf '%b' '\0'"$(printf '%o' "0x${h:?}")"; done | base64Encode)"
 	printf 'sha256-%s' "${b64?}"
 }
@@ -114,7 +114,7 @@ main() {
 	directory="${1:-./}"
 
 	if [ ! -d "${directory:?}" ] || [ ! -r "${directory:?}" ]; then
-		printf -- '%s\n' "Cannot read directory: '${directory:?}'" >&2
+		printf '%s\n' "Cannot read directory: '${directory:?}'" >&2
 		exit 1
 	fi
 
@@ -136,7 +136,7 @@ main() {
 		fileDate="$(getFileModificationTime "${file:?}")"
 		escapedFileDate="$(escapeHTML "${fileDate:?}")"
 
-		printf -- '%s\n' "$(cat <<-EOF
+		printf '%s\n' "$(cat <<-EOF
 			<a class="row" href="./${escapedFileNameURI:?}" title="${escapedFileName:?}">
 				<div class="cell">${escapedFileName:?}</div>
 				<div class="cell">${escapedFileSize:?}</div>
@@ -345,7 +345,7 @@ main() {
 	)"
 
 	# HTML.
-	printf -- '%s\n' "$(tr -d '\n' <<-EOF
+	printf '%s\n' "$(tr -d '\n' <<-EOF
 		<!DOCTYPE html>
 		<html lang="en">
 

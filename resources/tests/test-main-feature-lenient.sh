@@ -16,21 +16,21 @@ main() {
 	export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/test-domains-source.txt"
 	export HBLOCK_LENIENT='false'
 
-	printf -- 'Test - Main - Lenient: "-l" short option\n'
+	printf 'Test - Main - Lenient: "-l" short option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -l)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Lenient: "--lenient" long option\n'
+	printf 'Test - Main - Lenient: "--lenient" long option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --lenient)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Lenient: "HBLOCK_LENIENT" environment variable\n'
+	printf 'Test - Main - Lenient: "HBLOCK_LENIENT" environment variable\n'
 	actual="$(set -a; HBLOCK_LENIENT='true' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
@@ -39,7 +39,7 @@ main() {
 
 	export HBLOCK_LENIENT='true'
 
-	printf -- 'Test - Main - Lenient: "--no-lenient" long option\n'
+	printf 'Test - Main - Lenient: "--no-lenient" long option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --no-lenient)"
 	expected="$(cat -- "${0%.sh}"-false.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then

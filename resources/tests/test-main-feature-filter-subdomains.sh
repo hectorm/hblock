@@ -16,21 +16,21 @@ main() {
 	export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/test-domains-source.txt"
 	export HBLOCK_FILTER_SUBDOMAINS='false'
 
-	printf -- 'Test - Main - Filter subdomains: "-f" short option\n'
+	printf 'Test - Main - Filter subdomains: "-f" short option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -f)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Filter subdomains: "--filter-subdomains" long option\n'
+	printf 'Test - Main - Filter subdomains: "--filter-subdomains" long option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --filter-subdomains)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
 
-	printf -- 'Test - Main - Filter subdomains: "HBLOCK_FILTER_SUBDOMAINS" environment variable\n'
+	printf 'Test - Main - Filter subdomains: "HBLOCK_FILTER_SUBDOMAINS" environment variable\n'
 	actual="$(set -a; HBLOCK_FILTER_SUBDOMAINS='true' runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
 	expected="$(cat -- "${0%.sh}"-true.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
@@ -39,7 +39,7 @@ main() {
 
 	export HBLOCK_FILTER_SUBDOMAINS='true'
 
-	printf -- 'Test - Main - Filter subdomains: "--no-filter-subdomains" long option\n'
+	printf 'Test - Main - Filter subdomains: "--no-filter-subdomains" long option\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- --no-filter-subdomains)"
 	expected="$(cat -- "${0%.sh}"-false.out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then

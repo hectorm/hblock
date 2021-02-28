@@ -21,9 +21,9 @@ runInTestShell() {
 assertEquals() {
 	actual="${1?}"; expected="${2?}"
 	if [ "${actual?}" != "${expected?}" ]; then
-		printf -- '\nError, values are not equal\n\n' >&2
-		printf -- '[Actual]:\n\n%s\n\n' "${actual?}" >&2
-		printf -- '[Expected]:\n\n%s\n\n' "${expected?}" >&2
+		printf '\nError, values are not equal\n\n' >&2
+		printf '[Actual]:\n\n%s\n\n' "${actual?}" >&2
+		printf '[Expected]:\n\n%s\n\n' "${expected?}" >&2
 		return 1
 	fi
 	return 0

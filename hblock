@@ -136,13 +136,13 @@ optArgBool() {
 	else optArg='false'; fi
 }
 optDie() {
-	printf -- '%s\n' "${@-}" "Try 'hblock --help' for more information" >&2
+	printf '%s\n' "${@-}" "Try 'hblock --help' for more information" >&2
 	exit 2
 }
 
 # Show help and quit.
 showHelp() {
-	printf -- '%s\n' "$(sed -e 's/%NL/\n/g' <<-EOF
+	printf '%s\n' "$(sed -e 's/%NL/\n/g' <<-EOF
 		Usage: hblock [OPTION]...
 
 		hBlock is a POSIX-compliant shell script that gets a list of domains that serve
@@ -248,7 +248,7 @@ showHelp() {
 # Show version number and quit.
 showVersion() {
 	getMetadata() { sed -ne 's|^# '"${1:?}"':[[:blank:]]*\(.\{1,\}\)$|\1|p' -- "${0:?}"; }
-	printf -- '%s\n' "$(cat <<-EOF
+	printf '%s\n' "$(cat <<-EOF
 		hBlock $(getMetadata 'Version')
 		Author: $(getMetadata 'Author')
 		License: $(getMetadata 'License')
@@ -269,22 +269,22 @@ exists() {
 # Pretty print methods.
 printInfo() {
 	if [ "${quiet-}" != 'true' ]; then
-		if [ "${color-}" != 'true' ]; then printf -- '[INFO] %s\n' "${@-}"
-		else printf -- '\033[0m[\033[1;32mINFO\033[0m] %s\n' "${@-}"; fi
+		if [ "${color-}" != 'true' ]; then printf '[INFO] %s\n' "${@-}"
+		else printf '\033[0m[\033[1;32mINFO\033[0m] %s\n' "${@-}"; fi
 	fi
 }
 printWarn() {
-	if [ "${color-}" != 'true' ]; then printf -- '[WARN] %s\n' "${@-}" >&2
-	else printf -- '\033[0m[\033[1;33mWARN\033[0m] %s\n' "${@-}" >&2; fi
+	if [ "${color-}" != 'true' ]; then printf '[WARN] %s\n' "${@-}" >&2
+	else printf '\033[0m[\033[1;33mWARN\033[0m] %s\n' "${@-}" >&2; fi
 }
 printError() {
-	if [ "${color-}" != 'true' ]; then printf -- '[ERROR] %s\n' "${@-}" >&2
-	else printf -- '\033[0m[\033[1;31mERROR\033[0m] %s\n' "${@-}" >&2; fi
+	if [ "${color-}" != 'true' ]; then printf '[ERROR] %s\n' "${@-}" >&2
+	else printf '\033[0m[\033[1;31mERROR\033[0m] %s\n' "${@-}" >&2; fi
 }
 printList() {
 	if [ "${quiet-}" != 'true' ]; then
-		if [ "${color-}" != 'true' ]; then printf -- ' * %s\n' "${@-}"
-		else printf -- '\033[0m \033[1;36m*\033[0m %s\n' "${@-}"; fi
+		if [ "${color-}" != 'true' ]; then printf ' * %s\n' "${@-}"
+		else printf '\033[0m \033[1;36m*\033[0m %s\n' "${@-}"; fi
 	fi
 }
 
@@ -297,7 +297,7 @@ rand() {
 mktempFile() {
 	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
 	while file="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
-	(umask 077 && touch -- "${file:?}"); printf -- '%s' "${file:?}"
+	(umask 077 && touch -- "${file:?}"); printf '%s' "${file:?}"
 }
 
 # Write stdin to a file.
@@ -461,7 +461,7 @@ main() {
 
 	# Parse command line options.
 	# shellcheck disable=SC2086
-	{ optParse "${@-}"; set -- ${posArgs-}; }
+	{ optParse "${@-}"; set -- ${posArgs-} >/dev/null; }
 
 	if [ "${color:?}" = 'auto' ]; then
 		# Check color support, but honor ${NO_COLOR} variable (https://no-color.org).
@@ -479,7 +479,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') headerFile="$(mktempFile)"; true > "${headerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') headerFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
+		'builtin') headerFile="$(mktempFile)"; printf '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${headerFile:?}" ] || { printError "No such file: ${headerFile:?}"; exit 1; } ;;
 	esac
@@ -491,7 +491,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') footerFile="$(mktempFile)"; true > "${footerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') footerFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
+		'builtin') footerFile="$(mktempFile)"; printf '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${footerFile:?}" ] || { printError "No such file: ${footerFile:?}"; exit 1; } ;;
 	esac
@@ -503,7 +503,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') sourcesFile="$(mktempFile)"; true > "${sourcesFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') sourcesFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
+		'builtin') sourcesFile="$(mktempFile)"; printf '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${sourcesFile:?}" ] || { printError "No such file: ${sourcesFile:?}"; exit 1; } ;;
 	esac
@@ -515,7 +515,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') allowlistFile="$(mktempFile)"; true > "${allowlistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') allowlistFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
+		'builtin') allowlistFile="$(mktempFile)"; printf '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${allowlistFile:?}" ] || { printError "No such file: ${allowlistFile:?}"; exit 1; } ;;
 	esac
@@ -527,7 +527,7 @@ main() {
 		# If the file value equals "none", use an empty file.
 		'none') denylistFile="$(mktempFile)"; true > "${denylistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') denylistFile="$(mktempFile)"; printf -- '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
+		'builtin') denylistFile="$(mktempFile)"; printf '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${denylistFile:?}" ] || { printError "No such file: ${denylistFile:?}"; exit 1; } ;;
 	esac
@@ -658,23 +658,23 @@ main() {
 
 		# If the header file is not empty, it is appended to the output file.
 		if [ -s "${headerFile:?}" ]; then
-			[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN HEADER"
+			[ -z "${C?}" ] || printf '\n%s\n' "${C?} BEGIN HEADER"
 			awk 1 < "${headerFile:?}"
-			[ -z "${C?}" ] || printf -- '%s\n' "${C?} END HEADER"
+			[ -z "${C?}" ] || printf '%s\n' "${C?} END HEADER"
 		fi
 
 		# If the blocklist file is not empty, it is appended to the output file.
 		if [ -s "${blocklistFile:?}" ]; then
-			[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN BLOCKLIST"
+			[ -z "${C?}" ] || printf '\n%s\n' "${C?} BEGIN BLOCKLIST"
 			awk 1 < "${blocklistFile:?}"
-			[ -z "${C?}" ] || printf -- '%s\n' "${C?} END BLOCKLIST"
+			[ -z "${C?}" ] || printf '%s\n' "${C?} END BLOCKLIST"
 		fi
 
 		# If the footer file is not empty, it is appended to the output file.
 		if [ -s "${footerFile:?}" ]; then
-			[ -z "${C?}" ] || printf -- '\n%s\n' "${C?} BEGIN FOOTER"
+			[ -z "${C?}" ] || printf '\n%s\n' "${C?} BEGIN FOOTER"
 			awk 1 < "${footerFile:?}"
-			[ -z "${C?}" ] || printf -- '%s\n' "${C?} END FOOTER"
+			[ -z "${C?}" ] || printf '%s\n' "${C?} END FOOTER"
 		fi
 	}
 

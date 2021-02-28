@@ -15,7 +15,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 main() {
 	export HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/test-domains-source.txt"
 
-	printf -- 'Test - Main - Argument: Double dash argument\n'
+	printf 'Test - Main - Argument: Double dash argument\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO- -- -v)"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then

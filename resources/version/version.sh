@@ -72,7 +72,7 @@ setVersion() {
 	make -C "${PROJECT_DIR:?}" man
 
 	# Regenerate checksum file.
-	printf -- '%s  %s\n' "${hblockScriptChecksum:?}" 'hblock' > "${PROJECT_DIR:?}"/hblock.sha256
+	printf '%s  %s\n' "${hblockScriptChecksum:?}" 'hblock' > "${PROJECT_DIR:?}"/hblock.sha256
 }
 
 if [ "${1:?}" = 'get' ]; then

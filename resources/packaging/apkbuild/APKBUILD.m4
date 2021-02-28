@@ -1,6 +1,6 @@
 # Maintainer: Héctor Molinero Fernández <hector@molinero.dev>
 pkgname='hblock'
-pkgver='m4_esyscmd(printf -- '%s' "${PKG_VERSION?}")'
+pkgver='m4_esyscmd(printf '%s' "${PKG_VERSION?}")'
 pkgrel='0'
 pkgdesc='Adblocker that creates a hosts file from multiple sources'
 url='https://github.com/hectorm/hblock'

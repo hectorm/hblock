@@ -13,7 +13,7 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
-	printf -- 'Test - Stats: Suffixes\n'
+	printf 'Test - Stats: Suffixes\n'
 	actual="$(runInTestShell "${SCRIPT_DIR:?}/../stats/stats.sh" "${SCRIPT_DIR:?}/test-domains-stats.txt" "file://${SCRIPT_DIR:?}/psl.txt")"
 	expected="$(cat -- "${0%.sh}".out)"
 	if ! assertEquals "${actual?}" "${expected?}"; then
