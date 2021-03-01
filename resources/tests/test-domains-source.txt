@@ -1,49 +1,49 @@
 # Single entries
-SiNglE-enTRY-000.cOm
-SingLE-enTRy-000.com
-sInglE-EntRy-001.coM
-SingLE-ENTrY-001.COm
-    sINGlE-eNtry-002.cOm	
-	SinGLE-EntRY-003.com    
-singLE-enTRy-004
-SInGLE-entRY-005.CoRp
-SinGle-eNtry-006.DOmaIn
-SinGLe-eNTrY-007.eXamPlE
-SINGLe-eNtry-008.hOMe
-sIngLE-EnTRY-009.Host
-sInGle-eNTRY-010.INvalid
-sinGlE-eNtRY-011.lAN
-sINGle-enTry-012.LocAL
-SinGlE-entRy-013.lOCALdomain
-siNglE-enTry-014.lOcaLhosT
-SInglE-eNTrY-015.teST
-siNGlE-eNtRY-016.cOm SiNgLe-entry-016.COM
-sUB-001.sInGlE-eNTry-017.CoM
-suB-000.siNGLe-EntrY-017.com
-Sub-000.SuB-000.sUb-000.SIngLE-eNTrY-017.CoM
-siNgLe-eNtRY-017.CoM
-Sub-000.sUb-000.SinglE-Entry-017.coM
-suB-000.SiNglE-eNtRy-018.cOM
-sub-000.SUb-000.sInglE-eNtry-018.Com
-SUB-001.singlE-ENTrY-018.Com
-SUB-000.sub-000.SUB-000.SiNgLe-ENtry-019.cOM
+sIngLe-entry-000.cOM
+sINgLe-EntrY-000.COM
+SiNGle-entry-001.Com
+sInGLE-ENTRy-001.COm
+    siNGle-ENTry-002.COm	
+	SIngLE-Entry-003.coM    
+SINGLe-EnTry-004
+SinGLE-entRY-005.Corp
+sInGle-eNtRY-006.dOmaiN
+siNgLe-entRy-007.eXaMPle
+sINgLe-enTry-008.HomE
+SINgLE-eNTRy-009.HOsT
+SInGLE-ENtRY-010.inVAlID
+sINglE-EntRy-011.Lan
+sInGLe-EntrY-012.lOCAL
+SIngLe-ENTry-013.LOcaLDomaIN
+SINglE-ENtrY-014.loCalhoST sInglE-eNTry-015.Test
+# SInGLe-enTrY-016.COm SiNGLE-entry-016.COM
+Sub-001.siNgLe-eNtrY-017.COM
+sub-000.SiNglE-EntrY-017.cOM    suB-000.suB-000.sUb-000.SiNGlE-enTry-017.coM	siNGlE-EnTRy-017.cOM
+sub-000.SUB-000.SiNGLE-EntRY-017.cOm
+sub-000.SInGLE-EnTrY-018.coM
+SUb-000.sUB-000.SinGLe-enTrY-018.coM
+sUb-001.sINGLE-Entry-018.COm sUb-001.sINGLE-enTRy-018.COm
+sUb-000.SUb-000.SUB-000.siNGLE-enTRY-019.COm SINGlE-ENTry-020.INVaLiD
+sinGle-enTry-021.0iNVAlID sINGLe-ENtRy-022.vALiD
+sIngLe-eNTry-023.valiD SInGle-entry-024.0iNvaLiD
 
 # Entries with prefix
-0.0.0.0 eNTrY-WiTh-PREFIx-000.cOm
-0.0.0.0	eNTRy-WiTh-pREFIx-001.cOM
-    0.0.0.0	eNTRy-wIth-pREfIX-002.CoM   
-	0.0.0.0 EntRy-WITH-pReFIX-003.COm	
-127.0.0.1 EntrY-WiTh-pREfIx-004.cOM
-::  ENTRy-WitH-PReFix-005.cOm
-::1 entRY-wItH-PrEfiX-006.Com
-255.255.255.255 Entry-wIth-Prefix-007.COm
-fFFF:FFF:ff:f::FfFf:FfFf:fFff eNTRY-wiTH-pREFiX-008.cOM
-NOT-aN-iP eNtry-WIth-PRefIx-009.CoM
+0.0.0.0 ENtry-With-pREFIx-000.Com
+0.0.0.0	eNtrY-wIth-prefix-001.CoM
+    0.0.0.0	enTRY-WItH-prefIX-002.COm   
+	0.0.0.0 EnTrY-wITH-PrEfIX-003.coM	
+127.0.0.1 ENtRY-with-pREFiX-004.cOm
+::  entRy-WITh-PREFiX-005.com eNtrY-WITH-PRefiX-005.cOm     
+::1 eNtrY-WITh-pRefix-006.COm EntRy-wiTH-prEFIx-006.COm		
+255.255.255.255 EnTry-WIth-PREFIx-007.cOm ENTry-with-PREfiX-007.cOm
+FfFf:fff:FF:f::ffFF:FfFf:fFff ENtRY-WItH-PreFiX-008.com ENtRy-wiTH-PrEfIX-008.cOM
+not-an-iP ENTry-With-pReFIx-009.coM
+127.0.0.1 0.0.0.0 eNTRy-With-PREFiX-010.coM
+::1 :: EnTRY-WiTH-pREFiX-011.cOM
+0.0.0.0 entrY-WitH-PREFIx-012.com 0.0.0.0
 
 # Entries with comments
-entRY-WiTH-coMMeNt-000.CoM# DuMMY COMmeNt
-EnTrY-wITH-CoMmEnt-001.com # DUMmy COMMeNT
-enTRy-witH-coMMenT-002.cOm  # dUmmy coMmenT
-Entry-WiTH-ComMENT-003.cOM	# dUmmy COMMEnt
-0.0.0.0 ENTrY-wIth-COMMENt-004.CoM # duMMY cOmmeNt
-#0.0.0.0 eNtrY-WiTh-cOMMENT-005.CoM
+eNTry-with-coMMeNt-000.COM# dUmMY cOMMENt
+entry-with-comment-001.CoM Entry-WITh-cOmMEnt-002.cOM # DuMmY CoMMenT
+0.0.0.0 ENTrY-wItH-COMMEnT-003.CoM ENTrY-wITH-cOmMEnt-004.cOm # DumMY coMmeNT
+#0.0.0.0 ENTRY-wiTH-ComMenT-005.Com
