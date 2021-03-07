@@ -14,56 +14,56 @@ ff02::3         ip6-allhosts
 # END HEADER
 
 # BEGIN BLOCKLIST
-entry-with-comment-000.com
-	└─ 0.0.0.0
-entry-with-comment-001.com
-	└─ 0.0.0.0
-entry-with-comment-002.com
-	└─ 0.0.0.0
-entry-with-comment-003.com
-	└─ 0.0.0.0
-entry-with-comment-004.com
-	└─ 0.0.0.0
-entry-with-prefix-000.com
-	└─ 0.0.0.0
-entry-with-prefix-001.com
-	└─ 0.0.0.0
-entry-with-prefix-002.com
-	└─ 0.0.0.0
-entry-with-prefix-003.com
-	└─ 0.0.0.0
-entry-with-prefix-004.com
-	└─ 0.0.0.0
-entry-with-prefix-005.com
-	└─ 0.0.0.0
-entry-with-prefix-006.com
-	└─ 0.0.0.0
-hblock-check.molinero.dev
-	└─ 0.0.0.0
-single-entry-000.com
-	└─ 0.0.0.0
-single-entry-001.com
-	└─ 0.0.0.0
-single-entry-002.com
-	└─ 0.0.0.0
-single-entry-003.com
-	└─ 0.0.0.0
-single-entry-017.com
-	└─ 0.0.0.0
-sub-000.single-entry-017.com
-	└─ 0.0.0.0
-sub-000.single-entry-018.com
-	└─ 0.0.0.0
-sub-000.sub-000.single-entry-017.com
-	└─ 0.0.0.0
-sub-000.sub-000.single-entry-018.com
-	└─ 0.0.0.0
-sub-000.sub-000.sub-000.single-entry-017.com
-	└─ 0.0.0.0
-sub-000.sub-000.sub-000.single-entry-019.com
-	└─ 0.0.0.0
-sub-001.single-entry-017.com
-	└─ 0.0.0.0
-sub-001.single-entry-018.com
-	└─ 0.0.0.0
+0.0.0.0 entry-with-comment-000.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-comment-000.com
+0.0.0.0 entry-with-comment-001.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-comment-001.com
+0.0.0.0 entry-with-comment-002.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-comment-002.com
+0.0.0.0 entry-with-comment-003.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-comment-003.com
+0.0.0.0 entry-with-comment-004.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-comment-004.com
+0.0.0.0 entry-with-prefix-000.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-prefix-000.com
+0.0.0.0 entry-with-prefix-001.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-prefix-001.com
+0.0.0.0 entry-with-prefix-002.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-prefix-002.com
+0.0.0.0 entry-with-prefix-003.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-prefix-003.com
+0.0.0.0 entry-with-prefix-004.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-prefix-004.com
+0.0.0.0 entry-with-prefix-005.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-prefix-005.com
+0.0.0.0 entry-with-prefix-006.com # % %R %D %F
+	└─ 0.0.0.0 entry-with-prefix-006.com
+0.0.0.0 hblock-check.molinero.dev # % %R %D %F
+	└─ 0.0.0.0 hblock-check.molinero.dev
+0.0.0.0 single-entry-000.com # % %R %D %F
+	└─ 0.0.0.0 single-entry-000.com
+0.0.0.0 single-entry-001.com # % %R %D %F
+	└─ 0.0.0.0 single-entry-001.com
+0.0.0.0 single-entry-002.com # % %R %D %F
+	└─ 0.0.0.0 single-entry-002.com
+0.0.0.0 single-entry-003.com # % %R %D %F
+	└─ 0.0.0.0 single-entry-003.com
+0.0.0.0 single-entry-017.com # % %R %D %F
+	└─ 0.0.0.0 single-entry-017.com
+0.0.0.0 sub-000.single-entry-017.com # % %R %D %F
+	└─ 0.0.0.0 sub-000.single-entry-017.com
+0.0.0.0 sub-000.single-entry-018.com # % %R %D %F
+	└─ 0.0.0.0 sub-000.single-entry-018.com
+0.0.0.0 sub-000.sub-000.single-entry-017.com # % %R %D %F
+	└─ 0.0.0.0 sub-000.sub-000.single-entry-017.com
+0.0.0.0 sub-000.sub-000.single-entry-018.com # % %R %D %F
+	└─ 0.0.0.0 sub-000.sub-000.single-entry-018.com
+0.0.0.0 sub-000.sub-000.sub-000.single-entry-017.com # % %R %D %F
+	└─ 0.0.0.0 sub-000.sub-000.sub-000.single-entry-017.com
+0.0.0.0 sub-000.sub-000.sub-000.single-entry-019.com # % %R %D %F
+	└─ 0.0.0.0 sub-000.sub-000.sub-000.single-entry-019.com
+0.0.0.0 sub-001.single-entry-017.com # % %R %D %F
+	└─ 0.0.0.0 sub-001.single-entry-017.com
+0.0.0.0 sub-001.single-entry-018.com # % %R %D %F
+	└─ 0.0.0.0 sub-001.single-entry-018.com
 # END BLOCKLIST
