@@ -567,7 +567,7 @@ main() {
 		if [ "${regex:?}" = 'true' ]; then
 			grep -vf "${allowlistPatternFile:?}" -- "${blocklistFile:?}" | sponge "${blocklistFile:?}"
 		else
-			grep -Fxvf "${allowlistPatternFile:?}" -- "${blocklistFile:?}" | sponge  "${blocklistFile:?}"
+			grep -Fxvf "${allowlistPatternFile:?}" -- "${blocklistFile:?}" | sponge "${blocklistFile:?}"
 		fi
 		rm -f -- "${allowlistPatternFile:?}"
 	fi
