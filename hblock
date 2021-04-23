@@ -344,7 +344,7 @@ main() {
 	sysConfDir="${ETCDIR?}/hblock"
 
 	# Source environment file if exists.
-	# shellcheck disable=SC1090
+	# shellcheck disable=SC1091
 	if [ -f "${usrConfDir:?}/environment" ]; then
 		set -a; . "${usrConfDir:?}/environment"; set +a
 	elif [ -f "${sysConfDir:?}/environment" ]; then

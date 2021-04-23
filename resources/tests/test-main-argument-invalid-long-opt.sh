@@ -9,7 +9,7 @@ export LC_ALL='C'
 
 SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "${SCRIPT_DIR:?}"/env.sh
 
 main() {
