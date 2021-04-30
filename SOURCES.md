@@ -205,8 +205,8 @@
 [mirror-2-ublock-privacy]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/ublock-privacy/list.txt
 [mirror-3-ublock-privacy]: https://hmirror.molinero.dev/ublock-privacy/list.txt
 
-[homepage-urlhaus]: https://gitlab.com/curben/urlhaus-filter
-[source-urlhaus]: https://curben.gitlab.io/malware-filter/urlhaus-filter-hosts.txt
+[homepage-urlhaus]: https://urlhaus.abuse.ch
+[source-urlhaus]: https://urlhaus.abuse.ch/downloads/hostfile/
 [mirror-1-urlhaus]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/urlhaus/list.txt
 [mirror-2-urlhaus]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/urlhaus/list.txt
 [mirror-3-urlhaus]: https://hmirror.molinero.dev/urlhaus/list.txt
