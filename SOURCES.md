@@ -5,15 +5,10 @@
 | adaway.org                              | CC-BY-3.0                                                         | [Link][homepage-adaway.org]                           | [Link][source-adaway.org]                         | [Link][mirror-1-adaway.org]                         | [Link][mirror-2-adaway.org]                         | [Link][mirror-3-adaway.org]                         |
 | AdBlock NoCoin List                     | MIT                                                               | [Link][homepage-adblock-nocoin-list]                  | [Link][source-adblock-nocoin-list]                | [Link][mirror-1-adblock-nocoin-list]                | [Link][mirror-2-adblock-nocoin-list]                | [Link][mirror-3-adblock-nocoin-list]                |
 | AdGuard - Simplified                    | GPL-3.0-only                                                      | [Link][homepage-adguard-simplified]                   | [Link][source-adguard-simplified]                 | [Link][mirror-1-adguard-simplified]                 | [Link][mirror-2-adguard-simplified]                 | [Link][mirror-3-adguard-simplified]                 |
-| AntiPopads                              | WTFPL                                                             | [Link][homepage-antipopads]                           | [Link][source-antipopads]                         | [Link][mirror-1-antipopads]                         | [Link][mirror-2-antipopads]                         | [Link][mirror-3-antipopads]                         |
 | DigitalSide Threat-Intel                | MIT                                                               | [Link][homepage-digitalside-threat-intel]             | [Link][source-digitalside-threat-intel]           | [Link][mirror-1-digitalside-threat-intel]           | [Link][mirror-2-digitalside-threat-intel]           | [Link][mirror-3-digitalside-threat-intel]           |
 | EasyList                                | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist]                             | [Link][source-easylist]                           | [Link][mirror-1-easylist]                           | [Link][mirror-2-easylist]                           | [Link][mirror-3-easylist]                           |
 | EasyPrivacy                             | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easyprivacy]                          | [Link][source-easyprivacy]                        | [Link][mirror-1-easyprivacy]                        | [Link][mirror-2-easyprivacy]                        | [Link][mirror-3-easyprivacy]                        |
 | ETH Phishing Detect                     | [DBAD][license-eth-phishing-detect]                               | [Link][homepage-eth-phishing-detect]                  | [Link][source-eth-phishing-detect]                | [Link][mirror-1-eth-phishing-detect]                | [Link][mirror-2-eth-phishing-detect]                | [Link][mirror-3-eth-phishing-detect]                |
-| FadeMind - add.2o7Net                   | GPL-3.0-or-later                                                  | [Link][homepage-fademind-add.2o7net]                  | [Link][source-fademind-add.2o7net]                | [Link][mirror-1-fademind-add.2o7net]                | [Link][mirror-2-fademind-add.2o7net]                | [Link][mirror-3-fademind-add.2o7net]                |
-| FadeMind - add.Dead                     | GPL-3.0-or-later                                                  | [Link][homepage-fademind-add.dead]                    | [Link][source-fademind-add.dead]                  | [Link][mirror-1-fademind-add.dead]                  | [Link][mirror-2-fademind-add.dead]                  | [Link][mirror-3-fademind-add.dead]                  |
-| FadeMind - add.Risk                     | GPL-3.0-or-later                                                  | [Link][homepage-fademind-add.risk]                    | [Link][source-fademind-add.risk]                  | [Link][mirror-1-fademind-add.risk]                  | [Link][mirror-2-fademind-add.risk]                  | [Link][mirror-3-fademind-add.risk]                  |
-| FadeMind - add.Spam                     | GPL-3.0-or-later                                                  | [Link][homepage-fademind-add.spam]                    | [Link][source-fademind-add.spam]                  | [Link][mirror-1-fademind-add.spam]                  | [Link][mirror-2-fademind-add.spam]                  | [Link][mirror-3-fademind-add.spam]                  |
 | Geoffrey Frogeye - First-party trackers | MIT                                                               | [Link][homepage-gfrogeye-firstparty-trackers]         | [Link][source-gfrogeye-firstparty-trackers]       | [Link][mirror-1-gfrogeye-firstparty-trackers]       | [Link][mirror-2-gfrogeye-firstparty-trackers]       | [Link][mirror-3-gfrogeye-firstparty-trackers]       |
 | hostsVN                                 | MIT                                                               | [Link][homepage-hostsvn]                              | [Link][source-hostsvn]                            | [Link][mirror-1-hostsvn]                            | [Link][mirror-2-hostsvn]                            | [Link][mirror-3-hostsvn]                            |
 | KADhosts                                | CC-BY-SA-4.0                                                      | [Link][homepage-kadhosts]                             | [Link][source-kadhosts]                           | [Link][mirror-1-kadhosts]                           | [Link][mirror-2-kadhosts]                           | [Link][mirror-3-kadhosts]                           |
@@ -51,12 +46,6 @@
 [mirror-2-adguard-simplified]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/adguard-simplified/list.txt
 [mirror-3-adguard-simplified]: https://hmirror.molinero.dev/adguard-simplified/list.txt
 
-[homepage-antipopads]: https://github.com/Yhonay/antipopads
-[source-antipopads]: https://raw.githubusercontent.com/Yhonay/antipopads/master/hosts
-[mirror-1-antipopads]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
-[mirror-2-antipopads]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/antipopads/list.txt
-[mirror-3-antipopads]: https://hmirror.molinero.dev/antipopads/list.txt
-
 [homepage-digitalside-threat-intel]: https://osint.digitalside.it
 [source-digitalside-threat-intel]: https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt
 [mirror-1-digitalside-threat-intel]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
@@ -81,30 +70,6 @@
 [mirror-1-eth-phishing-detect]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
 [mirror-2-eth-phishing-detect]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/eth-phishing-detect/list.txt
 [mirror-3-eth-phishing-detect]: https://hmirror.molinero.dev/eth-phishing-detect/list.txt
-
-[homepage-fademind-add.2o7net]: https://github.com/FadeMind/hosts.extras
-[source-fademind-add.2o7net]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.2o7Net/hosts
-[mirror-1-fademind-add.2o7net]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
-[mirror-2-fademind-add.2o7net]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/fademind-add.2o7net/list.txt
-[mirror-3-fademind-add.2o7net]: https://hmirror.molinero.dev/fademind-add.2o7net/list.txt
-
-[homepage-fademind-add.dead]: https://github.com/FadeMind/hosts.extras
-[source-fademind-add.dead]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Dead/hosts
-[mirror-1-fademind-add.dead]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
-[mirror-2-fademind-add.dead]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/fademind-add.dead/list.txt
-[mirror-3-fademind-add.dead]: https://hmirror.molinero.dev/fademind-add.dead/list.txt
-
-[homepage-fademind-add.risk]: https://github.com/FadeMind/hosts.extras
-[source-fademind-add.risk]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Risk/hosts
-[mirror-1-fademind-add.risk]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
-[mirror-2-fademind-add.risk]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/fademind-add.risk/list.txt
-[mirror-3-fademind-add.risk]: https://hmirror.molinero.dev/fademind-add.risk/list.txt
-
-[homepage-fademind-add.spam]: https://github.com/FadeMind/hosts.extras
-[source-fademind-add.spam]: https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
-[mirror-1-fademind-add.spam]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
-[mirror-2-fademind-add.spam]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/fademind-add.spam/list.txt
-[mirror-3-fademind-add.spam]: https://hmirror.molinero.dev/fademind-add.spam/list.txt
 
 [homepage-gfrogeye-firstparty-trackers]: https://hostfiles.frogeye.fr
 [source-gfrogeye-firstparty-trackers]: https://hostfiles.frogeye.fr/firstparty-trackers.txt

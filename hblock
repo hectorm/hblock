@@ -42,15 +42,10 @@ HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/antipopads/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.2o7net/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.dead/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.risk/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/fademind-add.spam/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/gfrogeye-firstparty-trackers/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/hostsvn/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
