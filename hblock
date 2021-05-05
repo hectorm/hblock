@@ -316,7 +316,7 @@ sanitizeBlocklist() {
 	tr -d '\r' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz' \
 		| sed -e "${leadingScript:?};${ipv4Script:?};${ipv6Script:?};${trailingScript:?}" \
 		| { grep -e "^${domainRegex:?}\([[:blank:]]\{1,\}${domainRegex:?}\)*$" ||:; } \
-		| tr -s ' \t' '\n'
+		| tr -s ' \t' '\n' | sed 's/\.$//'
 }
 
 # Remove reserved Top Level Domains.

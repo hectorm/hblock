@@ -11,7 +11,7 @@ sInGle-eNtRY-006.dOmaiN
 siNgLe-entRy-007.eXaMPle
 sINgLe-enTry-008.HomE
 SINgLE-eNTRy-009.HOsT
-SInGLE-ENtRY-010.inVAlID
+SInGLE-ENtRY-010.inVAlID.
 sINglE-EntRy-011.Lan
 sInGLe-EntrY-012.lOCAL
 SIngLe-ENTry-013.LOcaLDomaIN
@@ -22,8 +22,8 @@ Sub-001.siNgLe-eNtrY-017.COM
 sub-000.SiNglE-EntrY-017.cOM    suB-000.suB-000.sUb-000.SiNGlE-enTry-017.coM	siNGlE-EnTRy-017.cOM
 sub-000.SUB-000.SiNGLE-EntRY-017.cOm
 sub-000.SInGLE-EnTrY-018.coM
-SUb-000.sUB-000.SinGLe-enTrY-018.coM
-sUb-001.sINGLE-Entry-018.COm sUb-001.sINGLE-enTRy-018.COm
+SUb-000.sUB-000.SinGLe-enTrY-018.coM.
+sUb-001.sINGLE-Entry-018.COm. sUb-001.sINGLE-enTRy-018.COm.
 sUb-000.SUb-000.SUB-000.siNGLE-enTRY-019.COm SINGlE-ENTry-020.lOCal
 sinGle-enTry-021.-iNVAlID- sINGLe-ENtRy-022.vALiD
 sIngLe-eNTry-023.valiD SInGle-entry-024.-iNvaLiD-
