@@ -12,7 +12,6 @@
 | Geoffrey Frogeye - First-party trackers | MIT                                                               | [Link][homepage-gfrogeye-firstparty-trackers]         | [Link][source-gfrogeye-firstparty-trackers]       | [Link][mirror-1-gfrogeye-firstparty-trackers]       | [Link][mirror-2-gfrogeye-firstparty-trackers]       | [Link][mirror-3-gfrogeye-firstparty-trackers]       |
 | hostsVN                                 | MIT                                                               | [Link][homepage-hostsvn]                              | [Link][source-hostsvn]                            | [Link][mirror-1-hostsvn]                            | [Link][mirror-2-hostsvn]                            | [Link][mirror-3-hostsvn]                            |
 | KADhosts                                | CC-BY-SA-4.0                                                      | [Link][homepage-kadhosts]                             | [Link][source-kadhosts]                           | [Link][mirror-1-kadhosts]                           | [Link][mirror-2-kadhosts]                           | [Link][mirror-3-kadhosts]                           |
-| lightswitch05 - Ads & Tracking          | Apache-2.0                                                        | [Link][homepage-lightswitch05-ads-and-tracking]       | [Link][source-lightswitch05-ads-and-tracking]     | [Link][mirror-1-lightswitch05-ads-and-tracking]     | [Link][mirror-2-lightswitch05-ads-and-tracking]     | [Link][mirror-3-lightswitch05-ads-and-tracking]     |
 | matomo.org - Spammers                   | [Public domain][license-matomo.org-spammers]                      | [Link][homepage-matomo.org-spammers]                  | [Link][source-matomo.org-spammers]                | [Link][mirror-1-matomo.org-spammers]                | [Link][mirror-2-matomo.org-spammers]                | [Link][mirror-3-matomo.org-spammers]                |
 | mitchellkrogza - Badd-Boyz-Hosts        | MIT                                                               | [Link][homepage-mitchellkrogza-badd-boyz-hosts]       | [Link][source-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-1-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-2-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-3-mitchellkrogza-badd-boyz-hosts]     |
 | pgl.yoyo.org                            | [MCRAE][license-pgl.yoyo.org]                                     | [Link][homepage-pgl.yoyo.org]                         | [Link][source-pgl.yoyo.org]                       | [Link][mirror-1-pgl.yoyo.org]                       | [Link][mirror-2-pgl.yoyo.org]                       | [Link][mirror-3-pgl.yoyo.org]                       |
@@ -88,12 +87,6 @@
 [mirror-1-kadhosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/kadhosts/list.txt
 [mirror-2-kadhosts]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/kadhosts/list.txt
 [mirror-3-kadhosts]: https://hmirror.molinero.dev/kadhosts/list.txt
-
-[homepage-lightswitch05-ads-and-tracking]: https://www.github.developerdan.com/hosts/
-[source-lightswitch05-ads-and-tracking]: https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt
-[mirror-1-lightswitch05-ads-and-tracking]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/lightswitch05-ads-and-tracking/list.txt
-[mirror-2-lightswitch05-ads-and-tracking]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/lightswitch05-ads-and-tracking/list.txt
-[mirror-3-lightswitch05-ads-and-tracking]: https://hmirror.molinero.dev/lightswitch05-ads-and-tracking/list.txt
 
 [homepage-matomo.org-spammers]: https://github.com/matomo-org/referrer-spam-list
 [license-matomo.org-spammers]: https://github.com/matomo-org/referrer-spam-list#license
