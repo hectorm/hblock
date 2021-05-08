@@ -4,6 +4,7 @@
 |:----------------------------------------|:------------------------------------------------------------------|:-----------------------------------------------------:|:-------------------------------------------------:|:---------------------------------------------------:|:---------------------------------------------------:|:---------------------------------------------------:|
 | adaway.org                              | CC-BY-3.0                                                         | [Link][homepage-adaway.org]                           | [Link][source-adaway.org]                         | [Link][mirror-1-adaway.org]                         | [Link][mirror-2-adaway.org]                         | [Link][mirror-3-adaway.org]                         |
 | AdBlock NoCoin List                     | MIT                                                               | [Link][homepage-adblock-nocoin-list]                  | [Link][source-adblock-nocoin-list]                | [Link][mirror-1-adblock-nocoin-list]                | [Link][mirror-2-adblock-nocoin-list]                | [Link][mirror-3-adblock-nocoin-list]                |
+| AdGuard - CNAME trackers                | MIT                                                               | [Link][homepage-adguard-cname-trackers]               | [Link][source-adguard-cname-trackers]             | [Link][mirror-1-adguard-cname-trackers]             | [Link][mirror-2-adguard-cname-trackers]             | [Link][mirror-3-adguard-cname-trackers]             |
 | AdGuard - Simplified                    | GPL-3.0-only                                                      | [Link][homepage-adguard-simplified]                   | [Link][source-adguard-simplified]                 | [Link][mirror-1-adguard-simplified]                 | [Link][mirror-2-adguard-simplified]                 | [Link][mirror-3-adguard-simplified]                 |
 | DigitalSide Threat-Intel                | MIT                                                               | [Link][homepage-digitalside-threat-intel]             | [Link][source-digitalside-threat-intel]           | [Link][mirror-1-digitalside-threat-intel]           | [Link][mirror-2-digitalside-threat-intel]           | [Link][mirror-3-digitalside-threat-intel]           |
 | EasyList                                | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist]                             | [Link][source-easylist]                           | [Link][mirror-1-easylist]                           | [Link][mirror-2-easylist]                           | [Link][mirror-3-easylist]                           |
@@ -38,6 +39,12 @@
 [mirror-1-adblock-nocoin-list]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 [mirror-2-adblock-nocoin-list]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/adblock-nocoin-list/list.txt
 [mirror-3-adblock-nocoin-list]: https://hmirror.molinero.dev/adblock-nocoin-list/list.txt
+
+[homepage-adguard-cname-trackers]: https://github.com/AdguardTeam/cname-trackers
+[source-adguard-cname-trackers]: https://raw.githubusercontent.com/AdguardTeam/cname-trackers/master/combined_disguised_trackers_justdomains.txt
+[mirror-1-adguard-cname-trackers]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-cname-trackers/list.txt
+[mirror-2-adguard-cname-trackers]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/adguard-cname-trackers/list.txt
+[mirror-3-adguard-cname-trackers]: https://hmirror.molinero.dev/adguard-cname-trackers/list.txt
 
 [homepage-adguard-simplified]: https://github.com/AdguardTeam/AdGuardSDNSFilter
 [source-adguard-simplified]: https://filters.adtidy.org/extension/chromium/filters/15.txt
