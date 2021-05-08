@@ -47,7 +47,7 @@
 [mirror-3-adguard-cname-trackers]: https://hmirror.molinero.dev/adguard-cname-trackers/list.txt
 
 [homepage-adguard-simplified]: https://github.com/AdguardTeam/AdGuardSDNSFilter
-[source-adguard-simplified]: https://filters.adtidy.org/extension/chromium/filters/15.txt
+[source-adguard-simplified]: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
 [mirror-1-adguard-simplified]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
 [mirror-2-adguard-simplified]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/adguard-simplified/list.txt
 [mirror-3-adguard-simplified]: https://hmirror.molinero.dev/adguard-simplified/list.txt
