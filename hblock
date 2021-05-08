@@ -45,6 +45,22 @@ HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-ara/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-bul/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-ces-slk/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-deu/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-fra/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-heb/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-ind/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-ita/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-kor/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-lav/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-lit/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-nld/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-por/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-rus/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-spa/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-zho/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easyprivacy/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/eth-phishing-detect/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/gfrogeye-firstparty-trackers/list.txt
