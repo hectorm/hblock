@@ -43,6 +43,7 @@ HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-cname-trackers/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/dandelionsprout-nordic/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-ara/list.txt
