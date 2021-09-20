@@ -7,7 +7,6 @@
 | AdGuard - CNAME trackers                | MIT                                                               | [Link][homepage-adguard-cname-trackers]               | [Link][source-adguard-cname-trackers]             | [Link][mirror-1-adguard-cname-trackers]             | [Link][mirror-2-adguard-cname-trackers]             | [Link][mirror-3-adguard-cname-trackers]             |
 | AdGuard - Simplified                    | GPL-3.0-only                                                      | [Link][homepage-adguard-simplified]                   | [Link][source-adguard-simplified]                 | [Link][mirror-1-adguard-simplified]                 | [Link][mirror-2-adguard-simplified]                 | [Link][mirror-3-adguard-simplified]                 |
 | DandelionSprout - Nordic                | [Dandelicence][license-dandelionsprout-nordic]                    | [Link][homepage-dandelionsprout-nordic]               | [Link][source-dandelionsprout-nordic]             | [Link][mirror-1-dandelionsprout-nordic]             | [Link][mirror-2-dandelionsprout-nordic]             | [Link][mirror-3-dandelionsprout-nordic]             |
-| DigitalSide Threat-Intel                | MIT                                                               | [Link][homepage-digitalside-threat-intel]             | [Link][source-digitalside-threat-intel]           | [Link][mirror-1-digitalside-threat-intel]           | [Link][mirror-2-digitalside-threat-intel]           | [Link][mirror-3-digitalside-threat-intel]           |
 | EasyList                                | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist]                             | [Link][source-easylist]                           | [Link][mirror-1-easylist]                           | [Link][mirror-2-easylist]                           | [Link][mirror-3-easylist]                           |
 | EasyList - Arabic                       | CC-BY-NC-SA-3.0                                                   | [Link][homepage-easylist-ara]                         | [Link][source-easylist-ara]                       | [Link][mirror-1-easylist-ara]                       | [Link][mirror-2-easylist-ara]                       | [Link][mirror-3-easylist-ara]                       |
 | EasyList - Bulgarian                    | GPL-3.0-only                                                      | [Link][homepage-easylist-bul]                         | [Link][source-easylist-bul]                       | [Link][mirror-1-easylist-bul]                       | [Link][mirror-2-easylist-bul]                       | [Link][mirror-3-easylist-bul]                       |
@@ -75,12 +74,6 @@
 [mirror-1-dandelionsprout-nordic]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/dandelionsprout-nordic/list.txt
 [mirror-2-dandelionsprout-nordic]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/dandelionsprout-nordic/list.txt
 [mirror-3-dandelionsprout-nordic]: https://hmirror.molinero.dev/dandelionsprout-nordic/list.txt
-
-[homepage-digitalside-threat-intel]: https://osint.digitalside.it
-[source-digitalside-threat-intel]: https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt
-[mirror-1-digitalside-threat-intel]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/digitalside-threat-intel/list.txt
-[mirror-2-digitalside-threat-intel]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/digitalside-threat-intel/list.txt
-[mirror-3-digitalside-threat-intel]: https://hmirror.molinero.dev/digitalside-threat-intel/list.txt
 
 [homepage-easylist]: https://easylist.to
 [source-easylist]: https://easylist.to/easylist/easylist.txt
