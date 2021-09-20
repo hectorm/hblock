@@ -1,6 +1,6 @@
 # NAME
 
-hBlock - manual page for hBlock 3.2.2
+hBlock - manual page for hBlock 3.2.3
 
 # SYNOPSIS
 
@@ -15,7 +15,7 @@ from connecting to them.
 
 # OPTIONS
 
-**-O**, **--output** &lt;FILE\|-&gt;, ${HBLOCK\_OUTPUT\_FILE}
+**-O**, **--output** \<FILE\|->, ${HBLOCK_OUTPUT_FILE}
 
 > Output file location.
 >
@@ -23,8 +23,7 @@ from connecting to them.
 >
 > (default: */etc/hosts*)
 
-**-H**, **--header** &lt;FILE\|builtin\|none\|-&gt;,
-${HBLOCK\_HEADER\_FILE}
+**-H**, **--header** \<FILE\|builtin\|none\|->, ${HBLOCK_HEADER_FILE}
 
 > File to be included at the beginning of the output file.
 >
@@ -37,14 +36,13 @@ ${HBLOCK\_HEADER\_FILE}
 > If unspecified and any of the following files exists, its content is
 > used.
 >
-> ${XDG\_CONFIG\_HOME}/hblock/header
+> ${XDG_CONFIG_HOME}/hblock/header
 >
 > */etc/hblock/header*
 >
 > (default: builtin)
 
-**-F**, **--footer** &lt;FILE\|builtin\|none\|-&gt;,
-${HBLOCK\_FOOTER\_FILE}
+**-F**, **--footer** \<FILE\|builtin\|none\|->, ${HBLOCK_FOOTER_FILE}
 
 > File to be included at the end of the output file.
 >
@@ -57,14 +55,13 @@ ${HBLOCK\_FOOTER\_FILE}
 > If unspecified and any of the following files exists, its content is
 > used.
 >
-> ${XDG\_CONFIG\_HOME}/hblock/footer
+> ${XDG_CONFIG_HOME}/hblock/footer
 >
 > */etc/hblock/footer*
 >
 > (default: builtin)
 
-**-S**, **--sources** &lt;FILE\|builtin\|none\|-&gt;,
-${HBLOCK\_SOURCES\_FILE}
+**-S**, **--sources** \<FILE\|builtin\|none\|->, ${HBLOCK_SOURCES_FILE}
 
 > File with line separated URLs used to generate the blocklist.
 >
@@ -77,14 +74,14 @@ ${HBLOCK\_SOURCES\_FILE}
 > If unspecified and any of the following files exists, its content is
 > used.
 >
-> ${XDG\_CONFIG\_HOME}/hblock/sources.list
+> ${XDG_CONFIG_HOME}/hblock/sources.list
 >
 > */etc/hblock/sources.list*
 >
 > (default: builtin)
 
-**-A**, **--allowlist** &lt;FILE\|builtin\|none\|-&gt;,
-${HBLOCK\_ALLOWLIST\_FILE}
+**-A**, **--allowlist** \<FILE\|builtin\|none\|->,
+${HBLOCK_ALLOWLIST_FILE}
 
 > File with line separated entries to be removed from the blocklist.
 >
@@ -97,14 +94,14 @@ ${HBLOCK\_ALLOWLIST\_FILE}
 > If unspecified and any of the following files exists, its content is
 > used.
 >
-> ${XDG\_CONFIG\_HOME}/hblock/allow.list
+> ${XDG_CONFIG_HOME}/hblock/allow.list
 >
 > */etc/hblock/allow.list*
 >
 > (default: builtin)
 
-**-D**, **--denylist** &lt;FILE\|builtin\|none\|-&gt;,
-${HBLOCK\_DENYLIST\_FILE}
+**-D**, **--denylist** \<FILE\|builtin\|none\|->,
+${HBLOCK_DENYLIST_FILE}
 
 > File with line separated entries to be added to the blocklist.
 >
@@ -117,52 +114,52 @@ ${HBLOCK\_DENYLIST\_FILE}
 > If unspecified and any of the following files exists, its content is
 > used.
 >
-> ${XDG\_CONFIG\_HOME}/hblock/deny.list
+> ${XDG_CONFIG_HOME}/hblock/deny.list
 >
 > */etc/hblock/deny.list*
 >
 > (default: builtin)
 
-**-R**, **--redirection** &lt;REDIRECTION&gt;, ${HBLOCK\_REDIRECTION}
+**-R**, **--redirection** \<REDIRECTION>, ${HBLOCK_REDIRECTION}
 
 > Redirection for all entries in the blocklist.
 >
 > (default: 0.0.0.0)
 
-**-W**, **--wrap** &lt;NUMBER&gt;, ${HBLOCK\_WRAP}
+**-W**, **--wrap** \<NUMBER>, ${HBLOCK_WRAP}
 
 > Break blocklist lines after this number of entries.
 >
 > (default: 1)
 
-**-T**, **--template** &lt;TEMPLATE&gt;, ${HBLOCK\_TEMPLATE}
+**-T**, **--template** \<TEMPLATE>, ${HBLOCK_TEMPLATE}
 
 > Template applied to each entry.
 >
-> %D = &lt;DOMAIN&gt;, %R = &lt;REDIRECTION&gt;
+> %D = \<DOMAIN>, %R = \<REDIRECTION>
 >
 > (default: %R %D)
 
-**-C**, **--comment** &lt;COMMENT&gt;, ${HBLOCK\_COMMENT}
+**-C**, **--comment** \<COMMENT>, ${HBLOCK_COMMENT}
 
 > Character used for comments.
 >
-> (default: \#)
+> (default: #)
 
-**-l**, **--\[no-\]lenient**, ${HBLOCK\_LENIENT}
+**-l**, **--\[no-\]lenient**, ${HBLOCK_LENIENT}
 
 > Match all entries from sources regardless of their IP, instead of
 > 0.0.0.0, 127.0.0.1, ::, ::1 or nothing.
 >
 > (default: false)
 
-**-r**, **--\[no-\]regex**, ${HBLOCK\_REGEX}
+**-r**, **--\[no-\]regex**, ${HBLOCK_REGEX}
 
 > Use POSIX BREs in the allowlist instead of fixed strings.
 >
 > (default: false)
 
-**-f**, **--\[no-\]filter-subdomains**, ${HBLOCK\_FILTER\_SUBDOMAINS}
+**-f**, **--\[no-\]filter-subdomains**, ${HBLOCK_FILTER_SUBDOMAINS}
 
 > Do not include subdomains when the parent domain is also blocked.
 > Useful for reducing the blocklist size in cases such as when DNS
@@ -170,19 +167,19 @@ ${HBLOCK\_DENYLIST\_FILE}
 >
 > (default: false)
 
-**-c**, **--\[no-\]continue**, ${HBLOCK\_CONTINUE}
+**-c**, **--\[no-\]continue**, ${HBLOCK_CONTINUE}
 
 > Do not abort if a download error occurs.
 >
 > (default: false)
 
-**-q**, **--\[no-\]quiet**, ${HBLOCK\_QUIET}
+**-q**, **--\[no-\]quiet**, ${HBLOCK_QUIET}
 
 > Suppress non-error messages.
 >
 > (default: false)
 
-**-x**, **--color** &lt;auto\|true\|false&gt;, ${HBLOCK\_COLOR}
+**-x**, **--color** \<auto\|true\|false>, ${HBLOCK_COLOR}
 
 > Colorize the output.
 >
@@ -198,9 +195,9 @@ ${HBLOCK\_DENYLIST\_FILE}
 
 # REPORTING BUGS
 
-Report bugs to: &lt;https://github.com/hectorm/hblock/issues&gt;
+Report bugs to: \<https://github.com/hectorm/hblock/issues>
 
   
-Author: Héctor Molinero Fernández &lt;hector@molinero.dev&gt;  
+Author: Héctor Molinero Fernández \<hector@molinero.dev>  
 License: MIT, https://opensource.org/licenses/MIT  
 Repository: https://github.com/hectorm/hblock
