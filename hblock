@@ -16,7 +16,7 @@ if [ -z "${ETCDIR+x}" ]; then ETCDIR='/etc'; fi
 if [ -z "${XDG_CONFIG_HOME+x}" ]; then XDG_CONFIG_HOME="${HOME-}/.config"; fi
 
 # Remove temporary files on exit.
-cleanup() { ret="$?"; rm -f -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"; }
+cleanup() { ret="$?"; rm -rf -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"; }
 { trap cleanup EXIT ||:; trap cleanup TERM ||:; trap cleanup INT ||:; trap cleanup HUP ||:; } 2>/dev/null
 
 # Built-in header.
@@ -113,6 +113,7 @@ optParse() {
 			'-r' |'--regex'|'--no-regex') optArgBool "${@-}"; regex="${optArg:?}" ;;
 			'-f' |'--filter-subdomains'|'--no-filter-subdomains') optArgBool "${@-}"; filterSubdomains="${optArg:?}" ;;
 			'-c' |'--continue'|'--no-continue') optArgBool "${@-}"; continue="${optArg:?}" ;;
+			'-p'*|'--parallel') optArgStr "${@-}"; parallel="${optArg?}"; shift "${optShift:?}" ;;
 			'-q' |'--quiet'|'--no-quiet') optArgBool "${@-}"; quiet="${optArg:?}" ;;
 			'-x'*|'--color') optArgStr "${@-}"; color="${optArg?}"; shift "${optShift:?}" ;;
 			'-v' |'--version') showVersion ;;
@@ -239,6 +240,9 @@ showHelp() {
 		 -c, --[no-]continue, \${HBLOCK_CONTINUE}%NL
 		    Do not abort if a download error occurs.%NL
 		    (default: ${continue?})%NL
+		 -p, --parallel, \${HBLOCK_PARALLEL}%NL
+		    Maximum concurrency for parallel downloads.%NL
+		    (default: ${parallel?})%NL
 		 -q, --[no-]quiet, \${HBLOCK_QUIET}%NL
 		    Suppress non-error messages.%NL
 		    (default: ${quiet?})%NL
@@ -284,8 +288,16 @@ printError() { [ -n "${NO_STDERR+x}" ] || printf "${COLOR_RESET-}[${COLOR_BRED-}
 printList() {  [ -n "${NO_STDOUT+x}" ] || printf "${COLOR_RESET-} ${COLOR_BCYAN-}*${COLOR_RESET-} %s\n" "${@-}"; }
 
 # Print a pseudorandom string.
-rand() {
-	:& awk -v N="${!}" 'BEGIN{srand();printf("%08x%06x",rand()*2^31-1,N)}'
+rand() { :& awk -v N="${!}" 'BEGIN{srand();printf("%08x%06x",rand()*2^31-1,N)}'; }
+
+# Print the number of running jobs.
+njobs() { jobs | grep -c 'Running'; }
+
+# Create a temporary directory.
+mktempDir() {
+	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
+	while dir="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${dir:?}" ]; do sleep 1; done
+	(umask 077 && mkdir -- "${dir:?}"); printf '%s' "${dir:?}"
 }
 
 # Create a temporary file.
@@ -293,6 +305,13 @@ mktempFile() {
 	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
 	while file="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
 	(umask 077 && touch -- "${file:?}"); printf '%s' "${file:?}"
+}
+
+# Create a temporary FIFO special file.
+mktempFifo() {
+	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
+	while fifo="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${fifo:?}" ]; do sleep 1; done
+	(umask 077 && mkfifo -- "${fifo:?}"); printf '%s' "${fifo:?}"
 }
 
 # Write stdin to a file.
@@ -449,6 +468,9 @@ main() {
 	# Abort if a download error occurs.
 	continue="${HBLOCK_CONTINUE-"false"}"
 
+	# Maximum concurrency for parallel downloads.
+	parallel="${HBLOCK_PARALLEL-"1"}"
+
 	# Colorize the output.
 	color="${HBLOCK_COLOR-"auto"}"
 
@@ -541,20 +563,32 @@ main() {
 	if [ -s "${sourcesFile:?}" ]; then
 		printInfo 'Downloading sources'
 
+		sourcesDir="$(mktempDir)"; sourcesFifo="$(mktempFifo)"; sourcesIndex='0'
 		# Read the sources file ignoring comments or empty lines.
-		sourceFile="$(mktempFile)"
-		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${sourcesFile:?}" | while IFS= read -r url || [ -n "${url?}" ]; do
-			printList "${url:?}"
-			if fetchUrl "${url:?}" > "${sourceFile:?}"; then
-				{ cat -- "${sourceFile:?}"; printf '\n'; } >> "${blocklistFile:?}"
-			elif [ "${continue:?}" = 'true' ]; then
-				printWarn "Cannot obtain source: ${url:?}"
-			else
-				printError "Cannot obtain source: ${url:?}"
-				exit 1
+		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${sourcesFile:?}" > "${sourcesFifo:?}" &
+		while IFS= read -r url || [ -n "${url?}" ]; do
+			# Wait if the number of running jobs exceeds the concurrency limit.
+			if [ "${parallel:?}" -gt '0' ]; then
+				while [ "${parallel:?}" -le "$(njobs)" ]; do
+					wait "${!}"
+				done
 			fi
-		done
-		rm -f -- "${sourceFile:?}"
+			# Send download job to background.
+			{
+				printList "${url:?}"
+				if ! fetchUrl "${url:?}" > "${sourcesDir:?}"/"${sourcesIndex:?}"; then
+					if [ "${continue:?}" = 'true' ]; then
+						printWarn "Cannot obtain source: ${url:?}"
+					else
+						printError "Cannot obtain source: ${url:?}"
+						kill "${$}"; exit 1
+					fi
+				fi
+			} &
+			sourcesIndex="$((sourcesIndex+1))"
+		done < "${sourcesFifo:?}" && wait
+		cat "${sourcesDir:?}"/* > "${blocklistFile:?}"
+		rm -rf -- "${sourcesDir:?}" "${sourcesFifo:?}"
 	fi
 
 	# If the denylist file is not empty, it is appended to the blocklist file.
