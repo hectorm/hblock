@@ -27,16 +27,24 @@ rand() {
 	:& awk -v N="${!}" 'BEGIN{srand();printf("%08x%06x",rand()*2^31-1,N)}'
 }
 
-# Create a temporary file.
-mktempFile() {
+# Create a temporary directory, file or FIFO special file.
+createTemp() {
 	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
-	while file="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
-	(umask 077 && touch -- "${file:?}"); printf '%s' "${file:?}"
+	while t="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${t:?}" ]; do sleep 1; done
+	(
+		umask 077
+		case "${1-}" in
+			'dir') mkdir -- "${t:?}" ;;
+			'file') touch -- "${t:?}" ;;
+			'fifo') mkfifo -- "${t:?}" ;;
+		esac
+		printf '%s' "${t:?}"
+	)
 }
 
 # Write stdin to a file.
 sponge() {
-	spongeFile="$(mktempFile)"; cat > "${spongeFile:?}"
+	spongeFile="$(createTemp 'file')"; cat > "${spongeFile:?}"
 	cat -- "${spongeFile:?}" > "${1:?}"; rm -f -- "${spongeFile:?}"
 }
 
@@ -74,7 +82,7 @@ main() {
 	fi
 
 	# Create stats file.
-	statsFile="$(mktempFile)"
+	statsFile="$(createTemp 'file')"
 
 	if [ "${pslUrl:?}" = 'none' ]; then
 		# Remove until the last part of the domain and count occurrences.
@@ -82,7 +90,7 @@ main() {
 			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' >> "${statsFile:?}"
 	else
 		# Download public suffix list.
-		pslFile="$(mktempFile)"
+		pslFile="$(createTemp 'file')"
 		fetchUrl "${pslUrl:?}" > "${pslFile:?}"
 
 		# Punycode encode suffix list, sort suffixes by length in descending order and transform each one into regexes.
@@ -92,13 +100,13 @@ main() {
 			| sponge "${pslFile:?}"
 
 		# Remove the last part of the domain and count occurrences.
-		workFile="$(mktempFile)"
+		workFile="$(createTemp 'file')"
 		sed -e 's/^[^.]\{1,\}//' -- "${domainsFile:?}" \
 			| awk '{A[$1]++}END{for(i in A)printf("%s\t%s\n",A[i],i)}' \
 			> "${workFile:?}"
 
 		# Count occurrences for each suffix.
-		matchFile="$(mktempFile)"
+		matchFile="$(createTemp 'file')"
 		while IFS= read -r suffix || [ -n "${suffix?}" ]; do
 			if grep -- "${suffix:?}" "${workFile:?}" > "${matchFile:?}"; then
 				count="$(awk '{N+=$1}END{print(N)}' < "${matchFile:?}")"

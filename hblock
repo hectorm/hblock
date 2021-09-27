@@ -290,35 +290,29 @@ printList() {  [ -n "${NO_STDOUT+x}" ] || printf "${COLOR_RESET-} ${COLOR_BCYAN-
 # Print a pseudorandom string.
 rand() { :& awk -v N="${!}" 'BEGIN{srand();printf("%08x%06x",rand()*2^31-1,N)}'; }
 
-# Print the number of running jobs.
-njobs() { jobs | grep -c 'Running'; }
-
-# Create a temporary directory.
-mktempDir() {
+# Create a temporary directory, file or FIFO special file.
+createTemp() {
 	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
-	while dir="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${dir:?}" ]; do sleep 1; done
-	(umask 077 && mkdir -- "${dir:?}"); printf '%s' "${dir:?}"
-}
-
-# Create a temporary file.
-mktempFile() {
-	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
-	while file="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${file:?}" ]; do sleep 1; done
-	(umask 077 && touch -- "${file:?}"); printf '%s' "${file:?}"
-}
-
-# Create a temporary FIFO special file.
-mktempFifo() {
-	# POSIX does not specify the mktemp utility, so here comes a hacky solution.
-	while fifo="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${fifo:?}" ]; do sleep 1; done
-	(umask 077 && mkfifo -- "${fifo:?}"); printf '%s' "${fifo:?}"
+	while t="${TMPDIR:-${TMP:-/tmp}}/hblock.${$}.$(rand)" && [ -e "${t:?}" ]; do sleep 1; done
+	(
+		umask 077
+		case "${1-}" in
+			'dir') mkdir -- "${t:?}" ;;
+			'file') touch -- "${t:?}" ;;
+			'fifo') mkfifo -- "${t:?}" ;;
+		esac
+		printf '%s' "${t:?}"
+	)
 }
 
 # Write stdin to a file.
 sponge() {
-	spongeFile="$(mktempFile)"; cat > "${spongeFile:?}"
+	spongeFile="$(createTemp 'file')"; cat > "${spongeFile:?}"
 	cat -- "${spongeFile:?}" > "${1:?}"; rm -f -- "${spongeFile:?}"
 }
+
+# Print the number of running jobs.
+njobs() { jobs | grep -c 'Running'; }
 
 # Print to stdout the contents of a URL.
 fetchUrl() {
@@ -499,11 +493,11 @@ main() {
 	# Check the header file.
 	case "${headerFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') headerFile="$(mktempFile)"; cat <&0 > "${headerFile:?}" ;;
+		'-') headerFile="$(createTemp 'file')"; cat <&0 > "${headerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') headerFile="$(mktempFile)"; true > "${headerFile:?}" ;;
+		'none') headerFile="$(createTemp 'file')"; true > "${headerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') headerFile="$(mktempFile)"; printf '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
+		'builtin') headerFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${headerFile:?}" ] || { printError "No such file: ${headerFile:?}"; exit 1; } ;;
 	esac
@@ -511,11 +505,11 @@ main() {
 	# Check the footer file.
 	case "${footerFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') footerFile="$(mktempFile)"; cat <&0 > "${footerFile:?}" ;;
+		'-') footerFile="$(createTemp 'file')"; cat <&0 > "${footerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') footerFile="$(mktempFile)"; true > "${footerFile:?}" ;;
+		'none') footerFile="$(createTemp 'file')"; true > "${footerFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') footerFile="$(mktempFile)"; printf '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
+		'builtin') footerFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${footerFile:?}" ] || { printError "No such file: ${footerFile:?}"; exit 1; } ;;
 	esac
@@ -523,11 +517,11 @@ main() {
 	# Check the sources file.
 	case "${sourcesFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') sourcesFile="$(mktempFile)"; cat <&0 > "${sourcesFile:?}" ;;
+		'-') sourcesFile="$(createTemp 'file')"; cat <&0 > "${sourcesFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') sourcesFile="$(mktempFile)"; true > "${sourcesFile:?}" ;;
+		'none') sourcesFile="$(createTemp 'file')"; true > "${sourcesFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') sourcesFile="$(mktempFile)"; printf '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
+		'builtin') sourcesFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${sourcesFile:?}" ] || { printError "No such file: ${sourcesFile:?}"; exit 1; } ;;
 	esac
@@ -535,11 +529,11 @@ main() {
 	# Check the allowlist file.
 	case "${allowlistFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') allowlistFile="$(mktempFile)"; cat <&0 > "${allowlistFile:?}" ;;
+		'-') allowlistFile="$(createTemp 'file')"; cat <&0 > "${allowlistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') allowlistFile="$(mktempFile)"; true > "${allowlistFile:?}" ;;
+		'none') allowlistFile="$(createTemp 'file')"; true > "${allowlistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') allowlistFile="$(mktempFile)"; printf '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
+		'builtin') allowlistFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${allowlistFile:?}" ] || { printError "No such file: ${allowlistFile:?}"; exit 1; } ;;
 	esac
@@ -547,23 +541,23 @@ main() {
 	# Check the denylist file.
 	case "${denylistFile:?}" in
 		# If the file value equals "-", use stdin.
-		'-') denylistFile="$(mktempFile)"; cat <&0 > "${denylistFile:?}" ;;
+		'-') denylistFile="$(createTemp 'file')"; cat <&0 > "${denylistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') denylistFile="$(mktempFile)"; true > "${denylistFile:?}" ;;
+		'none') denylistFile="$(createTemp 'file')"; true > "${denylistFile:?}" ;;
 		# If the file value equals "builtin", use the built-in value.
-		'builtin') denylistFile="$(mktempFile)"; printf '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
+		'builtin') denylistFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
 		# If the file does not exist, throw an error.
 		*) [ -e "${denylistFile:?}" ] || { printError "No such file: ${denylistFile:?}"; exit 1; } ;;
 	esac
 
 	# Create an empty blocklist file.
-	blocklistFile="$(mktempFile)"
+	blocklistFile="$(createTemp 'file')"
 
 	# If the sources file is not empty, each source is downloaded and appended to the blocklist file.
 	if [ -s "${sourcesFile:?}" ]; then
 		printInfo 'Downloading sources'
 
-		sourcesDir="$(mktempDir)"; sourcesFifo="$(mktempFifo)"; sourcesIndex='0'
+		sourcesDir="$(createTemp 'dir')"; sourcesFifo="$(createTemp 'fifo')"; sourcesIndex='0'
 		# Read the sources file ignoring comments or empty lines.
 		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${sourcesFile:?}" > "${sourcesFifo:?}" &
 		while IFS= read -r url || [ -n "${url?}" ]; do
@@ -606,7 +600,7 @@ main() {
 	# If the allowlist file is not empty, the entries on it are removed from the blocklist file.
 	if [ -s "${allowlistFile:?}" ]; then
 		printInfo 'Applying allowlist'
-		allowlistPatternFile="$(mktempFile)"
+		allowlistPatternFile="$(createTemp 'file')"
 		# Entries are treated as regexes depending on whether the regex option is enabled.
 		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${allowlistFile:?}" >> "${allowlistPatternFile:?}"
 		if [ "${regex:?}" = 'true' ]; then
