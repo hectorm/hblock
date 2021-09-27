@@ -312,7 +312,7 @@ sponge() {
 }
 
 # Print the number of running jobs.
-njobs() { jobs | grep -c 'Running'; }
+njobs() { jobs | grep -ic 'running'; }
 
 # Print to stdout the contents of a URL.
 fetchUrl() {
