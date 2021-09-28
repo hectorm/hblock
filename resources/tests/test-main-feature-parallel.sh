@@ -14,16 +14,28 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 
 main() {
 	# shellcheck disable=SC2155
-	export HBLOCK_SOURCES="$(cat <<-EOF
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-		file://${SCRIPT_DIR:?}/test-domains-source.txt
-	EOF
+	export HBLOCK_SOURCES="$(printf '%s\n' \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
+		"file://${SCRIPT_DIR:?}/test-domains-source.txt" "file://${SCRIPT_DIR:?}/test-domains-source.txt" \
 	)"
 	export HBLOCK_PARALLEL='1'
 
