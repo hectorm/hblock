@@ -26,6 +26,8 @@ hBlock is a POSIX-compliant shell script that gets a list of domains that serve 
 and creates a [hosts file](https://en.wikipedia.org/wiki/Hosts_(file)), [among other formats](./resources/alt-formats/), that prevents your system
 from connecting to them.
 
+:warning: hBlock by default **replaces the hosts file of your system**, consider making a backup first if you have entries you want to preserve.
+
 ## Installation
 
 hBlock is available in various package managers. Please check the [PACKAGES.md](./PACKAGES.md) file for an up-to-date list.
