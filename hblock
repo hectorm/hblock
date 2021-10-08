@@ -311,8 +311,8 @@ sponge() {
 	cat -- "${spongeFile:?}" > "${1:?}"; rm -f -- "${spongeFile:?}"
 }
 
-# Print the number of running jobs.
-njobs() { jobs | grep -ic 'running'; }
+# Count files or directories in a directory.
+dirCount() { [ -e "${1:?}" ] && printf '%s' "${#}" || printf '%s' '0'; }
 
 # Print to stdout the contents of a URL.
 fetchUrl() {
@@ -329,6 +329,9 @@ fetchUrl() {
 		fi
 	fi
 }
+
+# Remove comments from string.
+removeComments() { sed -e 's/[[:blank:]]*#.*//;/^$/d'; }
 
 # Transform hosts file entries to domain names.
 sanitizeBlocklist() {
@@ -557,32 +560,47 @@ main() {
 	if [ -s "${sourcesFile:?}" ]; then
 		printInfo 'Downloading sources'
 
-		sourcesDir="$(createTemp 'dir')"; sourcesFifo="$(createTemp 'fifo')"; sourcesIndex='0'
+		sourcesDlDir="$(createTemp 'dir')"
+		sourcesUrlFile="$(createTemp 'file')"
+
 		# Read the sources file ignoring comments or empty lines.
-		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${sourcesFile:?}" > "${sourcesFifo:?}" &
+		removeComments < "${sourcesFile:?}" > "${sourcesUrlFile:?}"
+
 		while IFS= read -r url || [ -n "${url?}" ]; do
 			# Wait if the number of running jobs exceeds the concurrency limit.
 			if [ "${parallel:?}" -gt '0' ]; then
-				while [ "${parallel:?}" -le "$(njobs)" ]; do
-					wait "${!}"
+				while [ "${parallel:?}" -le "$(dirCount "${sourcesDlDir:?}"/*.part)" ]; do
+					# POSIX does not specify the "-n" option, wait for the last PID as fallback.
+					# shellcheck disable=SC3045
+					wait -n 2>/dev/null || wait "${!}"
 				done
 			fi
-			# Send download job to background.
+
+			# Initialize the download job and send it to the background.
+			printList "${url:?}"
+			sourceDlFile="${sourcesDlDir:?}"/"$(rand)"
+			touch -- "${sourceDlFile:?}.part"
 			{
-				printList "${url:?}"
-				if ! fetchUrl "${url:?}" > "${sourcesDir:?}"/"${sourcesIndex:?}"; then
+				if fetchUrl "${url:?}" > "${sourceDlFile:?}.part"; then
+					if [ -e "${sourceDlFile:?}.part" ]; then
+						mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}"
+					fi
+				else
+					rm -f -- "${sourceDlFile:?}.part"
 					if [ "${continue:?}" = 'true' ]; then
 						printWarn "Cannot obtain source: ${url:?}"
 					else
 						printError "Cannot obtain source: ${url:?}"
-						kill "${$}"; exit 1
+						{ kill "${$}"; exit 1; } 2>/dev/null
 					fi
 				fi
 			} &
-			sourcesIndex="$((sourcesIndex+1))"
-		done < "${sourcesFifo:?}" && wait
-		cat "${sourcesDir:?}"/* > "${blocklistFile:?}"
-		rm -rf -- "${sourcesDir:?}" "${sourcesFifo:?}"
+		done < "${sourcesUrlFile:?}"
+		wait
+
+		# Append downloaded sources to the blocklist file.
+		cat -- "${sourcesDlDir:?}"/* >> "${blocklistFile:?}"
+		rm -rf -- "${sourcesDlDir:?}"
 	fi
 
 	# If the denylist file is not empty, it is appended to the blocklist file.
@@ -602,7 +620,7 @@ main() {
 		printInfo 'Applying allowlist'
 		allowlistPatternFile="$(createTemp 'file')"
 		# Entries are treated as regexes depending on whether the regex option is enabled.
-		sed -e 's/[[:blank:]]*#.*//;/^$/d' -- "${allowlistFile:?}" >> "${allowlistPatternFile:?}"
+		removeComments < "${allowlistFile:?}" >> "${allowlistPatternFile:?}"
 		if [ "${regex:?}" = 'true' ]; then
 			grep -vf "${allowlistPatternFile:?}" -- "${blocklistFile:?}" | sponge "${blocklistFile:?}"
 		else
