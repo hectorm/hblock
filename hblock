@@ -466,7 +466,7 @@ main() {
 	continue="${HBLOCK_CONTINUE-"false"}"
 
 	# Maximum concurrency for parallel downloads.
-	parallel="${HBLOCK_PARALLEL-"1"}"
+	parallel="${HBLOCK_PARALLEL-"4"}"
 
 	# Colorize the output.
 	color="${HBLOCK_COLOR-"auto"}"
