@@ -495,7 +495,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') headerFile="$(createTemp 'file')"; cat <&0 > "${headerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') headerFile="$(createTemp 'file')"; true > "${headerFile:?}" ;;
+		'none') headerFile="$(createTemp 'file')" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') headerFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_HEADER_BUILTIN?}" > "${headerFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -507,7 +507,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') footerFile="$(createTemp 'file')"; cat <&0 > "${footerFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') footerFile="$(createTemp 'file')"; true > "${footerFile:?}" ;;
+		'none') footerFile="$(createTemp 'file')" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') footerFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_FOOTER_BUILTIN?}" > "${footerFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -519,7 +519,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') sourcesFile="$(createTemp 'file')"; cat <&0 > "${sourcesFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') sourcesFile="$(createTemp 'file')"; true > "${sourcesFile:?}" ;;
+		'none') sourcesFile="$(createTemp 'file')" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') sourcesFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_SOURCES_BUILTIN?}" > "${sourcesFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -531,7 +531,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') allowlistFile="$(createTemp 'file')"; cat <&0 > "${allowlistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') allowlistFile="$(createTemp 'file')"; true > "${allowlistFile:?}" ;;
+		'none') allowlistFile="$(createTemp 'file')" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') allowlistFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_ALLOWLIST_BUILTIN?}" > "${allowlistFile:?}" ;;
 		# If the file does not exist, throw an error.
@@ -543,7 +543,7 @@ main() {
 		# If the file value equals "-", use stdin.
 		'-') denylistFile="$(createTemp 'file')"; cat <&0 > "${denylistFile:?}" ;;
 		# If the file value equals "none", use an empty file.
-		'none') denylistFile="$(createTemp 'file')"; true > "${denylistFile:?}" ;;
+		'none') denylistFile="$(createTemp 'file')" ;;
 		# If the file value equals "builtin", use the built-in value.
 		'builtin') denylistFile="$(createTemp 'file')"; printf '%s' "${HBLOCK_DENYLIST_BUILTIN?}" > "${denylistFile:?}" ;;
 		# If the file does not exist, throw an error.
