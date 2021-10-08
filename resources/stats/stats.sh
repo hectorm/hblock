@@ -23,9 +23,7 @@ exists() {
 }
 
 # Print a pseudorandom string.
-rand() {
-	:& awk -v N="${!}" 'BEGIN{srand();printf("%08x%06x",rand()*2^31-1,N)}'
-}
+rand() { :& awk -v N="${!}" 'BEGIN{srand();printf("%08x%06x",rand()*2^31-1,N)}'; }
 
 # Create a temporary directory, file or FIFO special file.
 createTemp() {
