@@ -1,6 +1,6 @@
 # NAME
 
-hBlock - manual page for hBlock 3.2.3
+hBlock - manual page for hBlock 3.3.0
 
 # SYNOPSIS
 
@@ -172,6 +172,12 @@ ${HBLOCK_DENYLIST_FILE}
 > Do not abort if a download error occurs.
 >
 > (default: false)
+
+**-p**, **--parallel**, ${HBLOCK_PARALLEL}
+
+> Maximum concurrency for parallel downloads.
+>
+> (default: 4)
 
 **-q**, **--\[no-\]quiet**, ${HBLOCK_QUIET}
 
