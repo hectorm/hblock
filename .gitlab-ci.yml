@@ -49,11 +49,11 @@ test-fedora-latest:
   script:
     - 'make test-all'
 
-test-centos-latest:
+test-rockylinux-latest:
   stage: 'test'
   needs:
     - 'lint-shellcheck-stable'
-  image: 'docker.io/centos:latest'
+  image: 'docker.io/rockylinux:latest'
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
@@ -293,19 +293,19 @@ build-fedora-latest:
     expire_in: '1 day'
     paths: ['./dist-build-fedora-latest/']
 
-build-centos-latest:
+build-rockylinux-latest:
   stage: 'build'
   needs:
-    - 'test-centos-latest'
-  image: 'docker.io/centos:latest'
+    - 'test-rockylinux-latest'
+  image: 'docker.io/rockylinux:latest'
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
     - 'make hosts stats index'
-    - 'mv ./dist/ ./dist-build-centos-latest/'
+    - 'mv ./dist/ ./dist-build-rockylinux-latest/'
   artifacts:
     expire_in: '1 day'
-    paths: ['./dist-build-centos-latest/']
+    paths: ['./dist-build-rockylinux-latest/']
 
 build-opensuse-latest:
   stage: 'build'
@@ -387,7 +387,7 @@ package-rpm:
   stage: 'package'
   needs:
     - 'build-fedora-latest'
-    - 'build-centos-latest'
+    - 'build-rockylinux-latest'
     - 'build-opensuse-latest'
   image: 'docker.io/fedora:latest'
   before_script:

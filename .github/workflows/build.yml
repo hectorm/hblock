@@ -50,10 +50,10 @@ jobs:
       - name: 'Build project'
         run: 'make hosts stats index'
 
-  build-centos-latest:
-    name: 'Build on CentOS'
+  build-rockylinux-latest:
+    name: 'Build on Rocky Linux'
     runs-on: 'ubuntu-latest'
-    container: 'docker.io/centos:latest'
+    container: 'docker.io/rockylinux:latest'
     steps:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl findutils file idn2 make'

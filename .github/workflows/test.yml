@@ -50,10 +50,10 @@ jobs:
       - name: 'Test project'
         run: 'make test-all'
 
-  test-centos-latest:
-    name: 'Test on CentOS'
+  test-rockylinux-latest:
+    name: 'Test on Rocky Linux'
     runs-on: 'ubuntu-latest'
-    container: 'docker.io/centos:latest'
+    container: 'docker.io/rockylinux:latest'
     steps:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl findutils file idn2 make'
