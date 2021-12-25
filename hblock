@@ -582,9 +582,7 @@ main() {
 			touch -- "${sourceDlFile:?}.part"
 			{
 				if fetchUrl "${url:?}" > "${sourceDlFile:?}.part"; then
-					if [ -e "${sourceDlFile:?}.part" ]; then
-						mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}"
-					fi
+					mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}"
 				else
 					rm -f -- "${sourceDlFile:?}.part"
 					if [ "${continue:?}" = 'true' ]; then
