@@ -79,6 +79,19 @@ test-archlinux-latest:
   script:
     - 'make test-all'
 
+test-archlinux-latest-awk-nawk:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/archlinux:latest'
+  before_script:
+    - 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
+    - 'pacman -Syu --noconfirm --needed nawk'
+    - 'pacman -Qi nawk'
+  script:
+    - 'ln -sf "$(command -v nawk)" /usr/bin/awk'
+    - 'make test-all'
+
 test-alpine-latest:
   stage: 'test'
   needs:
@@ -87,6 +100,129 @@ test-alpine-latest:
   before_script:
     - 'apk add --no-cache ca-certificates curl file libidn2 make'
   script:
+    - 'make test-all'
+
+test-alpine-latest-shell-bash:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache bash'
+    - 'apk info --no-cache bash'
+  script:
+    - 'make test-all TEST_SHELL="$(command -v bash)"'
+
+test-alpine-latest-shell-zsh:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache zsh'
+    - 'apk info --no-cache zsh'
+  script:
+    - 'make test-all TEST_SHELL="$(command -v zsh)"'
+
+test-alpine-latest-shell-dash:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache dash'
+    - 'apk info --no-cache dash'
+  script:
+    - 'make test-all TEST_SHELL="$(command -v dash)"'
+
+test-alpine-latest-shell-mksh:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache mksh'
+    - 'apk info --no-cache mksh'
+  script:
+    - 'make test-all TEST_SHELL="$(command -v mksh)"'
+
+test-alpine-latest-shell-oksh:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing oksh'
+    - 'apk info --no-cache oksh'
+  script:
+    - 'make test-all TEST_SHELL="$(command -v oksh)"'
+
+test-alpine-latest-shell-yash:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache yash'
+    - 'apk info --no-cache yash'
+  script:
+    - 'make test-all TEST_SHELL="$(command -v yash)"'
+
+test-alpine-latest-shell-busybox-ash:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache busybox'
+    - 'apk info --no-cache busybox'
+  script:
+    - 'make test-all TEST_SHELL="$(command -v busybox) ash"'
+
+test-alpine-latest-awk-gawk:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache gawk'
+    - 'apk info --no-cache gawk'
+  script:
+    - 'ln -sf "$(command -v gawk)" /usr/bin/awk'
+    - 'make test-all'
+
+test-alpine-latest-awk-mawk:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache mawk'
+    - 'apk info --no-cache mawk'
+  script:
+    - 'ln -sf "$(command -v mawk)" /usr/bin/awk'
+    - 'make test-all'
+
+test-alpine-latest-awk-busybox-awk:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image: 'docker.io/alpine:latest'
+  before_script:
+    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache busybox'
+    - 'apk info --no-cache busybox'
+  script:
+    - 'ln -sf "$(command -v busybox)" /usr/bin/awk'
     - 'make test-all'
 
 test-openwrt-latest:
@@ -100,90 +236,6 @@ test-openwrt-latest:
   script:
     - 'make test-all'
 
-test-alpine-edge-shell-bash:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache bash'
-    - 'apk info --no-cache bash'
-  script:
-    - 'make test-all TEST_SHELL="$(command -v bash)"'
-
-test-alpine-edge-shell-zsh:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache zsh'
-    - 'apk info --no-cache zsh'
-  script:
-    - 'make test-all TEST_SHELL="$(command -v zsh)"'
-
-test-alpine-edge-shell-dash:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache dash'
-    - 'apk info --no-cache dash'
-  script:
-    - 'make test-all TEST_SHELL="$(command -v dash)"'
-
-test-alpine-edge-shell-mksh:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache mksh'
-    - 'apk info --no-cache mksh'
-  script:
-    - 'make test-all TEST_SHELL="$(command -v mksh)"'
-
-test-alpine-edge-shell-oksh:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing oksh'
-    - 'apk info --no-cache oksh'
-  script:
-    - 'make test-all TEST_SHELL="$(command -v oksh)"'
-
-test-alpine-edge-shell-yash:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache yash'
-    - 'apk info --no-cache yash'
-  script:
-    - 'make test-all TEST_SHELL="$(command -v yash)"'
-
-test-alpine-edge-shell-busybox-ash:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache busybox'
-    - 'apk info --no-cache busybox'
-  script:
-    - 'make test-all TEST_SHELL="$(command -v busybox) ash"'
-
 test-openwrt-latest-shell-busybox-ash:
   stage: 'test'
   needs:
@@ -196,58 +248,6 @@ test-openwrt-latest-shell-busybox-ash:
     - 'opkg info busybox'
   script:
     - 'make test-all TEST_SHELL="$(command -v busybox) ash"'
-
-test-alpine-edge-awk-gawk:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache gawk'
-    - 'apk info --no-cache gawk'
-  script:
-    - 'ln -sf "$(command -v gawk)" /usr/bin/awk'
-    - 'make test-all'
-
-test-alpine-edge-awk-mawk:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache mawk'
-    - 'apk info --no-cache mawk'
-  script:
-    - 'ln -sf "$(command -v mawk)" /usr/bin/awk'
-    - 'make test-all'
-
-test-alpine-edge-awk-busybox-awk:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/alpine:edge'
-  before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
-    - 'apk add --no-cache busybox'
-    - 'apk info --no-cache busybox'
-  script:
-    - 'ln -sf "$(command -v busybox)" /usr/bin/awk'
-    - 'make test-all'
-
-test-archlinux-latest-awk-nawk:
-  stage: 'test'
-  needs:
-    - 'lint-shellcheck-stable'
-  image: 'docker.io/archlinux:latest'
-  before_script:
-    - 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
-    - 'pacman -Syu --noconfirm --needed nawk'
-    - 'pacman -Qi nawk'
-  script:
-    - 'ln -sf "$(command -v nawk)" /usr/bin/awk'
-    - 'make test-all'
 
 build-debian-latest:
   stage: 'build'
@@ -325,6 +325,7 @@ build-archlinux-latest:
   stage: 'build'
   needs:
     - 'test-archlinux-latest'
+    - 'test-archlinux-latest-awk-nawk'
   image: 'docker.io/archlinux:latest'
   before_script:
     - 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
@@ -339,6 +340,16 @@ build-alpine-latest:
   stage: 'build'
   needs:
     - 'test-alpine-latest'
+    - 'test-alpine-latest-shell-bash'
+    - 'test-alpine-latest-shell-zsh'
+    - 'test-alpine-latest-shell-dash'
+    - 'test-alpine-latest-shell-mksh'
+    - 'test-alpine-latest-shell-oksh'
+    - 'test-alpine-latest-shell-yash'
+    - 'test-alpine-latest-shell-busybox-ash'
+    - 'test-alpine-latest-awk-gawk'
+    - 'test-alpine-latest-awk-mawk'
+    - 'test-alpine-latest-awk-busybox-awk'
   image: 'docker.io/alpine:latest'
   before_script:
     - 'apk add --no-cache ca-certificates curl file libidn2 make'
@@ -353,6 +364,7 @@ build-openwrt-latest:
   stage: 'build'
   needs:
     - 'test-openwrt-latest'
+    - 'test-openwrt-latest-shell-busybox-ash'
   image: 'docker.io/openwrtorg/rootfs:latest'
   before_script:
     - 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'

@@ -1,0 +1,695 @@
+name: 'CI'
+
+on:
+  push:
+    tags: ['*']
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+  schedule:
+    - cron: '42 02 * * *'
+  workflow_dispatch:
+
+jobs:
+
+  lint-shellcheck-stable:
+    name: 'Lint with ShellCheck'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/koalaman/shellcheck-alpine:stable'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Print ShellCheck version'
+        run: 'shellcheck --version'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Lint project'
+        run: 'make lint'
+
+  test-debian-latest:
+    name: 'Test on Debian'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/debian:latest'
+    steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-ubuntu-latest:
+    name: 'Test on Ubuntu'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/ubuntu:latest'
+    steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-fedora-latest:
+    name: 'Test on Fedora'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/fedora:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-rockylinux-latest:
+    name: 'Test on Rocky Linux'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/rockylinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-opensuse-latest:
+    name: 'Test on openSUSE'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/opensuse/leap:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-archlinux-latest:
+    name: 'Test on Arch Linux'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-archlinux-latest-awk-nawk:
+    name: 'Test on Arch Linux (nawk awk implementation)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'pacman -Syu --noconfirm --needed nawk'
+      - name: 'Print nawk version'
+        run: 'pacman -Qi nawk'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v nawk)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-latest:
+    name: 'Test on Alpine Linux'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-latest-shell-bash:
+    name: 'Test on Alpine Linux (bash shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache bash'
+      - name: 'Print bash version'
+        run: 'apk info --no-cache bash'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v bash)"'
+
+  test-alpine-latest-shell-zsh:
+    name: 'Test on Alpine Linux (zsh shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache zsh'
+      - name: 'Print zsh version'
+        run: 'apk info --no-cache zsh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v zsh)"'
+
+  test-alpine-latest-shell-dash:
+    name: 'Test on Alpine Linux (dash shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache dash'
+      - name: 'Print dash version'
+        run: 'apk info --no-cache dash'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v dash)"'
+
+  test-alpine-latest-shell-mksh:
+    name: 'Test on Alpine Linux (mksh shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache mksh'
+      - name: 'Print mksh version'
+        run: 'apk info --no-cache mksh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v mksh)"'
+
+  test-alpine-latest-shell-oksh:
+    name: 'Test on Alpine Linux (oksh shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing oksh'
+      - name: 'Print oksh version'
+        run: 'apk info --no-cache oksh'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v oksh)"'
+
+  test-alpine-latest-shell-yash:
+    name: 'Test on Alpine Linux (yash shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache yash'
+      - name: 'Print yash version'
+        run: 'apk info --no-cache yash'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v yash)"'
+
+  test-alpine-latest-shell-busybox-ash:
+    name: 'Test on Alpine Linux (BusyBox ash shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache busybox'
+      - name: 'Print BusyBox version'
+        run: 'apk info --no-cache busybox'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
+
+  test-alpine-latest-awk-gawk:
+    name: 'Test on Alpine Linux (gawk awk implementation)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache gawk'
+      - name: 'Print gawk version'
+        run: 'apk info --no-cache gawk'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v gawk)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-latest-awk-mawk:
+    name: 'Test on Alpine Linux (mawk awk implementation)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache mawk'
+      - name: 'Print mawk version'
+        run: 'apk info --no-cache mawk'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v mawk)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-latest-awk-busybox-awk:
+    name: 'Test on Alpine Linux (BusyBox awk implementation)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache busybox'
+      - name: 'Print busybox version'
+        run: 'apk info --no-cache busybox'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v busybox)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-openwrt-latest:
+    name: 'Test on OpenWrt'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
+    steps:
+      - name: 'Apply workarounds for GitHub Actions runner'
+        run: 'printf "ID=alpine\n" > /etc/_os-release'
+      - name: 'Update package index'
+        run: 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
+      - name: 'Install packages'
+        run: 'opkg install ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make test-all'
+
+  test-openwrt-latest-shell-busybox-ash:
+    name: 'Test on OpenWrt (BusyBox ash shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
+    steps:
+      - name: 'Apply workarounds for GitHub Actions runner'
+        run: 'printf "ID=alpine\n" > /etc/_os-release'
+      - name: 'Update package index'
+        run: 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
+      - name: 'Install packages'
+        run: 'opkg install ca-certificates curl file idn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'opkg install busybox'
+      - name: 'Print BusyBox version'
+        run: 'opkg info busybox'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
+
+  test-macos-latest:
+    name: 'Test on macOS bash'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-macos-latest-shell-bash:
+    name: 'Test on macOS (bash shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v bash)"'
+
+  test-macos-latest-shell-zsh:
+    name: 'Test on macOS (zsh shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v zsh)"'
+
+  test-macos-latest-shell-dash:
+    name: 'Test on macOS (dash shell)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Test project'
+        run: 'make test-all TEST_SHELL="$(command -v dash)"'
+
+  build-debian-latest:
+    name: 'Build on Debian'
+    needs:
+      - 'test-debian-latest'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/debian:latest'
+    steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-ubuntu-latest:
+    name: 'Build on Ubuntu'
+    needs:
+      - 'test-ubuntu-latest'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/ubuntu:latest'
+    steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-fedora-latest:
+    name: 'Build on Fedora'
+    needs:
+      - 'test-fedora-latest'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/fedora:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-rockylinux-latest:
+    name: 'Build on Rocky Linux'
+    needs:
+      - 'test-rockylinux-latest'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/rockylinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-opensuse-latest:
+    name: 'Build on openSUSE'
+    needs:
+      - 'test-opensuse-latest'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/opensuse/tumbleweed:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-archlinux-latest:
+    name: 'Build on Arch Linux'
+    needs:
+      - 'test-archlinux-latest'
+      - 'test-archlinux-latest-awk-nawk'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-alpine-latest:
+    name: 'Build on Alpine Linux'
+    needs:
+      - 'test-alpine-latest'
+      - 'test-alpine-latest-shell-bash'
+      - 'test-alpine-latest-shell-zsh'
+      - 'test-alpine-latest-shell-dash'
+      - 'test-alpine-latest-shell-mksh'
+      - 'test-alpine-latest-shell-oksh'
+      - 'test-alpine-latest-shell-yash'
+      - 'test-alpine-latest-shell-busybox-ash'
+      - 'test-alpine-latest-awk-gawk'
+      - 'test-alpine-latest-awk-mawk'
+      - 'test-alpine-latest-awk-busybox-awk'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-openwrt-latest:
+    name: 'Build on OpenWrt'
+    needs:
+      - 'test-openwrt-latest'
+      - 'test-openwrt-latest-shell-busybox-ash'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/openwrtorg/rootfs:latest'
+    steps:
+      - name: 'Apply workarounds for GitHub Actions runner'
+        run: 'printf "ID=alpine\n" > /etc/_os-release'
+      - name: 'Update package index'
+        run: 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
+      - name: 'Install packages'
+        run: 'opkg install ca-certificates curl file idn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  build-macos-latest:
+    name: 'Build on macOS'
+    needs:
+      - 'test-macos-latest'
+      - 'test-macos-latest-shell-bash'
+      - 'test-macos-latest-shell-zsh'
+      - 'test-macos-latest-shell-dash'
+    runs-on: 'macos-latest'
+    steps:
+      - name: 'Use dash as sh'
+        run: 'sudo ln -sf /bin/dash /var/select/sh'
+      - name: 'Install packages'
+        run: 'brew install curl libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Build project'
+        run: 'make hosts stats index'
+
+  package-deb:
+    name: 'Create deb package'
+    needs:
+      - 'build-debian-latest'
+      - 'build-ubuntu-latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/debian:latest'
+    steps:
+      - name: 'Update package index'
+        run: 'apt-get update'
+      - name: 'Install packages'
+        run: 'apt-get install -y ca-certificates curl file idn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apt-get install -y build-essential debhelper dpkg-dev m4 rsync'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Package project'
+        run: |
+          make package-deb
+          mv ./dist/ ./dist-package-deb/
+          apt install -y ./dist-package-deb/packages/hblock-*.deb
+          command hblock -v
+
+  package-rpm:
+    name: 'Create RPM package'
+    needs:
+      - 'build-fedora-latest'
+      - 'build-rockylinux-latest'
+      - 'build-opensuse-latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/fedora:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'dnf install -y ca-certificates curl findutils file idn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'dnf install -y m4 rpm-build rpmdevtools rsync systemd'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Package project'
+        run: |
+          make package-rpm
+          mv ./dist/ ./dist-package-rpm/
+          dnf install -y ./dist-package-rpm/packages/hblock-*.rpm
+          command hblock -v
+
+  package-pkgbuild:
+    name: 'Create PKGBUILD package'
+    needs:
+      - 'build-archlinux-latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/archlinux:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'pacman -Syu --noconfirm --needed base-devel m4 rsync sudo'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Package project'
+        run: |
+          mkdir ./dist/; chown nobody ./dist/
+          sudo -u nobody make package-pkgbuild
+          mv ./dist/ ./dist-package-pkgbuild/
+          pacman -U --noconfirm ./dist-package-pkgbuild/packages/hblock-*.pkg.tar.*
+          command hblock -v
+
+  package-apkbuild:
+    name: 'Create APKBUILD package'
+    needs:
+      - 'build-alpine-latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache alpine-sdk m4 rsync sudo'
+      - name: 'Create unprivileged user and setup abuild'
+        run: |
+          adduser -D -G abuild build
+          printf "\n%s\n" "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          sudo -u build abuild-keygen -a -i -n
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Package project'
+        run: |
+          mkdir ./dist/; chown build ./dist/
+          sudo -u build make package-apkbuild
+          mv ./dist/ ./dist-package-apkbuild/
+          apk add --allow-untrusted ./dist-package-apkbuild/packages/hblock-*.apk
+          command hblock -v
+
+  package-npm:
+    name: 'Create npm package'
+    needs:
+      - 'build-alpine-latest'
+    runs-on: 'ubuntu-latest'
+    container:
+      image: 'docker.io/node:current-alpine'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache m4 rsync'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Package project'
+        run: |
+          make package-npm
+          mv ./dist/ ./dist-package-npm/
+          npm install -g ./dist-package-npm/packages/hblock-*.tgz
+          command hblock -v
