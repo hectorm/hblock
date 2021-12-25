@@ -582,6 +582,7 @@ main() {
 			touch -- "${sourceDlFile:?}.part"
 			{
 				if fetchUrl "${url:?}" > "${sourceDlFile:?}.part"; then
+					printf '\n' >> "${sourceDlFile:?}.part"
 					mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}"
 				else
 					rm -f -- "${sourceDlFile:?}.part"
