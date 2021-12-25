@@ -376,7 +376,7 @@ jobs:
         run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
   test-macos-latest:
-    name: 'Test on macOS bash'
+    name: 'Test on macOS'
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'macos-latest'
