@@ -44,7 +44,7 @@ setVersion() {
 	version="${1:?}"
 
 	# Update script version.
-	sed -e 's|^\(# Version:[[:blank:]]*\).\{1,\}$|\1'"${version:?}"'|g' \
+	sed -e 's|\(.*HBLOCK_VERSION='"'"'\)[^'"'"']\{1,\}\('"'"'.*\)|\1'"${version:?}"'\2|g' \
 		-- "${PROJECT_DIR:?}"/hblock > "${PROJECT_DIR:?}"/.hblock.tmp \
 		&& cat -- "${PROJECT_DIR:?}"/.hblock.tmp > "${PROJECT_DIR:?}"/hblock \
 		&& rm -f -- "${PROJECT_DIR:?}"/.hblock.tmp

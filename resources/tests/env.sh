@@ -13,6 +13,8 @@ SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)"
 export HOSTNAME='hblock'
 export ETCDIR="${SCRIPT_DIR:?}/etc"
 export XDG_CONFIG_HOME="${ETCDIR:?}"
+export HBLOCK_VERSION='0.0.0'
+export HBLOCK_REPOSITORY='https://example.com'
 
 runInTestShell() {
 	${TEST_SHELL:-/bin/sh} -- "${@-}" 2>&1 ||:
