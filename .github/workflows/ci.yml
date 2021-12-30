@@ -427,6 +427,24 @@ jobs:
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v dash)"'
 
+  test-haiku-latest:
+    name: 'Test on Haiku'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    container: 'docker.io/hectormolinero/qemu-haiku:latest'
+    steps:
+      - name: 'Wait until the VM is ready'
+        run: 'container-init & timeout 600 vmshell exit 0'
+      - name: 'Install packages'
+        run: 'vmshell pkgman install -y ca_root_certificates curl file libidn2 make'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@main'
+      - name: 'Copy project to VM'
+        run: 'vmshell mkdir ./hblock/; tar -cf - ./ | vmshell tar -xf - -C ./hblock/'
+      - name: 'Test project'
+        run: 'vmshell make -C ./hblock/ test-all'
+
   build-debian-latest:
     name: 'Build on Debian'
     needs:

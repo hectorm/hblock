@@ -249,6 +249,20 @@ test-openwrt-latest-shell-busybox-ash:
   script:
     - 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
+test-haiku-latest:
+  stage: 'test'
+  needs:
+    - 'lint-shellcheck-stable'
+  image:
+    name: 'docker.io/hectormolinero/qemu-haiku:latest'
+    entrypoint: ['']
+  before_script:
+    - 'container-init & timeout 600 vmshell exit 0'
+    - 'vmshell pkgman install -y ca_root_certificates curl file libidn2 make'
+    - 'vmshell mkdir ./hblock/; tar -cf - ./ | vmshell tar -xf - -C ./hblock/'
+  script:
+    - 'vmshell make -C ./hblock/ test-all'
+
 build-debian-latest:
   stage: 'build'
   needs:
