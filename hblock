@@ -96,10 +96,10 @@ EOF
 
 # Parse command line options.
 optParse() {
+	SEP="$(printf '\037')"
 	while [ "${#}" -gt '0' ]; do
 		case "${1?}" in
-			# Short options that accept an argument need a "*" in their pattern because they can be
-			# found in the "-A<value>" form.
+			# Short options that accept a value need a "*" in their pattern because they can be found in the "-A<value>" form.
 			'-O'*|'--output') optArgStr "${@-}"; outputFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-H'*|'--header') optArgStr "${@-}"; headerFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-F'*|'--footer') optArgStr "${@-}"; footerFile="${optArg?}"; shift "${optShift:?}" ;;
@@ -119,16 +119,16 @@ optParse() {
 			'-x'*|'--color') optArgStr "${@-}"; color="${optArg?}"; shift "${optShift:?}" ;;
 			'-v' |'--version') showVersion ;;
 			'-h' |'--help') showHelp ;;
-			# If "--" is found, the remaining positional arguments are saved and the parsing ends.
-			--) shift; posArgs="${posArgs-} ${*-}"; break ;;
+			# If "--" is found, the remaining positional parameters are saved and the parsing ends.
+			--) shift; _IFS="${IFS?}"; IFS="${SEP:?}"; POS="${POS-}${POS+${SEP:?}}${*-}"; IFS="${_IFS?}"; break ;;
 			# If a long option in the form "--opt=value" is found, it is split into "--opt" and "value".
 			--*=*) optSplitEquals "${@-}"; shift; set -- "${optName:?}" "${optArg?}" "${@-}"; continue ;;
 			# If an option did not match any pattern, an error is thrown.
 			-?|--*) optDie "Illegal option ${1:?}" ;;
 			# If multiple short options in the form "-AB" are found, they are split into "-A" and "-B".
 			-?*) optSplitShort "${@-}"; shift; set -- "${optAName:?}" "${optBName:?}" "${@-}"; continue ;;
-			# If a positional argument is found, it is saved.
-			*) posArgs="${posArgs-} ${1?}" ;;
+			# If a positional parameter is found, it is saved.
+			*) POS="${POS-}${POS+${SEP:?}}${1?}" ;;
 		esac
 		shift
 	done
@@ -476,7 +476,7 @@ main() {
 
 	# Parse command line options.
 	# shellcheck disable=SC2086
-	{ optParse "${@-}"; set -- ${posArgs-} >/dev/null; }
+	{ optParse "${@-}"; _IFS="${IFS?}"; IFS="${SEP:?}"; set -- ${POS-} >/dev/null; IFS="${_IFS?}"; }
 
 	# Define terminal colors if the color option is enabled or in auto mode if STDOUT is attached to a TTY and the
 	# "NO_COLOR" variable is not set (https://no-color.org).
