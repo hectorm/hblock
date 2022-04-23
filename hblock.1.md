@@ -1,6 +1,6 @@
 # NAME
 
-hBlock - manual page for hBlock 3.3.1
+hBlock - manual page for hBlock 3.3.2
 
 # SYNOPSIS
 
@@ -15,7 +15,7 @@ from connecting to them.
 
 # OPTIONS
 
-**-O**, **--output** \<FILE\|->, ${HBLOCK_OUTPUT_FILE}
+**-O**, **--output** \<FILE\|-\>, ${HBLOCK_OUTPUT_FILE}
 
 > Output file location.
 >
@@ -23,7 +23,7 @@ from connecting to them.
 >
 > (default: */etc/hosts*)
 
-**-H**, **--header** \<FILE\|builtin\|none\|->, ${HBLOCK_HEADER_FILE}
+**-H**, **--header** \<FILE\|builtin\|none\|-\>, ${HBLOCK_HEADER_FILE}
 
 > File to be included at the beginning of the output file.
 >
@@ -42,7 +42,7 @@ from connecting to them.
 >
 > (default: builtin)
 
-**-F**, **--footer** \<FILE\|builtin\|none\|->, ${HBLOCK_FOOTER_FILE}
+**-F**, **--footer** \<FILE\|builtin\|none\|-\>, ${HBLOCK_FOOTER_FILE}
 
 > File to be included at the end of the output file.
 >
@@ -61,7 +61,7 @@ from connecting to them.
 >
 > (default: builtin)
 
-**-S**, **--sources** \<FILE\|builtin\|none\|->, ${HBLOCK_SOURCES_FILE}
+**-S**, **--sources** \<FILE\|builtin\|none\|-\>, ${HBLOCK_SOURCES_FILE}
 
 > File with line separated URLs used to generate the blocklist.
 >
@@ -80,7 +80,7 @@ from connecting to them.
 >
 > (default: builtin)
 
-**-A**, **--allowlist** \<FILE\|builtin\|none\|->,
+**-A**, **--allowlist** \<FILE\|builtin\|none\|-\>,
 ${HBLOCK_ALLOWLIST_FILE}
 
 > File with line separated entries to be removed from the blocklist.
@@ -100,7 +100,7 @@ ${HBLOCK_ALLOWLIST_FILE}
 >
 > (default: builtin)
 
-**-D**, **--denylist** \<FILE\|builtin\|none\|->,
+**-D**, **--denylist** \<FILE\|builtin\|none\|-\>,
 ${HBLOCK_DENYLIST_FILE}
 
 > File with line separated entries to be added to the blocklist.
@@ -120,31 +120,31 @@ ${HBLOCK_DENYLIST_FILE}
 >
 > (default: builtin)
 
-**-R**, **--redirection** \<REDIRECTION>, ${HBLOCK_REDIRECTION}
+**-R**, **--redirection** \<REDIRECTION\>, ${HBLOCK_REDIRECTION}
 
 > Redirection for all entries in the blocklist.
 >
 > (default: 0.0.0.0)
 
-**-W**, **--wrap** \<NUMBER>, ${HBLOCK_WRAP}
+**-W**, **--wrap** \<NUMBER\>, ${HBLOCK_WRAP}
 
 > Break blocklist lines after this number of entries.
 >
 > (default: 1)
 
-**-T**, **--template** \<TEMPLATE>, ${HBLOCK_TEMPLATE}
+**-T**, **--template** \<TEMPLATE\>, ${HBLOCK_TEMPLATE}
 
 > Template applied to each entry.
 >
-> %D = \<DOMAIN>, %R = \<REDIRECTION>
+> %D = \<DOMAIN\>, %R = \<REDIRECTION\>
 >
 > (default: %R %D)
 
-**-C**, **--comment** \<COMMENT>, ${HBLOCK_COMMENT}
+**-C**, **--comment** \<COMMENT\>, ${HBLOCK_COMMENT}
 
 > Character used for comments.
 >
-> (default: #)
+> (default: \#)
 
 **-l**, **--\[no-\]lenient**, ${HBLOCK_LENIENT}
 
@@ -185,7 +185,7 @@ ${HBLOCK_DENYLIST_FILE}
 >
 > (default: false)
 
-**-x**, **--color** \<auto\|true\|false>, ${HBLOCK_COLOR}
+**-x**, **--color** \<auto\|true\|false\>, ${HBLOCK_COLOR}
 
 > Colorize the output.
 >
@@ -201,9 +201,9 @@ ${HBLOCK_DENYLIST_FILE}
 
 # REPORTING BUGS
 
-Report bugs to: \<https://github.com/hectorm/hblock/issues>
+Report bugs to: \<https://github.com/hectorm/hblock/issues\>
 
   
-Author: Héctor Molinero Fernández \<hector@molinero.dev>  
+Author: Héctor Molinero Fernández \<hector@molinero.dev\>  
 License: MIT, https://opensource.org/licenses/MIT  
 Repository: https://github.com/hectorm/hblock

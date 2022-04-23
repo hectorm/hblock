@@ -4,7 +4,7 @@ set -eu
 export LC_ALL='C'
 
 # Metadata.
-if [ -z "${HBLOCK_VERSION+x}"    ]; then HBLOCK_VERSION='3.3.1'; fi
+if [ -z "${HBLOCK_VERSION+x}"    ]; then HBLOCK_VERSION='3.3.2'; fi
 if [ -z "${HBLOCK_AUTHOR+x}"     ]; then HBLOCK_AUTHOR='Héctor Molinero Fernández <hector@molinero.dev>'; fi
 if [ -z "${HBLOCK_LICENSE+x}"    ]; then HBLOCK_LICENSE='MIT, https://opensource.org/licenses/MIT'; fi
 if [ -z "${HBLOCK_REPOSITORY+x}" ]; then HBLOCK_REPOSITORY='https://github.com/hectorm/hblock'; fi
