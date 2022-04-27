@@ -432,7 +432,7 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
-    container: 'docker.io/hectormolinero/qemu-haiku:latest'
+    container: 'docker.io/hectorm/qemu-haiku:latest'
     steps:
       - name: 'Wait until the VM is ready'
         run: 'container-init & timeout 600 vmshell exit 0'

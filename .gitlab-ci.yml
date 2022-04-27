@@ -254,7 +254,7 @@ test-haiku-latest:
   needs:
     - 'lint-shellcheck-stable'
   image:
-    name: 'docker.io/hectormolinero/qemu-haiku:latest'
+    name: 'docker.io/hectorm/qemu-haiku:latest'
     entrypoint: ['']
   before_script:
     - 'container-init & timeout 600 vmshell exit 0'
