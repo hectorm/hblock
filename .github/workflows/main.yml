@@ -15,6 +15,8 @@ jobs:
   lint-shellcheck-stable:
     name: 'Lint with ShellCheck'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container:
       image: 'docker.io/koalaman/shellcheck-alpine:stable'
     steps:
@@ -32,6 +34,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Update package index'
@@ -48,6 +52,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/ubuntu:latest'
     steps:
       - name: 'Update package index'
@@ -64,6 +70,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
@@ -78,6 +86,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/rockylinux:latest'
     steps:
       - name: 'Install packages'
@@ -92,6 +102,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/opensuse/leap:latest'
     steps:
       - name: 'Install packages'
@@ -106,6 +118,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/archlinux:latest'
     steps:
       - name: 'Install packages'
@@ -120,6 +134,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/archlinux:latest'
     steps:
       - name: 'Install packages'
@@ -140,6 +156,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -154,6 +172,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -172,6 +192,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -190,6 +212,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -208,6 +232,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -226,6 +252,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -244,6 +272,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -262,6 +292,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -280,6 +312,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -300,6 +334,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -320,6 +356,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -340,6 +378,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/openwrtorg/rootfs:latest'
     steps:
       - name: 'Apply workarounds for GitHub Actions runner'
@@ -358,6 +398,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/openwrtorg/rootfs:latest'
     steps:
       - name: 'Apply workarounds for GitHub Actions runner'
@@ -380,6 +422,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'macos-latest'
+    permissions:
+      contents: 'read'
     steps:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
@@ -393,6 +437,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'macos-latest'
+    permissions:
+      contents: 'read'
     steps:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
@@ -406,6 +452,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'macos-latest'
+    permissions:
+      contents: 'read'
     steps:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
@@ -419,6 +467,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'macos-latest'
+    permissions:
+      contents: 'read'
     steps:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
@@ -432,6 +482,8 @@ jobs:
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/hectorm/qemu-haiku:latest'
     steps:
       - name: 'Wait until the VM is ready'
@@ -450,6 +502,8 @@ jobs:
     needs:
       - 'test-debian-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/debian:latest'
     steps:
       - name: 'Update package index'
@@ -466,6 +520,8 @@ jobs:
     needs:
       - 'test-ubuntu-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/ubuntu:latest'
     steps:
       - name: 'Update package index'
@@ -482,6 +538,8 @@ jobs:
     needs:
       - 'test-fedora-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/fedora:latest'
     steps:
       - name: 'Install packages'
@@ -496,6 +554,8 @@ jobs:
     needs:
       - 'test-rockylinux-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/rockylinux:latest'
     steps:
       - name: 'Install packages'
@@ -510,6 +570,8 @@ jobs:
     needs:
       - 'test-opensuse-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/opensuse/tumbleweed:latest'
     steps:
       - name: 'Install packages'
@@ -525,6 +587,8 @@ jobs:
       - 'test-archlinux-latest'
       - 'test-archlinux-latest-awk-nawk'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/archlinux:latest'
     steps:
       - name: 'Install packages'
@@ -549,6 +613,8 @@ jobs:
       - 'test-alpine-latest-awk-mawk'
       - 'test-alpine-latest-awk-busybox-awk'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
@@ -564,6 +630,8 @@ jobs:
       - 'test-openwrt-latest'
       - 'test-openwrt-latest-shell-busybox-ash'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container: 'docker.io/openwrtorg/rootfs:latest'
     steps:
       - name: 'Apply workarounds for GitHub Actions runner'
@@ -585,6 +653,8 @@ jobs:
       - 'test-macos-latest-shell-zsh'
       - 'test-macos-latest-shell-dash'
     runs-on: 'macos-latest'
+    permissions:
+      contents: 'read'
     steps:
       - name: 'Use dash as sh'
         run: 'sudo ln -sf /bin/dash /var/select/sh'
@@ -601,6 +671,8 @@ jobs:
       - 'build-debian-latest'
       - 'build-ubuntu-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container:
       image: 'docker.io/debian:latest'
     steps:
@@ -626,6 +698,8 @@ jobs:
       - 'build-rockylinux-latest'
       - 'build-opensuse-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container:
       image: 'docker.io/fedora:latest'
     steps:
@@ -647,6 +721,8 @@ jobs:
     needs:
       - 'build-archlinux-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container:
       image: 'docker.io/archlinux:latest'
     steps:
@@ -669,6 +745,8 @@ jobs:
     needs:
       - 'build-alpine-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container:
       image: 'docker.io/alpine:latest'
     steps:
@@ -696,6 +774,8 @@ jobs:
     needs:
       - 'build-alpine-latest'
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
     container:
       image: 'docker.io/node:current-alpine'
     steps:
