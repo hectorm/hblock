@@ -259,7 +259,7 @@ jobs:
       - name: 'Install packages'
         run: 'apk add --no-cache ca-certificates curl file libidn2 make'
       - name: 'Install packages (2nd stage)'
-        run: 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing oksh'
+        run: 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community oksh'
       - name: 'Print oksh version'
         run: 'apk info --no-cache oksh'
       - name: 'Checkout project'
