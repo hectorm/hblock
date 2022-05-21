@@ -10,6 +10,8 @@ on:
     - cron: '42 02 * * *'
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
 
   lint-shellcheck-stable:
