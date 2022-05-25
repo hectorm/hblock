@@ -23,7 +23,7 @@ jobs:
       image: 'docker.io/koalaman/shellcheck-alpine:stable'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file make'
       - name: 'Print ShellCheck version'
         run: 'shellcheck --version'
       - name: 'Checkout project'
@@ -163,7 +163,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Checkout project'
         uses: 'actions/checkout@v3'
       - name: 'Test project'
@@ -179,7 +179,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache bash'
       - name: 'Print bash version'
@@ -199,7 +199,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache zsh'
       - name: 'Print zsh version'
@@ -219,7 +219,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache dash'
       - name: 'Print dash version'
@@ -239,7 +239,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache mksh'
       - name: 'Print mksh version'
@@ -259,7 +259,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community oksh'
       - name: 'Print oksh version'
@@ -279,7 +279,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache yash'
       - name: 'Print yash version'
@@ -299,7 +299,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache busybox'
       - name: 'Print BusyBox version'
@@ -319,7 +319,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache gawk'
       - name: 'Print gawk version'
@@ -341,7 +341,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache mawk'
       - name: 'Print mawk version'
@@ -363,7 +363,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache busybox'
       - name: 'Print busybox version'
@@ -620,7 +620,7 @@ jobs:
     container: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Checkout project'
         uses: 'actions/checkout@v3'
       - name: 'Build project'
@@ -753,7 +753,7 @@ jobs:
       image: 'docker.io/alpine:latest'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache alpine-sdk m4 rsync sudo'
       - name: 'Create unprivileged user and setup abuild'
@@ -782,7 +782,7 @@ jobs:
       image: 'docker.io/node:current-alpine'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file libidn2 make'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache m4 rsync'
       - name: 'Checkout project'

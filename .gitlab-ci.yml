@@ -12,7 +12,7 @@ lint-shellcheck-stable:
   stage: 'lint'
   image: 'docker.io/koalaman/shellcheck-alpine:stable'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file make'
     - 'shellcheck --version'
   script:
     - 'make lint'
@@ -98,7 +98,7 @@ test-alpine-latest:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
   script:
     - 'make test-all'
 
@@ -108,7 +108,7 @@ test-alpine-latest-shell-bash:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache bash'
     - 'apk info --no-cache bash'
   script:
@@ -120,7 +120,7 @@ test-alpine-latest-shell-zsh:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache zsh'
     - 'apk info --no-cache zsh'
   script:
@@ -132,7 +132,7 @@ test-alpine-latest-shell-dash:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache dash'
     - 'apk info --no-cache dash'
   script:
@@ -144,7 +144,7 @@ test-alpine-latest-shell-mksh:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache mksh'
     - 'apk info --no-cache mksh'
   script:
@@ -156,7 +156,7 @@ test-alpine-latest-shell-oksh:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community oksh'
     - 'apk info --no-cache oksh'
   script:
@@ -168,7 +168,7 @@ test-alpine-latest-shell-yash:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache yash'
     - 'apk info --no-cache yash'
   script:
@@ -180,7 +180,7 @@ test-alpine-latest-shell-busybox-ash:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache busybox'
     - 'apk info --no-cache busybox'
   script:
@@ -192,7 +192,7 @@ test-alpine-latest-awk-gawk:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache gawk'
     - 'apk info --no-cache gawk'
   script:
@@ -205,7 +205,7 @@ test-alpine-latest-awk-mawk:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache mawk'
     - 'apk info --no-cache mawk'
   script:
@@ -218,7 +218,7 @@ test-alpine-latest-awk-busybox-awk:
     - 'lint-shellcheck-stable'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache busybox'
     - 'apk info --no-cache busybox'
   script:
@@ -366,7 +366,7 @@ build-alpine-latest:
     - 'test-alpine-latest-awk-busybox-awk'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
   script:
     - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-alpine-latest/'
@@ -452,7 +452,7 @@ package-apkbuild:
     - 'build-alpine-latest'
   image: 'docker.io/alpine:latest'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache alpine-sdk m4 rsync sudo'
     - 'adduser -D -G abuild build'
     - 'printf "\n%s\n" "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
@@ -473,7 +473,7 @@ package-npm:
     - 'build-alpine-latest'
   image: 'docker.io/node:current-alpine'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file libidn2 make'
+    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
     - 'apk add --no-cache m4 rsync'
   script:
     - 'make package-npm'
