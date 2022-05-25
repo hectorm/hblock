@@ -473,7 +473,7 @@ package-npm:
     - 'build-alpine-latest'
   image: 'docker.io/node:current-alpine'
   before_script:
-    - 'apk add --no-cache ca-certificates curl file idn2-utils make'
+    - 'apk add --no-cache ca-certificates curl file make'
     - 'apk add --no-cache m4 rsync'
   script:
     - 'make package-npm'

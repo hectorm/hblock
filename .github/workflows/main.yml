@@ -782,7 +782,7 @@ jobs:
       image: 'docker.io/node:current-alpine'
     steps:
       - name: 'Install packages'
-        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
+        run: 'apk add --no-cache ca-certificates curl file make'
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache m4 rsync'
       - name: 'Checkout project'
