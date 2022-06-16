@@ -483,7 +483,7 @@ jobs:
     name: 'Test on Haiku'
     needs:
       - 'lint-shellcheck-stable'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-22.04'
     permissions:
       contents: 'read'
     container: 'docker.io/hectorm/qemu-haiku:latest'
