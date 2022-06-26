@@ -157,7 +157,7 @@ test-alpine-latest-shell-oksh:
   image: 'docker.io/alpine:latest'
   before_script:
     - 'apk add --no-cache ca-certificates curl file idn2-utils make'
-    - 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community oksh'
+    - 'apk add --no-cache oksh'
     - 'apk info --no-cache oksh'
   script:
     - 'make test-all TEST_SHELL="$(command -v oksh)"'

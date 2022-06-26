@@ -261,7 +261,7 @@ jobs:
       - name: 'Install packages'
         run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
-        run: 'apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/community oksh'
+        run: 'apk add --no-cache oksh'
       - name: 'Print oksh version'
         run: 'apk info --no-cache oksh'
       - name: 'Checkout project'
