@@ -1,6 +1,6 @@
 # NAME
 
-hBlock - manual page for hBlock 3.3.2
+hBlock - manual page for hBlock 3.4.0
 
 # SYNOPSIS
 
