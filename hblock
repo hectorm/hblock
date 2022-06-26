@@ -712,6 +712,11 @@ main() {
 				${C?} Generated with hBlock ${HBLOCK_VERSION:?} (${HBLOCK_REPOSITORY:?})
 				${C?} Blocked domains: ${blocklistCount:?}
 			EOF
+			if [ -z "${SOURCE_DATE_EPOCH+x}" ]; then
+				cat <<-EOF
+					${C?} Date: $(date)
+				EOF
+			fi
 		fi
 
 		# If the header file is not empty, it is appended to the output file.
