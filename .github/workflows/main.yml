@@ -90,7 +90,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/rockylinux:latest'
+    container: 'docker.io/rockylinux:9'
     steps:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl findutils file idn2 make'
@@ -558,7 +558,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/rockylinux:latest'
+    container: 'docker.io/rockylinux:9'
     steps:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl findutils file idn2 make'

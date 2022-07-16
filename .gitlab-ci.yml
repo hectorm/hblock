@@ -53,7 +53,7 @@ test-rockylinux-latest:
   stage: 'test'
   needs:
     - 'lint-shellcheck-stable'
-  image: 'docker.io/rockylinux:latest'
+  image: 'docker.io/rockylinux:9'
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
@@ -311,7 +311,7 @@ build-rockylinux-latest:
   stage: 'build'
   needs:
     - 'test-rockylinux-latest'
-  image: 'docker.io/rockylinux:latest'
+  image: 'docker.io/rockylinux:9'
   before_script:
     - 'dnf install -y ca-certificates curl findutils file idn2 make'
   script:
