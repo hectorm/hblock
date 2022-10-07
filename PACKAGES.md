@@ -2,9 +2,11 @@
 
 ### Arch Linux
 
-A package for Arch Linux users is [available in the Arch User Repository (AUR)](https://aur.archlinux.org/packages/hblock/).
+A package for Arch Linux users is [available in the community repository](https://archlinux.org/packages/community/any/hblock/).
 
-Use your favorite [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers) to perform the installation.
+```sh
+pacman -S hblock
+```
 
 ### DragonFlyBSD
 
@@ -60,4 +62,12 @@ npm install -g hblock
 or
 ```sh
 npx hblock
+```
+
+### Void Linux
+
+A package for Void Linux users is [available in the main repository](https://github.com/void-linux/void-packages/tree/master/srcpkgs/hblock).
+
+```sh
+xbps-install -S hblock
 ```
