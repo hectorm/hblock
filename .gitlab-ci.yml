@@ -55,7 +55,7 @@ test-rockylinux-latest:
     - 'lint-shellcheck-stable'
   image: 'docker.io/rockylinux:9'
   before_script:
-    - 'dnf install -y ca-certificates curl findutils file idn2 make'
+    - 'dnf install -y ca-certificates curl-minimal findutils file idn2 make'
   script:
     - 'make test-all'
 
@@ -313,7 +313,7 @@ build-rockylinux-latest:
     - 'test-rockylinux-latest'
   image: 'docker.io/rockylinux:9'
   before_script:
-    - 'dnf install -y ca-certificates curl findutils file idn2 make'
+    - 'dnf install -y ca-certificates curl-minimal findutils file idn2 make'
   script:
     - 'make hosts stats index'
     - 'mv ./dist/ ./dist-build-rockylinux-latest/'
