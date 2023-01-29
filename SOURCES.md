@@ -41,7 +41,6 @@
 | uBlock - Badware                        | GPL-3.0-only                                                      | [Link][homepage-ublock-badware]                       | [Link][source-ublock-badware]                     | [Link][mirror-1-ublock-badware]                     | [Link][mirror-2-ublock-badware]                     | [Link][mirror-3-ublock-badware]                     |
 | uBlock - Privacy                        | GPL-3.0-only                                                      | [Link][homepage-ublock-privacy]                       | [Link][source-ublock-privacy]                     | [Link][mirror-1-ublock-privacy]                     | [Link][mirror-2-ublock-privacy]                     | [Link][mirror-3-ublock-privacy]                     |
 | URLhaus                                 | CC0-1.0                                                           | [Link][homepage-urlhaus]                              | [Link][source-urlhaus]                            | [Link][mirror-1-urlhaus]                            | [Link][mirror-2-urlhaus]                            | [Link][mirror-3-urlhaus]                            |
-| winhelp2002.mvps.org                    | CC-BY-NC-SA-4.0                                                   | [Link][homepage-winhelp2002.mvps.org]                 | [Link][source-winhelp2002.mvps.org]               | [Link][mirror-1-winhelp2002.mvps.org]               | [Link][mirror-2-winhelp2002.mvps.org]               | [Link][mirror-3-winhelp2002.mvps.org]               |
 
 [homepage-adaway.org]: https://adaway.org
 [source-adaway.org]: https://adaway.org/hosts.txt
@@ -280,9 +279,3 @@
 [mirror-1-urlhaus]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/urlhaus/list.txt
 [mirror-2-urlhaus]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/urlhaus/list.txt
 [mirror-3-urlhaus]: https://hmirror.molinero.dev/urlhaus/list.txt
-
-[homepage-winhelp2002.mvps.org]: https://winhelp2002.mvps.org
-[source-winhelp2002.mvps.org]: https://winhelp2002.mvps.org/hosts.txt
-[mirror-1-winhelp2002.mvps.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
-[mirror-2-winhelp2002.mvps.org]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/winhelp2002.mvps.org/list.txt
-[mirror-3-winhelp2002.mvps.org]: https://hmirror.molinero.dev/winhelp2002.mvps.org/list.txt

@@ -79,7 +79,6 @@ HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/urlhaus/list.txt
-	https://raw.githubusercontent.com/hectorm/hmirror/master/data/winhelp2002.mvps.org/list.txt
 EOF
 )"
 
