@@ -229,7 +229,7 @@ test-openwrt-latest:
   stage: 'test'
   needs:
     - 'lint-shellcheck-stable'
-  image: 'docker.io/openwrtorg/rootfs:latest'
+  image: 'docker.io/openwrt/rootfs:latest'
   before_script:
     - 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
     - 'opkg install ca-certificates curl file idn2 make'
@@ -240,7 +240,7 @@ test-openwrt-latest-shell-busybox-ash:
   stage: 'test'
   needs:
     - 'lint-shellcheck-stable'
-  image: 'docker.io/openwrtorg/rootfs:latest'
+  image: 'docker.io/openwrt/rootfs:latest'
   before_script:
     - 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
     - 'opkg install ca-certificates curl file idn2 make'
@@ -379,7 +379,7 @@ build-openwrt-latest:
   needs:
     - 'test-openwrt-latest'
     - 'test-openwrt-latest-shell-busybox-ash'
-  image: 'docker.io/openwrtorg/rootfs:latest'
+  image: 'docker.io/openwrt/rootfs:latest'
   before_script:
     - 'mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:'
     - 'opkg install ca-certificates curl file idn2 make'

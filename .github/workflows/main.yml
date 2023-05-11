@@ -382,7 +382,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/openwrtorg/rootfs:latest'
+    container: 'docker.io/openwrt/rootfs:latest'
     steps:
       - name: 'Apply workarounds for GitHub Actions runner'
         run: 'printf "ID=alpine\n" > /etc/_os-release'
@@ -402,7 +402,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/openwrtorg/rootfs:latest'
+    container: 'docker.io/openwrt/rootfs:latest'
     steps:
       - name: 'Apply workarounds for GitHub Actions runner'
         run: 'printf "ID=alpine\n" > /etc/_os-release'
@@ -634,7 +634,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/openwrtorg/rootfs:latest'
+    container: 'docker.io/openwrt/rootfs:latest'
     steps:
       - name: 'Apply workarounds for GitHub Actions runner'
         run: 'printf "ID=alpine\n" > /etc/_os-release'
