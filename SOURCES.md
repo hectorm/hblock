@@ -37,6 +37,7 @@
 | someonewhocares.org                     | ["non-commercial with attribution"][license-someonewhocares.org]  | [Link][homepage-someonewhocares.org]                  | [Link][source-someonewhocares.org]                | [Link][mirror-1-someonewhocares.org]                | [Link][mirror-2-someonewhocares.org]                | [Link][mirror-3-someonewhocares.org]                |
 | spam404.com                             | CC-BY-SA-4.0                                                      | [Link][homepage-spam404.com]                          | [Link][source-spam404.com]                        | [Link][mirror-1-spam404.com]                        | [Link][mirror-2-spam404.com]                        | [Link][mirror-3-spam404.com]                        |
 | StevenBlack                             | MIT                                                               | [Link][homepage-stevenblack]                          | [Link][source-stevenblack]                        | [Link][mirror-1-stevenblack]                        | [Link][mirror-2-stevenblack]                        | [Link][mirror-3-stevenblack]                        |
+| Turkish Ad Hosts                        | GPL-3.0-only                                                      | [Link][homepage-turkish-ad-hosts]                     | [Link][source-turkish-ad-hosts]                   | [Link][mirror-1-turkish-ad-hosts]                   | [Link][mirror-2-turkish-ad-hosts]                   | [Link][mirror-3-turkish-ad-hosts]                   |
 | uBlock                                  | GPL-3.0-only                                                      | [Link][homepage-ublock]                               | [Link][source-ublock]                             | [Link][mirror-1-ublock]                             | [Link][mirror-2-ublock]                             | [Link][mirror-3-ublock]                             |
 | uBlock - 2020                           | GPL-3.0-only                                                      | [Link][homepage-ublock-2020]                          | [Link][source-ublock-2020]                        | [Link][mirror-1-ublock-2020]                        | [Link][mirror-2-ublock-2020]                        | [Link][mirror-3-ublock-2020]                        |
 | uBlock - 2021                           | GPL-3.0-only                                                      | [Link][homepage-ublock-2021]                          | [Link][source-ublock-2021]                        | [Link][mirror-1-ublock-2021]                        | [Link][mirror-2-ublock-2021]                        | [Link][mirror-3-ublock-2021]                        |
@@ -261,6 +262,12 @@
 [mirror-1-stevenblack]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
 [mirror-2-stevenblack]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/stevenblack/list.txt
 [mirror-3-stevenblack]: https://hmirror.molinero.dev/stevenblack/list.txt
+
+[homepage-turkish-ad-hosts]: https://github.com/symbuzzer/Turkish-Ad-Hosts
+[source-turkish-ad-hosts]: "https://raw.githubusercontent.com/symbuzzer/Turkish-Ad-Hosts/main/hosts
+[mirror-1-turkish-ad-hosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/turkish-ad-hosts/list.txt
+[mirror-2-turkish-ad-hosts]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/turkish-ad-hosts/list.txt
+[mirror-3-turkish-ad-hosts]: https://hmirror.molinero.dev/turkish-ad-hosts/list.txt
 
 [homepage-ublock]: https://github.com/uBlockOrigin/uAssets
 [source-ublock]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt
