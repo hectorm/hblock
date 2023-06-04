@@ -31,6 +31,7 @@
 | KADhosts                                | CC-BY-SA-4.0                                                      | [Link][homepage-kadhosts]                             | [Link][source-kadhosts]                           | [Link][mirror-1-kadhosts]                           | [Link][mirror-2-kadhosts]                           | [Link][mirror-3-kadhosts]                           |
 | matomo.org - Spammers                   | [Public domain][license-matomo.org-spammers]                      | [Link][homepage-matomo.org-spammers]                  | [Link][source-matomo.org-spammers]                | [Link][mirror-1-matomo.org-spammers]                | [Link][mirror-2-matomo.org-spammers]                | [Link][mirror-3-matomo.org-spammers]                |
 | mitchellkrogza - Badd-Boyz-Hosts        | MIT                                                               | [Link][homepage-mitchellkrogza-badd-boyz-hosts]       | [Link][source-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-1-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-2-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-3-mitchellkrogza-badd-boyz-hosts]     |
+| pgl.yoyo.org                            | [MCRAE][license-pgl.yoyo.org]                                     | [Link][homepage-pgl.yoyo.org]                         | [Link][source-pgl.yoyo.org]                       | [Link][mirror-1-pgl.yoyo.org]                       | [Link][mirror-2-pgl.yoyo.org]                       | [Link][mirror-3-pgl.yoyo.org]                       |
 | Phishing Army                           | CC-BY-NC-4.0                                                      | [Link][homepage-phishing.army]                        | [Link][source-phishing.army]                      | [Link][mirror-1-phishing.army]                      | [Link][mirror-2-phishing.army]                      | [Link][mirror-3-phishing.army]                      |
 | socram8888 - Not on my shift!           | ISC                                                               | [Link][homepage-socram8888-notonmyshift]              | [Link][source-socram8888-notonmyshift]            | [Link][mirror-1-socram8888-notonmyshift]            | [Link][mirror-2-socram8888-notonmyshift]            | [Link][mirror-3-socram8888-notonmyshift]            |
 | someonewhocares.org                     | ["non-commercial with attribution"][license-someonewhocares.org]  | [Link][homepage-someonewhocares.org]                  | [Link][source-someonewhocares.org]                | [Link][mirror-1-someonewhocares.org]                | [Link][mirror-2-someonewhocares.org]                | [Link][mirror-3-someonewhocares.org]                |
@@ -218,6 +219,13 @@
 [mirror-1-mitchellkrogza-badd-boyz-hosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
 [mirror-2-mitchellkrogza-badd-boyz-hosts]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/mitchellkrogza-badd-boyz-hosts/list.txt
 [mirror-3-mitchellkrogza-badd-boyz-hosts]: https://hmirror.molinero.dev/mitchellkrogza-badd-boyz-hosts/list.txt
+
+[homepage-pgl.yoyo.org]: https://pgl.yoyo.org/adservers/
+[license-pgl.yoyo.org]: https://pgl.yoyo.org/license/
+[source-pgl.yoyo.org]: https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&mimetype=plaintext
+[mirror-1-pgl.yoyo.org]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/pgl.yoyo.org/list.txt
+[mirror-2-pgl.yoyo.org]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/pgl.yoyo.org/list.txt
+[mirror-3-pgl.yoyo.org]: https://hmirror.molinero.dev/pgl.yoyo.org/list.txt
 
 [homepage-phishing.army]: https://phishing.army
 [source-phishing.army]: https://phishing.army/download/phishing_army_blocklist.txt
