@@ -94,7 +94,7 @@ EOF
 
 # Parse command line options.
 optParse() {
-	SEP="$(printf '\037')"; POS=''
+	SEP="$(printf '\037')"
 	while [ "${#}" -gt '0' ]; do
 		case "${1?}" in
 			# Short options that accept a value need a "*" in their pattern because they can be found in the "-A<value>" form.
