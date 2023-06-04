@@ -76,6 +76,10 @@ HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/spam404.com/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/stevenblack/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2020/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2021/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2022/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2023/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-abuse/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
