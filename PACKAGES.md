@@ -2,7 +2,7 @@
 
 ### Arch Linux
 
-A package for Arch Linux users is [available in the community repository](https://archlinux.org/packages/community/any/hblock/).
+A package for Arch Linux users is [available in the `extra` repository](https://archlinux.org/packages/extra/any/hblock/).
 
 ```sh
 pacman -S hblock
