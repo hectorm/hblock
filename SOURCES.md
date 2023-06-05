@@ -264,7 +264,7 @@
 [mirror-3-stevenblack]: https://hmirror.molinero.dev/stevenblack/list.txt
 
 [homepage-turkish-ad-hosts]: https://github.com/symbuzzer/Turkish-Ad-Hosts
-[source-turkish-ad-hosts]: "https://raw.githubusercontent.com/symbuzzer/Turkish-Ad-Hosts/main/hosts
+[source-turkish-ad-hosts]: https://raw.githubusercontent.com/symbuzzer/Turkish-Ad-Hosts/main/hosts
 [mirror-1-turkish-ad-hosts]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/turkish-ad-hosts/list.txt
 [mirror-2-turkish-ad-hosts]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/turkish-ad-hosts/list.txt
 [mirror-3-turkish-ad-hosts]: https://hmirror.molinero.dev/turkish-ad-hosts/list.txt
