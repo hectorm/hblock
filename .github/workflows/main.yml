@@ -106,7 +106,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/opensuse/leap:latest'
+    container: 'docker.io/opensuse/tumbleweed:latest'
     steps:
       - name: 'Install packages'
         run: 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
