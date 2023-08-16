@@ -109,7 +109,7 @@ jobs:
     container: 'docker.io/opensuse/tumbleweed:latest'
     steps:
       - name: 'Install packages'
-        run: 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
+        run: 'zypper install -y ca-certificates curl file gawk gzip libidn2-tools make tar'
       - name: 'Checkout project'
         uses: 'actions/checkout@v3'
       - name: 'Test project'
@@ -577,7 +577,7 @@ jobs:
     container: 'docker.io/opensuse/tumbleweed:latest'
     steps:
       - name: 'Install packages'
-        run: 'zypper install -y ca-certificates curl file gzip libidn2-tools make tar'
+        run: 'zypper install -y ca-certificates curl file gawk gzip libidn2-tools make tar'
       - name: 'Checkout project'
         uses: 'actions/checkout@v3'
       - name: 'Build project'
