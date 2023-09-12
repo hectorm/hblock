@@ -27,7 +27,7 @@ jobs:
       - name: 'Print ShellCheck version'
         run: 'shellcheck --version'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Lint project'
         run: 'make lint'
 
@@ -45,7 +45,7 @@ jobs:
       - name: 'Install packages'
         run: 'apt-get install -y ca-certificates curl file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -63,7 +63,7 @@ jobs:
       - name: 'Install packages'
         run: 'apt-get install -y ca-certificates curl file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -79,7 +79,7 @@ jobs:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl findutils file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -95,7 +95,7 @@ jobs:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl-minimal findutils file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -111,7 +111,7 @@ jobs:
       - name: 'Install packages'
         run: 'zypper install -y ca-certificates curl file gawk gzip libidn2-tools make tar'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -127,7 +127,7 @@ jobs:
       - name: 'Install packages'
         run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -149,7 +149,7 @@ jobs:
       - name: 'Set default awk implementation'
         run: 'ln -sf "$(command -v nawk)" /usr/bin/awk'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -165,7 +165,7 @@ jobs:
       - name: 'Install packages'
         run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -185,7 +185,7 @@ jobs:
       - name: 'Print bash version'
         run: 'apk info --no-cache bash'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v bash)"'
 
@@ -205,7 +205,7 @@ jobs:
       - name: 'Print zsh version'
         run: 'apk info --no-cache zsh'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v zsh)"'
 
@@ -225,7 +225,7 @@ jobs:
       - name: 'Print dash version'
         run: 'apk info --no-cache dash'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v dash)"'
 
@@ -245,7 +245,7 @@ jobs:
       - name: 'Print mksh version'
         run: 'apk info --no-cache mksh'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v mksh)"'
 
@@ -265,7 +265,7 @@ jobs:
       - name: 'Print oksh version'
         run: 'apk info --no-cache oksh'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v oksh)"'
 
@@ -285,7 +285,7 @@ jobs:
       - name: 'Print yash version'
         run: 'apk info --no-cache yash'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v yash)"'
 
@@ -305,7 +305,7 @@ jobs:
       - name: 'Print BusyBox version'
         run: 'apk info --no-cache busybox'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
@@ -327,7 +327,7 @@ jobs:
       - name: 'Set default awk implementation'
         run: 'ln -sf "$(command -v gawk)" /usr/bin/awk'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -349,7 +349,7 @@ jobs:
       - name: 'Set default awk implementation'
         run: 'ln -sf "$(command -v mawk)" /usr/bin/awk'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -371,7 +371,7 @@ jobs:
       - name: 'Set default awk implementation'
         run: 'ln -sf "$(command -v busybox)" /usr/bin/awk'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -391,7 +391,7 @@ jobs:
       - name: 'Install packages'
         run: 'opkg install ca-certificates curl file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make test-all'
 
@@ -415,7 +415,7 @@ jobs:
       - name: 'Print BusyBox version'
         run: 'opkg info busybox'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
 
@@ -430,7 +430,7 @@ jobs:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all'
 
@@ -445,7 +445,7 @@ jobs:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v bash)"'
 
@@ -460,7 +460,7 @@ jobs:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v zsh)"'
 
@@ -475,7 +475,7 @@ jobs:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Test project'
         run: 'make test-all TEST_SHELL="$(command -v dash)"'
 
@@ -493,7 +493,7 @@ jobs:
       - name: 'Install packages'
         run: 'vmshell pkgman install -y ca_root_certificates curl file libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Copy project to VM'
         run: 'vmshell mkdir ./hblock/; tar -cf - ./ | vmshell tar -xf - -C ./hblock/'
       - name: 'Test project'
@@ -513,7 +513,7 @@ jobs:
       - name: 'Install packages'
         run: 'apt-get install -y ca-certificates curl file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -531,7 +531,7 @@ jobs:
       - name: 'Install packages'
         run: 'apt-get install -y ca-certificates curl file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -547,7 +547,7 @@ jobs:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl findutils file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -563,7 +563,7 @@ jobs:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl-minimal findutils file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -579,7 +579,7 @@ jobs:
       - name: 'Install packages'
         run: 'zypper install -y ca-certificates curl file gawk gzip libidn2-tools make tar'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -596,7 +596,7 @@ jobs:
       - name: 'Install packages'
         run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -622,7 +622,7 @@ jobs:
       - name: 'Install packages'
         run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -643,7 +643,7 @@ jobs:
       - name: 'Install packages'
         run: 'opkg install ca-certificates curl file idn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -663,7 +663,7 @@ jobs:
       - name: 'Install packages'
         run: 'brew install curl libidn2 make'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Build project'
         run: 'make hosts stats index'
 
@@ -685,7 +685,7 @@ jobs:
       - name: 'Install packages (2nd stage)'
         run: 'apt-get install -y build-essential debhelper dpkg-dev m4 rsync'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Package project'
         run: |
           make package-deb
@@ -710,7 +710,7 @@ jobs:
       - name: 'Install packages (2nd stage)'
         run: 'dnf install -y m4 rpm-build rpmdevtools rsync systemd'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Package project'
         run: |
           make package-rpm
@@ -733,7 +733,7 @@ jobs:
       - name: 'Install packages (2nd stage)'
         run: 'pacman -Syu --noconfirm --needed base-devel m4 rsync sudo'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Package project'
         run: |
           mkdir ./dist/; chown nobody ./dist/
@@ -762,7 +762,7 @@ jobs:
           printf "\n%s\n" "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           sudo -u build abuild-keygen -a -i -n
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Package project'
         run: |
           mkdir ./dist/; chown build ./dist/
@@ -786,7 +786,7 @@ jobs:
       - name: 'Install packages (2nd stage)'
         run: 'apk add --no-cache m4 rsync'
       - name: 'Checkout project'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
       - name: 'Package project'
         run: |
           make package-npm
