@@ -6,6 +6,7 @@
 | AdBlock NoCoin List                     | MIT                                                               | [Link][homepage-adblock-nocoin-list]                  | [Link][source-adblock-nocoin-list]                | [Link][mirror-1-adblock-nocoin-list]                | [Link][mirror-2-adblock-nocoin-list]                | [Link][mirror-3-adblock-nocoin-list]                |
 | AdGuard - CNAME trackers                | MIT                                                               | [Link][homepage-adguard-cname-trackers]               | [Link][source-adguard-cname-trackers]             | [Link][mirror-1-adguard-cname-trackers]             | [Link][mirror-2-adguard-cname-trackers]             | [Link][mirror-3-adguard-cname-trackers]             |
 | AdGuard - Simplified                    | GPL-3.0-only                                                      | [Link][homepage-adguard-simplified]                   | [Link][source-adguard-simplified]                 | [Link][mirror-1-adguard-simplified]                 | [Link][mirror-2-adguard-simplified]                 | [Link][mirror-3-adguard-simplified]                 |
+| d3Host                                  | CC-BY-NC-SA-4.0                                                   | [Link][homepage-d3host]                               | [Link][source-d3host]                             | [Link][mirror-1-d3host]                             | [Link][mirror-2-d3host]                             | [Link][mirror-3-d3host]                             |
 | DandelionSprout - Nordic                | [Dandelicence][license-dandelionsprout-nordic]                    | [Link][homepage-dandelionsprout-nordic]               | [Link][source-dandelionsprout-nordic]             | [Link][mirror-1-dandelionsprout-nordic]             | [Link][mirror-2-dandelionsprout-nordic]             | [Link][mirror-3-dandelionsprout-nordic]             |
 | EasyList                                | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist]                             | [Link][source-easylist]                           | [Link][mirror-1-easylist]                           | [Link][mirror-2-easylist]                           | [Link][mirror-3-easylist]                           |
 | EasyList - Arabic                       | CC-BY-NC-SA-3.0                                                   | [Link][homepage-easylist-ara]                         | [Link][source-easylist-ara]                       | [Link][mirror-1-easylist-ara]                       | [Link][mirror-2-easylist-ara]                       | [Link][mirror-3-easylist-ara]                       |
@@ -70,6 +71,12 @@
 [mirror-1-adguard-simplified]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
 [mirror-2-adguard-simplified]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/adguard-simplified/list.txt
 [mirror-3-adguard-simplified]: https://hmirror.molinero.dev/adguard-simplified/list.txt
+
+[homepage-d3host]: https://github.com/d3ward/toolz
+[source-d3host]: https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.txt
+[mirror-1-d3host]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/d3host/list.txt
+[mirror-2-d3host]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/d3host/list.txt
+[mirror-3-d3host]: https://hmirror.molinero.dev/d3host/list.txt
 
 [homepage-dandelionsprout-nordic]: https://github.com/DandelionSprout/adfilt
 [license-dandelionsprout-nordic]: https://github.com/DandelionSprout/adfilt/blob/master/LICENSE.md
