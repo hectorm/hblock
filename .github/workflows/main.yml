@@ -131,28 +131,6 @@ jobs:
       - name: 'Test project'
         run: 'make test-all'
 
-  test-archlinux-latest-awk-nawk:
-    name: 'Test on Arch Linux (nawk awk implementation)'
-    needs:
-      - 'lint-shellcheck-stable'
-    runs-on: 'ubuntu-latest'
-    permissions:
-      contents: 'read'
-    container: 'docker.io/archlinux:latest'
-    steps:
-      - name: 'Install packages'
-        run: 'pacman -Syu --noconfirm --needed ca-certificates curl file libidn2 make'
-      - name: 'Install packages (2nd stage)'
-        run: 'pacman -Syu --noconfirm --needed nawk'
-      - name: 'Print nawk version'
-        run: 'pacman -Qi nawk'
-      - name: 'Set default awk implementation'
-        run: 'ln -sf "$(command -v nawk)" /usr/bin/awk'
-      - name: 'Checkout project'
-        uses: 'actions/checkout@v4'
-      - name: 'Test project'
-        run: 'make test-all'
-
   test-alpine-latest:
     name: 'Test on Alpine Linux'
     needs:
@@ -348,6 +326,28 @@ jobs:
         run: 'apk info --no-cache mawk'
       - name: 'Set default awk implementation'
         run: 'ln -sf "$(command -v mawk)" /usr/bin/awk'
+      - name: 'Checkout project'
+        uses: 'actions/checkout@v4'
+      - name: 'Test project'
+        run: 'make test-all'
+
+  test-alpine-latest-awk-nawk:
+    name: 'Test on Alpine Linux (nawk awk implementation)'
+    needs:
+      - 'lint-shellcheck-stable'
+    runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
+    container: 'docker.io/alpine:latest'
+    steps:
+      - name: 'Install packages'
+        run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
+      - name: 'Install packages (2nd stage)'
+        run: 'apk add --no-cache nawk --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community'
+      - name: 'Print nawk version'
+        run: 'apk info --no-cache nawk'
+      - name: 'Set default awk implementation'
+        run: 'ln -sf "$(command -v nawk)" /usr/bin/awk'
       - name: 'Checkout project'
         uses: 'actions/checkout@v4'
       - name: 'Test project'
@@ -587,7 +587,6 @@ jobs:
     name: 'Build on Arch Linux'
     needs:
       - 'test-archlinux-latest'
-      - 'test-archlinux-latest-awk-nawk'
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
@@ -613,6 +612,7 @@ jobs:
       - 'test-alpine-latest-shell-busybox-ash'
       - 'test-alpine-latest-awk-gawk'
       - 'test-alpine-latest-awk-mawk'
+      - 'test-alpine-latest-awk-nawk'
       - 'test-alpine-latest-awk-busybox-awk'
     runs-on: 'ubuntu-latest'
     permissions:
