@@ -24,18 +24,6 @@ A package for FreeBSD users is [available in FreshPorts](https://www.freshports.
 pkg install hblock
 ```
 
-### Gentoo
-
-A package for Gentoo users is [available in the `src_prepare` overlay](https://gitlab.com/src_prepare/src_prepare-overlay/-/tree/master/net-firewall/hblock/).
-
- * Add the `src_prepare` overlay with the help of the [official repository](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay).
- * Unmask the `net-firewall/hblock` package with the help of the [Gentoo wiki](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package).
- * Install the package through Portage:
-
-   ```sh
-   emerge --verbose net-firewall/hblock
-   ```
-
 ### Haiku OS
 
 A package for Haiku OS users is [available in HaikuPorts](https://github.com/haikuports/haikuports/tree/master/net-firewall/hblock).
