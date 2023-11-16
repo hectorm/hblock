@@ -52,6 +52,14 @@ or
 npx hblock
 ```
 
+### Nix
+
+A package for Nix users is [available in the stable channel](https://search.nixos.org/packages?show=hblock).
+
+```sh
+nix-shell -p hblock
+```
+
 ### Void Linux
 
 A package for Void Linux users is [available in the main repository](https://github.com/void-linux/void-packages/tree/master/srcpkgs/hblock).
