@@ -21,6 +21,7 @@
 | EasyList - Latvian                      | CC-BY-SA-4.0                                                      | [Link][homepage-easylist-lav]                         | [Link][source-easylist-lav]                       | [Link][mirror-1-easylist-lav]                       | [Link][mirror-2-easylist-lav]                       | [Link][mirror-3-easylist-lav]                       |
 | EasyList - Lithuanian                   | GPL-3.0-only                                                      | [Link][homepage-easylist-lit]                         | [Link][source-easylist-lit]                       | [Link][mirror-1-easylist-lit]                       | [Link][mirror-2-easylist-lit]                       | [Link][mirror-3-easylist-lit]                       |
 | EasyList - Dutch                        | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist-nld]                         | [Link][source-easylist-nld]                       | [Link][mirror-1-easylist-nld]                       | [Link][mirror-2-easylist-nld]                       | [Link][mirror-3-easylist-nld]                       |
+| EasyList - Polish                       | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist-pol]                         | [Link][source-easylist-pol]                       | [Link][mirror-1-easylist-pol]                       | [Link][mirror-2-easylist-pol]                       | [Link][mirror-3-easylist-pol]                       |
 | EasyList - Portuguese                   | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist-por]                         | [Link][source-easylist-por]                       | [Link][mirror-1-easylist-por]                       | [Link][mirror-2-easylist-por]                       | [Link][mirror-3-easylist-por]                       |
 | EasyList - Russian                      | CC-BY-3.0                                                         | [Link][homepage-easylist-rus]                         | [Link][source-easylist-rus]                       | [Link][mirror-1-easylist-rus]                       | [Link][mirror-2-easylist-rus]                       | [Link][mirror-3-easylist-rus]                       |
 | EasyList - Spanish                      | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist-spa]                         | [Link][source-easylist-spa]                       | [Link][mirror-1-easylist-spa]                       | [Link][mirror-2-easylist-spa]                       | [Link][mirror-3-easylist-spa]                       |
@@ -162,6 +163,12 @@
 [mirror-1-easylist-nld]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-nld/list.txt
 [mirror-2-easylist-nld]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/easylist-nld/list.txt
 [mirror-3-easylist-nld]: https://hmirror.molinero.dev/easylist-nld/list.txt
+
+[homepage-easylist-pol]: https://github.com/easylistpolish/easylistpolish
+[source-easylist-pol]: https://easylist-downloads.adblockplus.org/easylistpolish.txt
+[mirror-1-easylist-pol]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist-pol/list.txt
+[mirror-2-easylist-pol]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/easylist-pol/list.txt
+[mirror-3-easylist-pol]: https://hmirror.molinero.dev/easylist-pol/list.txt
 
 [homepage-easylist-por]: https://github.com/easylist/easylistportuguese
 [source-easylist-por]: https://easylist-downloads.adblockplus.org/easylistportuguese.txt
