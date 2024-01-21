@@ -16,9 +16,11 @@ if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
 if [ -z "${ETCDIR+x}" ]; then ETCDIR='/etc'; fi
 if [ -z "${XDG_CONFIG_HOME+x}" ]; then XDG_CONFIG_HOME="${HOME-}/.config"; fi
 
-# Remove temporary files on exit.
-cleanup() { ret="$?"; rm -rf -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"; }
-{ trap cleanup EXIT ||:; trap cleanup TERM ||:; trap cleanup INT ||:; trap cleanup HUP ||:; } 2>/dev/null
+# Trap various signals to remove temporary files on exit.
+abort() { : "${EXIT_STATUS:=${?}}"; rm -rf -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${EXIT_STATUS:?}"; }
+{ trap abort EXIT ||:; trap abort TERM ||:; trap abort INT ||:; trap abort HUP ||:; } 2>/dev/null
+# For all other signals the exit status is preserved, but USR1 and USR2 will always use 10 and 12 respectively.
+{ trap 'EXIT_STATUS=10; abort' USR1; trap 'EXIT_STATUS=12; abort' USR2; } 2>/dev/null
 
 # Built-in header.
 HOSTNAME="${HOSTNAME-"$(uname -n)"}"
@@ -588,10 +590,9 @@ main() {
 			sourceDlFile="${sourcesDlDir:?}"/"$(rand)"
 			touch -- "${sourceDlFile:?}.part"
 			{
-				if fetchUrl "${url:?}" > "${sourceDlFile:?}.part"; then
+				if { fetchUrl "${url:?}" && printf '\n'; } > "${sourceDlFile:?}.part"; then
 					if [ -e "${sourceDlFile:?}.part" ]; then
-						printf '\n' >> "${sourceDlFile:?}.part"
-						mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}"
+						mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}" 2>/dev/null
 					fi
 				else
 					rm -f -- "${sourceDlFile:?}.part"
@@ -599,7 +600,7 @@ main() {
 						printWarn "Cannot obtain source: ${url:?}"
 					else
 						printError "Cannot obtain source: ${url:?}"
-						{ kill "${$}"; exit 1; } 2>/dev/null
+						{ kill -s USR2 "${$}"; exit 1; } 2>/dev/null
 					fi
 				fi
 			} &

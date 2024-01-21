@@ -10,9 +10,11 @@ export LC_ALL='C'
 # Emulate ksh if the shell is zsh.
 if [ -n "${ZSH_VERSION-}" ]; then emulate -L ksh; fi
 
-# Remove temporary files on exit.
-cleanup() { ret="$?"; rm -f -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${ret:?}"; }
-{ trap cleanup EXIT ||:; trap cleanup TERM ||:; trap cleanup INT ||:; trap cleanup HUP ||:; } 2>/dev/null
+# Trap various signals to remove temporary files on exit.
+abort() { : "${EXIT_STATUS:=${?}}"; rm -rf -- "${TMPDIR:-${TMP:-/tmp}}/hblock.${$}."*; trap - EXIT; exit "${EXIT_STATUS:?}"; }
+{ trap abort EXIT ||:; trap abort TERM ||:; trap abort INT ||:; trap abort HUP ||:; } 2>/dev/null
+# For all other signals the exit status is preserved, but USR1 and USR2 will always use 10 and 12 respectively.
+{ trap 'EXIT_STATUS=10; abort' USR1; trap 'EXIT_STATUS=12; abort' USR2; } 2>/dev/null
 
 # Check if a program exists.
 exists() {
