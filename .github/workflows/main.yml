@@ -343,7 +343,7 @@ jobs:
       - name: 'Install packages'
         run: 'apk add --no-cache ca-certificates curl file idn2-utils make'
       - name: 'Install packages (2nd stage)'
-        run: 'apk add --no-cache nawk --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community'
+        run: 'apk add --no-cache nawk'
       - name: 'Print nawk version'
         run: 'apk info --no-cache nawk'
       - name: 'Set default awk implementation'
