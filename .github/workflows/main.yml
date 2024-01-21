@@ -83,14 +83,14 @@ jobs:
       - name: 'Test project'
         run: 'make test-all'
 
-  test-rockylinux-latest:
-    name: 'Test on Rocky Linux'
+  test-almalinux-latest:
+    name: 'Test on AlmaLinux'
     needs:
       - 'lint-shellcheck-stable'
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/rockylinux:9'
+    container: 'docker.io/almalinux:latest'
     steps:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl-minimal findutils file idn2 make'
@@ -551,14 +551,14 @@ jobs:
       - name: 'Build project'
         run: 'make hosts stats index'
 
-  build-rockylinux-latest:
-    name: 'Build on Rocky Linux'
+  build-almalinux-latest:
+    name: 'Build on AlmaLinux'
     needs:
-      - 'test-rockylinux-latest'
+      - 'test-almalinux-latest'
     runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
-    container: 'docker.io/rockylinux:9'
+    container: 'docker.io/almalinux:latest'
     steps:
       - name: 'Install packages'
         run: 'dnf install -y ca-certificates curl-minimal findutils file idn2 make'
@@ -697,7 +697,7 @@ jobs:
     name: 'Create RPM package'
     needs:
       - 'build-fedora-latest'
-      - 'build-rockylinux-latest'
+      - 'build-almalinux-latest'
       - 'build-opensuse-latest'
     runs-on: 'ubuntu-latest'
     permissions:
