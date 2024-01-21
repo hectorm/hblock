@@ -326,7 +326,7 @@ fetchUrl() {
 	# If the protocol is "file://" we can omit the download and simply use cat.
 	if [ "${1#file://}" != "${1:?}" ]; then cat -- "${1#file://}"
 	else
-		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0'
+		userAgent='Mozilla/5.0 (X11; Linux x86_64; rv:115.0) Gecko/20100101 Firefox/115.0'
 		if exists curl; then curl -fsSL -A "${userAgent:?}" -- "${1:?}"
 		elif exists wget; then wget -qO- -U "${userAgent:?}" -- "${1:?}"
 		elif exists fetch; then fetch -qo- --user-agent="${userAgent:?}" -- "${1:?}"
