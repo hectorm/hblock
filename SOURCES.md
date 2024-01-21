@@ -44,6 +44,7 @@
 | uBlock - 2021                           | GPL-3.0-only                                                      | [Link][homepage-ublock-2021]                          | [Link][source-ublock-2021]                        | [Link][mirror-1-ublock-2021]                        | [Link][mirror-2-ublock-2021]                        | [Link][mirror-3-ublock-2021]                        |
 | uBlock - 2022                           | GPL-3.0-only                                                      | [Link][homepage-ublock-2022]                          | [Link][source-ublock-2022]                        | [Link][mirror-1-ublock-2022]                        | [Link][mirror-2-ublock-2022]                        | [Link][mirror-3-ublock-2022]                        |
 | uBlock - 2023                           | GPL-3.0-only                                                      | [Link][homepage-ublock-2023]                          | [Link][source-ublock-2023]                        | [Link][mirror-1-ublock-2023]                        | [Link][mirror-2-ublock-2023]                        | [Link][mirror-3-ublock-2023]                        |
+| uBlock - 2024                           | GPL-3.0-only                                                      | [Link][homepage-ublock-2024]                          | [Link][source-ublock-2024]                        | [Link][mirror-1-ublock-2024]                        | [Link][mirror-2-ublock-2024]                        | [Link][mirror-3-ublock-2024]                        |
 | uBlock - Abuse                          | GPL-3.0-only                                                      | [Link][homepage-ublock-abuse]                         | [Link][source-ublock-abuse]                       | [Link][mirror-1-ublock-abuse]                       | [Link][mirror-2-ublock-abuse]                       | [Link][mirror-3-ublock-abuse]                       |
 | uBlock - Badware                        | GPL-3.0-only                                                      | [Link][homepage-ublock-badware]                       | [Link][source-ublock-badware]                     | [Link][mirror-1-ublock-badware]                     | [Link][mirror-2-ublock-badware]                     | [Link][mirror-3-ublock-badware]                     |
 | uBlock - Privacy                        | GPL-3.0-only                                                      | [Link][homepage-ublock-privacy]                       | [Link][source-ublock-privacy]                     | [Link][mirror-1-ublock-privacy]                     | [Link][mirror-2-ublock-privacy]                     | [Link][mirror-3-ublock-privacy]                     |
@@ -306,6 +307,12 @@
 [mirror-1-ublock-2023]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2023/list.txt
 [mirror-2-ublock-2023]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/ublock-2023/list.txt
 [mirror-3-ublock-2023]: https://hmirror.molinero.dev/ublock-2023/list.txt
+
+[homepage-ublock-2024]: https://github.com/uBlockOrigin/uAssets
+[source-ublock-2024]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters-2024.txt
+[mirror-1-ublock-2024]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2024/list.txt
+[mirror-2-ublock-2024]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/ublock-2024/list.txt
+[mirror-3-ublock-2024]: https://hmirror.molinero.dev/ublock-2024/list.txt
 
 [homepage-ublock-abuse]: https://github.com/uBlockOrigin/uAssets
 [source-ublock-abuse]: https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt
