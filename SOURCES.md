@@ -49,7 +49,6 @@
 | uBlock - Badware                        | GPL-3.0-only                                                      | [Link][homepage-ublock-badware]                       | [Link][source-ublock-badware]                     | [Link][mirror-1-ublock-badware]                     | [Link][mirror-2-ublock-badware]                     | [Link][mirror-3-ublock-badware]                     |
 | uBlock - Privacy                        | GPL-3.0-only                                                      | [Link][homepage-ublock-privacy]                       | [Link][source-ublock-privacy]                     | [Link][mirror-1-ublock-privacy]                     | [Link][mirror-2-ublock-privacy]                     | [Link][mirror-3-ublock-privacy]                     |
 | URLhaus                                 | CC0-1.0                                                           | [Link][homepage-urlhaus]                              | [Link][source-urlhaus]                            | [Link][mirror-1-urlhaus]                            | [Link][mirror-2-urlhaus]                            | [Link][mirror-3-urlhaus]                            |
-| usom.gov.tr                             | Unknown                                                           | [Link][homepage-usom.gov.tr]                          | [Link][source-usom.gov.tr]                        | [Link][mirror-1-usom.gov.tr]                        | [Link][mirror-2-usom.gov.tr]                        | [Link][mirror-3-usom.gov.tr]                        |
 
 [homepage-adaway.org]: https://adaway.org
 [source-adaway.org]: https://adaway.org/hosts.txt
@@ -337,9 +336,3 @@
 [mirror-1-urlhaus]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/urlhaus/list.txt
 [mirror-2-urlhaus]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/urlhaus/list.txt
 [mirror-3-urlhaus]: https://hmirror.molinero.dev/urlhaus/list.txt
-
-[homepage-usom.gov.tr]: https://www.usom.gov.tr
-[source-usom.gov.tr]: https://www.usom.gov.tr/url-list.txt
-[mirror-1-usom.gov.tr]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/usom.gov.tr/list.txt
-[mirror-2-usom.gov.tr]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/usom.gov.tr/list.txt
-[mirror-3-usom.gov.tr]: https://hmirror.molinero.dev/usom.gov.tr/list.txt
