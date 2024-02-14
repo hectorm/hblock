@@ -16,6 +16,15 @@ A package for DragonFlyBSD users is [available in DPorts](https://github.com/Dra
 pkg install hblock
 ```
 
+### Fedora
+
+A package for Fedora users is [available in COPR](https://copr.fedorainfracloud.org/coprs/pesader/hblock/).
+
+```sh
+dnf copr enable pesader/hblock
+dnf install hblock
+```
+
 ### FreeBSD
 
 A package for FreeBSD users is [available in FreshPorts](https://www.freshports.org/net/hblock/).
