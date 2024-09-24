@@ -113,6 +113,7 @@ optParse() {
 			'-S'*|'--sources') optArgStr "${@-}"; sourcesFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-A'*|'--allowlist') optArgStr "${@-}"; allowlistFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-D'*|'--denylist') optArgStr "${@-}"; denylistFile="${optArg?}"; shift "${optShift:?}" ;;
+			'-n'*|'--retry') optArgStr "${@-}"; retry="${optArg?}"; shift "${optShift:?}" ;;
 			'-R'*|'--redirection') optArgStr "${@-}"; redirection="${optArg?}"; shift "${optShift:?}" ;;
 			'-W'*|'--wrap') optArgStr "${@-}"; wrap="${optArg?}"; shift "${optShift:?}" ;;
 			'-T'*|'--template') optArgStr "${@-}"; template="${optArg?}"; shift "${optShift:?}" ;;
@@ -193,6 +194,9 @@ showHelp() {
 		        \${XDG_CONFIG_HOME}/hblock/footer%NL
 		        ${ETCDIR?}/hblock/footer%NL
 		    (default: ${footerFile?})%NL
+		 -n, --retry <NUMBER>, \${HBLOCK_RETRY}%NL
+		    Number of times to retry a failed download.%NL
+		    (default: ${retry?})%NL
 		 -S, --sources <FILE|builtin|none|->, \${HBLOCK_SOURCES_FILE}%NL
 		    File with line separated URLs used to generate the blocklist.%NL
 		    If equals "builtin", the built-in value is used.%NL
@@ -451,6 +455,9 @@ main() {
 	# Redirection for all entries in the blocklist.
 	redirection="${HBLOCK_REDIRECTION-"0.0.0.0"}"
 
+	# Number of times to retry a failed download.
+	retry="${HBLOCK_RETRY-"0"}"
+
 	# Break blocklist lines after this number of entries.
 	wrap="${HBLOCK_WRAP-"1"}"
 
@@ -588,19 +595,30 @@ main() {
 			sourceDlFile="${sourcesDlDir:?}"/"$(rand)"
 			touch -- "${sourceDlFile:?}.part"
 			{
-				if { fetchUrl "${url:?}" && printf '\n'; } > "${sourceDlFile:?}.part"; then
-					if [ -e "${sourceDlFile:?}.part" ]; then
-						mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}" 2>/dev/null
-					fi
-				else
-					rm -f -- "${sourceDlFile:?}.part"
-					if [ "${continue:?}" = 'true' ]; then
-						printWarn "Cannot obtain source: ${url:?}"
+				attempt=0
+				max_attempts=$((retry + 1))
+				while true; do
+					if { fetchUrl "${url:?}" && printf '\n'; } > "${sourceDlFile:?}.part"; then
+						if [ -e "${sourceDlFile:?}.part" ]; then
+							mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}" 2>/dev/null
+						fi
+						break
 					else
-						printError "Cannot obtain source: ${url:?}"
-						{ kill -s USR2 "${$}"; exit 1; } 2>/dev/null
+						attempt=$((attempt + 1))
+						if [ "${attempt}" -ge "${max_attempts}" ]; then
+							rm -f -- "${sourceDlFile:?}.part"
+							if [ "${continue:?}" = 'true' ]; then
+								printWarn "Cannot obtain source: ${url:?}"
+								break
+							else
+								printError "Cannot obtain source: ${url:?}"
+								{ kill -s USR2 "${$}"; exit 1; } 2>/dev/null
+							fi
+						else
+							sleep 1
+						fi
 					fi
-				fi
+				done
 			} &
 		done < "${sourcesUrlFile:?}"
 		wait
