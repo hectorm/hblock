@@ -596,7 +596,7 @@ main() {
 			touch -- "${sourceDlFile:?}.part"
 			{
 				attempt=0
-				max_attempts=$((retry + 1))
+				maxAttempts=$((retry + 1))
 				while true; do
 					if { fetchUrl "${url:?}" && printf '\n'; } > "${sourceDlFile:?}.part"; then
 						if [ -e "${sourceDlFile:?}.part" ]; then
@@ -605,7 +605,7 @@ main() {
 						break
 					else
 						attempt=$((attempt + 1))
-						if [ "${attempt}" -ge "${max_attempts}" ]; then
+						if [ "${attempt}" -ge "${maxAttempts}" ]; then
 							rm -f -- "${sourceDlFile:?}.part"
 							if [ "${continue:?}" = 'true' ]; then
 								printWarn "Cannot obtain source: ${url:?}"
