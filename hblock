@@ -113,7 +113,6 @@ optParse() {
 			'-S'*|'--sources') optArgStr "${@-}"; sourcesFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-A'*|'--allowlist') optArgStr "${@-}"; allowlistFile="${optArg?}"; shift "${optShift:?}" ;;
 			'-D'*|'--denylist') optArgStr "${@-}"; denylistFile="${optArg?}"; shift "${optShift:?}" ;;
-			'-n'*|'--retry') optArgStr "${@-}"; retry="${optArg?}"; shift "${optShift:?}" ;;
 			'-R'*|'--redirection') optArgStr "${@-}"; redirection="${optArg?}"; shift "${optShift:?}" ;;
 			'-W'*|'--wrap') optArgStr "${@-}"; wrap="${optArg?}"; shift "${optShift:?}" ;;
 			'-T'*|'--template') optArgStr "${@-}"; template="${optArg?}"; shift "${optShift:?}" ;;
@@ -121,6 +120,7 @@ optParse() {
 			'-l' |'--lenient'|'--no-lenient') optArgBool "${@-}"; lenient="${optArg:?}" ;;
 			'-r' |'--regex'|'--no-regex') optArgBool "${@-}"; regex="${optArg:?}" ;;
 			'-f' |'--filter-subdomains'|'--no-filter-subdomains') optArgBool "${@-}"; filterSubdomains="${optArg:?}" ;;
+			'-n'*|'--retry') optArgStr "${@-}"; retry="${optArg?}"; shift "${optShift:?}" ;;
 			'-c' |'--continue'|'--no-continue') optArgBool "${@-}"; continue="${optArg:?}" ;;
 			'-p'*|'--parallel') optArgStr "${@-}"; parallel="${optArg?}"; shift "${optShift:?}" ;;
 			'-q' |'--quiet'|'--no-quiet') optArgBool "${@-}"; quiet="${optArg:?}" ;;
@@ -194,9 +194,6 @@ showHelp() {
 		        \${XDG_CONFIG_HOME}/hblock/footer%NL
 		        ${ETCDIR?}/hblock/footer%NL
 		    (default: ${footerFile?})%NL
-		 -n, --retry <NUMBER>, \${HBLOCK_RETRY}%NL
-		    Number of times to retry a failed download.%NL
-		    (default: ${retry?})%NL
 		 -S, --sources <FILE|builtin|none|->, \${HBLOCK_SOURCES_FILE}%NL
 		    File with line separated URLs used to generate the blocklist.%NL
 		    If equals "builtin", the built-in value is used.%NL
@@ -249,6 +246,9 @@ showHelp() {
 		    Useful for reducing the blocklist size in cases such as when DNS blocking
 		    makes these subdomains redundant.%NL
 		    (default: ${filterSubdomains?})%NL
+		 -n, --retry <NUMBER>, \${HBLOCK_RETRY}%NL
+		    Number of times to retry a failed download.%NL
+		    (default: ${retry?})%NL
 		 -c, --[no-]continue, \${HBLOCK_CONTINUE}%NL
 		    Do not abort if a download error occurs.%NL
 		    (default: ${continue?})%NL
@@ -455,9 +455,6 @@ main() {
 	# Redirection for all entries in the blocklist.
 	redirection="${HBLOCK_REDIRECTION-"0.0.0.0"}"
 
-	# Number of times to retry a failed download.
-	retry="${HBLOCK_RETRY-"0"}"
-
 	# Break blocklist lines after this number of entries.
 	wrap="${HBLOCK_WRAP-"1"}"
 
@@ -475,6 +472,9 @@ main() {
 
 	# Do not include subdomains when the parent domain is also blocked.
 	filterSubdomains="${HBLOCK_FILTER_SUBDOMAINS-"false"}"
+
+	# Number of times to retry a failed download.
+	retry="${HBLOCK_RETRY-"0"}"
 
 	# Abort if a download error occurs.
 	continue="${HBLOCK_CONTINUE-"false"}"
