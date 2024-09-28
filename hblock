@@ -120,6 +120,7 @@ optParse() {
 			'-l' |'--lenient'|'--no-lenient') optArgBool "${@-}"; lenient="${optArg:?}" ;;
 			'-r' |'--regex'|'--no-regex') optArgBool "${@-}"; regex="${optArg:?}" ;;
 			'-f' |'--filter-subdomains'|'--no-filter-subdomains') optArgBool "${@-}"; filterSubdomains="${optArg:?}" ;;
+			'-n'*|'--retry') optArgStr "${@-}"; retry="${optArg?}"; shift "${optShift:?}" ;;
 			'-c' |'--continue'|'--no-continue') optArgBool "${@-}"; continue="${optArg:?}" ;;
 			'-p'*|'--parallel') optArgStr "${@-}"; parallel="${optArg?}"; shift "${optShift:?}" ;;
 			'-q' |'--quiet'|'--no-quiet') optArgBool "${@-}"; quiet="${optArg:?}" ;;
@@ -245,6 +246,9 @@ showHelp() {
 		    Useful for reducing the blocklist size in cases such as when DNS blocking
 		    makes these subdomains redundant.%NL
 		    (default: ${filterSubdomains?})%NL
+		 -n, --retry <NUMBER>, \${HBLOCK_RETRY}%NL
+		    Number of times to retry a failed download.%NL
+		    (default: ${retry?})%NL
 		 -c, --[no-]continue, \${HBLOCK_CONTINUE}%NL
 		    Do not abort if a download error occurs.%NL
 		    (default: ${continue?})%NL
@@ -469,6 +473,9 @@ main() {
 	# Do not include subdomains when the parent domain is also blocked.
 	filterSubdomains="${HBLOCK_FILTER_SUBDOMAINS-"false"}"
 
+	# Number of times to retry a failed download.
+	retry="${HBLOCK_RETRY-"0"}"
+
 	# Abort if a download error occurs.
 	continue="${HBLOCK_CONTINUE-"false"}"
 
@@ -588,19 +595,30 @@ main() {
 			sourceDlFile="${sourcesDlDir:?}"/"$(rand)"
 			touch -- "${sourceDlFile:?}.part"
 			{
-				if { fetchUrl "${url:?}" && printf '\n'; } > "${sourceDlFile:?}.part"; then
-					if [ -e "${sourceDlFile:?}.part" ]; then
-						mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}" 2>/dev/null
-					fi
-				else
-					rm -f -- "${sourceDlFile:?}.part"
-					if [ "${continue:?}" = 'true' ]; then
-						printWarn "Cannot obtain source: ${url:?}"
+				attempt=0
+				maxAttempts=$((retry + 1))
+				while true; do
+					if { fetchUrl "${url:?}" && printf '\n'; } > "${sourceDlFile:?}.part"; then
+						if [ -e "${sourceDlFile:?}.part" ]; then
+							mv -- "${sourceDlFile:?}.part" "${sourceDlFile:?}" 2>/dev/null
+						fi
+						break
 					else
-						printError "Cannot obtain source: ${url:?}"
-						{ kill -s USR2 "${$}"; exit 1; } 2>/dev/null
+						attempt=$((attempt + 1))
+						if [ "${attempt}" -ge "${maxAttempts}" ]; then
+							rm -f -- "${sourceDlFile:?}.part"
+							if [ "${continue:?}" = 'true' ]; then
+								printWarn "Cannot obtain source: ${url:?}"
+								break
+							else
+								printError "Cannot obtain source: ${url:?}"
+								{ kill -s USR2 "${$}"; exit 1; } 2>/dev/null
+							fi
+						else
+							sleep 1
+						fi
 					fi
-				fi
+				done
 			} &
 		done < "${sourcesUrlFile:?}"
 		wait
