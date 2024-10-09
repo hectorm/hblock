@@ -5,6 +5,7 @@
 | adaway.org                              | CC-BY-3.0                                                         | [Link][homepage-adaway.org]                           | [Link][source-adaway.org]                         | [Link][mirror-1-adaway.org]                         | [Link][mirror-2-adaway.org]                         | [Link][mirror-3-adaway.org]                         |
 | AdBlock NoCoin List                     | MIT                                                               | [Link][homepage-adblock-nocoin-list]                  | [Link][source-adblock-nocoin-list]                | [Link][mirror-1-adblock-nocoin-list]                | [Link][mirror-2-adblock-nocoin-list]                | [Link][mirror-3-adblock-nocoin-list]                |
 | AdGuard - Simplified                    | GPL-3.0-only                                                      | [Link][homepage-adguard-simplified]                   | [Link][source-adguard-simplified]                 | [Link][mirror-1-adguard-simplified]                 | [Link][mirror-2-adguard-simplified]                 | [Link][mirror-3-adguard-simplified]                 |
+| AWAvenue Ads                            | CC BY-NC-SA 4.0                                                   | [Link][homepage-awavenue-ads]                         | [Link][source-awavenue-ads]                       | [Link][mirror-1-awavenue-ads]                       | [Link][mirror-2-awavenue-ads]                       | [Link][mirror-3-awavenue-ads]                       |
 | d3Host                                  | CC-BY-NC-SA-4.0                                                   | [Link][homepage-d3host]                               | [Link][source-d3host]                             | [Link][mirror-1-d3host]                             | [Link][mirror-2-d3host]                             | [Link][mirror-3-d3host]                             |
 | DandelionSprout - Nordic                | [Dandelicence][license-dandelionsprout-nordic]                    | [Link][homepage-dandelionsprout-nordic]               | [Link][source-dandelionsprout-nordic]             | [Link][mirror-1-dandelionsprout-nordic]             | [Link][mirror-2-dandelionsprout-nordic]             | [Link][mirror-3-dandelionsprout-nordic]             |
 | EasyList                                | (GPL-3.0-only OR CC-BY-SA-3.0)                                    | [Link][homepage-easylist]                             | [Link][source-easylist]                           | [Link][mirror-1-easylist]                           | [Link][mirror-2-easylist]                           | [Link][mirror-3-easylist]                           |
@@ -66,6 +67,12 @@
 [mirror-1-adguard-simplified]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
 [mirror-2-adguard-simplified]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/adguard-simplified/list.txt
 [mirror-3-adguard-simplified]: https://hmirror.molinero.dev/adguard-simplified/list.txt
+
+[homepage-awavenue-ads]: https://github.com/TG-Twilight/AWAvenue-Ads-Rule
+[source-awavenue-ads]: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-hosts.txt
+[mirror-1-awavenue-ads]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/awavenue-ads/list.txt
+[mirror-2-awavenue-ads]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/awavenue-ads/list.txt
+[mirror-3-awavenue-ads]: https://hmirror.molinero.dev/awavenue-ads/list.txt
 
 [homepage-d3host]: https://github.com/d3ward/toolz
 [source-d3host]: https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.txt

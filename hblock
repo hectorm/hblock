@@ -45,6 +45,7 @@ HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adaway.org/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adblock-nocoin-list/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/adguard-simplified/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/awavenue-ads/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/d3host/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/dandelionsprout-nordic/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/easylist/list.txt
