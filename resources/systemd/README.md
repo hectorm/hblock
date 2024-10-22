@@ -4,7 +4,7 @@ The following commands will schedule a daily update of the hosts file. See [this
 more information about systemd timers.
 
 ```sh
-curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/hectorm/hblock/v3.4.5/resources/systemd/hblock.{service,timer}' \
+curl -o '/tmp/hblock.#1' 'https://raw.githubusercontent.com/hectorm/hblock/v3.5.0/resources/systemd/hblock.{service,timer}' \
   && echo '45980a80506df48cbfa6dd18d20f0ad4300744344408a0f87560b2be73b7c607  /tmp/hblock.service' | shasum -c \
   && echo '87a7ba5067d4c565aca96659b0dce230471a6ba35fbce1d3e9d02b264da4dc38  /tmp/hblock.timer' | shasum -c \
   && sudo mv /tmp/hblock.{service,timer} /etc/systemd/system/ \
