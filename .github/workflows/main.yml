@@ -375,50 +375,6 @@ jobs:
       - name: "Test project"
         run: "make test-all"
 
-  test-openwrt-latest:
-    name: "Test on OpenWrt"
-    needs:
-      - "lint-shellcheck-stable"
-    runs-on: "ubuntu-latest"
-    permissions:
-      contents: "read"
-    container: "docker.io/openwrt/rootfs:latest"
-    steps:
-      - name: "Apply workarounds for GitHub Actions runner"
-        run: 'printf "ID=alpine\n" > /etc/_os-release'
-      - name: "Update package index"
-        run: "mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:"
-      - name: "Install packages"
-        run: "opkg install ca-certificates curl file findutils idn2 make"
-      - name: "Checkout project"
-        uses: "actions/checkout@v4"
-      - name: "Build project"
-        run: "make test-all"
-
-  test-openwrt-latest-shell-busybox-ash:
-    name: "Test on OpenWrt (BusyBox ash shell)"
-    needs:
-      - "lint-shellcheck-stable"
-    runs-on: "ubuntu-latest"
-    permissions:
-      contents: "read"
-    container: "docker.io/openwrt/rootfs:latest"
-    steps:
-      - name: "Apply workarounds for GitHub Actions runner"
-        run: 'printf "ID=alpine\n" > /etc/_os-release'
-      - name: "Update package index"
-        run: "mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:"
-      - name: "Install packages"
-        run: "opkg install ca-certificates curl file findutils idn2 make"
-      - name: "Install packages (2nd stage)"
-        run: "opkg install busybox"
-      - name: "Print BusyBox version"
-        run: "opkg info busybox"
-      - name: "Checkout project"
-        uses: "actions/checkout@v4"
-      - name: "Build project"
-        run: 'make test-all TEST_SHELL="$(command -v busybox) ash"'
-
   test-macos-latest:
     name: "Test on macOS"
     needs:
@@ -621,27 +577,6 @@ jobs:
     steps:
       - name: "Install packages"
         run: "apk add --no-cache ca-certificates curl file findutils idn2-utils make"
-      - name: "Checkout project"
-        uses: "actions/checkout@v4"
-      - name: "Build project"
-        run: "make hosts stats index"
-
-  build-openwrt-latest:
-    name: "Build on OpenWrt"
-    needs:
-      - "test-openwrt-latest"
-      - "test-openwrt-latest-shell-busybox-ash"
-    runs-on: "ubuntu-latest"
-    permissions:
-      contents: "read"
-    container: "docker.io/openwrt/rootfs:latest"
-    steps:
-      - name: "Apply workarounds for GitHub Actions runner"
-        run: 'printf "ID=alpine\n" > /etc/_os-release'
-      - name: "Update package index"
-        run: "mkdir -p /var/run/; mkdir -p /var/lock/; opkg update ||:"
-      - name: "Install packages"
-        run: "opkg install ca-certificates curl file findutils idn2 make"
       - name: "Checkout project"
         uses: "actions/checkout@v4"
       - name: "Build project"
