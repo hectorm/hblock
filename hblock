@@ -85,6 +85,7 @@ HBLOCK_SOURCES_BUILTIN="$(cat <<-'EOF'
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2022/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2023/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2024/list.txt
+	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-2025/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-abuse/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-badware/list.txt
 	https://raw.githubusercontent.com/hectorm/hmirror/master/data/ublock-privacy/list.txt
