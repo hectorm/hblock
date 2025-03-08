@@ -35,6 +35,7 @@
 | mitchellkrogza - Badd-Boyz-Hosts        | MIT                                                               | [Link][homepage-mitchellkrogza-badd-boyz-hosts]       | [Link][source-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-1-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-2-mitchellkrogza-badd-boyz-hosts]     | [Link][mirror-3-mitchellkrogza-badd-boyz-hosts]     |
 | pgl.yoyo.org                            | [MCRAE][license-pgl.yoyo.org]                                     | [Link][homepage-pgl.yoyo.org]                         | [Link][source-pgl.yoyo.org]                       | [Link][mirror-1-pgl.yoyo.org]                       | [Link][mirror-2-pgl.yoyo.org]                       | [Link][mirror-3-pgl.yoyo.org]                       |
 | Phishing Army                           | CC-BY-NC-4.0                                                      | [Link][homepage-phishing.army]                        | [Link][source-phishing.army]                      | [Link][mirror-1-phishing.army]                      | [Link][mirror-2-phishing.army]                      | [Link][mirror-3-phishing.army]                      |
+| Red Flag Domains                        | CC-BY-NC-SA-4.0                                                   | [Link][homepage-red.flag.domains]                     | [Link][source-red.flag.domains]                   | [Link][mirror-1-red.flag.domains]                   | [Link][mirror-2-red.flag.domains]                   | [Link][mirror-3-red.flag.domains]                   |
 | someonewhocares.org                     | ["non-commercial with attribution"][license-someonewhocares.org]  | [Link][homepage-someonewhocares.org]                  | [Link][source-someonewhocares.org]                | [Link][mirror-1-someonewhocares.org]                | [Link][mirror-2-someonewhocares.org]                | [Link][mirror-3-someonewhocares.org]                |
 | spam404.com                             | CC-BY-SA-4.0                                                      | [Link][homepage-spam404.com]                          | [Link][source-spam404.com]                        | [Link][mirror-1-spam404.com]                        | [Link][mirror-2-spam404.com]                        | [Link][mirror-3-spam404.com]                        |
 | StevenBlack                             | MIT                                                               | [Link][homepage-stevenblack]                          | [Link][source-stevenblack]                        | [Link][mirror-1-stevenblack]                        | [Link][mirror-2-stevenblack]                        | [Link][mirror-3-stevenblack]                        |
@@ -252,6 +253,12 @@
 [mirror-1-phishing.army]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/phishing.army/list.txt
 [mirror-2-phishing.army]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/phishing.army/list.txt
 [mirror-3-phishing.army]: https://hmirror.molinero.dev/phishing.army/list.txt
+
+[homepage-red.flag.domains]: https://red.flag.domains
+[source-red.flag.domains]: https://dl.red.flag.domains/red.flag.domains.txt
+[mirror-1-red.flag.domains]: https://raw.githubusercontent.com/hectorm/hmirror/master/data/red.flag.domains/list.txt
+[mirror-2-red.flag.domains]: https://gitlab.com/hectorm/hmirror/-/raw/master/data/red.flag.domains/list.txt
+[mirror-3-red.flag.domains]: https://hmirror.molinero.dev/red.flag.domains/list.txt
 
 [homepage-someonewhocares.org]: https://someonewhocares.org/hosts/
 [license-someonewhocares.org]: https://someonewhocares.org/hosts/
