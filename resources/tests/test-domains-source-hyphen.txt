@@ -1,0 +1,13 @@
+0.0.0.0 example.com
+0.0.0.0 aaa.example.com
+0.0.0.0 example-bbb.com
+0.0.0.0 bbb.example-bbb.com
+0.0.0.0 ccc.bbb.example-bbb.com
+0.0.0.0 example-ccc.example.com
+0.0.0.0 ddd.example-ccc.example.com
+0.0.0.0 examplecom.net
+0.0.0.0 example.com.net
+0.0.0.0 sub.example.org
+0.0.0.0 sub-x.example.org
+0.0.0.0 a.sub.example.org
+0.0.0.0 b.a.sub.example.org

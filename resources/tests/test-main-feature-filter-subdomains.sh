@@ -45,6 +45,13 @@ main() {
 	if ! assertEquals "${actual?}" "${expected?}"; then
 		exit 1
 	fi
+
+	printf 'Test - Main - Filter subdomains: domains with hyphens\n'
+	actual="$(set -a; HBLOCK_SOURCES="file://${SCRIPT_DIR:?}/test-domains-source-hyphen.txt" runInTestShell "${SCRIPT_DIR:?}/../../hblock" -qO-)"
+	expected="$(cat -- "${0%.sh}"-hyphen.out)"
+	if ! assertEquals "${actual?}" "${expected?}"; then
+		exit 1
+	fi
 }
 
 main "${@-}"
