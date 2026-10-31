@@ -1,6 +1,6 @@
 # NAME
 
-hBlock - manual page for hBlock 3.5.1
+hBlock - manual page for hBlock 3.5.2
 
 # SYNOPSIS
 
@@ -210,7 +210,7 @@ from connecting to them.
 
 Report bugs to: \<https://github.com/hectorm/hblock/issues\>
 
-  
-Author: Héctor Molinero Fernández \<hector@molinero.dev\>  
-License: MIT, https://opensource.org/licenses/MIT  
+\
+Author: Héctor Molinero Fernández \<hector@molinero.dev\>\
+License: MIT, https://opensource.org/licenses/MIT\
 Repository: https://github.com/hectorm/hblock
