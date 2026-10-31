@@ -666,7 +666,7 @@ main() {
 				BEGIN { FS = "." }
 				{
 					for (i = NF; i > 0; i--) {
-						printf("%s%s", $i, (i > 1 ? FS : RS))
+						printf("%s%s", $i, (i > 1 ? FS : S RS))
 					}
 				}
 			EOF
@@ -675,13 +675,15 @@ main() {
 				BEGIN { p = "." }
 				{
 					if (index($0, p) != 1) {
-						print($0); p = $0"."
+						print(substr($0, 1, length($0) - 1)); p = $0
 					}
 				}
 			EOF
 			)"
-			awk "${awkReverseScript:?}" < "${blocklistFile:?}" | sort \
-				| awk "${awkFilterScript:?}" | awk "${awkReverseScript:?}" \
+			# Sorting with a trailing dot keeps each domain next to its subdomains,
+			# otherwise "-" (0x2D) sorts before "." (0x2E) and splits them apart.
+			awk -v S='.' "${awkReverseScript:?}" < "${blocklistFile:?}" | sort \
+				| awk "${awkFilterScript:?}" | awk -v S='' "${awkReverseScript:?}" \
 				| sponge "${blocklistFile:?}"
 		fi
 
